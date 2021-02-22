@@ -59,6 +59,8 @@ namespace Aroma_Shop.Mvc
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseStatusCodePages();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
