@@ -5,4 +5,8 @@
     <RootNamespace>Aroma_Shop.Application</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Aroma Shop.Domain\Aroma Shop.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

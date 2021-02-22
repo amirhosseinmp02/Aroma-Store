@@ -8,5 +8,6 @@ namespace Aroma_Shop.Domain.Interfaces
     public interface IMessageRepository
     {
         void AddMessage(Message message);
+        void Save();
     }
 }
