@@ -5,8 +5,4 @@
     <RootNamespace>Aroma_Shop.Domain</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>
