@@ -5,4 +5,15 @@
     <RootNamespace>Aroma_Shop.Mvc</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aroma Shop.Ioc\Aroma Shop.Ioc.csproj" />
+  </ItemGroup>
+
 </Project>

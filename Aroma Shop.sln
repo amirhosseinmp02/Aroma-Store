@@ -13,15 +13,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ioc", "Ioc", "{0F4C3CCC-D48
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{D363BE15-FC6A-4DBC-8E2C-BBE4F6159295}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aroma Shop.Application", "Aroma Shop.Application\Aroma Shop.Application.csproj", "{92BA9F86-22FC-4B19-B027-7BBE70F3825F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aroma Shop.Application", "Aroma Shop.Application\Aroma Shop.Application.csproj", "{92BA9F86-22FC-4B19-B027-7BBE70F3825F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aroma Shop.Data", "Aroma Shop.Data\Aroma Shop.Data.csproj", "{50B5EBC1-0EE3-4675-A236-E4C77B120552}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aroma Shop.Data", "Aroma Shop.Data\Aroma Shop.Data.csproj", "{50B5EBC1-0EE3-4675-A236-E4C77B120552}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aroma Shop.Domain", "Aroma Shop.Domain\Aroma Shop.Domain.csproj", "{5261E57B-B0A0-4D0F-95C4-2455E0ADEF5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aroma Shop.Domain", "Aroma Shop.Domain\Aroma Shop.Domain.csproj", "{5261E57B-B0A0-4D0F-95C4-2455E0ADEF5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aroma Shop.Ioc", "Aroma Shop.Ioc\Aroma Shop.Ioc.csproj", "{89519A58-EEA9-41DE-BA92-93F9E30A1BEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aroma Shop.Ioc", "Aroma Shop.Ioc\Aroma Shop.Ioc.csproj", "{89519A58-EEA9-41DE-BA92-93F9E30A1BEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aroma Shop.Mvc", "Aroma Shop.Mvc\Aroma Shop.Mvc.csproj", "{98A9A880-92A1-40F7-8DB0-A1ECB4E5E8D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aroma Shop.Mvc", "Aroma Shop.Mvc\Aroma Shop.Mvc.csproj", "{98A9A880-92A1-40F7-8DB0-A1ECB4E5E8D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
