@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Aroma_Shop.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,5 +14,7 @@ namespace Aroma_Shop.Data.Context
         {
             
         }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }
