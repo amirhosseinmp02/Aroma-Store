@@ -23,7 +23,8 @@ namespace Aroma_Shop.Mvc.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [Route("/Contact-Us")]
+        public IActionResult ContactUs()
         {
             return View();
         }
