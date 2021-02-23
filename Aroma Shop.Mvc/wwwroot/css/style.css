@@ -4804,3 +4804,6 @@ a {
         padding-bottom: 115px !important
     }
 }
+.field-validation-error {
+    color: red;
+}

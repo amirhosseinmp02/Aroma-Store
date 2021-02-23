@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aroma Shop.Application\Aroma Shop.Application.csproj" />
     <ProjectReference Include="..\Aroma Shop.Data\Aroma Shop.Data.csproj" />
   </ItemGroup>
 

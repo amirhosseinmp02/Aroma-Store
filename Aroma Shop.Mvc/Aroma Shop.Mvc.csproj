@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aroma Shop.Application\Aroma Shop.Application.csproj" />
     <ProjectReference Include="..\Aroma Shop.Ioc\Aroma Shop.Ioc.csproj" />
   </ItemGroup>
 

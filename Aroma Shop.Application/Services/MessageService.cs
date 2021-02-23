@@ -18,7 +18,16 @@ namespace Aroma_Shop.Application.Services
 
         public bool AddMessage(Message message)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _messageRepository.AddMessage(message);
+                _messageRepository.Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
