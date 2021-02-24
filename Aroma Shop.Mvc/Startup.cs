@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Microsoft.AspNetCore.Identity;
@@ -51,6 +53,15 @@ namespace Aroma_Shop.Mvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                    context.Request.Path = "/ManageErrors/Error404";
+                await next();
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -58,8 +69,6 @@ namespace Aroma_Shop.Mvc
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseStatusCodePages();
 
             app.UseEndpoints(endpoints =>
             {
