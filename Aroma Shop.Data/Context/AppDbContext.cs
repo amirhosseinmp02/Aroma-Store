@@ -16,5 +16,15 @@ namespace Aroma_Shop.Data.Context
         }
 
         public DbSet<Message> Messages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Message>(p =>
+            {
+                
+            });
+
+            base.OnModelCreating(builder);
+        }
     }
 }
