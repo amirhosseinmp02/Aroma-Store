@@ -5,4 +5,8 @@
     <RootNamespace>Aroma_Shop.Domain</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.3" />
+  </ItemGroup>
+
 </Project>
