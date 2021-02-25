@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Aroma_Shop.Domain.Models
 {
-    class Product
+    public class Product
     {
         [Key]
         public int ProductId { get; set; }
