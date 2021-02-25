@@ -18,5 +18,9 @@ namespace Aroma_Shop.Domain.Models
         [NotMapped]
         [Display(Name = "آپلود تصویر")]
         public IFormFile ImageFile { get; set; }
+
+        //Navigations Proterties
+
+        public Product Product { get; set; }
     }
 }
