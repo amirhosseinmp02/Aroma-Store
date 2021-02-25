@@ -21,6 +21,7 @@ namespace Aroma_Shop.Domain.Models
 
         //Navigations Proterties
 
+        public ICollection<Comment> Replies { get; set; }
         public Product Product { get; set; }
     }
 }

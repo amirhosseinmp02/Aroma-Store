@@ -7,6 +7,12 @@ namespace Aroma_Shop.Domain.Models
 {
     public class Category
     {
+        public Category()
+        {
+            ChildrenCategories = new List<Category>();
+            Products = new List<Product>();
+        }
+
         [Key]
         public int CategoryId { get; set; }
         [MaxLength(100, ErrorMessage = "حداکثر 100 کارکتر مجاز می باشد")]
