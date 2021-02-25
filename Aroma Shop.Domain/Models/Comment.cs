@@ -7,6 +7,11 @@ namespace Aroma_Shop.Domain.Models
 {
     public class Comment
     {
+        public Comment()
+        {
+            Replies = new List<Comment>();
+        }
+
         [Key]
         public int CommentId { get; set; }
         [MaxLength(100, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
