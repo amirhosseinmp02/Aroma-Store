@@ -12,5 +12,11 @@ namespace Aroma_Shop.Domain.Models
         [MaxLength(100, ErrorMessage = "حداکثر 100 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا نام دسته را وارد نمایید")]
         public string CategoryName { get; set; }
+
+        //Navigations Proterties
+
+        public Category ParentCategory { get; set; }
+        public ICollection<Category> ChildrenCategories { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }
