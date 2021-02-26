@@ -8,7 +8,7 @@
                 <div class="card-product__img">
                     <img class="card-img" src="img/Products/@product.Images.FirstOrDefault().ImageName" alt="">
                     <div class="card-product__imgOverlay">
-                        <a class="btn btn-block text-light btn-dark btn-buy">خرید</a>
+                        <a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId" class="btn btn-block text-light btn-dark btn-buy">خرید</a>
                     </div>
                 </div>
                 <div class="card-body">
