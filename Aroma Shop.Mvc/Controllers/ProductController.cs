@@ -16,11 +16,11 @@ namespace Aroma_Shop.Mvc.Controllers
             _productService = productService;
         }
 
-        [Route("/Products/{productId}")]
+        [HttpGet("/Products/{productId}")]
         public IActionResult ProductDetails(int productId)
         {
             var model = _productService.GetProduct(productId);
-            return View();
+            return View(model);
         }
     }
 }
