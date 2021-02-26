@@ -15,16 +15,19 @@ namespace Aroma_Shop.Mvc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMessageService _messageService;
+        private readonly IProductService _productService;
 
-        public HomeController(ILogger<HomeController> logger, IMessageService messageService)
+        public HomeController(ILogger<HomeController> logger, IMessageService messageService, IProductService productService)
         {
             _logger = logger;
             _messageService = messageService;
+            _productService = productService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = _productService.GetProducts();
+            return View(model);
         }
 
         [HttpGet("/Contact-Us")]
