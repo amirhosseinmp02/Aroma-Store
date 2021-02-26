@@ -16,11 +16,6 @@ namespace Aroma_Shop.Data.Context
         }
 
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<ProductInformation> ProductsInformations { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
