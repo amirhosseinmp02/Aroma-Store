@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500");*/
 @import url('https://v1.fontapi.ir/css/Samim');
 body {
-    font-family: 'Samim';
+    font-family: 'Samim', sans-serif;
     font-size: 15px;
     font-weight: 400;
     line-height: 1.667
@@ -4384,14 +4384,16 @@ a {
         font-size: 14px;
         color: #777;
         font-weight: normal;
-        padding-right: 10px
+        padding-right: 12px;
+        margin-top: 12px;
     }
 
     .product_count input {
         width: 76px;
         border: 1px solid #eeeeee;
         border-radius: 3px;
-        padding-left: 10px
+        padding-left: 0px;
+        margin-right: 2px;
     }
 
     .product_count button {
@@ -4401,7 +4403,7 @@ a {
         box-shadow: none;
         cursor: pointer;
         position: absolute;
-        right: 0px;
+        right: 130px;
         font-size: 14px;
         color: #cccccc;
         -webkit-transition: all 0.3s ease 0s;
@@ -4415,11 +4417,11 @@ a {
         }
 
     .product_count .increase {
-        top: -4px
+        top: 5px
     }
 
     .product_count .reduced {
-        bottom: -8px
+        bottom: 0px
     }
 
 .product_description_area {
@@ -4813,4 +4815,7 @@ a {
 }
 .list li span:nth-last-child(1) {
     display: none
+}
+#btn-addtocart {
+    margin-right: 25px
 }
