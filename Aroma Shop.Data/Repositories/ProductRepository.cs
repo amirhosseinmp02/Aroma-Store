@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
@@ -19,12 +20,21 @@ namespace Aroma_Shop.Data.Repositories
 
         public IEnumerable<Product> GetProducts()
         {
-            return _context.Products;
+            var products = _context.Products
+                .Include(p => p.Categories)
+                .Include(p => p.Images);
+            return products;
         }
 
         public Product GetProduct(int productId)
         {
-            return _context.Products.Find(productId);
+            var product = _context.Products
+                .Include(p => p.Categories)
+                .Include(p => p.Informations)
+                .Include(p => p.Comments)
+                .Include(p => p.Images)
+                .SingleOrDefault(p => p.ProductId == productId);
+            return product;
         }
     }
 }
