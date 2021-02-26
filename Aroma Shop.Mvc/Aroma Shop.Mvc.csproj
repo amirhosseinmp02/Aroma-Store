@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Aroma Shop.Ioc\Aroma Shop.Ioc.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\Products\" />
+  </ItemGroup>
+
 </Project>

@@ -4807,3 +4807,7 @@ a {
 .field-validation-error {
     color: red;
 }
+.btn-buy {
+    max-width: 150px;
+    margin: auto
+}
