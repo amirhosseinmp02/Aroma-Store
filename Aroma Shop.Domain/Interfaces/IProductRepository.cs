@@ -8,6 +8,6 @@ namespace Aroma_Shop.Domain.Interfaces
     public interface IProductRepository
     {
         IEnumerable<Product> GetProducts();
-        Product GetProduct();
+        Product GetProduct(int productId);
     }
 }
