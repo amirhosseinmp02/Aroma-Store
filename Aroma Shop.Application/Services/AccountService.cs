@@ -6,6 +6,7 @@ using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using Aroma_Shop.Application.Utilites;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -44,7 +45,7 @@ namespace Aroma_Shop.Application.Services
 
             #region emailMessage
 
-            
+            var emailMessage = ViewToStringRenderer.RenderViewToStringAsync(_accessor.HttpContext.RequestServices, $"~/Views/Emails/MyEmailTemplate.cshtml", url);
 
             #endregion
             _emailService.SendEmailAsync(user.Email, "تأیید ایمیل",string.Format(""), true);
