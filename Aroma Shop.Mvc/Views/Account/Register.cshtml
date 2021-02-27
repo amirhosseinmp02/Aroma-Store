@@ -4,42 +4,54 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>Register</h1>
-
-<h4>RegisterViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Register">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+<!--================Login Box Area =================-->
+<section class="login_box_area section-margin">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <div class="hover">
+                        <h4>قبلا ثبت نام کرده اید؟</h4>
+                        <p>پس همین الان وارد شوید</p>
+                        <a class="button button-account" href="login.html">ورود</a>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            <div class="col-lg-6">
+                <div class="login_form_inner register_form_inner">
+                    <h3>ثبت نام</h3>
+                    <form class="row login_form" asp-action="Register" id="register_form">
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="name" placeholder="نام کاربری" onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام کاربری'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="email" placeholder="ایمیل" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="password" placeholder="کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'کلمه عبور'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="confirmPassword" placeholder="تکرار کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'تکرار کلمه عبور'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account rememberme">
+                                <label for="f-option2">مرا بخاطر بسپار</label>
+                                <input type="checkbox" id="f-option2" name="selector">
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="button button-register w-100">ثبت نام</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RePassword" class="control-label"></label>
-                <input asp-for="RePassword" class="form-control" />
-                <span asp-validation-for="RePassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
+<!--================End Login Box Area =================-->
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
 

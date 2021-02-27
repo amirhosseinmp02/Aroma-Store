@@ -21,7 +21,7 @@ namespace Aroma_Shop.Application.ViewModels
         [Required(ErrorMessage = "لطفا کلمه عبور مورد نظر را وارد نمایید")]
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
-        [MinLength(8, ErrorMessage = "حداکثر 8 کارکتر مجاز می باشد")]
+        [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
         public string Password { get; set; }
         [Required(ErrorMessage = "لطفا تکرار کلمه عبور را وارد نمایید")]
         [Compare(nameof(Password),ErrorMessage = "تکرار کلمه عبور با کلمه عبور مطابقت ندارد")]
