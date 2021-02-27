@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.ViewModels;
+using Aroma_Shop.Domain.Models;
 
 namespace Aroma_Shop.Mvc.Controllers
 {
@@ -24,6 +26,36 @@ namespace Aroma_Shop.Mvc.Controllers
             if(_accountService.IsUserSignedIn(User))
                 return RedirectToAction("Index", "Home");
             return View();
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (_accountService.IsUserSignedIn(User))
+                return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                var user = new CustomIdentityUser()
+                {
+                    UserName = model.UserName,
+                    Email = model.Email
+                };
+                var result = 
+                    await _accountService.CreateUser(user, model.Password);
+                if (result.Succeeded)
+                {
+                    var emailConfirmation = 
+                        _accountService
+                            .SendEmailConfirmation(user, "Account", "");
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
+            }
+
+            return View(model);
         }
 
         #endregion
