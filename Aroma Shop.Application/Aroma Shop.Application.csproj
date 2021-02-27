@@ -11,4 +11,8 @@
 	  <ProjectReference Include="..\Aroma Shop.Domain\Aroma Shop.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>
