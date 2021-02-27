@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Utilites;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace Aroma_Shop.Application.Services
@@ -55,6 +56,14 @@ namespace Aroma_Shop.Application.Services
             {
                 return false;
             }
+        }
+
+        public JsonResult IsUserNameExist(string userName)
+        {
+            var user =  _userManager.FindByNameAsync(userName);
+            if (user == null) 
+                return new JsonResult(true);
+            return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
         }
 
         public bool IsUserSignedIn(ClaimsPrincipal user)
