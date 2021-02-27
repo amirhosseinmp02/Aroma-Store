@@ -12,5 +12,6 @@ namespace Aroma_Shop.Application.Interfaces
     {
         bool IsUserSignedIn(ClaimsPrincipal user);
         Task<IdentityResult> CreateUser(CustomIdentityUser user, string password);
+        bool SendEmailConfirmation(CustomIdentityUser user,string controllerName,string actionName);
     }
 }

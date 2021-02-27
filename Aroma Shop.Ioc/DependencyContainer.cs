@@ -22,6 +22,7 @@ namespace Aroma_Shop.Ioc
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddHttpContextAccessor();
         }
     }
 }
