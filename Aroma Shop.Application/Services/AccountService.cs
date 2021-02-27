@@ -66,6 +66,14 @@ namespace Aroma_Shop.Application.Services
             return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
         }
 
+        public JsonResult IsEmailExist(string email)
+        {
+            var emaill = _userManager.FindByNameAsync(email);
+            if (emaill == null)
+                return new JsonResult(true);
+            return new JsonResult("امکان استفاده از این ایمیل وجود ندارد");
+        }
+
         public bool IsUserSignedIn(ClaimsPrincipal user)
         {
             if (_signInManager.IsSignedIn(user))
