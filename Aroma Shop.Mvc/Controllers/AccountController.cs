@@ -16,6 +16,12 @@ namespace Aroma_Shop.Mvc.Controllers
             _accountService = accountService;
         }
 
-
+        [HttpGet("Register")]
+        public IActionResult Register()
+        {
+            if(_accountService.IsUserSignedIn(User))
+                return RedirectToAction("Index", "Home");
+            return View();
+        }
     }
 }
