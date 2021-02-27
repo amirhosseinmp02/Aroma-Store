@@ -37,18 +37,24 @@ namespace Aroma_Shop.Application.Services
 
         public bool SendEmailConfirmation(CustomIdentityUser user, string returnController, string returnAction)
         {
-            var emailConfirmationToken = 
-                _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
-                new {userName = user.UserName, token = emailConfirmationToken}
-                , _accessor.HttpContext.Request.Scheme);
-
-            #region emailMessage
-
-            var emailMessage = ViewToStringRenderer.RenderViewToStringAsync(_accessor.HttpContext.RequestServices, $"~/Views/Emails/MyEmailTemplate.cshtml", url);
-
-            #endregion
-            _emailService.SendEmailAsync(user.Email, "تأیید ایمیل",string.Format(""), true);
+            try
+            {
+                var emailConfirmationToken = 
+                    _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
+                    new {userName = user.UserName, token = emailConfirmationToken}
+                    , _accessor.HttpContext.Request.Scheme);
+                var emailMessage = 
+                    ViewToStringRenderer
+                        .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
+                            , $"~/Views/Emails/MyEmailTemplate.cshtml", url);
+                _emailService.SendEmailAsync(user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool IsUserSignedIn(ClaimsPrincipal user)
