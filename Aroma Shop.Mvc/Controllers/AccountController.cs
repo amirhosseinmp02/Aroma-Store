@@ -16,7 +16,7 @@ namespace Aroma_Shop.Mvc.Controllers
             _accountService = accountService;
         }
 
-        #region MyRegion
+        #region Register
 
         [HttpGet("Register")]
         public IActionResult Register()
