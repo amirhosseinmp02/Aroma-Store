@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Aroma_Shop.Application.Interfaces
 {
@@ -13,5 +14,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool IsUserSignedIn(ClaimsPrincipal user);
         Task<IdentityResult> CreateUser(CustomIdentityUser user, string password);
         bool SendEmailConfirmation(CustomIdentityUser user,string controllerName,string actionName);
+        JsonResult IsUserNameExist(string userName);
     }
 }
