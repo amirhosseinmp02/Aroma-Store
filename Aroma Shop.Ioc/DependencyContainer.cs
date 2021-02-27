@@ -19,6 +19,9 @@ namespace Aroma_Shop.Ioc
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IAccountService, AccountService>();
         }
     }
 }
