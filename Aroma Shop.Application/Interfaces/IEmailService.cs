@@ -7,6 +7,6 @@ namespace Aroma_Shop.Application.Interfaces
 {
     public interface IEmailService
     {
-        public bool SendEmailAsync(string toEmail, string subject, string message, bool isMessageHtml = false);
+        public Task SendEmailAsync(string toEmail, string subject, string message, bool isMessageHtml = false);
     }
 }

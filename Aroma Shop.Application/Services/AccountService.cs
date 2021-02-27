@@ -14,6 +14,7 @@ namespace Aroma_Shop.Application.Services
     {
         private readonly UserManager<CustomIdentityUser> _userManager;
         private readonly SignInManager<CustomIdentityUser> _signInManager;
+        
 
         public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
         {
