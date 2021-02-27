@@ -16,6 +16,8 @@ namespace Aroma_Shop.Mvc.Controllers
             _accountService = accountService;
         }
 
+        #region MyRegion
+
         [HttpGet("Register")]
         public IActionResult Register()
         {
@@ -23,5 +25,23 @@ namespace Aroma_Shop.Mvc.Controllers
                 return RedirectToAction("Index", "Home");
             return View();
         }
+
+        #endregion
+
+        #region CheckingUser&Email
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult IsUserNameExist(string userName)
+        {
+            return _accountService.IsUserNameExist(userName);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult IsEmailExist(string email)
+        {
+            return _accountService.IsEmailExist(email);
+        }
+        #endregion
     }
 }
