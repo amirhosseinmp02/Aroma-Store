@@ -1,8 +1,12 @@
-﻿using Aroma_Shop.Application.Interfaces;
+﻿using System;
+using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Services;
+using Aroma_Shop.Data.Context;
 using Aroma_Shop.Data.Repositories;
 using Aroma_Shop.Domain.Interfaces;
+using Aroma_Shop.Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Aroma_Shop.Ioc
 {

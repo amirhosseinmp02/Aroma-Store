@@ -12,6 +12,7 @@ using System.Net.Mime;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
+using Aroma_Shop.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +35,14 @@ namespace Aroma_Shop.Mvc
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AromaAppDBConnection"));
             });
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
+                {
+                    options.Password.RequiredUniqueChars = 0;
+                    options.User.RequireUniqueEmail = true;
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+
+                })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
             RegisterServices(services);
