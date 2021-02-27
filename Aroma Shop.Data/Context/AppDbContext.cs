@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aroma_Shop.Data.Context
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<CustomIdentityUser, CustomIdentityRole, string>
     {
         public AppDbContext(DbContextOptions options)
             :base(options)

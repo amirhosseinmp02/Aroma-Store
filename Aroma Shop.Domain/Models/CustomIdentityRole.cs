@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Aroma_Shop.Domain.Models
 {
-    class CustomIdentityRole : IdentityRole
+    public class CustomIdentityRole : IdentityRole
     {
         public int Rank { get; set; }
 
