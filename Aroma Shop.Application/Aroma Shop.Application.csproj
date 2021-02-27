@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aroma Shop.Domain\Aroma Shop.Domain.csproj" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.12" />
+	  <ProjectReference Include="..\Aroma Shop.Domain\Aroma Shop.Domain.csproj" />
   </ItemGroup>
 
 </Project>
