@@ -96,7 +96,12 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             returnUrl =
                 (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) ? returnUrl : Url.Content("~/"));
-
+            var result = 
+                await _accountService
+                    .ConfigureExternalLoginsCallBacks(remoteError);
+            if (result)
+                return Redirect(returnUrl);
+            return RedirectToAction("Login");
         }
 
         #endregion
