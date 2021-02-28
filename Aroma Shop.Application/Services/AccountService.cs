@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -103,6 +104,13 @@ namespace Aroma_Shop.Application.Services
             if (_signInManager.IsSignedIn(user))
                 return true;
             return false;
+        }
+
+        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications()
+        {
+            var externalLogins =
+                await _signInManager.GetExternalAuthenticationSchemesAsync();
+            return externalLogins;
         }
     }
 }
