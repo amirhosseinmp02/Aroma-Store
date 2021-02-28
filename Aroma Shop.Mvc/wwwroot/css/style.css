@@ -4841,4 +4841,7 @@ input.input-validation-error {
 
 .validation-summary-valid {
     display: none;
-}  
+}
+.successregister {
+    margin-top: 17vh
+}
