@@ -1,7 +1,7 @@
-﻿@model Aroma_Shop.Application.ViewModels.Account.RegisterViewModel
+﻿@model Aroma_Shop.Application.ViewModels.Account.LoginViewModel
 
 @{
-    ViewData["Title"] = "ثبت نام";
+    ViewData["Title"] = "ورود";
 }
 
 <!--================Login Box Area =================-->
@@ -11,36 +11,36 @@
             <div class="col-lg-6">
                 <div class="login_box_img">
                     <div class="hover">
-                        <h4>قبلا ثبت نام کرده اید؟</h4>
-                        <p>پس همین الان وارد شوید</p>
-                        <a class="button button-account" asp-action="Login">ورود</a>
+                        <h4>کاربر جدید هستید ؟</h4>
+                        <p>پس همین الان ثبت نام کنید</p>
+                        <a class="button button-account" asp-action="Register">ثبت نام</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="login_form_inner register_form_inner">
-                    <h3>ثبت نام</h3>
-                    <form class="row login_form" asp-action="Register" id="register_form">
-                        <div class="col-md-12 form-group">
-                            <input asp-for="UserName" class="form-control" id="name" placeholder="نام کاربری" onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام کاربری'">
-
-                        </div>
+                <div class="login_form_inner">
+                    <h3>ورود</h3>
+                    <form class="row login_form" asp-action="Login" id="contactForm">
                         <div class="col-md-12 form-group">
                             <input asp-for="Email" class="form-control" id="email" placeholder="ایمیل" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل'">
 
                         </div>
                         <div class="col-md-12 form-group">
                             <input asp-for="Password" class="form-control" id="password" placeholder="کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'کلمه عبور'">
-                            
+
                         </div>
                         <div class="col-md-12 form-group">
-                            <input asp-for="RePassword" class="form-control" id="confirmPassword" placeholder="تکرار کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'تکرار کلمه عبور'">
-                            
+                            <div class="creat_account float-right">
+                                <label>مرا بخاطر بسپار</label>
+                                <input asp-for="RememberMe" id="f-option2">
+                            </div>
                         </div>
                         <div class="col-md-12 form-group">
-                            <button type="submit" class="button button-register w-100">ثبت نام</button>
+                            <button type="submit" class="button button-login w-100">ورود</button>
+                            <a href="#">کلمه عبور خود را فراموش کرده ام.</a>
                             <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
                         </div>
+                        <input asp-for="ReturnUrl" type="hidden" />
                     </form>
                 </div>
             </div>

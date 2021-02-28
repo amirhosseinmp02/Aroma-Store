@@ -59,6 +59,8 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region Login
+
         [HttpGet("Login")]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
@@ -71,6 +73,10 @@ namespace Aroma_Shop.Mvc.Controllers
             };
             return View(model);
         }
+
+
+
+        #endregion
 
         #region CheckingUser&Email
 

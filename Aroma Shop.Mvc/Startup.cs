@@ -26,6 +26,10 @@ namespace Aroma_Shop.Mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContextPool<AppDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("AromaAppDBConnection"));
+            });
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
