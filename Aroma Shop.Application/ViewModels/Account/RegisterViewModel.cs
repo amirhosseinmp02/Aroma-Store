@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Aroma_Shop.Application.ViewModels
+namespace Aroma_Shop.Application.ViewModels.Account
 {
     public class RegisterViewModel
     {
