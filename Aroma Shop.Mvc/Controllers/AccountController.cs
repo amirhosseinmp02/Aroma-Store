@@ -61,6 +61,14 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        [HttpGet("Login")]
+        public IActionResult Login()
+        {
+            if(_accountService.IsUserSignedIn(User))
+                return RedirectToAction("Index", "Home");
+            return View();
+        }
+
         #region CheckingUser&Email
 
         [HttpPost]
