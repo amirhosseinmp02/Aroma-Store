@@ -22,6 +22,6 @@ namespace Aroma_Shop.Application.Interfaces
 
         ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
             string returnUrl);
-        Task<bool> ConfigureExternalLoginsCallBacks(string returnUrl = null, string remoteError = null);
+        Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null);
     }
 }

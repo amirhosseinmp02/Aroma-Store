@@ -94,6 +94,8 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> ExternalLoginsCallBacks
             (string returnUrl = null, string remoteError = null)
         {
+            returnUrl =
+                (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) ? returnUrl : Url.Content("~/"));
 
         }
 

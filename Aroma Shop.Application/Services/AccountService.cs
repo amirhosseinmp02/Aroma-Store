@@ -126,9 +126,49 @@ namespace Aroma_Shop.Application.Services
             return new ChallengeResult(provider, properties);
         }
 
-        public Task<bool> ConfigureExternalLoginsCallBacks(string returnUrl = null, string remoteError = null)
+        public async Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (!string.IsNullOrEmpty(remoteError))
+                    return false;
+                var externalLoginInfo = 
+                    await _signInManager.GetExternalLoginInfoAsync();
+                if (externalLoginInfo == null)
+                    return false;
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
+                    externalLoginInfo.ProviderKey, false, true);
+                if (signInResult.Succeeded)
+                    return true;
+                var email = 
+                    externalLoginInfo.Principal
+                        .FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user =
+                        await _userManager.FindByEmailAsync(email);
+                    if (user == null)
+                    {
+                        var userName = email.Split("@")[0];
+                        user = new CustomIdentityUser()
+                        {
+                            UserName = (userName.Length <= 10 ? userName : userName.Substring(0, 7)),
+                            Email = email,
+                            EmailConfirmed = true
+                        };
+                        await _userManager.CreateAsync(user);
+                    }
+                    await _userManager.AddLoginAsync(user, externalLoginInfo);
+                    await _signInManager.SignInAsync(user, false);
+                    return true;
+                }
+
+                return false;
+            }
+            catch   
+            {
+                return false;
+            }
         }
     }
 }
