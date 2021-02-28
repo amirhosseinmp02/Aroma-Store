@@ -37,10 +37,10 @@ namespace Aroma_Shop.Mvc
             });
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
                 {
-                    options.Password.RequiredUniqueChars = 0;
                     options.User.RequireUniqueEmail = true;
                     options.User.AllowedUserNameCharacters =
                         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
