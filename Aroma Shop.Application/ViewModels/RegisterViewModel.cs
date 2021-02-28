@@ -25,6 +25,7 @@ namespace Aroma_Shop.Application.ViewModels
         public string Password { get; set; }
         [Required(ErrorMessage = "لطفا تکرار کلمه عبور را وارد نمایید")]
         [Compare(nameof(Password),ErrorMessage = "تکرار کلمه عبور با کلمه عبور مطابقت ندارد")]
+        [DataType(DataType.Password)]
         public string RePassword { get; set; }
     }
 }

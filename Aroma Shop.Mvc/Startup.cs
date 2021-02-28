@@ -5,12 +5,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Security.Policy;
-using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.CustomIdentityModels.Translations;
@@ -38,6 +32,12 @@ namespace Aroma_Shop.Mvc
             });
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
                 {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequiredUniqueChars = 0;
                     options.User.RequireUniqueEmail = true;
                     options.User.AllowedUserNameCharacters =
                         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";

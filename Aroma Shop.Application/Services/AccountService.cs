@@ -48,7 +48,7 @@ namespace Aroma_Shop.Application.Services
                 var emailMessage = 
                     await ViewToStringRenderer
                         .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
-                            , $"~/Views/Emails/MyEmailTemplate.cshtml", url);
+                            , $"~/Views/Emails/EmailConfirmationTemplate.cshtml", url);
                 await _emailService.SendEmailAsync(user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
                 return true;
             }
