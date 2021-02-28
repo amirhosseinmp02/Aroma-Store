@@ -80,6 +80,7 @@ namespace Aroma_Shop.Mvc.Controllers
         #region ExternalLogins
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ExternalLogins(string provider, string returnUrl)
         {
             return View();
