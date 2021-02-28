@@ -125,5 +125,10 @@ namespace Aroma_Shop.Application.Services
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
+
+        public Task<bool> ConfigureExternalLoginsCallBacks(string returnUrl = null, string remoteError = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
