@@ -29,6 +29,7 @@ namespace Aroma_Shop.Mvc.Controllers
         }
 
         [HttpPost("Register")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (_accountService.IsUserSignedIn(User))
@@ -65,7 +66,8 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult IsUserNameExist(string userName)
         {
-            return _accountService.IsUserNameExist(userName);
+            var t = _accountService.IsUserNameExist(userName);
+            return t;
         }
 
         [HttpPost]

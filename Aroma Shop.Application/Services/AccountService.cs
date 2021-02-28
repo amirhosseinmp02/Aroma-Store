@@ -36,20 +36,20 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public bool SendEmailConfirmation(CustomIdentityUser user, string returnController, string returnAction)
+        public async Task<bool> SendEmailConfirmation(CustomIdentityUser user, string returnController, string returnAction)
         {
             try
             {
                 var emailConfirmationToken = 
-                    _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
                     new {userName = user.UserName, token = emailConfirmationToken}
                     , _accessor.HttpContext.Request.Scheme);
                 var emailMessage = 
-                    ViewToStringRenderer
+                    await ViewToStringRenderer
                         .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
                             , $"~/Views/Emails/MyEmailTemplate.cshtml", url);
-                _emailService.SendEmailAsync(user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
+                await _emailService.SendEmailAsync(user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
                 return true;
             }
             catch
@@ -58,17 +58,19 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public JsonResult IsUserNameExist(string userName)
+        public async Task<JsonResult> IsUserNameExist(string userName)
         {
-            var user =  _userManager.FindByNameAsync(userName);
+            var user =  
+                await _userManager.FindByNameAsync(userName);
             if (user == null) 
                 return new JsonResult(true);
             return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
         }
 
-        public JsonResult IsEmailExist(string email)
+        public async Task<JsonResult> IsEmailExist(string email)
         {
-            var emaill = _userManager.FindByNameAsync(email);
+            var emaill = 
+                await _userManager.FindByNameAsync(email);
             if (emaill == null)
                 return new JsonResult(true);
             return new JsonResult("امکان استفاده از این ایمیل وجود ندارد");

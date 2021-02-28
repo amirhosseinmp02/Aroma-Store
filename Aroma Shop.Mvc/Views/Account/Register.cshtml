@@ -22,26 +22,31 @@
                     <h3>ثبت نام</h3>
                     <form class="row login_form" asp-action="Register" id="register_form">
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" placeholder="نام کاربری" onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام کاربری'">
+                            <input asp-for="UserName" class="form-control" id="name" placeholder="نام کاربری" onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام کاربری'">
+
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="email" placeholder="ایمیل" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل'">
+                            <input asp-for="Email" class="form-control" id="email" placeholder="ایمیل" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل'">
+
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="password" placeholder="کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'کلمه عبور'">
+                            <input asp-for="Password" class="form-control" id="password" placeholder="کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'کلمه عبور'">
+                            
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="confirmPassword" placeholder="تکرار کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'تکرار کلمه عبور'">
+                            <input asp-for="RePassword" class="form-control" id="confirmPassword" placeholder="تکرار کلمه عبور" onfocus="this.placeholder = ''" onblur="this.placeholder = 'تکرار کلمه عبور'">
+                            
                         </div>
                         <div class="col-md-12 form-group">
                             <div class="creat_account rememberme">
                                 <label for="f-option2">مرا بخاطر بسپار</label>
-                                <input type="checkbox" id="f-option2" name="selector">
+                                <input asp-for="RememberMe" />
                             </div>
                         </div>
                         <div class="col-md-12 form-group">
                             <button type="submit" class="button button-register w-100">ثبت نام</button>
                         </div>
+                        <div class="alert alert-danger w-100 text-left mt-2 ml-3" role="alert" asp-validation-summary="All"></div>
                     </form>
                 </div>
             </div>

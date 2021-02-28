@@ -13,8 +13,8 @@ namespace Aroma_Shop.Application.Interfaces
     {
         bool IsUserSignedIn(ClaimsPrincipal user);
         Task<IdentityResult> CreateUser(CustomIdentityUser user, string password);
-        bool SendEmailConfirmation(CustomIdentityUser user,string controllerName,string actionName);
-        JsonResult IsUserNameExist(string userName);
-        JsonResult IsEmailExist(string email);
+        Task<bool> SendEmailConfirmation(CustomIdentityUser user,string controllerName,string actionName);
+        Task<JsonResult> IsUserNameExist(string userName);
+        Task<JsonResult> IsEmailExist(string email);
     }
 }

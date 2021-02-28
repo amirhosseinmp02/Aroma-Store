@@ -4822,3 +4822,23 @@ a {
 .rememberme {
     text-align: right !important
 }
+.field-validation-error {
+    color: #e80c4d;
+    font-weight: bold;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border-bottom: 1px solid #e80c4d !important;
+}
+
+.validation-summary-errors {
+    display: block
+}
+
+.validation-summary-valid {
+    display: none;
+}  
