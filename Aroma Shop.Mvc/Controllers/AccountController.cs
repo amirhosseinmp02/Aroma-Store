@@ -64,17 +64,16 @@ namespace Aroma_Shop.Mvc.Controllers
         #region CheckingUser&Email
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult IsUserNameExist(string userName)
+        public async Task<IActionResult> IsUserNameExist(string userName)
         {
-            var t = _accountService.IsUserNameExist(userName);
-            return t;
+            return await _accountService.IsUserNameExist(userName);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult IsEmailExist(string email)
+        public async Task<IActionResult> IsEmailExist(string email)
         {
-            return _accountService.IsEmailExist(email);
+            return await _accountService.IsEmailExist(email);
         }
         #endregion
     }
