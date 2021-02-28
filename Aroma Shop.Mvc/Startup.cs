@@ -26,10 +26,6 @@ namespace Aroma_Shop.Mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContextPool<AppDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("AromaAppDBConnection"));
-            });
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -46,6 +42,17 @@ namespace Aroma_Shop.Mvc
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders()
                 .AddErrorDescriber<PersianIdentityErrorDescriber>();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Login";
+                options.LogoutPath = "/LogOut";
+            });
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "765998609051-j257eigqecb9oud7b6evtde9thuikul1.apps.googleusercontent.com";
+                    options.ClientSecret = "MheK94NpxwDrmVQwBuFYfk9t";
+                });
             RegisterServices(services);
         }
 
