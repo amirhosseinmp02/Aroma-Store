@@ -75,6 +75,15 @@ namespace Aroma_Shop.Mvc.Controllers
         }
 
 
+        #endregion
+
+        #region ExternalLogins
+
+        [HttpPost]
+        public IActionResult ExternalLogins(string provider, string returnUrl)
+        {
+            return View();
+        }
 
         #endregion
 
