@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Account;
@@ -59,16 +60,16 @@ namespace Aroma_Shop.Mvc.Controllers
         #endregion
 
         [HttpGet("Login")]
-        public IActionResult Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string returnUrl = null)
         {
             if(_accountService.IsUserSignedIn(User))
                 return RedirectToAction("Index", "Home");
             var model = new LoginViewModel()
             {
                 ReturnUrl = returnUrl,
-                ExternalsLogins = 
-            }
-            return View();
+                ExternalsLogins = (await _accountService.GetExternalAuthentications()).ToList()
+            };
+            return View(model);
         }
 
         #region CheckingUser&Email
