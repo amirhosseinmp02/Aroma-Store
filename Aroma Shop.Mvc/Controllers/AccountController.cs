@@ -59,10 +59,15 @@ namespace Aroma_Shop.Mvc.Controllers
         #endregion
 
         [HttpGet("Login")]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
             if(_accountService.IsUserSignedIn(User))
                 return RedirectToAction("Index", "Home");
+            var model = new LoginViewModel()
+            {
+                ReturnUrl = returnUrl,
+                ExternalsLogins = 
+            }
             return View();
         }
 

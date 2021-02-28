@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,5 +18,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> EmailConfirmation(string email, string token);
         Task<JsonResult> IsUserNameExist(string userName);
         Task<JsonResult> IsEmailExist(string email);
+        Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications();
     }
 }
