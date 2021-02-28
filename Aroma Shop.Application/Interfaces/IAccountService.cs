@@ -19,5 +19,8 @@ namespace Aroma_Shop.Application.Interfaces
         Task<JsonResult> IsUserNameExist(string userName);
         Task<JsonResult> IsEmailExist(string email);
         Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications();
+
+        ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
+            string returnUrl);
     }
 }
