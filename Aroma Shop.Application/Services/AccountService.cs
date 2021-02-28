@@ -112,5 +112,18 @@ namespace Aroma_Shop.Application.Services
                 await _signInManager.GetExternalAuthenticationSchemesAsync();
             return externalLogins;
         }
+
+        public ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName, string returnUrl)
+        {
+            var redirectUrl =
+                _linkGenerator
+                    .GetUriByAction
+                    (_accessor.HttpContext
+                        , actionName, controllerName
+                        , new {returnurl = returnUrl}
+                        , _accessor.HttpContext.Request.Scheme);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
     }
 }
