@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Domain.Interfaces;
-using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Application.Services
 {

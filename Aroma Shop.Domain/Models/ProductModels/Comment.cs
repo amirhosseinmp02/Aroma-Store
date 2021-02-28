@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Aroma_Shop.Domain.Models
+namespace Aroma_Shop.Domain.Models.ProductModels
 {
     public class Comment
     {

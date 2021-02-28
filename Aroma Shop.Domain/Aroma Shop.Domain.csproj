@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\CustomIdentityModels\Translations\**" />
+    <EmbeddedResource Remove="Models\CustomIdentityModels\Translations\**" />
+    <None Remove="Models\CustomIdentityModels\Translations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
   </ItemGroup>

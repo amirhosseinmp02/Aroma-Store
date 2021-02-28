@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
-using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aroma_Shop.Data.Repositories

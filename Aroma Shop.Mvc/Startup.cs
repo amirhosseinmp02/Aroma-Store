@@ -12,7 +12,7 @@ using System.Net.Mime;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
-using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

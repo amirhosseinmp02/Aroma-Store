@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Aroma_Shop.Domain.Models;
+﻿using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
