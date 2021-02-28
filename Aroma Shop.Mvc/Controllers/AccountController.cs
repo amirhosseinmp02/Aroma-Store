@@ -91,6 +91,12 @@ namespace Aroma_Shop.Mvc.Controllers
             return result;
         }
 
+        public async Task<IActionResult> ExternalLoginsCallBacks
+            (string returnUrl = null, string remoteError = null)
+        {
+
+        }
+
         #endregion
 
         #region CheckingUser&Email
