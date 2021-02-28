@@ -47,7 +47,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 {
                     var emailConfirmation = 
                         _accountService
-                            .SendEmailConfirmation(user, "Account", "");
+                            .SendEmailConfirmation(user, "Account", "EmailConfirmation");
                     return RedirectToAction("Index", "Home");
                 }
                 foreach (var item in result.Errors)
@@ -62,6 +62,7 @@ namespace Aroma_Shop.Mvc.Controllers
         #endregion
 
         #region CheckingUser&Email
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IsUserNameExist(string userName)
@@ -75,6 +76,19 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             return await _accountService.IsEmailExist(email);
         }
+
+        #endregion
+
+        #region EmailConfirmation
+
+        public async Task<IActionResult> EmailConfirmation(string email, string token)
+        {
+            var result = await _accountService.EmailConfirmation(email, token);
+            if (result)
+                return View();
+            return NotFound();
+        }
+
         #endregion
     }
 }
