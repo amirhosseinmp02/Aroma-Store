@@ -14,6 +14,7 @@ namespace Aroma_Shop.Application.Interfaces
         bool IsUserSignedIn(ClaimsPrincipal user);
         Task<IdentityResult> CreateUser(CustomIdentityUser user, string password);
         Task<bool> SendEmailConfirmation(CustomIdentityUser user,string controllerName,string actionName);
+        Task<bool> EmailConfirmation(string email, string token);
         Task<JsonResult> IsUserNameExist(string userName);
         Task<JsonResult> IsEmailExist(string email);
     }

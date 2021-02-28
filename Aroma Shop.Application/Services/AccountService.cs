@@ -43,13 +43,33 @@ namespace Aroma_Shop.Application.Services
                 var emailConfirmationToken = 
                     await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
-                    new {userName = user.UserName, token = emailConfirmationToken}
+                    new {email = user.Email, token = emailConfirmationToken}
                     , _accessor.HttpContext.Request.Scheme);
                 var emailMessage = 
                     await ViewToStringRenderer
                         .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
                             , $"~/Views/Emails/EmailConfirmationTemplate.cshtml", url);
                 await _emailService.SendEmailAsync(user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> EmailConfirmation(string email, string token)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+                    return false;
+                var user = 
+                    await _userManager.FindByNameAsync(email);
+                if (user == null) 
+                    return false;
+                var result = 
+                    await _userManager.ConfirmEmailAsync(user, token);
                 return true;
             }
             catch
