@@ -4843,5 +4843,6 @@ input.input-validation-error {
     display: none;
 }
 .successregister {
-    margin-top: 17vh
+    margin-top: 5vh;
+    background: #ffffff
 }

@@ -47,7 +47,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 {
                     var emailConfirmation = 
                         _accountService
-                            .SendEmailConfirmation(user, "Account", "EmailConfirmation");
+                            .SendEmailConfirmation(user,"Account", "EmailConfirmation");
                     return RedirectToAction("Index", "Home");
                 }
                 foreach (var item in result.Errors)
@@ -83,7 +83,8 @@ namespace Aroma_Shop.Mvc.Controllers
 
         public async Task<IActionResult> EmailConfirmation(string email, string token)
         {
-            var result = await _accountService.EmailConfirmation(email, token);
+            var result = 
+                await _accountService.EmailConfirmation(email, token);
             if (result)
                 return View();
             return NotFound();

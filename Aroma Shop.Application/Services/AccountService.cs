@@ -65,11 +65,13 @@ namespace Aroma_Shop.Application.Services
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
                     return false;
                 var user = 
-                    await _userManager.FindByNameAsync(email);
+                    await _userManager.FindByEmailAsync(email);
                 if (user == null) 
                     return false;
                 var result = 
                     await _userManager.ConfirmEmailAsync(user, token);
+                if (!result.Succeeded)
+                    return false;
                 return true;
             }
             catch
