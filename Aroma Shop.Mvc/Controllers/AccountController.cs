@@ -83,7 +83,12 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogins(string provider, string returnUrl)
         {
-            return View();
+            var result = 
+                _accountService
+                    .ConfigureExternalLogins
+                        (provider, "Account"
+                        , "ExternalLoginsCallBacks", returnUrl);
+            return result;
         }
 
         #endregion
