@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -23,5 +24,6 @@ namespace Aroma_Shop.Application.Interfaces
         ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
             string returnUrl);
         Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null);
+        Task<bool> LoginWithPassword(LoginViewModel vm);
     }
 }
