@@ -21,7 +21,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("Register")]
         public IActionResult Register()
         {
-            if(_accountService.IsUserSignedIn(User))
+            if (_accountService.IsUserSignedIn(User))
                 return RedirectToAction("Index", "Home");
             return View();
         }
@@ -39,13 +39,13 @@ namespace Aroma_Shop.Mvc.Controllers
                     UserName = model.UserName,
                     Email = model.Email
                 };
-                var result = 
+                var result =
                     await _accountService.CreateUser(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var emailConfirmation = 
+                    var emailConfirmation =
                         _accountService
-                            .SendEmailConfirmation(user,"Account", "EmailConfirmation");
+                            .SendEmailConfirmation(user, "Account", "EmailConfirmation");
                     return RedirectToAction("Index", "Home");
                 }
                 foreach (var item in result.Errors)
@@ -64,7 +64,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("Login")]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            if(_accountService.IsUserSignedIn(User))
+            if (_accountService.IsUserSignedIn(User))
                 return RedirectToAction("Index", "Home");
             var model = new LoginViewModel()
             {
@@ -83,8 +83,17 @@ namespace Aroma_Shop.Mvc.Controllers
                 return RedirectToAction("Index", "Home");
             if (ModelState.IsValid)
             {
-
+                var result = await _accountService.LoginWithPassword(model);
+                if (result)
+                {
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                        return Redirect(returnUrl);
+                    return RedirectToAction("Index", "Home");
+                }
             }
+            model.ReturnUrl = returnUrl;
+            model.ExternalsLogins = (await _accountService.GetExternalAuthentications()).ToList();
+            ModelState.AddModelError("", "نام کاربری یا رمز عبور اشتباه است.");
             return View(model);
         }
         #endregion
@@ -95,7 +104,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogins(string provider, string returnUrl)
         {
-            var result = 
+            var result =
                 _accountService
                     .ConfigureExternalLogins
                         (provider, "Account"
@@ -108,7 +117,7 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             returnUrl =
                 (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) ? returnUrl : Url.Content("~/"));
-            var result = 
+            var result =
                 await _accountService
                     .ConfigureExternalLoginsCallBacks(remoteError);
             if (result)
@@ -140,7 +149,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
         public async Task<IActionResult> EmailConfirmation(string email, string token)
         {
-            var result = 
+            var result =
                 await _accountService.EmailConfirmation(email, token);
             if (result)
                 return View();

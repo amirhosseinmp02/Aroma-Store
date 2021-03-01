@@ -42,20 +42,21 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var emailConfirmationToken = 
+                var emailConfirmationToken =
                     await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
                     new {email = user.Email, token = emailConfirmationToken}
                     , _accessor.HttpContext.Request.Scheme);
-                var emailMessage = 
+                var emailMessage =
                     await ViewToStringRenderer
                         .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
                             , $"~/Views/Emails/EmailConfirmationTemplate.cshtml", url);
                 await _emailService.SendEmailAsync(user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
