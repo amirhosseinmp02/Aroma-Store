@@ -74,7 +74,19 @@ namespace Aroma_Shop.Mvc.Controllers
             return View(model);
         }
 
+        [HttpPost("Login")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login
+            (LoginViewModel model, string returnUrl = null)
+        {
+            if (_accountService.IsUserSignedIn(User))
+                return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
 
+            }
+            return View(model);
+        }
         #endregion
 
         #region ExternalLogins
