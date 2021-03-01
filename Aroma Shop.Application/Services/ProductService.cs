@@ -19,19 +19,19 @@ namespace Aroma_Shop.Application.Services
             return _productRepository.GetProduct(productId);
         }
 
+        public IEnumerable<Product> GetProducts()
+        {
+            return _productRepository.GetProducts();
+        }
+
         public IEnumerable<Category> GetCategories()
         {
-            throw new System.NotImplementedException();
+            return _productRepository.GetCategories();
         }
 
         public Category GetCategory(int categoryId)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public IEnumerable<Product> GetProducts()
-        {
-            return _productRepository.GetProducts();
+            return _productRepository.GetCategory(categoryId);
         }
     }
 }
