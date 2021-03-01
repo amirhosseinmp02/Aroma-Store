@@ -47,7 +47,11 @@ namespace Aroma_Shop.Data.Repositories
 
         public Category GetCategory(int categoryId)
         {
-            throw new NotImplementedException();
+            var category = _context.Categories
+                .Include(p => p.ParentCategory)
+                .Include(p => p.ChildrenCategories)
+                .SingleOrDefault(p => p.CategoryId == categoryId);
+            return category;
         }
     }
 }
