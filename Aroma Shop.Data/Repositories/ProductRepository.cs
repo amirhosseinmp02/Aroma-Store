@@ -39,7 +39,10 @@ namespace Aroma_Shop.Data.Repositories
 
         public IEnumerable<Category> GetCategories()
         {
-            throw new NotImplementedException();
+            var categories = _context.Categories
+                .Include(p => p.ParentCategory)
+                .Include(p => p.ChildrenCategories);
+            return categories;
         }
 
         public Category GetCategory(int categoryId)
