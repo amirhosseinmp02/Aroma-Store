@@ -23,5 +23,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var model = _productService.GetProducts();
             return View(model);
         }
+
+
     }
 }

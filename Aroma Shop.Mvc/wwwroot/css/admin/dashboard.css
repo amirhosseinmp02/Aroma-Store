@@ -117,3 +117,7 @@ body {
 .admin-products {
     max-width: 100px
 }
+
+.cart-item-cells {
+    text-align: center
+}
