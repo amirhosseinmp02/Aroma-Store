@@ -36,5 +36,15 @@ namespace Aroma_Shop.Data.Repositories
                 .SingleOrDefault(p => p.ProductId == productId);
             return product;
         }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Category GetCategory(int categoryId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
