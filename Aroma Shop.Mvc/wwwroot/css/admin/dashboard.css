@@ -119,5 +119,5 @@ body {
 }
 
 .cart-item-cells {
-    text-align: center
+    text-align: center !important
 }
