@@ -7,6 +7,7 @@ using Aroma_Shop.Application.Interfaces;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -16,7 +17,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             _productService = productService;
         }
 
-        [HttpGet("/Products")]
+        [HttpGet("/Admin/Products")]
         public IActionResult Index()
         {
             var model = _productService.GetProducts();
