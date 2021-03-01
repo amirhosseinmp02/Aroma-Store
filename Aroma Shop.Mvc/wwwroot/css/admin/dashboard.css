@@ -108,3 +108,8 @@ body {
         font-size: 3.5rem;
     }
 }
+
+.dropdown-container {
+    display: none;
+    margin-right: 25px
+}
