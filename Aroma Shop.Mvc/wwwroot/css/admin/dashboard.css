@@ -113,3 +113,7 @@ body {
     display: none;
     margin-right: 25px
 }
+
+.admin-products {
+    max-width: 100px
+}
