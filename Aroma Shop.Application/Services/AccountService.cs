@@ -6,6 +6,7 @@ using Aroma_Shop.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -166,6 +167,26 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
             catch   
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> LoginWithPassword(LoginViewModel vm)
+        {
+            try
+            {
+                var user = 
+                    await _userManager.FindByEmailAsync(vm.Email);
+                var result =
+                    await _signInManager.PasswordSignInAsync
+                    (user.UserName, vm.Password
+                        , vm.RememberMe,false);
+                if (result.Succeeded)
+                    return true;
+                return false;
+            }
+            catch
             {
                 return false;
             }
