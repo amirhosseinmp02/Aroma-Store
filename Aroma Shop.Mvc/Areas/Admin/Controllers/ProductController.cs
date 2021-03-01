@@ -24,6 +24,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(model);
         }
 
-
+        [HttpGet("/Admin/Products/Categories")]
+        public IActionResult Categories()
+        {
+            var model = _productService.GetProducts();
+            return View(model);
+        }
     }
 }

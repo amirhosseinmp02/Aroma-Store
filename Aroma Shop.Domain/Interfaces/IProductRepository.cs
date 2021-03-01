@@ -7,5 +7,8 @@ namespace Aroma_Shop.Domain.Interfaces
     {
         IEnumerable<Product> GetProducts();
         Product GetProduct(int productId);
+
+        IEnumerable<Category> GetCategories();
+        Category GetCategory(int categoryId);
     }
 }
