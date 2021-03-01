@@ -1,4 +1,5 @@
-﻿using Aroma_Shop.Ioc;
+﻿using System.Threading.Tasks;
+using Aroma_Shop.Ioc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -54,8 +55,8 @@ namespace Aroma_Shop.Mvc
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "765998609051-j257eigqecb9oud7b6evtde9thuikul1.apps.googleusercontent.com";
-                    options.ClientSecret = "MheK94NpxwDrmVQwBuFYfk9t";
+                    options.ClientId = "168190188156-bl2bbkcna0bgd8f8s2ih1mhps80dogbc.apps.googleusercontent.com";
+                    options.ClientSecret = "5JhPg-OAJDEXQwm8v-fwbYrU";
                 });
             RegisterServices(services);
         }
@@ -74,13 +75,7 @@ namespace Aroma_Shop.Mvc
                 app.UseHsts();
             }
 
-            app.Use(async (context, next) =>
-            {
-                await next();
-                if (context.Response.StatusCode == 404)
-                    context.Request.Path = "/ManageErrors/Error404";
-                await next();
-            });
+            app.UseStatusCodePagesWithReExecute("/ManageErrors/Error{0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
