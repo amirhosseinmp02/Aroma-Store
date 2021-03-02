@@ -31,10 +31,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpGet("/Admin/Products/CreateCategory")]
-        public IActionResult CreateCategory()
+        [HttpGet("/Admin/Products/AddCategory")]
+        public IActionResult AddCategory()
         {
-            return View("");
+            return View();
         }
     }
 }
