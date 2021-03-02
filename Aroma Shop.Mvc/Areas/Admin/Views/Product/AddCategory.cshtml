@@ -1,4 +1,4 @@
-﻿@model Aroma_Shop.Domain.Models.ProductModels.Category
+﻿@model Aroma_Shop.Application.ViewModels.Product.AddCategoryViewModel
 
 @{
     ViewData["Title"] = "افزودن دسته بندی";
@@ -15,13 +15,21 @@
 
             <div class="form-group">
                 <label class="control-label" for="CategoryName">نام</label>
-                <input class="form-control" asp-for="CategoryName">
+                <input class="form-control" asp-for="@Model.Category.CategoryName">
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">توضیحات</label>
-                <textarea class="form-control" asp-for="CategoryDescription"></textarea>
+                <textarea class="form-control" asp-for="@Model.Category.CategoryDescription"></textarea>
                 <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <select class="form-control">
+                    <option>منو تست</option>
+                    <option>منو تست</option>
+                    <option>منو تست</option>
+                    <option>&nbsp;&nbsp;منو تست</option>
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
