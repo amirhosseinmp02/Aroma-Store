@@ -13,6 +13,7 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
+        bool UpdateCategory(Category category);
         bool DeleteCategory(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView(IEnumerable<Category> categories);
     }
