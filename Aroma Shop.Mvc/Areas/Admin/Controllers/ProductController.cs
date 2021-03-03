@@ -106,6 +106,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost("/Admin/Products/EditCategory")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditCategory(AddEditCategoryViewModel model)
+        {
+            
+        }
+
         #endregion
 
         #region DeleteCategory
