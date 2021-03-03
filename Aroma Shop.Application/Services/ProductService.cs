@@ -74,5 +74,10 @@ namespace Aroma_Shop.Application.Services
             }
             return items;
         }
+
+        public bool AddCategory(Category category)
+        {
+            return _productRepository.AddCategory(category);
+        }
     }
 }
