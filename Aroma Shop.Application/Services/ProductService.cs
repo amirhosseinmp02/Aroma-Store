@@ -65,6 +65,26 @@ namespace Aroma_Shop.Application.Services
 
         }
 
+        public bool UpdateCategory(AddEditCategoryViewModel categoryViewModel)
+        {
+            try
+            {
+                var parentCategory = GetCategory((int)categoryViewModel.ParentCategoryId);
+                var category = new Category()
+                {
+                    CategoryName = categoryViewModel.CategoryName,
+                    CategoryDescription = categoryViewModel.CategoryDescription,
+                    ParentCategory = parentCategory
+                };
+                _productRepository.UpdateCategory(category);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool DeleteCategory(int categoryId)
         {
             try
