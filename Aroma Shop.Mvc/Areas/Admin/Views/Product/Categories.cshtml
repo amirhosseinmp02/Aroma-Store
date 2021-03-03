@@ -26,7 +26,7 @@
             <td class="align-middle">
                 <div class="admin-products-actions">
                     <a class="btn text-light btn-primary" asp-route-Id="@category.CategoryId">ویرایش</a>
-                    <a class="btn text-light btn-primary" asp-route-categoryId="@category.CategoryId">حذف</a>
+                    <a class="btn text-light btn-primary" asp-action="DeleteCategory" asp-route-categoryId="@category.CategoryId">حذف</a>
                 </div>
             </td>
         </tr>
