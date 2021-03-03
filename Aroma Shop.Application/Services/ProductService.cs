@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -75,8 +76,15 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public bool AddCategory(Category category)
+        public bool AddCategory(AddCategoryViewModel categoryViewModel)
         {
+            var category = new Category()
+            {
+                CategoryName = categoryViewModel.CategoryName,
+                CategoryDescription = categoryViewModel.CategoryDescription
+            };
+            category.ParentCategory.CategoryId = categoryViewModel.ParentCategoryId;
+            var result = _productRepository.AddCategory(category);
             return _productRepository.AddCategory(category);
         }
     }
