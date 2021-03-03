@@ -61,6 +61,11 @@ namespace Aroma_Shop.Data.Repositories
             _context.Add(category);
         }
 
+        public void UpdateCategory(Category category)
+        {
+            _context.Update(category);
+        }
+
         public void DeleteCategory(int categoryId)
         {
             var category = GetCategory(categoryId);
