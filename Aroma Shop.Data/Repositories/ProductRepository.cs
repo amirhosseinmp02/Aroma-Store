@@ -41,7 +41,9 @@ namespace Aroma_Shop.Data.Repositories
         {
             var categories = _context.Categories
                 .Include(p => p.ParentCategory)
-                .Include(p => p.ChildrenCategories);
+                .Include(p => p.ChildrenCategories)
+                .ThenInclude(p=>p.ChildrenCategories).ThenInclude(p=>p.ChildrenCategories)
+                .ThenInclude(p=>p.ChildrenCategories).ThenInclude(p=>p.ChildrenCategories);
             return categories;
         }
 

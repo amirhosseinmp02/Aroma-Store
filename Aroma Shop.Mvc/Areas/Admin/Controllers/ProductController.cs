@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
+using Aroma_Shop.Domain.Models.ProductModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
@@ -35,9 +37,9 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddCategory")]
         public IActionResult AddCategory()
         {
-            var model = new AddCategoryViewModel
+            var model = new AddCategoryViewModel()
             {
-                AllCategories = _productService.GetCategories()
+                AllCategories = _productService.GetCategoriesTreeView(_productService.GetCategories())
             };
             return View(model);
         }
