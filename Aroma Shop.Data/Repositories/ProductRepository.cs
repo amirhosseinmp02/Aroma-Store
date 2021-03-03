@@ -65,6 +65,20 @@ namespace Aroma_Shop.Data.Repositories
         {
             var category = GetCategory(categoryId);
             _context.Remove(category);
+            if (category.ChildrenCategories.Count != 0)
+            {
+                ChildrenCategoriesScrolling(category.ChildrenCategories);
+                void ChildrenCategoriesScrolling(IEnumerable<Category> children)
+                {
+                    foreach (var child in children)
+                    {
+                        _context.Remove(child);
+                        var temp = GetCategory(child.CategoryId);
+                        if(temp.ChildrenCategories.Count != 0)
+                            ChildrenCategoriesScrolling(temp.ChildrenCategories);
+                    }
+                }
+            }
         }
 
         public void Save()
