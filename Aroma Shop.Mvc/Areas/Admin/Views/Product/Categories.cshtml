@@ -26,7 +26,32 @@
             <td class="align-middle">
                 <div class="admin-products-actions">
                     <a class="btn text-light btn-primary" asp-route-Id="@category.CategoryId">ویرایش</a>
-                    <a class="btn text-light btn-primary" asp-action="DeleteCategory" asp-route-categoryId="@category.CategoryId">حذف</a>
+                    <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(category.CategoryId)" >حذف</button>
+                    <div class="modal fade" id="deletemodal@(category.CategoryId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(category.CategoryId)" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h5 class="modal-title text-center" id="deletemodalLabel">حذف دسته بندی</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h1 class="text-info">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                            <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                    </h1>
+                                    <p class="lead">آیا از حذف دسته بندی <span class="text-warning">@category.CategoryName</span> مطمئن هستید ؟</p>
+                                    <p class="text-info">تمامی دسته های فرزند حذف خواهند شد</p>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <a type="button" class="btn btn-danger" asp-action="DeleteCategory" asp-route-categoryId="@category.CategoryId">حذف</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </td>
         </tr>

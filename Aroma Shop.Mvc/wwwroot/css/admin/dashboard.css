@@ -130,15 +130,15 @@ ul {
 
 .field-validation-error {
     color: #e80c4d;
-    font-weight: bold;
+    font-weight: bold
 }
 
 .field-validation-valid {
-    display: none;
+    display: none
 }
 
 input.input-validation-error {
-    border: 1px solid #e80c4d !important;
+    border: 1px solid #e80c4d !important
 }
 
 .validation-summary-errors {
@@ -146,5 +146,12 @@ input.input-validation-error {
 }
 
 .validation-summary-valid {
-    display: none;
+    display: none
+}
+
+.rtl .modal-header .close {
+    margin: unset !important;
+    position: absolute;
+    top: 5px;
+    left: 5px
 }
