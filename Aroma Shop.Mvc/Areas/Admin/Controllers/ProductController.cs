@@ -110,7 +110,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditCategory(AddEditCategoryViewModel model)
         {
-            
+            if (ModelState.IsValid)
+            {
+                
+            }
+
+            return View();
         }
 
         #endregion
