@@ -61,6 +61,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             {
 
             }
+            model = new AddCategoryViewModel()
+            {
+                AllCategories = _productService.GetCategoriesTreeView(_productService.GetCategories())
+            };
             return View(model);
         }
 

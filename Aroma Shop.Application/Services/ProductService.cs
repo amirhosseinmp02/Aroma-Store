@@ -47,7 +47,7 @@ namespace Aroma_Shop.Application.Services
             {
                 foreach (var parent in parents)
                 {
-                    items.Add(new SelectListItem(new string('─', count) + $" {parent.CategoryName}", parent.CategoryId.ToString()));
+                    items.Add(new SelectListItem(new string('─', count*2) + $" {parent.CategoryName}", parent.CategoryId.ToString()));
                     if (parent.ChildrenCategories.Count != 0)
                     {
                         ++count;
@@ -60,7 +60,7 @@ namespace Aroma_Shop.Application.Services
             {
                 foreach (var child in children)
                 {
-                    items.Add(new SelectListItem(new string('─', counter) + $" {child.CategoryName}", child.CategoryId.ToString()));
+                    items.Add(new SelectListItem(new string('─', counter*2) + $" {child.CategoryName}", child.CategoryId.ToString()));
                     if (child.ChildrenCategories.Count != 0)
                     {
                         ++counter;
