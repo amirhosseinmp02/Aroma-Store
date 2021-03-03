@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Application.ViewModels.Product
 {
-    public class AddCategoryViewModel
+    public class AddEditCategoryViewModel
     {
         [MaxLength(100, ErrorMessage = "حداکثر 100 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا نام دسته را وارد نمایید")]

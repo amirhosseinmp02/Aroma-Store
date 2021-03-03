@@ -48,7 +48,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult AddCategory()
         {
             var categories = _productService.GetCategories();
-            var model = new AddCategoryViewModel()
+            var model = new AddEditCategoryViewModel()
             {
                 AllCategories = _productService.GetCategoriesTreeView(categories)
             };
@@ -57,7 +57,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/AddCategory")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddCategory(AddCategoryViewModel model)
+        public IActionResult AddCategory(AddEditCategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 {
                     ModelState.Clear();
                     var newCategories = _productService.GetCategories();
-                    model = new AddCategoryViewModel()
+                    model = new AddEditCategoryViewModel()
                     {
                         AllCategories = _productService.GetCategoriesTreeView(newCategories)
                     };

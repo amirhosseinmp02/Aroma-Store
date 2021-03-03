@@ -38,7 +38,7 @@ namespace Aroma_Shop.Application.Services
             return _productRepository.GetCategory(categoryId);
         }
 
-        public bool AddCategory(AddCategoryViewModel categoryViewModel)
+        public bool AddCategory(AddEditCategoryViewModel categoryViewModel)
         {
             try
             {
