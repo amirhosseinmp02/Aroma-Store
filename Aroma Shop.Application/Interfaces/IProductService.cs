@@ -11,6 +11,7 @@ namespace Aroma_Shop.Application.Interfaces
         Product GetProduct(int productId);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
+        bool AddCategory(Category category);
         IEnumerable<SelectListItem> GetCategoriesTreeView(IEnumerable<Category> categories);
     }
 }
