@@ -55,5 +55,18 @@ namespace Aroma_Shop.Data.Repositories
                 .SingleOrDefault(p => p.CategoryId == categoryId);
             return category;
         }
+
+        public bool AddCategory(Category category)
+        {
+            try
+            {
+                _context.Add(category);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
