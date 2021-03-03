@@ -11,6 +11,7 @@ namespace Aroma_Shop.Domain.Interfaces
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         void AddCategory(Category category);
+        void DeleteCategory(int categoryId);
         void Save();
     }
 }
