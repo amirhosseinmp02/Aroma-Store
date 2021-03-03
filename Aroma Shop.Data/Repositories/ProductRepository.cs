@@ -68,5 +68,10 @@ namespace Aroma_Shop.Data.Repositories
                 return false;
             }
         }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
     }
 }
