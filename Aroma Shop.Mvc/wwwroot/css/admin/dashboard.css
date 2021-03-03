@@ -132,7 +132,7 @@ body {
 }
 
 input.input-validation-error {
-    border-bottom: 1px solid #e80c4d !important;
+    border: 1px solid #e80c4d !important;
 }
 
 .validation-summary-errors {

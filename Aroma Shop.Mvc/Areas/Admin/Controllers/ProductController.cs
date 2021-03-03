@@ -47,9 +47,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddCategory")]
         public IActionResult AddCategory()
         {
+            var categories = _productService.GetCategories();
             var model = new AddCategoryViewModel()
             {
-                AllCategories = _productService.GetCategoriesTreeView(_productService.GetCategories())
+                AllCategories = _productService.GetCategoriesTreeView(categories)
             };
             return View(model);
         }
@@ -61,10 +62,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             {
 
             }
-            model = new AddCategoryViewModel()
-            {
-                AllCategories = _productService.GetCategoriesTreeView(_productService.GetCategories())
-            };
+            var categories = _productService.GetCategories();
+            model.AllCategories = _productService.GetCategoriesTreeView(categories);
             return View(model);
         }
 
