@@ -38,6 +38,43 @@ namespace Aroma_Shop.Application.Services
             return _productRepository.GetCategory(categoryId);
         }
 
+        public bool AddCategory(AddCategoryViewModel categoryViewModel)
+        {
+            try
+            {
+                var category = new Category()
+                {
+                    CategoryName = categoryViewModel.CategoryName,
+                    CategoryDescription = categoryViewModel.CategoryDescription
+                };
+                var parentCategory =
+                    _productRepository
+                        .GetCategory(categoryViewModel.ParentCategoryId);
+                category.ParentCategory = parentCategory;
+                _productRepository.AddCategory(category);
+                _productRepository.Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public bool DeleteCategory(int categoryId)
+        {
+            try
+            {
+                _productRepository.DeleteCategory(categoryId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<SelectListItem> GetCategoriesTreeView(IEnumerable<Category> categories)
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -75,30 +112,6 @@ namespace Aroma_Shop.Application.Services
                 }
             }
             return items;
-        }
-
-        public bool AddCategory(AddCategoryViewModel categoryViewModel)
-        {
-            try
-            {
-                var category = new Category()
-                {
-                    CategoryName = categoryViewModel.CategoryName,
-                    CategoryDescription = categoryViewModel.CategoryDescription
-                };
-                var parentCategory =
-                    _productRepository
-                        .GetCategory(categoryViewModel.ParentCategoryId);
-                category.ParentCategory = parentCategory;
-                _productRepository.AddCategory(category);
-                _productRepository.Save();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-            
         }
     }
 }
