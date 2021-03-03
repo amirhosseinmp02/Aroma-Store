@@ -20,6 +20,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             _productService = productService;
         }
 
+        #region ShowProducts
+
         [HttpGet("/Admin/Products")]
         public IActionResult Index()
         {
@@ -27,12 +29,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(model);
         }
 
+        #endregion
+
+        #region ShowCategories
+
         [HttpGet("/Admin/Products/Categories")]
         public IActionResult Categories()
         {
             var model = _productService.GetCategories();
             return View(model);
         }
+
+        #endregion
+
+        #region AddCategory
 
         [HttpGet("/Admin/Products/AddCategory")]
         public IActionResult AddCategory()
@@ -43,5 +53,18 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             };
             return View(model);
         }
+
+        [HttpPost("/Admin/Products/AddCategory")]
+        public IActionResult AddCategory(AddCategoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+            return View(model);
+        }
+
+        #endregion
+
     }
 }
