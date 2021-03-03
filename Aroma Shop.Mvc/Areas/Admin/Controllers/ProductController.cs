@@ -56,11 +56,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         [HttpPost("/Admin/Products/AddCategory")]
+        [ValidateAntiForgeryToken]
         public IActionResult AddCategory(AddCategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
-
+                var result = _productService.AddCategory(model);
+                
             }
             var categories = _productService.GetCategories();
             model.AllCategories = _productService.GetCategoriesTreeView(categories);

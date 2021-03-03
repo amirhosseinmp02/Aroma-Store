@@ -56,17 +56,9 @@ namespace Aroma_Shop.Data.Repositories
             return category;
         }
 
-        public bool AddCategory(Category category)
+        public void AddCategory(Category category)
         {
-            try
-            {
-                _context.Add(category);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            _context.Add(category);
         }
 
         public void Save()

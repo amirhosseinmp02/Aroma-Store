@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
@@ -78,14 +79,26 @@ namespace Aroma_Shop.Application.Services
 
         public bool AddCategory(AddCategoryViewModel categoryViewModel)
         {
-            var category = new Category()
+            try
             {
-                CategoryName = categoryViewModel.CategoryName,
-                CategoryDescription = categoryViewModel.CategoryDescription
-            };
-            category.ParentCategory.CategoryId = categoryViewModel.ParentCategoryId;
-            var result = _productRepository.AddCategory(category);
-            return _productRepository.AddCategory(category);
+                var category = new Category()
+                {
+                    CategoryName = categoryViewModel.CategoryName,
+                    CategoryDescription = categoryViewModel.CategoryDescription
+                };
+                var parentCategory =
+                    _productRepository
+                        .GetCategory(categoryViewModel.ParentCategoryId);
+                category.ParentCategory = parentCategory;
+                _productRepository.AddCategory(category);
+                _productRepository.Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
         }
     }
 }
