@@ -48,10 +48,11 @@ namespace Aroma_Shop.Application.Services
                 foreach (var parent in parents)
                 {
                     items.Add(new SelectListItem(new string('─', count*2) + $" {parent.CategoryName}", parent.CategoryId.ToString()));
-                    if (parent.ChildrenCategories.Count != 0)
+                    var category = _productRepository.GetCategory(parent.CategoryId);
+                    if (category.ChildrenCategories.Count != 0)
                     {
                         ++count;
-                        ChildrenCategoriesScrolling(parent.ChildrenCategories, count);
+                        ChildrenCategoriesScrolling(category.ChildrenCategories, count);
                     }
                     count = 0;
                 }
@@ -61,10 +62,11 @@ namespace Aroma_Shop.Application.Services
                 foreach (var child in children)
                 {
                     items.Add(new SelectListItem(new string('─', counter*2) + $" {child.CategoryName}", child.CategoryId.ToString()));
-                    if (child.ChildrenCategories.Count != 0)
+                    var category = _productRepository.GetCategory(child.CategoryId);
+                    if (category.ChildrenCategories.Count != 0)
                     {
                         ++counter;
-                        ChildrenCategoriesScrolling(child.ChildrenCategories, counter);
+                        ChildrenCategoriesScrolling(category.ChildrenCategories, counter);
                         --counter;
                     }
 
