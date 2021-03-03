@@ -83,5 +83,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        [HttpGet("/Admin/Products/DeleteCategory")]
+        public IActionResult DeleteCategory(int categoryId)
+        {
+            return View();
+        }
     }
 }
