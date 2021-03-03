@@ -70,7 +70,6 @@ namespace Aroma_Shop.Application.Services
             try
             {
                 _productRepository.DeleteCategory(categoryId);
-                _productRepository.Save();
                 return true;
             }
             catch
