@@ -57,15 +57,27 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/AddCategory")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddCategory(AddCategoryViewModel model)
+        public IActionResult AddCategory(AddCategoryViewModel model,string s)
         {
             if (ModelState.IsValid)
             {
                 var result = _productService.AddCategory(model);
-                
+                if (result)
+                {
+                    ModelState.Clear();
+                    var newCategories = _productService.GetCategories();
+                    model = new AddCategoryViewModel()
+                    {
+                        AllCategories = _productService.GetCategoriesTreeView(newCategories)
+                    };
+                    ViewData["SuccessMessage"] = "دسته مورد نظر با موفقیت افزوده شد.";
+                    return View(model);
+                }
+                ModelState.AddModelError("", "مشکلی در زمان افزودن دسته رخ داد.");
             }
             var categories = _productService.GetCategories();
-            model.AllCategories = _productService.GetCategoriesTreeView(categories);
+            model.AllCategories =
+                _productService.GetCategoriesTreeView(categories);
             return View(model);
         }
 

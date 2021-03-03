@@ -29,7 +29,15 @@
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
             </div>
+            @if (ViewData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+            }
             <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
