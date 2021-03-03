@@ -25,7 +25,7 @@
             <td class="cart-item-cells align-middle">@category.CategoryDescription</td>
             <td class="align-middle">
                 <div class="admin-products-actions">
-                    <a class="btn text-light btn-primary" asp-action="EditCategory" asp-route-Id="@category.CategoryId">ویرایش</a>
+                    <a class="btn text-light btn-primary" asp-action="EditCategory" asp-route-categoryId="@category.CategoryId">ویرایش</a>
                     <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(category.CategoryId)" >حذف</button>
                     <div class="modal fade" id="deletemodal@(category.CategoryId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(category.CategoryId)" aria-hidden="true">
                         <div class="modal-dialog" role="document">

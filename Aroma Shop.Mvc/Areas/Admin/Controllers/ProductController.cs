@@ -88,7 +88,21 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/EditCategory")]
         public IActionResult EditCategory(int categoryId)
         {
-            var model = _productService.GetCategory(categoryId);
+            var category = _productService.GetCategory(categoryId);
+            if (category == null)
+                return NotFound();
+            var categories = _productService.GetCategories();
+            var model = new AddEditCategoryViewModel()
+            {
+                CategoryName = category.CategoryName,
+                CategoryDescription = category.CategoryDescription,
+                AllCategories = _productService.GetCategoriesTreeView(categories),
+                ParentCategoryId = category.ParentCategory.CategoryId
+            };
+            model.AllCategories
+                .SingleOrDefault
+                    (p => p.Value == model.ParentCategoryId.ToString())
+                .Selected = true;
             return View(model);
         }
 
@@ -100,7 +114,9 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult DeleteCategory(int categoryId)
         {
             var result = _productService.DeleteCategory(categoryId);
-            return RedirectToAction("Categories");
+            if(result)
+                return RedirectToAction("Categories");
+            return NotFound();
         }
 
         #endregion

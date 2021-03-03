@@ -1,40 +1,44 @@
-﻿@model Aroma_Shop.Domain.Models.ProductModels.Category
+﻿@model Aroma_Shop.Application.ViewModels.Product.AddEditCategoryViewModel
+
 
 @{
     ViewData["Title"] = "ویرایش دسته بندی";
 }
-
-<h1>EditCategory</h1>
-
-<h4>Category</h4>
-<hr />
+<div class="h2 mt-3">
+    <h1 class="h2 d-inline">افزودن دسته بندی</h1>
+    <a class="btn btn-warning float-left" asp-controller="Product" asp-action="Categories">بازگشت</a>
+</div>
+<hr>
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditCategory">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
+        <form asp-action="AddCategory">
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control" />
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                <label class="control-label" for="CategoryName">نام</label>
+                <input class="form-control" asp-for="CategoryName">
+                <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryName" class="control-label"></label>
-                <input asp-for="CategoryName" class="form-control" />
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                <label class="control-label">توضیحات</label>
+                <textarea class="form-control" asp-for="CategoryDescription"></textarea>
+                <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryDescription" class="control-label"></label>
-                <input asp-for="CategoryDescription" class="form-control" />
-                <span asp-validation-for="CategoryDescription" class="text-danger"></span>
+                <label class="control-label">دسته پدر</label>
+                <select class="form-control" asp-items="Model.AllCategories" asp-for="ParentCategoryId">
+                </select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="ویرایش" class="btn btn-block btn-primary">
             </div>
+            @if (ViewData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+            }
+            <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
