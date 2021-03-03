@@ -57,7 +57,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/AddCategory")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddCategory(AddCategoryViewModel model,string s)
+        public IActionResult AddCategory(AddCategoryViewModel model)
         {
             if (ModelState.IsValid)
             {

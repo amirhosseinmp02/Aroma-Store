@@ -23,10 +23,7 @@ namespace Aroma_Shop.Data.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Message>(p =>
-            {
-                
-            });
+
 
             base.OnModelCreating(builder);
         }

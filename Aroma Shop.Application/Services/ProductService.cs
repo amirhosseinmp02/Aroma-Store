@@ -47,10 +47,13 @@ namespace Aroma_Shop.Application.Services
                     CategoryName = categoryViewModel.CategoryName,
                     CategoryDescription = categoryViewModel.CategoryDescription
                 };
-                var parentCategory =
-                    _productRepository
-                        .GetCategory(categoryViewModel.ParentCategoryId);
-                category.ParentCategory = parentCategory;
+                if (categoryViewModel.ParentCategoryId != null)
+                {
+                    var parentCategory =
+                        _productRepository
+                            .GetCategory((int)categoryViewModel.ParentCategoryId);
+                    category.ParentCategory = parentCategory;
+                }
                 _productRepository.AddCategory(category);
                 _productRepository.Save();
                 return true;
@@ -79,6 +82,7 @@ namespace Aroma_Shop.Application.Services
         public IEnumerable<SelectListItem> GetCategoriesTreeView(IEnumerable<Category> categories)
         {
             List<SelectListItem> items = new List<SelectListItem>();
+            items.Add(new SelectListItem("انتخاب کنید",""));
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
             int count = 0;

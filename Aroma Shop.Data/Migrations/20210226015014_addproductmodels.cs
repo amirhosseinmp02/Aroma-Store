@@ -23,7 +23,7 @@ namespace Aroma_Shop.Data.Migrations
                         column: x => x.ParentCategoryCategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
