@@ -83,6 +83,17 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region EditCategory
+
+        [HttpGet("/Admin/Products/EditCategory")]
+        public IActionResult EditCategory(int categoryId)
+        {
+            var model = _productService.GetCategory(categoryId);
+            return View(model);
+        }
+
+        #endregion
+
         #region DeleteCategory
 
         [HttpGet("/Admin/Products/DeleteCategory")]
