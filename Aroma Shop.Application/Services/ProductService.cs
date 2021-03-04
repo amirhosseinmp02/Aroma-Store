@@ -99,8 +99,9 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public IEnumerable<SelectListItem> GetCategoriesTreeView(IEnumerable<Category> categories)
+        public IEnumerable<SelectListItem> GetCategoriesTreeView()
         {
+            var categories = _productRepository.GetCategories();
             List<SelectListItem> items = new List<SelectListItem>();
             items.Add(new SelectListItem("انتخاب کنید", ""));
             var parentsCategories =
@@ -139,8 +140,9 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(IEnumerable<Category> categories, Category selfCategory)
+        public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory)
         {
+            var categories = _productRepository.GetCategories();
             List<SelectListItem> items = new List<SelectListItem>();
             items.Add(new SelectListItem("انتخاب کنید", ""));
             var parentsCategories =
