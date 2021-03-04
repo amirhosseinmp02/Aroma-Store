@@ -69,14 +69,14 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var parentCategory = GetCategory((int)categoryViewModel.ParentCategoryId);
-                var category = new Category()
-                {
-                    CategoryName = categoryViewModel.CategoryName,
-                    CategoryDescription = categoryViewModel.CategoryDescription,
-                    ParentCategory = parentCategory
-                };
+                var parentCategory = 
+                    GetCategory(Convert.ToInt32(categoryViewModel.ParentCategoryId));
+                var category = GetCategory(categoryViewModel.CategoryId);
+                category.CategoryName = categoryViewModel.CategoryName;
+                category.CategoryDescription = categoryViewModel.CategoryDescription;
+                category.ParentCategory = parentCategory;
                 _productRepository.UpdateCategory(category);
+                _productRepository.Save();
                 return true;
             }
             catch

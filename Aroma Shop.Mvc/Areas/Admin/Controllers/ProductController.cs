@@ -50,7 +50,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var categories = _productService.GetCategories();
             var model = new AddEditCategoryViewModel()
             {
-                AllCategories = _productService.GetCategoriesTreeView(categories)
+                AllCategories = _productService.GetCategoriesTreeView()
             };
             return View(model);
         }
@@ -68,7 +68,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     var newCategories = _productService.GetCategories();
                     model = new AddEditCategoryViewModel()
                     {
-                        AllCategories = _productService.GetCategoriesTreeView(newCategories)
+                        AllCategories = _productService.GetCategoriesTreeView()
                     };
                     ViewData["SuccessMessage"] = "دسته مورد نظر با موفقیت افزوده شد.";
                     return View(model);
@@ -77,7 +77,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
             var categories = _productService.GetCategories();
             model.AllCategories =
-                _productService.GetCategoriesTreeView(categories);
+                _productService.GetCategoriesTreeView();
             return View(model);
         }
 
@@ -91,18 +91,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var category = _productService.GetCategory(categoryId);
             if (category == null)
                 return NotFound();
-            var categories = _productService.GetCategories();
             var model = new AddEditCategoryViewModel()
             {
                 CategoryName = category.CategoryName,
                 CategoryDescription = category.CategoryDescription,
-                AllCategories = _productService.GetCategoriesTreeView(categories),
-                ParentCategoryId = category.ParentCategory.CategoryId
+                AllCategories = _productService.GetCategoriesTreeViewForEdit(category),
+                ParentCategoryId = category.ParentCategory?.CategoryId
             };
-            model.AllCategories
-                .SingleOrDefault
-                    (p => p.Value == model.ParentCategoryId.ToString())
-                .Selected = true;
+            TempData["categoryId"] = categoryId;
             return View(model);
         }
 
@@ -110,12 +106,31 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditCategory(AddEditCategoryViewModel model)
         {
+            model.CategoryId = Convert.ToInt32(TempData["categoryId"]);
+            var category = _productService.GetCategory(model.CategoryId);
+            if (category == null)
+                return NotFound();
+            var categoryTreeView = 
+                _productService.GetCategoriesTreeViewForEdit(category);
             if (ModelState.IsValid)
             {
-                
+                var result = _productService.UpdateCategory(model);
+                if (result)
+                {
+                    return RedirectToAction("Categories");
+                }
+                ModelState.AddModelError("", "مشکلی در زمان ویرایش دسته رخ داد.");
             }
 
-            return View();
+            model = new AddEditCategoryViewModel()
+            {
+                CategoryName = category.CategoryName,
+                CategoryDescription = category.CategoryDescription,
+                AllCategories = categoryTreeView,
+                ParentCategoryId = category.ParentCategory?.CategoryId
+            };
+
+            return View(model);
         }
 
         #endregion
