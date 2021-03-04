@@ -102,7 +102,7 @@ namespace Aroma_Shop.Application.Services
         public IEnumerable<SelectListItem> GetCategoriesTreeView(IEnumerable<Category> categories)
         {
             List<SelectListItem> items = new List<SelectListItem>();
-            items.Add(new SelectListItem("انتخاب کنید",""));
+            items.Add(new SelectListItem("انتخاب کنید", ""));
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
             int count = 0;
@@ -111,7 +111,7 @@ namespace Aroma_Shop.Application.Services
             {
                 foreach (var parent in parents)
                 {
-                    items.Add(new SelectListItem(new string('─', count*2) + $" {parent.CategoryName}", parent.CategoryId.ToString()));
+                    items.Add(new SelectListItem(new string('─', count * 2) + $" {parent.CategoryName}", parent.CategoryId.ToString()));
                     var category = _productRepository.GetCategory(parent.CategoryId);
                     if (category.ChildrenCategories.Count != 0)
                     {
@@ -125,7 +125,7 @@ namespace Aroma_Shop.Application.Services
             {
                 foreach (var child in children)
                 {
-                    items.Add(new SelectListItem(new string('─', counter*2) + $" {child.CategoryName}", child.CategoryId.ToString()));
+                    items.Add(new SelectListItem(new string('─', counter * 2) + $" {child.CategoryName}", child.CategoryId.ToString()));
                     var category = _productRepository.GetCategory(child.CategoryId);
                     if (category.ChildrenCategories.Count != 0)
                     {
@@ -135,6 +135,65 @@ namespace Aroma_Shop.Application.Services
                     }
 
                 }
+            }
+            return items;
+        }
+
+        public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(IEnumerable<Category> categories, Category selfCategory)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            items.Add(new SelectListItem("انتخاب کنید", ""));
+            var parentsCategories =
+                categories.Where(p => p.ParentCategory == null);
+            int count = 0;
+            ParentsCategoriesScrolling(parentsCategories);
+            void ParentsCategoriesScrolling(IEnumerable<Category> parents)
+            {
+                foreach (var parent in parents)
+                {
+                    if (parent.CategoryId != selfCategory.CategoryId)
+                    {
+                        items.Add
+                            (new SelectListItem
+                            (new string('─', count * 2) +
+                             $" {parent.CategoryName}", parent.CategoryId.ToString()));
+                        var category = _productRepository.GetCategory(parent.CategoryId);
+                        if (category.ChildrenCategories.Count != 0)
+                        {
+                            ++count;
+                            ChildrenCategoriesScrolling(category.ChildrenCategories, count);
+                        }
+                        count = 0;
+                    }
+                }
+            }
+            void ChildrenCategoriesScrolling(IEnumerable<Category> children, int counter)
+            {
+                foreach (var child in children)
+                {
+                    if (child.CategoryId != selfCategory.CategoryId)
+                    {
+                        items.Add(new SelectListItem
+                            (new string('─', counter * 2) +
+                             $" {child.CategoryName}", child.CategoryId.ToString()));
+                        var category = _productRepository.GetCategory(child.CategoryId);
+                        if (category.ChildrenCategories.Count != 0)
+                        {
+                            ++counter;
+                            ChildrenCategoriesScrolling(category.ChildrenCategories, counter);
+                            --counter;
+                        }
+                    }
+                }
+            }
+
+            if (selfCategory.ParentCategory != null)
+            {
+                items
+                    .SingleOrDefault
+                    (p =>
+                        p.Value == selfCategory.ParentCategory.CategoryId.ToString())
+                    .Selected = true;
             }
             return items;
         }
