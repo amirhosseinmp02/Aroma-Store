@@ -155,3 +155,7 @@ input.input-validation-error {
     top: 5px;
     left: 5px
 }
+
+#search-textbox {
+    border-radius: 5px 0 0 5px
+}

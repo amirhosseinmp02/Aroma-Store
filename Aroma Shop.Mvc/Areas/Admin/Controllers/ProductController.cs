@@ -42,6 +42,28 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region SearchCategory
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SearchCategory(string search)
+        {
+            IEnumerable<Category> categories;
+            if (!string.IsNullOrEmpty(search))
+            {
+                categories = _productService.GetCategories().Where(p =>
+                    p.CategoryName.Contains(search) ||
+                    (Convert.ToBoolean(p.ParentCategory?.CategoryName.Contains(search))));
+            }
+            else
+            {
+                categories = _productService.GetCategories();
+            }
+            return View("Categories", categories);
+        }
+
+        #endregion
+
         #region AddCategory
 
         [HttpGet("/Admin/Products/AddCategory")]
@@ -110,7 +132,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var category = _productService.GetCategory(model.CategoryId);
             if (category == null)
                 return NotFound();
-            var categoryTreeView = 
+            var categoryTreeView =
                 _productService.GetCategoriesTreeViewForEdit(category);
             if (ModelState.IsValid)
             {
@@ -141,11 +163,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult DeleteCategory(int categoryId)
         {
             var result = _productService.DeleteCategory(categoryId);
-            if(result)
+            if (result)
                 return RedirectToAction("Categories");
             return NotFound();
         }
 
         #endregion
+
     }
 }
