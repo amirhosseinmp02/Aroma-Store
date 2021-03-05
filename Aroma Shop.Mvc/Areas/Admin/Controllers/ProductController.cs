@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,10 +35,19 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowCategories
 
         [HttpGet("/Admin/Products/Categories")]
-        public IActionResult Categories()
+        public IActionResult Categories(int pageNumber=1)
         {
-            var model = _productService.GetCategories();
-            return View(model);
+            var categories = _productService.GetCategories();
+            var page = new Paging<Category>(categories, 11, pageNumber);
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+            var categoriesPage = page.QueryResult;
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+            return View(categoriesPage);
         }
 
         #endregion
