@@ -14,7 +14,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [Required]
         [MaxLength(300)]
         [Display(Name = "آپلود تصویر")]
-        public string ImageName { get; set; }
+        public string ImagePath { get; set; }
         [NotMapped]
         [Display(Name = "آپلود تصویر")]
         public IFormFile ImageFile { get; set; }
