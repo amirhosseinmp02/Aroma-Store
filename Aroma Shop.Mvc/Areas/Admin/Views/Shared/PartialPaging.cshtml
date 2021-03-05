@@ -1,0 +1,14 @@
+﻿<nav class="mt-2 mb-5">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(ViewBag.pageNumber==ViewBag.firstPage?"disabled":"")">
+            <a class="page-link" asp-action="Categories" asp-route-pageNumber="@ViewBag.firstPage">ابتدا</a>
+        </li>
+        @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
+        {
+            <li class="page-item @(ViewBag.pageNumber==i?"active":"")"><a class="page-link" asp-action="Categories" asp-route-pageNumber="@i">@i</a></li>
+        }
+        <li class="page-item @(ViewBag.pageNumber==ViewBag.lastPage?"disabled":"")">
+            <a class="page-link" asp-action="Categories" asp-route-pageNumber="@ViewBag.lastPage">انتها</a>
+        </li>
+    </ul>
+</nav>

@@ -21,16 +21,17 @@
 </form>
 <table class="table table-striped table-bordered text-center table-light">
     <thead>
-        <tr>
-            <th class="cart-item-cells">نام</th>
-            <th class="cart-item-cells">توضیحات</th>
-            <th class="cart-item-cells">دسته پدر</th>
-            <th class="cart-item-cells">عملیات</th>
-        </tr>
+    <tr>
+        <th class="cart-item-cells">نام</th>
+        <th class="cart-item-cells">توضیحات</th>
+        <th class="cart-item-cells">دسته پدر</th>
+        <th class="cart-item-cells">عملیات</th>
+    </tr>
     </thead>
     <tbody>
     @foreach (var category in Model)
     {
+
         <tr>
             <td class="cart-item-cells align-middle">@category.CategoryName</td>
             <td class="cart-item-cells align-middle">@category.CategoryDescription</td>
@@ -70,3 +71,6 @@
     }
     </tbody>
 </table>
+@{
+    await Html.RenderPartialAsync("PartialPaging");
+}
