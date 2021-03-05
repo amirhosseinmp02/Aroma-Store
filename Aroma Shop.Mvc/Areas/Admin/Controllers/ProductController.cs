@@ -35,9 +35,18 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowCategories
 
         [HttpGet("/Admin/Products/Categories")]
-        public IActionResult Categories(int pageNumber=1)
+        public IActionResult Categories(int pageNumber = 1, string search = null)
         {
-            var categories = _productService.GetCategories();
+            IEnumerable<Category> categories;
+            if (!string.IsNullOrEmpty(search))
+            {
+                categories = _productService.GetCategories().Where(p =>
+                    p.CategoryName.Contains(search) ||
+                    (Convert.ToBoolean(p.ParentCategory?.CategoryName.Contains(search))));
+                ViewBag.search = search;
+            }
+            else
+                categories = _productService.GetCategories();
             var page = new Paging<Category>(categories, 11, pageNumber);
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
@@ -48,28 +57,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             ViewBag.prevPage = page.PreviousPage;
             ViewBag.nextPage = page.NextPage;
             return View(categoriesPage);
-        }
-
-        #endregion
-
-        #region SearchCategory
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SearchCategory(string search)
-        {
-            IEnumerable<Category> categories;
-            if (!string.IsNullOrEmpty(search))
-            {
-                categories = _productService.GetCategories().Where(p =>
-                    p.CategoryName.Contains(search) ||
-                    (Convert.ToBoolean(p.ParentCategory?.CategoryName.Contains(search))));
-            }
-            else
-            {
-                categories = _productService.GetCategories();
-            }
-            return View("Categories", categories);
         }
 
         #endregion
