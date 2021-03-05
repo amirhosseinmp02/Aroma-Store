@@ -9,66 +9,73 @@
     <a class="btn btn-warning float-left" asp-controller="Product" asp-action="AddCategory">افزودن</a>
 </div>
 <hr />
-<form asp-action="Categories" method="get">
-    <div class="input-group mb-4">
-        <input name="search" type="text" value="@ViewBag.search" class="form-control" placeholder="جستجو..." aria-label="جستجو...">
-        <button type="submit" class="input-group-text" id="search-textbox">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
-            </svg>
-        </button>
-    </div>
-</form>
-<table class="table table-striped table-bordered text-center table-light">
-    <thead>
-        <tr>
-            <th class="cart-item-cells">نام</th>
-            <th class="cart-item-cells">توضیحات</th>
-            <th class="cart-item-cells">دسته پدر</th>
-            <th class="cart-item-cells">عملیات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var category in Model)
-        {
-
+@if (ViewBag.isEmpty)
+{
+    <form asp-action="Categories" method="get">
+        <div class="input-group mb-4">
+            <input name="search" type="text" value="@ViewBag.search" class="form-control" placeholder="جستجو..." aria-label="جستجو...">
+            <button type="submit" class="input-group-text" id="search-textbox">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </form>
+    <table class="table table-striped table-bordered text-center table-light">
+        <thead>
             <tr>
-                <td class="cart-item-cells align-middle">@category.CategoryName</td>
-                <td class="cart-item-cells align-middle">@category.CategoryDescription</td>
-                <td class="cart-item-cells align-middle">@category.ParentCategory?.CategoryName</td>
-                <td class="align-middle">
-                    <div class="admin-products-actions">
-                        <a class="btn text-light btn-primary" asp-action="EditCategory" asp-route-categoryId="@category.CategoryId">ویرایش</a>
-                        <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(category.CategoryId)">حذف</button>
-                        <div class="modal fade" id="deletemodal@(category.CategoryId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(category.CategoryId)" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header justify-content-center">
-                                        <h5 class="modal-title text-center" id="deletemodalLabel">حذف دسته بندی</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h1 class="text-info">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                                <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                            </svg>
-                                        </h1>
-                                        <p class="lead">آیا از حذف دسته بندی <span class="text-warning">@category.CategoryName</span> مطمئن هستید ؟</p>
-                                        <p class="text-info">تمامی دسته های فرزند حذف خواهند شد</p>
-                                    </div>
-                                    <div class="modal-footer justify-content-center">
-                                        <a type="button" class="btn btn-danger" asp-action="DeleteCategory" asp-route-categoryId="@category.CategoryId">حذف</a>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                <th class="cart-item-cells">نام</th>
+                <th class="cart-item-cells">توضیحات</th>
+                <th class="cart-item-cells">دسته پدر</th>
+                <th class="cart-item-cells">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+
+                <tr>
+                    <td class="cart-item-cells align-middle">@category.CategoryName</td>
+                    <td class="cart-item-cells align-middle">@category.CategoryDescription</td>
+                    <td class="cart-item-cells align-middle">@category.ParentCategory?.CategoryName</td>
+                    <td class="align-middle">
+                        <div class="admin-products-actions">
+                            <a class="btn text-light btn-primary" asp-action="EditCategory" asp-route-categoryId="@category.CategoryId">ویرایش</a>
+                            <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(category.CategoryId)">حذف</button>
+                            <div class="modal fade" id="deletemodal@(category.CategoryId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(category.CategoryId)" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header justify-content-center">
+                                            <h5 class="modal-title text-center" id="deletemodalLabel">حذف دسته بندی</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h1 class="text-info">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                    <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                </svg>
+                                            </h1>
+                                            <p class="lead">آیا از حذف دسته بندی <span class="text-warning">@category.CategoryName</span> مطمئن هستید ؟</p>
+                                            <p class="text-info">تمامی دسته های فرزند حذف خواهند شد</p>
+                                        </div>
+                                        <div class="modal-footer justify-content-center">
+                                            <a type="button" class="btn btn-danger" asp-action="DeleteCategory" asp-route-categoryId="@category.CategoryId">حذف</a>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-@await Html.PartialAsync("PartialPaging", "Categories");
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @await Html.PartialAsync("PartialPaging", "Categories")
+}
+else
+{
+    <div class="alert alert-danger text-left" role="alert">دسته ای برای نمایش وجود ندارد</div>
+}

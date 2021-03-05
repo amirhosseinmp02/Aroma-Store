@@ -24,10 +24,35 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowProducts
 
         [HttpGet("/Admin/Products")]
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, string search = null)
         {
-            var model = _productService.GetProducts();
-            return View(model);
+            IEnumerable<Product> products;
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = _productService.GetProducts()
+                    .Where(p => p.ProductName.Contains(search)
+                                || p.Categories
+                                    .Contains(new Category(){CategoryName = "search"}));
+                ViewBag.search = search;
+            }
+            else
+                products = _productService.GetProducts();
+
+            if (products.Count() == 0)
+            {
+                ViewBag.isEmpty = true;
+                return View();
+            }
+            var page = new Paging<Product>(products, 11, pageNumber);
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+            var categoriesPage = page.QueryResult;
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+            return View(categoriesPage);
         }
 
         #endregion
