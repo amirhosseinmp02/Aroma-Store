@@ -56,6 +56,11 @@ namespace Aroma_Shop.Data.Repositories
             return category;
         }
 
+        public void AddProduct(Product product)
+        {
+            _context.Add(product);
+        }
+
         public void AddCategory(Category category)
         {
             _context.Add(category);
