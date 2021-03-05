@@ -9,7 +9,7 @@
     <a class="btn btn-warning float-left" asp-controller="Product" asp-action="AddCategory">افزودن</a>
 </div>
 <hr />
-@if (!ViewBag.isEmpty)
+@if (!Convert.ToBoolean(ViewBag.isEmpty))
 {
     <form asp-action="Index" method="get">
         <div class="input-group mb-4">

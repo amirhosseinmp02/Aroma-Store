@@ -37,7 +37,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
             else
                 products = _productService.GetProducts();
-
             if (products.Count() == 0)
             {
                 ViewBag.isEmpty = true;
@@ -72,6 +71,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
             else
                 categories = _productService.GetCategories();
+            if (categories.Count() == 0)
+            {
+                ViewBag.isEmpty = true;
+                return View();
+            }
             var page = new Paging<Category>(categories, 11, pageNumber);
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
