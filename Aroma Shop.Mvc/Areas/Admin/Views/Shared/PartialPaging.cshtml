@@ -2,14 +2,14 @@
 <nav class="mt-2 mb-5">
     <ul class="pagination justify-content-center">
         <li class="page-item @(ViewBag.pageNumber==ViewBag.firstPage?"disabled":"")">
-            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewBag.firstPage">ابتدا</a>
+            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewBag.firstPage" asp-route-search="@ViewBag.search">ابتدا</a>
         </li>
         @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
         {
-            <li class="page-item @(ViewBag.pageNumber==i?"active":"")"><a class="page-link" asp-action="@Model" asp-route-pageNumber="@i">@i</a></li>
+            <li class="page-item @(ViewBag.pageNumber==i?"active":"")"><a class="page-link" asp-action="@Model" asp-route-pageNumber="@i" asp-route-search="@ViewBag.search">@i</a></li>
         }
         <li class="page-item @(ViewBag.pageNumber==ViewBag.lastPage?"disabled":"")">
-            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewBag.lastPage">انتها</a>
+            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewBag.lastPage" asp-route-search="@ViewBag.search">انتها</a>
         </li>
     </ul>
 </nav>
