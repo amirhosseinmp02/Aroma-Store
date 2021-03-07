@@ -29,7 +29,7 @@ namespace Aroma_Shop.Application.Services
                     Body = message,
                     IsBodyHtml = isMessageHtml
                 };
-                client.UseDefaultCredentials = true;
+                
                 client.Send(emailMessage);
             }
             return Task.CompletedTask;
