@@ -56,6 +56,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region AddProduct
+
+        public IActionResult AddProduct()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region ShowCategories
 
         [HttpGet("/Admin/Products/Categories")]
