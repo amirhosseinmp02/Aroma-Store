@@ -18,7 +18,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
 
-        public IFormCollection Images { get; set; }
+        public IFormCollection ProductImages { get; set; }
 
     }
 }
