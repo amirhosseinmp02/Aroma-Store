@@ -1,6 +1,6 @@
 ﻿@model Aroma_Shop.Application.ViewModels.Product.AddEditProductViewModel
 @{
-    ViewData["Title"] = "AddProduct";
+    ViewData["Title"] = "افزودن محصول";
 }
 <style>
     </style>
@@ -68,16 +68,8 @@
     <script type="text/javascript">
         CKEDITOR.replace('matn', {
             language: 'fa',
-            font_defaultLabel: 'Samim',
-            font_names: 'Samim'
+            font_defaultLabel: "Samim"
         });
 
-        CKEDITOR.on('instanceReady', function( ev ) {
-            ev.editor.dataProcessor.htmlFilter.addRules({
-                elements: {
-                    p: function (e) { e.attributes.style = 'font-family:' + 'Samim' + ';'; }
-                }
-            });
-        });
     </script>
 }

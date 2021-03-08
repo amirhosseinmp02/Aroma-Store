@@ -344,7 +344,7 @@ jQuery(document).ready(function ($) {
 			outputHandler: outputHandlerFunc
 		})
 
-		$('#dropzone').prev('#textbox-wrapper').find('#textbox').append('<p class="large">تصاویر محصول را<br>به اینجا بکشید</p><p class="small">برای انتخاب تصاویر<br>کلکیک کنید</p>');
+		$('#dropzone').prev('#textbox-wrapper').find('#textbox').append('<p class="large">تصاویر محصول را<br>به اینجا بکشید</p><p class="small">برای انتخاب تصاویر<br>کلیک کنید</p>');
 	}
 	else {
 		$('body').addClass('nofilereader');
