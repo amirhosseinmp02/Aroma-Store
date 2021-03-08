@@ -32,7 +32,7 @@ Works in Mozilla, Webkit & IE.
 
 		var $this = $(this), dragging = false, pasting = false;
 
-		var $uploadField = $('<input type="file" style="display:none" name="fileselect[]" multiple="multiple" accept="image/*, .png, .jpg, .jpg" />');
+		var $uploadField = $('<input type="file" style="display:none" name="ProductImages" multiple="multiple" accept="image/*, .png, .jpg, .jpg" />');
 
 		// Create capture area for Mozilla & IE
 		var $contentEditable = $('<div contenteditable="true" style="position:absolute;overflow:hidden;top:-20px;width:0;height:0;" />');

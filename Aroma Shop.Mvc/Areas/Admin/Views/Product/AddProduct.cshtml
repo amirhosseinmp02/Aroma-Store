@@ -11,7 +11,7 @@
 <hr>
 <div class="row">
     <div class="col-lg-9 col-md-11 col-sm-12 m-auto">
-        <form asp-action="AddCategory" enctype="multipart/form-data">
+        <form asp-action="AddProduct" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="control-label" for="ProductName">نام</label>
                 <input class="form-control" asp-for="ProductName">
@@ -49,6 +49,11 @@
                     <div id="output"><ul></ul></div>
                 </div>
                 <div></div>
+            </div>
+            <div class="form-group">
+                <label for="@Model.TreeViewCategories">دسته بندی ها</label>
+                <select class="form-control" size="6" multiple aria-label="size 3 select example" asp-for="@Model.ProductCategoriesId" asp-items="@Model.TreeViewCategories">
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">

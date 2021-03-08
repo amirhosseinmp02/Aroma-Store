@@ -61,7 +61,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddProduct")]
         public IActionResult AddProduct()
         {
-            return View();
+            var model = new AddEditProductViewModel()
+            {
+                TreeViewCategories = _productService.GetCategoriesTreeView().Skip(1)
+            };
+            return View(model);
+        }
+
+        [HttpPost("/Admin/Products/AddProduct")]
+        public IActionResult AddProduct(AddEditProductViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                
+            }
+
+            return View(model);
         }
 
         #endregion
