@@ -26,7 +26,10 @@ namespace Aroma_Shop.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.MaxModelBindingCollectionSize = int.MaxValue;
+            });
             services.AddDbContextPool<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AromaAppDBConnection"));

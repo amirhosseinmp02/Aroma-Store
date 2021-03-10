@@ -3,7 +3,7 @@
     ViewData["Title"] = "افزودن محصول";
 }
 <style>
-    </style>
+</style>
 <div class="h2 mt-3">
     <h1 class="h2 d-inline">افزودن محصول</h1>
     <a class="btn btn-warning float-left" asp-controller="Product" asp-action="Categories">بازگشت</a>
@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">توضیحات</label>
-                <textarea id="matn" class="form-control">
+                <textarea id="matn" asp-for="ProductDescription" class="form-control">
 
                 </textarea>
                 <span class="text-danger field-validation-valid"></span>
@@ -35,27 +35,24 @@
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
-                <div class="mt-3 w-100">
-                    <div id="dropzone-wrapper">
-                        <div id="textbox-wrapper"><div id=textbox></div></div>
-                        <div id="dropzone"></div>
-                    </div>
-                    <div id="errormessages"><span style="display: none;"></span></div>
-
-                    <div id="overlay"></div>
-
-                </div>
-                <div>
-                    <div id="output"><ul></ul></div>
-                </div>
-                <div></div>
-            </div>
-            <div class="form-group">
                 <label for="@Model.TreeViewCategories">دسته بندی ها</label>
                 <select class="form-control" size="6" multiple aria-label="size 3 select example" asp-for="@Model.ProductCategoriesId" asp-items="@Model.TreeViewCategories">
                 </select>
             </div>
             <div class="form-group">
+                <label>انتخاب تصاویر</label>
+                <label for="attachment" class="w-100 text-center">
+                    <a class="upload-btn mb-2" role="button" aria-disabled="false"><i class="bi bi-cloud-arrow-up-fill text-info display-3"></i></a>
+                </label>
+                <input type="file" asp-for="ProductImages" accept=".png,.jpg,jpeg" id="attachment" style="visibility: hidden; position: absolute;" multiple/>
+                <p id="files-area">
+                    <span id="filesList">
+                        <span id="files-names"></span>
+                    </span>
+                </p>
+            </div>
+            <div class="form-group">
+                <img id="lol" />
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
             </div>
             @if (ViewData["SuccessMessage"] != null)

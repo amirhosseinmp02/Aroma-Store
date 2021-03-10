@@ -7,6 +7,7 @@ using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.ProductModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
@@ -69,6 +70,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         [HttpPost("/Admin/Products/AddProduct")]
+        [ValidateAntiForgeryToken]
         public IActionResult AddProduct(AddEditProductViewModel model)
         {
             if (ModelState.IsValid)
