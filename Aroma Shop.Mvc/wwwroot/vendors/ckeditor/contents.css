@@ -3,15 +3,19 @@ Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
 
-body {
+body
+{
 	/* Font */
 	/* Emoji fonts are added to visualise them nicely in Internet Explorer. */
-	font-family: 'Samim', sans-serif;
+	font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size: 12px;
+
 	/* Text color */
 	color: #333;
+
 	/* Remove the background color to make it transparent. */
 	background-color: #fff;
+
 	margin: 20px;
 }
 
@@ -19,14 +23,15 @@ body {
 {
 	font-size: 13px;
 	line-height: 1.6;
-
+    font-family: 'Samim', sans-serif;
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
 	word-wrap: break-word;
 }
 
-blockquote {
+blockquote
+{
 	font-style: italic;
-	font-family: 'Samim', sans-serif;
+	font-family: Georgia, Times, "Times New Roman", serif;
 	padding: 2px 0;
 	border-style: solid;
 	border-color: #ccc;
