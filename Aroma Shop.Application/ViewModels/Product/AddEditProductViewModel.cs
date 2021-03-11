@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Aroma_Shop.Domain.Models.CustomValidationAttribute;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,6 +31,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
 
+        [MaxFileSize(4194304)]
+        [AllowedExtensions(new string[]{".png",".jpg",".jpeg"})]
         public IEnumerable<IFormFile> ProductImages { get; set; }
         public IEnumerable<SelectListItem>? TreeViewCategories { get; set; }
         public IEnumerable<int> ProductCategoriesId { get; set; }
