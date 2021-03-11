@@ -23,6 +23,11 @@ namespace Aroma_Shop.Application.Services
             return _productRepository.GetProduct(productId);
         }
 
+        public bool AddProduct(AddEditProductViewModel productViewModel)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Product> GetProducts()
         {
             return _productRepository.GetProducts();
