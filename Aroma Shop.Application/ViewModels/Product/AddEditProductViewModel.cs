@@ -13,7 +13,6 @@ namespace Aroma_Shop.Application.ViewModels.Product
     {
         public AddEditProductViewModel()
         {
-            
             TreeViewCategories = new List<SelectListItem>();
             ProductCategoriesId = new List<int>();
             ProductImages = new List<IFormFile>();
@@ -31,6 +30,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
 
+        [MaxFilesCount(6)]
         [MaxFileSize(4194304)]
         [AllowedExtensions(new string[]{".png",".jpg",".jpeg"})]
         public IEnumerable<IFormFile> ProductImages { get; set; }
