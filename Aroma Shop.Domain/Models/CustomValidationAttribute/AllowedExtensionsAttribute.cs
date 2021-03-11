@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
@@ -19,13 +20,16 @@ namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
         protected override ValidationResult IsValid(
             object value, ValidationContext validationContext)
         {
-            var file = value as IFormFile;
-            if (file != null)
+            var files = value as IEnumerable<IFormFile>;
+            if (files != null)
             {
-                var extension = Path.GetExtension(file.FileName);
-                if (!((IList) _extensions).Contains(extension.ToLower()))
+                var filesExtensions = files.Select(p => Path.GetExtension(p.FileName).ToLower());
+                foreach (var fileExtension in filesExtensions)
                 {
-                    return new ValidationResult(GetErrorMessage());
+                    if (!_extensions.Contains(fileExtension))
+                    {
+                        return new ValidationResult(GetErrorMessage());
+                    }
                 }
             }
 

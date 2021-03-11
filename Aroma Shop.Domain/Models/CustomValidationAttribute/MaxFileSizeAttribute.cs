@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
@@ -17,10 +18,10 @@ namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
         protected override ValidationResult IsValid(
             object value, ValidationContext validationContext)
         {
-            var file = value as IFormFile;
-            if (file != null)
+            var files = value as IEnumerable<IFormFile>;
+            if (files != null)
             {
-                if (file.Length > _maxFileSize)
+                if (files.Any(p=>p.Length>_maxFileSize))
                 {
                     return new ValidationResult(GetErrorMessage());
                 }
