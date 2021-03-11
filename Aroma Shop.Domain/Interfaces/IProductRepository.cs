@@ -14,6 +14,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddCategory(Category category);
         void DeleteCategory(int categoryId);
         void UpdateCategory(Category category);
+        void AddImage(Image image);
         void Save();
     }
 }

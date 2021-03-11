@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Aroma_Shop.Application.Interfaces;
@@ -27,14 +28,29 @@ namespace Aroma_Shop.Application.Services
 
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {
-            var productCategories = new List<Category>();
-            foreach (var productCategoryId in productViewModel.ProductCategoriesId)
+            try
             {
-                productCategories.Add(GetCategory(productCategoryId));
+                var productCategories = new List<Category>();
+                foreach (var productCategoryId in productViewModel.ProductCategoriesId)
+                {
+                    productCategories.Add(GetCategory(productCategoryId));
+                }
+
+                var product = new Product()
+                {
+                    ProductName = productViewModel.ProductName,
+                    ProductDescription = productViewModel.ProductDescription,
+                    ProductPrice = productViewModel.ProductPrice,
+                    ProductQuantityInStock = productViewModel.ProductQuantityInStock,
+                    Categories = productCategories
+                };
+                AddProductImages(product,productViewModel.ProductImages);
+                return true;
             }
-
-            throw new Exception();
-
+            catch
+            {
+                return false;
+            }
         }
 
         public IEnumerable<Product> GetProducts()
@@ -83,7 +99,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var parentCategory = 
+                var parentCategory =
                     GetCategory(Convert.ToInt32(categoryViewModel.ParentCategoryId));
                 var category = GetCategory(categoryViewModel.CategoryId);
                 category.CategoryName = categoryViewModel.CategoryName;
@@ -214,10 +230,40 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public IEnumerable<Image> AddProductImages(IEnumerable<IFormFile> productImages)
+        public void AddProductImages(Product product,IEnumerable<IFormFile> productImagesFiles)
         {
-            string productImagesPath = Path.Combine(Directory.GetCurrentDirectory());
-            throw new Exception();
+            var persianCalendar = new PersianCalendar();
+            var monthProductImagesDirName =
+                $"{persianCalendar.GetYear(DateTime.Now)} - {persianCalendar.GetMonth(DateTime.Now)}";
+            var rootPath =
+                Path.Combine(Directory.GetCurrentDirectory(),
+                    "wwwroot", "img");
+            var productImagesPath =
+                Path.Combine(rootPath, "Product", monthProductImagesDirName);
+            var isYearMonthProductImagesDirExists =
+                Directory.Exists(productImagesPath);
+            if (!isYearMonthProductImagesDirExists)
+            {
+                Directory.CreateDirectory(productImagesPath);
+            }
+
+            foreach (var productImageFile in productImagesFiles)
+            {
+                var productImageFileName =
+                    Guid.NewGuid().ToString() + productImageFile.FileName;
+                var fullProductImagesPath
+                    = Path.Combine(productImagesPath, productImageFileName);
+                using (var stream = new FileStream(fullProductImagesPath, FileMode.Create))
+                {
+                    productImageFile.CopyTo(stream);
+                }
+                var productImage = new Image()
+                {
+                    ImagePath = $"Product/{monthProductImagesDirName}/{productImageFileName})",
+                    Product = product
+                };
+                _productRepository.AddImage(productImage);
+            }
         }
     }
 }

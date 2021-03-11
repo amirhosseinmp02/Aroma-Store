@@ -91,6 +91,11 @@ namespace Aroma_Shop.Data.Repositories
             }
         }
 
+        public void AddImage(Image image)
+        {
+            _context.Add(image);
+        }
+
         public void Save()
         {
             _context.SaveChanges();
