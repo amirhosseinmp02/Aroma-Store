@@ -36,6 +36,6 @@ CKEDITOR.editorConfig = function (config) {
     // Simplify the dialog windows.
     config.removeDialogTabs = 'image:advanced;link:advanced';
 
-    config.contentsCss = 'https://v1.fontapi.ir/css/Samim';
+    config.contentsCss = '../../Fonts/Samim.css';
     config.font_names = "Samim";
 };

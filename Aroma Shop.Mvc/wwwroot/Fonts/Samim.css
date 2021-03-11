@@ -1,0 +1,34 @@
+/*
+	Available weights for `Samim`: 400, 500, 700
+*/
+@font-face {
+     font-family: 'Samim';
+     src: url("https://fdn.fontcdn.ir/Fonts/Samim/6eb6490bef1e9c660a4c30ba4eac923e82b45ba5df3221b6a9ec16686f4f1ec5.eot");
+     src: url("https://fdn.fontcdn.ir/Fonts/Samim/6eb6490bef1e9c660a4c30ba4eac923e82b45ba5df3221b6a9ec16686f4f1ec5.eot?#iefix") format("embedded-opentype"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/b45379592d11b2bb9135eb78cea8b54220d89b26d67fb19bae5d15a540d32556.woff2") format("woff2"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/538ba3ff4633df61675f383136e31bca46f0b86da394d3d61c18a1b5a81182e2.woff") format("woff"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/05c7163a85f534d4162eb9cd65a0b9650ee55d754e7000736e5e297b774bb59c.ttf") format("truetype");
+     font-weight: 400;
+     font-style: normal;
+}
+@font-face {
+     font-family: 'Samim';
+     src: url("https://fdn.fontcdn.ir/Fonts/Samim/b53b9aa7da86a62f73aa0e6d4fc288ac278e0b87b48e3af3f90169b665bbfe0e.eot");
+     src: url("https://fdn.fontcdn.ir/Fonts/Samim/b53b9aa7da86a62f73aa0e6d4fc288ac278e0b87b48e3af3f90169b665bbfe0e.eot?#iefix") format("embedded-opentype"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/669fc8c8559080eab9fa0757424331c641a5134245dfb952e7471454f38e0384.woff2") format("woff2"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/41c0a06fdc5a75ba69edb7807fd78d2490e181829583d207f0698a3ce87d1a7f.woff") format("woff"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/00b91524be48d2f1db7eb3067fe12a3dafb71ff69c0fc043fd6181a5809edf61.ttf") format("truetype");
+     font-weight: 500;
+     font-style: normal;
+}
+@font-face {
+     font-family: 'Samim';
+     src: url("https://fdn.fontcdn.ir/Fonts/Samim/b4aadcd3f3a3bbab755b8d36dfda94a614ee4d640aa118b77f7a7c340d4b448e.eot");
+     src: url("https://fdn.fontcdn.ir/Fonts/Samim/b4aadcd3f3a3bbab755b8d36dfda94a614ee4d640aa118b77f7a7c340d4b448e.eot?#iefix") format("embedded-opentype"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/2433289a5eab77e0374c98180640c2eb1fa5301d6ec3c6219d720662cf0904fc.woff2") format("woff2"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/faaa02c2416dd41412461bc8ed5c3f87e85e329f940648932b7943ccbfc581f2.woff") format("woff"),
+          url("https://fdn.fontcdn.ir/Fonts/Samim/b14a43607588f1d8f64a9eb7f70b7fc91e52484f6c93c47d0b59ea14aa3a7d79.ttf") format("truetype");
+     font-weight: 700;
+     font-style: normal;
+}
+/* Powered by FontServer.ir */
