@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.ProductModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Application.Services
@@ -25,7 +27,14 @@ namespace Aroma_Shop.Application.Services
 
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {
-            throw new NotImplementedException();
+            var productCategories = new List<Category>();
+            foreach (var productCategoryId in productViewModel.ProductCategoriesId)
+            {
+                productCategories.Add(GetCategory(productCategoryId));
+            }
+
+            throw new Exception();
+
         }
 
         public IEnumerable<Product> GetProducts()
@@ -203,6 +212,12 @@ namespace Aroma_Shop.Application.Services
                     .Selected = true;
             }
             return items;
+        }
+
+        public IEnumerable<Image> AddProductImages(IEnumerable<IFormFile> productImages)
+        {
+            string productImagesPath = Path.Combine(Directory.GetCurrentDirectory());
+            throw new Exception();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.ProductModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Application.Interfaces
@@ -18,5 +19,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategory(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
+        IEnumerable<Image> AddProductImages(IEnumerable<IFormFile> productImages);
     }
 }
