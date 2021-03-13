@@ -1,4 +1,5 @@
-﻿@model  Aroma_Shop.Domain.Models.ProductModels.Product
+﻿@using System.Text.RegularExpressions
+@model  Aroma_Shop.Domain.Models.ProductModels.Product
 @{
     ViewData["Title"] = Model.ProductName;
 }
@@ -11,12 +12,12 @@
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img class="d-block w-100" src="" alt="First slide">
+                            <img class="d-block w-100" src="~/img/Product/@Model.Images.FirstOrDefault().ImagePath" alt="First slide">
                         </div>
                         @foreach (var productImage in Model.Images.Skip(1))
                         {
                             <div class="carousel-item">
-                                <img class="d-block w-100" src="@productImage.ImagePath" alt="First slide">
+                                <img class="d-block w-100" src="~/img/Product/@productImage.ImagePath" alt="First slide">
                             </div>
                         }
                     </div>
@@ -49,7 +50,7 @@
                         <li>وضعیت : @(Model.ProductQuantityInStock > 0 ? "موجود در انبار" : "<span class='text-danger'>ناموجود</span>")</li>
                     </ul>
                     <p class="mb-4">
-                        @Model.ProductDescription.Substring(0,91)...
+                        @Regex.Replace((Model.ProductDescription.Length>=91? Model.ProductDescription.Substring(0, 91)+ "..." : ""), @"<[^>]+>", "")
                     </p>
                     <div class="product_count">
                         <label for="qty">تعداد :</label>
@@ -92,7 +93,7 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-                @Model.ProductDescription
+                @Html.Raw(Model.ProductDescription)
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="table-responsive">

@@ -75,9 +75,23 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+                var result = _productService.AddProduct(model);
+                if (result)
+                {
+                    ModelState.Clear();
+                    model = new AddEditProductViewModel()
+                    {
+                        TreeViewCategories = _productService.GetCategoriesTreeView()
+                    };
+                    ViewData["SuccessMessage"] = "محصول مورد نظر با موفقیت افزوده شد.";
+                    return View(model);
+                }
+                ModelState.AddModelError("", "مشکلی در زمان افزودن محصول رخ داد.");
             }
-
+            model = new AddEditProductViewModel()
+            {
+                TreeViewCategories = _productService.GetCategoriesTreeView()
+            };
             return View(model);
         }
 
@@ -140,7 +154,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 if (result)
                 {
                     ModelState.Clear();
-                    var newCategories = _productService.GetCategories();
                     model = new AddEditCategoryViewModel()
                     {
                         AllCategories = _productService.GetCategoriesTreeView()
@@ -150,7 +163,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 }
                 ModelState.AddModelError("", "مشکلی در زمان افزودن دسته رخ داد.");
             }
-            var categories = _productService.GetCategories();
             model.AllCategories =
                 _productService.GetCategoriesTreeView();
             return View(model);

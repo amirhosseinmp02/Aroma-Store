@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
+﻿@using System.Web
+@using System.Text.RegularExpressions
+@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
 
 @{
     ViewData["Title"] = "محصولات";
@@ -6,7 +8,7 @@
 
 <div class="h2 mt-3">
     <h1 class="h2 d-inline">محصولات</h1>
-    <a class="btn btn-warning float-left" asp-controller="Product" asp-action="AddCategory">افزودن</a>
+    <a class="btn btn-warning float-left" asp-controller="Product" asp-action="AddProduct">افزودن</a>
 </div>
 <hr />
 @if (!Convert.ToBoolean(ViewBag.isEmpty))
@@ -27,6 +29,7 @@
                 <th class="cart-item-cells">تصویر</th>
                 <th class="cart-item-cells">نام</th>
                 <th class="cart-item-cells">قیمت</th>
+                <th class="cart-item-cells">توضیحات</th>
                 <th class="cart-item-cells">عملیات</th>
             </tr>
         </thead>
@@ -34,9 +37,10 @@
             @foreach (var product in Model)
             {
                 <tr>
-                    <th class="cart-item-cells"><img class="admin-products" src="@product.Images.FirstOrDefault().ImagePath"></th>
+                    <th class="cart-item-cells"><img class="admin-products" src="~/img/Product/@product.Images.FirstOrDefault().ImagePath"></th>
                     <td class="cart-item-cells align-middle">@product.ProductName</td>
                     <td class="cart-item-cells align-middle">@product.ProductPrice</td>
+                    <td class="cart-item-cells align-middle">@Regex.Replace(product.ProductDescription, @"<[^>]+>", "")</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
                             <a class="btn text-light btn-primary" asp-route-Id="@product.ProductId">ویرایش</a>
@@ -47,7 +51,7 @@
             }
         </tbody>
     </table>
-    @Html.PartialAsync("PartialPaging", "Index")
+    @await Html.PartialAsync("PartialPaging", "Index");
 }
 else
 {

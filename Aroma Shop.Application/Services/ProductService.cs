@@ -45,6 +45,7 @@ namespace Aroma_Shop.Application.Services
                     Categories = productCategories
                 };
                 AddProductImages(product,productViewModel.ProductImages);
+                _productRepository.Save();
                 return true;
             }
             catch
@@ -237,9 +238,9 @@ namespace Aroma_Shop.Application.Services
                 $"{persianCalendar.GetYear(DateTime.Now)} - {persianCalendar.GetMonth(DateTime.Now)}";
             var rootPath =
                 Path.Combine(Directory.GetCurrentDirectory(),
-                    "wwwroot", "img");
+                    "wwwroot", "img", "Product");
             var productImagesPath =
-                Path.Combine(rootPath, "Product", monthProductImagesDirName);
+                Path.Combine(rootPath, "Products", monthProductImagesDirName);
             var isYearMonthProductImagesDirExists =
                 Directory.Exists(productImagesPath);
             if (!isYearMonthProductImagesDirExists)
@@ -250,7 +251,7 @@ namespace Aroma_Shop.Application.Services
             foreach (var productImageFile in productImagesFiles)
             {
                 var productImageFileName =
-                    Guid.NewGuid().ToString() + productImageFile.FileName;
+                    $"{Guid.NewGuid().ToString()} - {productImageFile.FileName}";
                 var fullProductImagesPath
                     = Path.Combine(productImagesPath, productImageFileName);
                 using (var stream = new FileStream(fullProductImagesPath, FileMode.Create))
@@ -259,7 +260,7 @@ namespace Aroma_Shop.Application.Services
                 }
                 var productImage = new Image()
                 {
-                    ImagePath = $"Product/{monthProductImagesDirName}/{productImageFileName})",
+                    ImagePath = $"Products/{monthProductImagesDirName}/{productImageFileName}",
                     Product = product
                 };
                 _productRepository.AddImage(productImage);
