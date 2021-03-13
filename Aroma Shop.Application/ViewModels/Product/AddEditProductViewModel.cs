@@ -39,12 +39,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public IEnumerable<SelectListItem> TreeViewCategories { get; set; }
         public IEnumerable<int> ProductCategoriesId { get; set; }
 
-        [MaxLength(100, ErrorMessage = "حداکثر 100 کارکتر مجاز می باشد")]
-        [Required(ErrorMessage = "لطفا نام مشخصه را وارد نمایید")]
-        public List<string> InformationsNames { get; set; }
-        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
-        [Required(ErrorMessage = "لطفا مقدار مشخصه را وارد نمایید")]
-        public List<string> InformationsValues { get; set; }
+        public IEnumerable<string> InformationsNames { get; set; }
+        public IEnumerable<string> InformationsValues { get; set; }
 
     }
 }
