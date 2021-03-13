@@ -16,6 +16,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
             TreeViewCategories = new List<SelectListItem>();
             ProductCategoriesId = new List<int>();
             ProductImages = new List<IFormFile>();
+            InformationsNames = new List<string>();
+            InformationsValues = new List<string>();
         }
 
         [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
@@ -36,6 +38,13 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public IEnumerable<IFormFile> ProductImages { get; set; }
         public IEnumerable<SelectListItem> TreeViewCategories { get; set; }
         public IEnumerable<int> ProductCategoriesId { get; set; }
+
+        [MaxLength(100, ErrorMessage = "حداکثر 100 کارکتر مجاز می باشد")]
+        [Required(ErrorMessage = "لطفا نام مشخصه را وارد نمایید")]
+        public List<string> InformationsNames { get; set; }
+        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
+        [Required(ErrorMessage = "لطفا مقدار مشخصه را وارد نمایید")]
+        public List<string> InformationsValues { get; set; }
 
     }
 }

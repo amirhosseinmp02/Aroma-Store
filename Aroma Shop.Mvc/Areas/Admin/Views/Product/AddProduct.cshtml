@@ -53,18 +53,7 @@
             </div>
             <label>مشخصات</label>
             <div class="form-group border border-secondary p-2 border-dark product-informations">
-                <div class="row mb-2">
-                    <div class="col">
-                        <input type="text" class="form-control" placeholder="نام">
-                    </div>
-                    <div class="col">
-                        <input type="text" class="form-control" placeholder="مقدار">
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-success">افزودن</button>
+                <button id="add-information-btn" type="button" class="btn btn-success">افزودن</button>
             </div> 
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
@@ -87,5 +76,16 @@
             font_defaultLabel: "Samim"
         });
         CKEDITOR.addCss(".cke_editable{font-family: 'Samim', sans-serif;}");
+
+        //Add Informations Button Scripts
+        var content = "<div class='row mb-2'><div class='col' ><input type='text' class='form-control' placeholder='نام'></div><div class='col'><input type='text' class='form-control' placeholder='مقدار'></div><div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+        $("#add-information-btn").click(function() {
+            $(content).insertBefore("#add-information-btn");
+        });
+        $(document).on("click",
+            ".remove-information-btn",
+            function() {
+                $(this).parent().parent().remove();
+            });
     </script>
 }
