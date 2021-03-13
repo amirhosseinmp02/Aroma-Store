@@ -4812,7 +4812,7 @@ a {
     max-width: 150px;
     margin: auto
 }
-.list li span:nth-last-child(1) {
+.list li:first-child span:nth-last-child(1) {
     display: none
 }
 #btn-addtocart {

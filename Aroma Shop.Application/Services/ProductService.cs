@@ -35,34 +35,17 @@ namespace Aroma_Shop.Application.Services
                 {
                     productCategories.Add(GetCategory(productCategoryId));
                 }
-
-                var productsInformations = new List<ProductInformation>();
-                if (productViewModel.InformationsNames.Count() > 0 && productViewModel.InformationsValues.Count() > 0)
-                {
-                    for (int i = 0; i < productViewModel.InformationsNames.Count(); i++)
-                    {
-                        if (string.IsNullOrEmpty(productViewModel.InformationsNames.ElementAtOrDefault(i))
-                            || string.IsNullOrEmpty(productViewModel.InformationsValues.ElementAtOrDefault(i)))
-                            break;
-                        var productInformations = new ProductInformation()
-                        {
-                            Name = productViewModel.InformationsNames.ElementAtOrDefault(i),
-                            Value = productViewModel.InformationsValues.ElementAtOrDefault(i)
-                        };
-                        productsInformations.Add(productInformations);
-                    }
-                }
-
                 var product = new Product()
                 {
                     ProductName = productViewModel.ProductName,
                     ProductDescription = productViewModel.ProductDescription,
                     ProductPrice = productViewModel.ProductPrice,
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
-                    Categories = productCategories,
-                    Informations = productsInformations
+                    Categories = productCategories
                 };
                 AddProductImages(product,productViewModel.ProductImages);
+                AddProductsInformations(product,productViewModel.InformationsNames,productViewModel.InformationsValues);
+                _productRepository.AddProduct(product);
                 _productRepository.Save();
                 return true;
             }
@@ -282,6 +265,27 @@ namespace Aroma_Shop.Application.Services
                     Product = product
                 };
                 _productRepository.AddImage(productImage);
+            }
+        }
+
+        public void AddProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
+        {
+            if (informationsNames.Count() > 0 && informationsValues.Count() > 0)
+            {
+                for (int i = 0; i < informationsNames.Count(); i++)
+                {
+                    if (!string.IsNullOrEmpty(informationsNames.ElementAtOrDefault(i))
+                        || !string.IsNullOrEmpty(informationsValues.ElementAtOrDefault(i)))
+                    {
+                        var productInformations = new ProductInformation()
+                        {
+                            Name = informationsNames.ElementAtOrDefault(i),
+                            Value = informationsValues.ElementAtOrDefault(i),
+                            Product = product
+                        };
+                        _productRepository.AddProductInformations(productInformations);
+                    }
+                }
             }
         }
     }

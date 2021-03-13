@@ -8,13 +8,13 @@
             <div class="col-md-6 col-lg-4 col-xl-3">
                 <div class="card text-center card-product">
                     <div class="card-product__img">
-                        <img class="card-img" src="~/img/Product/@product.Images.FirstOrDefault().ImagePath" alt="">
+                        <img class="card-img" src="~/img/Product/@(product.Images.Count>0?product.Images.FirstOrDefault().ImagePath:"")" alt="">
                         <div class="card-product__imgOverlay">
                             <a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId" class="btn btn-block text-light btn-dark btn-buy">خرید</a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <p>@(product.Categories?.First().CategoryName)</p>
+                        <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
                         <h4 class="card-product__title"><a href="single-product.html">@product.ProductName</a></h4>
                         <p class="card-product__price">@product.ProductPrice تومان</p>
                     </div>
