@@ -1,0 +1,134 @@
+﻿@model Aroma_Shop.Application.ViewModels.Product.AddEditProductViewModel
+@{
+    ViewData["Title"] = "ویرایش محصول";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<div class="h2 mt-3">
+    <h1 class="h2 d-inline">ویرایش محصول</h1>
+    <a class="btn btn-warning float-left" asp-controller="Product" asp-action="Index">بازگشت</a>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-9 col-md-11 col-sm-12 m-auto">
+        <form asp-action="AddProduct" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="control-label" for="ProductName">نام</label>
+                <input class="form-control" asp-for="ProductName">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">شرح کوتاه</label>
+                <textarea asp-for="ProductShortDescription" rows="3" class="form-control">
+                </textarea>
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">شرح</label>
+                <textarea id="matn" asp-for="ProductDescription" class="form-control">
+                </textarea>
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="ProductPrice">قیمت</label>
+                <input class="form-control" asp-for="ProductPrice">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="ProductQuantityInStock">تعداد</label>
+                <input class="form-control" asp-for="ProductQuantityInStock">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label>دسته بندی ها</label>
+                <div id="jstree"></div>
+            </div>
+            <div class="form-group">
+                <label>انتخاب تصاویر</label>
+                <label for="attachment" class="w-100 text-center">
+                    <a class="upload-btn mb-2" role="button" aria-disabled="false"><i class="bi bi-cloud-arrow-up-fill text-info display-3"></i></a>
+                </label>
+                <input type="file" asp-for="ProductImages" accept=".png,.jpg,.jpeg" id="attachment" class="d-none" multiple />
+                <p id="files-area">
+                    <span id="filesList">
+                        <span id="files-names"></span>
+                    </span>
+                </p>
+            </div>
+            <label>مشخصات</label>
+            <div class="form-group border border-secondary p-2 border-dark product-informations">
+                <button id="add-information-btn" type="button" class="btn btn-success">افزودن</button>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-block btn-primary">
+                <input type="hidden" name="productCategoriesKey" id="selectedItems" />
+            </div>
+            @if (ViewData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+            }
+            <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/vendors/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('matn',
+            {
+                language: 'fa',
+                font_defaultLabel: "Samim"
+            });
+        CKEDITOR.addCss(".cke_editable{font-family: 'Samim', sans-serif;}");
+
+        //Add Informations Button Scripts
+        var content = "<div class='row mb-2'><div class='col' ><input type='text' name='InformationsNames' class='form-control' placeholder='نام'></div><div class='col'><input type='text' name='InformationsValues' class='form-control' placeholder='مقدار'></div><div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+        $("#add-information-btn").click(function() {
+            $(content).insertBefore("#add-information-btn");
+        });
+        $(document).on("click",
+            ".remove-information-btn",
+            function() {
+                $(this).parent().parent().remove();
+            });
+    </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script>
+        $(function() {
+            $('#jstree').on('changed.jstree',
+                function(e, data) {
+                    var postedItems = $('#jstree').jstree("get_selected");
+                    $('#selectedItems').val(JSON.stringify(postedItems));
+                }).jstree({
+                "core": {
+                    "themes": {
+                        "variant": "large"
+                    },
+                    "data": @Html.Raw(@Model.CategoriesTreeViewNodesJson)
+                },
+                "checkbox": {
+                    "keep_selected_style": false,
+                    "three_state": false
+                },
+                "plugins": ["wholerow", "checkbox"],
+                'types': {
+                    'types': {
+                        'file': {
+                            'icon': {
+                                'image': 'https://pics.freeicons.io/uploads/icons/png/14291991451579780443-512.png'
+                            }
+                        },
+                        'default': {
+                            'icon': {
+                                'image': 'https://pics.freeicons.io/uploads/icons/png/14291991451579780443-512.png'
+                            }
+                        }
+                    }
+                }
+            });
+    });
+    </script>
+}
