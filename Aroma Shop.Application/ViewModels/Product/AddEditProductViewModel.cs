@@ -30,6 +30,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public int ProductQuantityInStock { get; set; }
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
+        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
+        public string ProductShortDescription { get; set; }
         public string CategoriesTreeViewNodesJson { get; set; }
 
         [MaxFilesCount(6)]

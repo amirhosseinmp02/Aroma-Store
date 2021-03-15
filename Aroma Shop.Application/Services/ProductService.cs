@@ -39,6 +39,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     ProductName = productViewModel.ProductName,
                     ProductDescription = productViewModel.ProductDescription,
+                    ProductShortDescription = productViewModel.ProductShortDescription,
                     ProductPrice = productViewModel.ProductPrice,
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
                     Categories = productCategories

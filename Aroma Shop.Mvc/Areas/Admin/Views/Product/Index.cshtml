@@ -37,13 +37,13 @@
             @foreach (var product in Model)
             {
                 <tr>
-                    <th class="cart-item-cells"><img class="admin-products" src="~/img/Product/@product.Images.FirstOrDefault().ImagePath"></th>
+                    <th class="cart-item-cells"><img class="admin-products" src="~/img/Product/@(product.Images.Count>0?product.Images.FirstOrDefault().ImagePath:"")"></th>
                     <td class="cart-item-cells align-middle">@product.ProductName</td>
                     <td class="cart-item-cells align-middle">@product.ProductPrice</td>
-                    <td class="cart-item-cells align-middle">@Regex.Replace(product.ProductDescription, @"<[^>]+>", "")</td>
+                    <td class="cart-item-cells align-middle">@(!string.IsNullOrEmpty(product.ProductShortDescription)? product.ProductShortDescription:"")</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
-                            <a class="btn text-light btn-primary" asp-route-Id="@product.ProductId">ویرایش</a>
+                            <a class="btn text-light btn-primary mb-3" asp-route-Id="@product.ProductId">ویرایش</a>
                             <a class="btn text-light btn-primary" asp-route-Id="@product.ProductId">حذف</a>
                         </div>
                     </td>

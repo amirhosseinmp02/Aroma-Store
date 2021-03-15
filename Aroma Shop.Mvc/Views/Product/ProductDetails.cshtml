@@ -59,7 +59,7 @@
                         </li>
                     </ul>
                     <p class="mb-4">
-                        @Regex.Replace((Model.ProductDescription?.Length >= 91 ? Model.ProductDescription.Substring(0, 91) + "..." : ""), @"<[^>]+>", "")
+                        @(!string.IsNullOrEmpty(Model.ProductShortDescription)? Model.ProductShortDescription:"")
                     </p>
                     <div class="product_count">
                         <label for="qty">تعداد :</label>
