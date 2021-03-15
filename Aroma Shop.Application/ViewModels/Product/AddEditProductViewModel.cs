@@ -13,7 +13,6 @@ namespace Aroma_Shop.Application.ViewModels.Product
     {
         public AddEditProductViewModel()
         {
-            TreeViewCategories = new List<SelectListItem>();
             ProductCategoriesId = new List<int>();
             ProductImages = new List<IFormFile>();
             InformationsNames = new List<string>();
@@ -31,12 +30,12 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public int ProductQuantityInStock { get; set; }
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
+        public string CategoriesTreeViewNodesJson { get; set; }
 
         [MaxFilesCount(6)]
         [MaxFileSize(4194304)]
         [AllowedExtensions(new string[]{".png",".jpg",".jpeg"})]
         public IEnumerable<IFormFile> ProductImages { get; set; }
-        public IEnumerable<SelectListItem> TreeViewCategories { get; set; }
         public IEnumerable<int> ProductCategoriesId { get; set; }
 
         public IEnumerable<string> InformationsNames { get; set; }
