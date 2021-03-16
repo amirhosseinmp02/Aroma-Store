@@ -130,6 +130,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/EditProduct")]
         public IActionResult EditProduct(int productId)
         {
+            var product = _productService.GetProduct(productId);
             return View();
         }
 
