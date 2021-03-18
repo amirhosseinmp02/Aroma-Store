@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
@@ -35,7 +36,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 products = _productService.GetProducts()
                     .Where(p => p.ProductName.Contains(search)
                                 || p.Categories
-                                    .Contains(new Category(){CategoryName = "search"}));
+                                    .Contains(new Category() { CategoryName = "search" }));
                 ViewBag.search = search;
             }
             else
@@ -82,7 +83,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/AddProduct")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddProduct(AddEditProductViewModel model,string productCategoriesKey)
+        public IActionResult AddProduct(AddEditProductViewModel model, string productCategoriesKey)
         {
             if (ModelState.IsValid)
             {
@@ -131,9 +132,38 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult EditProduct(int productId)
         {
             var product = _productService.GetProduct(productId);
-            return View();
+            if (product == null)
+                return NotFound();
+            var categories = _productService.GetCategories();
+            var nodes = categories.Select(p => new TreeViewNode()
+            {
+                id = p.CategoryId.ToString(),
+                parent = p.ParentCategory == null ? "#" : p.ParentCategory.CategoryId.ToString(),
+                text = p.CategoryName,
+                selected = product.Categories.Any(t => t.CategoryName == p.CategoryName) ? true : false
+            }).ToList();
+
+            var jsonNodes = JsonConvert.SerializeObject(nodes);
+            var model = new AddEditProductViewModel()
+            {
+                ProductName = product.ProductName,
+                ProductShortDescription = product.ProductShortDescription,
+                ProductDescription = product.ProductDescription,
+                ProductPrice = product.ProductPrice,
+                ProductQuantityInStock = product.ProductQuantityInStock,
+                CategoriesTreeViewNodesJson = jsonNodes,
+                InformationsNames = product.Informations.Select(p => p.Name),
+                InformationsValues = product.Informations.Select(p => p.Value)
+            };
+            return View(model);
         }
 
+        [HttpPost("/Admin/Products/EditProduct")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProduct(AddEditProductViewModel model)
+        {
+            return View();
+        }
         #endregion
 
         #region ShowCategories

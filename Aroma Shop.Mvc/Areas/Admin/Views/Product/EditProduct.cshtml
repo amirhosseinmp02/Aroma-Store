@@ -1,4 +1,5 @@
-﻿@model Aroma_Shop.Application.ViewModels.Product.AddEditProductViewModel
+﻿@using System.IO
+@model Aroma_Shop.Application.ViewModels.Product.AddEditProductViewModel
 @{
     ViewData["Title"] = "ویرایش محصول";
 }
@@ -50,12 +51,27 @@
                 <input type="file" asp-for="ProductImages" accept=".png,.jpg,.jpeg" id="attachment" class="d-none" multiple />
                 <p id="files-area">
                     <span id="filesList">
-                        <span id="files-names"></span>
+                        <span id="files-names">
+                            @*@foreach (var imagePath in ViewBag.ImagesPaths)
+                                {
+                                    <span class="file-block"><span class="file-delete badge badge-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
+                                    </svg></span><img class="productimages" src="~/img/Product/@imagePath" alt="48275 copy.jpg"></span>
+                                }*@
+                        </span>
                     </span>
                 </p>
             </div>
             <label>مشخصات</label>
             <div class="form-group border border-secondary p-2 border-dark product-informations">
+                @for (int i = 0; i < Model.InformationsNames.Count(); i++)
+                {
+                    <div class='row mb-2'>
+                        <div class='col'><input type='text' name='InformationsNames' class='form-control' value="@Model.InformationsNames.ElementAtOrDefault(i)" placeholder='نام'></div>
+                        <div class='col'><input type='text' name='InformationsValues' class='form-control' value="@Model.InformationsValues.ElementAtOrDefault(i)" placeholder='مقدار'></div>
+                        <div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div>
+                    </div>
+                }
                 <button id="add-information-btn" type="button" class="btn btn-success">افزودن</button>
             </div>
             <div class="form-group">
@@ -74,6 +90,46 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/vendors/ckeditor/ckeditor.js"></script>
+
+    //Manage Images
+    <script>
+        const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
+
+        $("#attachment").on('change', function (e) {
+            for (var i = 0; i < this.files.length; i++) {
+                let fileBloc = $('<span/>', { class: 'file-block' }),
+                    fileName = $('<img/>', { class: 'productimages', src: URL.createObjectURL(this.files.item(i)), alt: this.files.item(i).name });
+                fileBloc.append('<span class="file-delete badge badge-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">\r\n  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>\r\n</svg></span>')
+                    .append(fileName);
+                $("#filesList > #files-names").append(fileBloc);
+                //document.getElementById("lol").src = URL.createObjectURL(this.files.item(i));
+            };
+            // Ajout des fichiers dans l'objet DataTransfer
+            for (let file of this.files) {
+                dt.items.add(file);
+            }
+            // Mise à jour des fichiers de l'input file après ajout
+            this.files = dt.files;
+
+            // EventListener pour le bouton de suppression créé
+            $('span.file-delete').click(function () {
+                let name = $(this).next('img.productimages').attr("alt");
+                // Supprimer l'affichage du nom de fichier
+                $(this).parent().remove();
+                for (let i = 0; i < dt.items.length; i++) {
+                    // Correspondance du fichier et du nom
+                    if (name === dt.items[i].getAsFile().name) {
+                        // Suppression du fichier dans l'objet DataTransfer
+                        dt.items.remove(i);
+                        continue;
+                    }
+                }
+                // Mise à jour des fichiers de l'input file après suppression
+                document.getElementById('attachment').files = dt.files;
+            });
+        });
+    </script>
+
     <script type="text/javascript">
         CKEDITOR.replace('matn',
             {
@@ -84,12 +140,12 @@
 
         //Add Informations Button Scripts
         var content = "<div class='row mb-2'><div class='col' ><input type='text' name='InformationsNames' class='form-control' placeholder='نام'></div><div class='col'><input type='text' name='InformationsValues' class='form-control' placeholder='مقدار'></div><div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
-        $("#add-information-btn").click(function() {
+        $("#add-information-btn").click(function () {
             $(content).insertBefore("#add-information-btn");
         });
         $(document).on("click",
             ".remove-information-btn",
-            function() {
+            function () {
                 $(this).parent().parent().remove();
             });
     </script>
@@ -113,21 +169,7 @@
                     "keep_selected_style": false,
                     "three_state": false
                 },
-                "plugins": ["wholerow", "checkbox"],
-                'types': {
-                    'types': {
-                        'file': {
-                            'icon': {
-                                'image': 'https://pics.freeicons.io/uploads/icons/png/14291991451579780443-512.png'
-                            }
-                        },
-                        'default': {
-                            'icon': {
-                                'image': 'https://pics.freeicons.io/uploads/icons/png/14291991451579780443-512.png'
-                            }
-                        }
-                    }
-                }
+                "plugins": ["wholerow", "checkbox"]
             });
     });
     </script>
