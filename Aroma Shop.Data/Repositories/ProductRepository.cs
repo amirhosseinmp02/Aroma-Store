@@ -100,9 +100,20 @@ namespace Aroma_Shop.Data.Repositories
             }
         }
 
+        public Image GetImage(int imageId)
+        {
+            var image = _context.Images.Find(imageId);
+            return image;
+        }
+
         public void AddImage(Image image)
         {
             _context.Add(image);
+        }
+
+        public void DeleteImage(Image image)
+        {
+            _context.Remove(image);
         }
 
         public void Save()
