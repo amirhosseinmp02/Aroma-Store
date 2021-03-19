@@ -21,6 +21,8 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategory(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
+        IEnumerable<Image> GetProductImages(IEnumerable<int> productImagesIds);
         void AddProductImages(Product product,IEnumerable<IFormFile> productImages);
+        void DeleteProductImages(IEnumerable<Image> productImages);
     }
 }
