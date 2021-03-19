@@ -100,10 +100,10 @@ namespace Aroma_Shop.Data.Repositories
             }
         }
 
-        public Image GetImage(int imageId)
+        public IEnumerable<Image> GetImages()
         {
-            var image = _context.Images.Find(imageId);
-            return image;
+            var images = _context.Images;
+            return images;
         }
 
         public void AddImage(Image image)

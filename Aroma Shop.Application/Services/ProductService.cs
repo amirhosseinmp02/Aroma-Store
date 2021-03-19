@@ -257,6 +257,11 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
+        public IEnumerable<Image> GetProductImages(IEnumerable<int> productImagesIds)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddProductImages(Product product,IEnumerable<IFormFile> productImagesFiles)
         {
             var persianCalendar = new PersianCalendar();
@@ -291,6 +296,11 @@ namespace Aroma_Shop.Application.Services
                 };
                 _productRepository.AddImage(productImage);
             }
+        }
+
+        public void DeleteProductImages(IEnumerable<Image> productImages)
+        {
+            throw new NotImplementedException();
         }
 
         public void AddProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
