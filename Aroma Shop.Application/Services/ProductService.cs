@@ -338,5 +338,10 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public void UpdateProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
