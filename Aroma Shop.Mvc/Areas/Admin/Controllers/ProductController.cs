@@ -111,6 +111,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var product = _productService.GetProduct(productId);
             if (product == null)
                 return NotFound();
+            TempData["productId"] = productId;
             var productCategories = _productService.GetCategoriesTreeView().Skip(1);
             foreach (var productCategory in productCategories)
             {
@@ -139,7 +140,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditProduct(AddEditProductViewModel model)
         {
-
+            model.ProductId = Convert.ToInt32(TempData["productId"]);
             return View();
         }
         #endregion

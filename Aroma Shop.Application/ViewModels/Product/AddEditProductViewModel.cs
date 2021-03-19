@@ -46,6 +46,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         //Properties For Editing Product
         public IEnumerable<Image> CurrentProductImages { get; set; }
         public IEnumerable<int> DeletedProductImagesIds { get; set; }
+        public int ProductId { get; set; }
 
     }
 }

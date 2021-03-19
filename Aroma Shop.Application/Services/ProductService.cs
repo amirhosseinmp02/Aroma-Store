@@ -56,6 +56,30 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public bool UpdateProduct(AddEditProductViewModel productViewModel)
+        {
+            try
+            {
+                var productCategories = _productRepository.GetCategories()
+                    .Where(p => productViewModel.ProductCategoriesId.Any(t => p.CategoryId == t)).ToList();
+                var product = new Product()
+                {
+                    ProductName = productViewModel.ProductName,
+                    ProductShortDescription = productViewModel.ProductShortDescription,
+                    ProductDescription = productViewModel.ProductDescription,
+                    ProductPrice = productViewModel.ProductPrice,
+                    ProductQuantityInStock = productViewModel.ProductQuantityInStock,
+                    Categories = productCategories
+
+                };
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<Product> GetProducts()
         {
             return _productRepository.GetProducts();
@@ -96,11 +120,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
 
-        }
-
-        public bool UpdateProduct(AddEditProductViewModel productViewModel)
-        {
-            throw new NotImplementedException();
         }
 
         public bool UpdateCategory(AddEditCategoryViewModel categoryViewModel)
