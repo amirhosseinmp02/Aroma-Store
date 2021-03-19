@@ -61,10 +61,17 @@ namespace Aroma_Shop.Data.Repositories
             _context.Add(product);
         }
 
+
         public void AddProductInformations(ProductInformation productInformation)
         {
             _context.Add(productInformation);
         }
+
+        public void DeleteProductInformations(Product product)
+        {
+            product.Informations.Clear(); 
+        }
+
         public void UpdateProduct(Product product)
         {
             _context.Update(product);
@@ -80,7 +87,7 @@ namespace Aroma_Shop.Data.Repositories
             _context.Update(category);
         }
 
-        public void DeleteCategory(int categoryId)
+        public void DeleteCategoryById(int categoryId)
         {
             var category = GetCategory(categoryId);
             _context.Remove(category);

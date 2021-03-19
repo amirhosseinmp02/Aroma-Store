@@ -44,8 +44,8 @@ namespace Aroma_Shop.Application.Services
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
                     Categories = productCategories
                 };
-                AddProductImages(product,productViewModel.ProductImagesFiles);
-                AddProductsInformations(product,productViewModel.InformationsNames,productViewModel.InformationsValues);
+                AddProductImages(product, productViewModel.ProductImagesFiles);
+                AddProductsInformations(product, productViewModel.InformationsNames, productViewModel.InformationsValues);
                 _productRepository.AddProduct(product);
                 _productRepository.Save();
                 return true;
@@ -62,6 +62,7 @@ namespace Aroma_Shop.Application.Services
             {
                 var productCategories = _productRepository.GetCategories()
                     .Where(p => productViewModel.ProductCategoriesId.Any(t => p.CategoryId == t)).ToList();
+
                 var product = new Product()
                 {
                     ProductName = productViewModel.ProductName,
@@ -70,8 +71,13 @@ namespace Aroma_Shop.Application.Services
                     ProductPrice = productViewModel.ProductPrice,
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
                     Categories = productCategories
-
                 };
+                AddProductImages(product,productViewModel.ProductImagesFiles);
+                if (productViewModel.DeletedProductImagesIds != null)
+                {
+                    var productImages = GetProductImages(productViewModel.DeletedProductImagesIds);
+                    DeleteProductImages(productImages);
+                }
                 return true;
             }
             catch
@@ -146,7 +152,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                _productRepository.DeleteCategory(categoryId);
+                _productRepository.DeleteCategoryById(categoryId);
                 _productRepository.Save();
                 return true;
             }
@@ -259,10 +265,12 @@ namespace Aroma_Shop.Application.Services
 
         public IEnumerable<Image> GetProductImages(IEnumerable<int> productImagesIds)
         {
-            throw new NotImplementedException();
+            var productImages = _productRepository.GetImages()
+                .Where(p => productImagesIds.Any(t => p.ImageId == t));
+            return productImages;
         }
 
-        public void AddProductImages(Product product,IEnumerable<IFormFile> productImagesFiles)
+        public void AddProductImages(Product product, IEnumerable<IFormFile> productImagesFiles)
         {
             var persianCalendar = new PersianCalendar();
             var monthProductImagesDirName =
@@ -300,7 +308,13 @@ namespace Aroma_Shop.Application.Services
 
         public void DeleteProductImages(IEnumerable<Image> productImages)
         {
-            throw new NotImplementedException();
+            foreach (var productImage in productImages)
+            {
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(),
+                    "wwwroot", "img", "Product",productImage.ImagePath);
+                File.Delete(imagePath);
+                _productRepository.DeleteImage(productImage);
+            }
         }
 
         public void AddProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
