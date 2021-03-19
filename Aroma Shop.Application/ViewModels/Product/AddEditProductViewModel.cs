@@ -14,7 +14,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public AddEditProductViewModel()
         {
             ProductCategoriesId = new List<int>();
-            ProductImages = new List<IFormFile>();
+            ProductImagesFiles = new List<IFormFile>();
             InformationsNames = new List<string>();
             InformationsValues = new List<string>();
         }
@@ -32,16 +32,20 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public string ProductDescription { get; set; }
         [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         public string ProductShortDescription { get; set; }
-        public string CategoriesTreeViewNodesJson { get; set; }
 
         [MaxFilesCount(6)]
         [MaxFileSize(4194304)]
         [AllowedExtensions(new string[]{".png",".jpg",".jpeg"})]
-        public IEnumerable<IFormFile> ProductImages { get; set; }
+        public IEnumerable<IFormFile> ProductImagesFiles { get; set; }
         public IEnumerable<int> ProductCategoriesId { get; set; }
+        public IEnumerable<SelectListItem> ProductCategories { get; set; }
 
         public IEnumerable<string> InformationsNames { get; set; }
         public IEnumerable<string> InformationsValues { get; set; }
+
+        //Properties For Editing Product
+        public IEnumerable<Image> CurrentProductImages { get; set; }
+        public IEnumerable<int> DeletedProductImagesIds { get; set; }
 
     }
 }

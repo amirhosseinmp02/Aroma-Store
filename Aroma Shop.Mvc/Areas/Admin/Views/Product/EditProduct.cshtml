@@ -11,7 +11,7 @@
 <hr>
 <div class="row">
     <div class="col-lg-9 col-md-11 col-sm-12 m-auto">
-        <form asp-action="AddProduct" enctype="multipart/form-data">
+        <form asp-action="EditProduct" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="control-label" for="ProductName">نام</label>
                 <input class="form-control" asp-for="ProductName">
@@ -41,23 +41,33 @@
             </div>
             <div class="form-group">
                 <label>دسته بندی ها</label>
-                <div id="jstree"></div>
+                <select class="form-control" multiple size="9"  multiple aria-label="select example" asp-for="ProductCategoriesId">
+                    @foreach (var c in Model.ProductCategories)
+                    {
+                        <option value="@c.Value" selected="@c.Selected">@c.Text</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label>انتخاب تصاویر</label>
                 <label for="attachment" class="w-100 text-center">
                     <a class="upload-btn mb-2" role="button" aria-disabled="false"><i class="bi bi-cloud-arrow-up-fill text-info display-3"></i></a>
                 </label>
-                <input type="file" asp-for="ProductImages" accept=".png,.jpg,.jpeg" id="attachment" class="d-none" multiple />
+                <input type="file" asp-for="ProductImagesFiles" accept=".png,.jpg,.jpeg" id="attachment" class="d-none" multiple />
                 <p id="files-area">
                     <span id="filesList">
                         <span id="files-names">
-                            @*@foreach (var imagePath in ViewBag.ImagesPaths)
-                                {
-                                    <span class="file-block"><span class="file-delete badge badge-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
-                                    </svg></span><img class="productimages" src="~/img/Product/@imagePath" alt="48275 copy.jpg"></span>
-                                }*@
+                            @foreach (var currentProductImage in Model.CurrentProductImages)
+                            {
+                                <input type="checkbox" name="CheckBoxes" value="@currentProductImage.ImageId" hidden />
+                                <span class="file-block">
+                                    <span class="delete-currentProductImage badge badge-danger">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
+                                        </svg>
+                                    </span><img class="productimages" src="~/img/Product/@currentProductImage.ImagePath" alt="@currentProductImage.ImageId">
+                                </span>
+                            }
                         </span>
                     </span>
                 </p>
@@ -90,8 +100,15 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/vendors/ckeditor/ckeditor.js"></script>
-
-    //Manage Images
+    @*Manage Current Product Images*@
+    <script>
+        $(".delete-currentProductImage").on("click",
+            function () {
+                $(this).parent().prev().attr("checked", "checked");
+                $(this).parent().remove();
+            });
+    </script>
+    @*Manage Images*@
     <script>
         const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
 
@@ -148,29 +165,5 @@
             function () {
                 $(this).parent().parent().remove();
             });
-    </script>
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-    <script>
-        $(function() {
-            $('#jstree').on('changed.jstree',
-                function(e, data) {
-                    var postedItems = $('#jstree').jstree("get_selected");
-                    $('#selectedItems').val(JSON.stringify(postedItems));
-                }).jstree({
-                "core": {
-                    "themes": {
-                        "variant": "large"
-                    },
-                    "data": @Html.Raw(@Model.CategoriesTreeViewNodesJson)
-                },
-                "checkbox": {
-                    "keep_selected_style": false,
-                    "three_state": false
-                },
-                "plugins": ["wholerow", "checkbox"]
-            });
-    });
     </script>
 }

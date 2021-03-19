@@ -37,7 +37,6 @@ namespace Aroma_Shop.Data.Repositories
             return product;
         }
 
-
         public IEnumerable<Category> GetCategories()
         {
             var categories = _context.Categories
@@ -65,6 +64,10 @@ namespace Aroma_Shop.Data.Repositories
         public void AddProductInformations(ProductInformation productInformation)
         {
             _context.Add(productInformation);
+        }
+        public void UpdateProduct(Product product)
+        {
+            _context.Update(product);
         }
 
         public void AddCategory(Category category)

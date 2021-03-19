@@ -175,6 +175,11 @@ input.input-validation-error {
     top: -40px;
     right: 12px;
 }
+.delete-currentProductImage {
+    position: relative;
+    top: -40px;
+    right: 12px;
+}
 
 .upload-btn {
     border: 2px #17a2b8 dashed;

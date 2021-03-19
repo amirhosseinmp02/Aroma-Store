@@ -9,6 +9,7 @@ namespace Aroma_Shop.Domain.Interfaces
         Product GetProduct(int productId);
         void AddProduct(Product product);
         void AddProductInformations(ProductInformation productInformation);
+        void UpdateProduct(Product product);
 
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);

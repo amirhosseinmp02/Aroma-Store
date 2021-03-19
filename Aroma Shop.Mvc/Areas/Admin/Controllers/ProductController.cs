@@ -65,61 +65,38 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddProduct")]
         public IActionResult AddProduct()
         {
-            var categories = _productService.GetCategories();
-            var nodes = categories.Select(p => new TreeViewNode()
-            {
-                id = p.CategoryId.ToString(),
-                parent = p.ParentCategory == null ? "#" : p.ParentCategory.CategoryId.ToString(),
-                text = p.CategoryName
-            }).ToList();
-
-            var jsonNodes = JsonConvert.SerializeObject(nodes);
+            var productCategories = _productService.GetCategoriesTreeView();
             var model = new AddEditProductViewModel()
             {
-                CategoriesTreeViewNodesJson = jsonNodes
+                ProductCategories = productCategories
             };
             return View(model);
         }
 
         [HttpPost("/Admin/Products/AddProduct")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddProduct(AddEditProductViewModel model, string productCategoriesKey)
+        public IActionResult AddProduct(AddEditProductViewModel model)
         {
             if (ModelState.IsValid)
             {
-                model.ProductCategoriesId = JsonConvert.DeserializeObject<int[]>(productCategoriesKey);
                 var result = _productService.AddProduct(model);
                 if (result)
                 {
                     ModelState.Clear();
-                    var returnCategories = _productService.GetCategories();
-                    var returnNodes = returnCategories.Select(p => new TreeViewNode()
-                    {
-                        id = p.CategoryId.ToString(),
-                        parent = p.ParentCategory == null ? "#" : p.ParentCategory.CategoryId.ToString(),
-                        text = p.CategoryName
-                    }).ToList();
-                    var returnJsonNodes = JsonConvert.SerializeObject(returnNodes);
+                    var returnProductCategories = _productService.GetCategoriesTreeView();
                     model = new AddEditProductViewModel()
                     {
-                        CategoriesTreeViewNodesJson = returnJsonNodes
+                        ProductCategories = returnProductCategories
                     };
                     ViewData["SuccessMessage"] = "محصول مورد نظر با موفقیت افزوده شد.";
                     return View(model);
                 }
                 ModelState.AddModelError("", "مشکلی در زمان افزودن محصول رخ داد.");
             }
-            var categories = _productService.GetCategories();
-            var nodes = categories.Select(p => new TreeViewNode()
-            {
-                id = p.CategoryId.ToString(),
-                parent = p.ParentCategory == null ? "#" : p.ParentCategory.CategoryId.ToString(),
-                text = p.CategoryName
-            }).ToList();
-            var jsonNodes = JsonConvert.SerializeObject(nodes);
+            var productCategories = _productService.GetCategoriesTreeView();
             model = new AddEditProductViewModel()
             {
-                CategoriesTreeViewNodesJson = jsonNodes
+                ProductCategories = productCategories
             };
             return View(model);
         }
@@ -134,16 +111,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var product = _productService.GetProduct(productId);
             if (product == null)
                 return NotFound();
-            var categories = _productService.GetCategories();
-            var nodes = categories.Select(p => new TreeViewNode()
+            var productCategories = _productService.GetCategoriesTreeView().Skip(1);
+            foreach (var productCategory in productCategories)
             {
-                id = p.CategoryId.ToString(),
-                parent = p.ParentCategory == null ? "#" : p.ParentCategory.CategoryId.ToString(),
-                text = p.CategoryName,
-                selected = product.Categories.Any(t => t.CategoryName == p.CategoryName) ? true : false
-            }).ToList();
-
-            var jsonNodes = JsonConvert.SerializeObject(nodes);
+                if (product.Categories.Any(p => p.CategoryId == Convert.ToInt32(productCategory.Value)))
+                {
+                    productCategory.Selected = true;
+                }
+            }
             var model = new AddEditProductViewModel()
             {
                 ProductName = product.ProductName,
@@ -151,10 +126,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ProductDescription = product.ProductDescription,
                 ProductPrice = product.ProductPrice,
                 ProductQuantityInStock = product.ProductQuantityInStock,
-                CategoriesTreeViewNodesJson = jsonNodes,
+                ProductCategories = productCategories,
                 InformationsNames = product.Informations.Select(p => p.Name),
-                InformationsValues = product.Informations.Select(p => p.Value)
+                InformationsValues = product.Informations.Select(p => p.Value),
+                CurrentProductImages = product.Images
             };
+            
             return View(model);
         }
 
@@ -162,6 +139,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditProduct(AddEditProductViewModel model)
         {
+
             return View();
         }
         #endregion

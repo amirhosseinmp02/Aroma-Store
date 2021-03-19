@@ -40,14 +40,14 @@
             </div>
             <div class="form-group">
                 <label>دسته بندی ها</label>
-                <div id="jstree"></div>
+                <select class="form-control" size="9"  multiple aria-label="select example" asp-items="Model.ProductCategories" asp-for="ProductCategoriesId"></select>
             </div>
             <div class="form-group">
                 <label>انتخاب تصاویر</label>
                 <label for="attachment" class="w-100 text-center">
                     <a class="upload-btn mb-2" role="button" aria-disabled="false"><i class="bi bi-cloud-arrow-up-fill text-info display-3"></i></a>
                 </label>
-                <input type="file" asp-for="ProductImages" accept=".png,.jpg,.jpeg" id="attachment" class="d-none" multiple />
+                <input type="file" asp-for="ProductImagesFiles" accept=".png,.jpg,.jpeg" id="attachment" class="d-none" multiple />
                 <p id="files-area">
                     <span id="filesList">
                         <span id="files-names"></span>
@@ -132,43 +132,5 @@
             function() {
                 $(this).parent().parent().remove();
             });
-    </script>
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-    <script>
-        $(function() {
-            $('#jstree').on('changed.jstree',
-                function(e, data) {
-                    var postedItems = $('#jstree').jstree("get_selected");
-                    $('#selectedItems').val(JSON.stringify(postedItems));
-                }).jstree({
-                "core": {
-                    "themes": {
-                        "variant": "large"
-                    },
-                    "data": @Html.Raw(@Model.CategoriesTreeViewNodesJson)
-                },
-                "checkbox": {
-                    "keep_selected_style": false,
-                    "three_state": false
-                },
-                "plugins": ["wholerow", "checkbox"],
-                'types': {
-                    'types': {
-                        'file': {
-                            'icon': {
-                                'image': 'https://pics.freeicons.io/uploads/icons/png/14291991451579780443-512.png'
-                            }
-                        },
-                        'default': {
-                            'icon': {
-                                'image': 'https://pics.freeicons.io/uploads/icons/png/14291991451579780443-512.png'
-                            }
-                        }
-                    }
-                }
-            });
-        });
     </script>
 }

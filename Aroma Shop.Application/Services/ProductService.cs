@@ -44,7 +44,7 @@ namespace Aroma_Shop.Application.Services
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
                     Categories = productCategories
                 };
-                AddProductImages(product,productViewModel.ProductImages);
+                AddProductImages(product,productViewModel.ProductImagesFiles);
                 AddProductsInformations(product,productViewModel.InformationsNames,productViewModel.InformationsValues);
                 _productRepository.AddProduct(product);
                 _productRepository.Save();
@@ -96,6 +96,11 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
 
+        }
+
+        public bool UpdateProduct(AddEditProductViewModel productViewModel)
+        {
+            throw new NotImplementedException();
         }
 
         public bool UpdateCategory(AddEditCategoryViewModel categoryViewModel)
@@ -289,5 +294,6 @@ namespace Aroma_Shop.Application.Services
                 }
             }
         }
+
     }
 }

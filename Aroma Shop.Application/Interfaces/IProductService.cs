@@ -13,6 +13,7 @@ namespace Aroma_Shop.Application.Interfaces
         Product GetProduct(int productId);
         bool AddProduct(AddEditProductViewModel productViewModel);
         void AddProductsInformations(Product product,IEnumerable<string> informationsNames,IEnumerable<string> informationsValues);
+        bool UpdateProduct(AddEditProductViewModel productViewModel);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
