@@ -9,15 +9,16 @@ namespace Aroma_Shop.Domain.Interfaces
         Product GetProduct(int productId);
         void AddProduct(Product product);
         void AddProductInformations(ProductInformation productInformation);
-        void DeleteProductInformations(Product product);
+        void DeleteProductInformation(ProductInformation productInformation);
         void UpdateProduct(Product product);
 
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         void AddCategory(Category category);
         void DeleteCategoryById(int categoryId);
+        void DeleteCategory(Category category);
         void UpdateCategory(Category category);
-        IEnumerable<Image> GetImages();
+        Image GetImage(int imageId);
         void AddImage(Image image);
         void DeleteImage(Image image);
         void Save();

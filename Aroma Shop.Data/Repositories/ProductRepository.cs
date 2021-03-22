@@ -67,9 +67,9 @@ namespace Aroma_Shop.Data.Repositories
             _context.Add(productInformation);
         }
 
-        public void DeleteProductInformations(Product product)
+        public void DeleteProductInformation(ProductInformation productInformation)
         {
-            product.Informations.Clear(); 
+            _context.Remove(productInformation);
         }
 
         public void UpdateProduct(Product product)
@@ -107,10 +107,15 @@ namespace Aroma_Shop.Data.Repositories
             }
         }
 
-        public IEnumerable<Image> GetImages()
+        public void DeleteCategory(Category category)
         {
-            var images = _context.Images;
-            return images;
+            _context.Remove(category);
+        }
+
+        public Image GetImage(int imageId)
+        {
+            var image = _context.Images.Find(imageId);
+            return image;
         }
 
         public void AddImage(Image image)

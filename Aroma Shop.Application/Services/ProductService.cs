@@ -33,7 +33,8 @@ namespace Aroma_Shop.Application.Services
                 var productCategories = new List<Category>();
                 foreach (var productCategoryId in productViewModel.ProductCategoriesId)
                 {
-                    productCategories.Add(GetCategory(productCategoryId));
+                    var productCategory = GetCategory(productCategoryId);
+                    productCategories.Add(productCategory);
                 }
                 var product = new Product()
                 {
@@ -44,8 +45,10 @@ namespace Aroma_Shop.Application.Services
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
                     Categories = productCategories
                 };
-                AddProductImages(product, productViewModel.ProductImagesFiles);
-                AddProductsInformations(product, productViewModel.InformationsNames, productViewModel.InformationsValues);
+                if (productViewModel.ProductImagesFiles.Any())
+                    AddProductImages(product, productViewModel.ProductImagesFiles);
+                if (productViewModel.InformationsNames.Any() && productViewModel.InformationsValues.Any())
+                    AddProductsInformations(product, productViewModel.InformationsNames, productViewModel.InformationsValues);
                 _productRepository.AddProduct(product);
                 _productRepository.Save();
                 return true;
@@ -60,27 +63,30 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var productCategories = _productRepository.GetCategories()
-                    .Where(p => productViewModel.ProductCategoriesId.Any(t => p.CategoryId == t)).ToList();
 
-                var product = new Product()
-                {
-                    ProductName = productViewModel.ProductName,
-                    ProductShortDescription = productViewModel.ProductShortDescription,
-                    ProductDescription = productViewModel.ProductDescription,
-                    ProductPrice = productViewModel.ProductPrice,
-                    ProductQuantityInStock = productViewModel.ProductQuantityInStock,
-                    Categories = productCategories
-                };
-                AddProductImages(product,productViewModel.ProductImagesFiles);
+                var product = GetProduct(productViewModel.ProductId);
+                product.ProductName = productViewModel.ProductName;
+                product.ProductShortDescription = productViewModel.ProductShortDescription;
+                product.ProductDescription = productViewModel.ProductDescription;
+                product.ProductPrice = productViewModel.ProductPrice;
+                product.ProductQuantityInStock = productViewModel.ProductQuantityInStock;
+                if (productViewModel.ProductCategoriesId.Any())
+                    UpdateProductCategories(product, productViewModel.ProductCategoriesId);
+                else if(product.Categories.Any())
+                    product.Categories.Clear();
+                if (productViewModel.ProductImagesFiles.Any())
+                    AddProductImages(product, productViewModel.ProductImagesFiles);
                 if (productViewModel.DeletedProductImagesIds != null)
-                {
-                    var productImages = GetProductImages(productViewModel.DeletedProductImagesIds);
-                    DeleteProductImages(productImages);
-                }
+                    DeleteProductImages(productViewModel.DeletedProductImagesIds);
+                if (productViewModel.InformationsNames.Any() && productViewModel.InformationsValues.Any())
+                    UpdateProductsInformations(product, productViewModel.InformationsNames, productViewModel.InformationsValues);
+                else if (product.ProductName.Any())
+                    DeleteProductInformations(product);
+                _productRepository.UpdateProduct(product);
+                _productRepository.Save();
                 return true;
             }
-            catch
+            catch (Exception e)
             {
                 return false;
             }
@@ -89,6 +95,14 @@ namespace Aroma_Shop.Application.Services
         public IEnumerable<Product> GetProducts()
         {
             return _productRepository.GetProducts();
+        }
+
+        public void UpdateProductCategories(Product product, IEnumerable<int> productCategoriesId)
+        {
+            var productCategories = GetCategories()
+                    .Where(p => productCategoriesId
+                        .Any(t => p.CategoryId == t)).ToList();
+            product.Categories = productCategories;
         }
 
         public IEnumerable<Category> GetCategories()
@@ -177,7 +191,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     items.Add(new SelectListItem(new string('─', count * 2) + $" {parent.CategoryName}", parent.CategoryId.ToString()));
                     var category = _productRepository.GetCategory(parent.CategoryId);
-                    if (category.ChildrenCategories.Count != 0)
+                    if (category.ChildrenCategories.Any())
                     {
                         ++count;
                         ChildrenCategoriesScrolling(category.ChildrenCategories, count);
@@ -191,7 +205,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     items.Add(new SelectListItem(new string('─', counter * 2) + $" {child.CategoryName}", child.CategoryId.ToString()));
                     var category = _productRepository.GetCategory(child.CategoryId);
-                    if (category.ChildrenCategories.Count != 0)
+                    if (category.ChildrenCategories.Any())
                     {
                         ++counter;
                         ChildrenCategoriesScrolling(category.ChildrenCategories, counter);
@@ -223,7 +237,7 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', count * 2) +
                              $" {parent.CategoryName}", parent.CategoryId.ToString()));
                         var category = _productRepository.GetCategory(parent.CategoryId);
-                        if (category.ChildrenCategories.Count != 0)
+                        if (category.ChildrenCategories.Any())
                         {
                             ++count;
                             ChildrenCategoriesScrolling(category.ChildrenCategories, count);
@@ -242,7 +256,7 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', counter * 2) +
                              $" {child.CategoryName}", child.CategoryId.ToString()));
                         var category = _productRepository.GetCategory(child.CategoryId);
-                        if (category.ChildrenCategories.Count != 0)
+                        if (category.ChildrenCategories.Any())
                         {
                             ++counter;
                             ChildrenCategoriesScrolling(category.ChildrenCategories, counter);
@@ -263,10 +277,14 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public IEnumerable<Image> GetProductImages(IEnumerable<int> productImagesIds)
+        public IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds)
         {
-            var productImages = _productRepository.GetImages()
-                .Where(p => productImagesIds.Any(t => p.ImageId == t));
+            var productImages = new List<Image>();
+            foreach (var productImagesId in productImagesIds)
+            {
+                var productImage = _productRepository.GetImage(productImagesId);
+                productImages.Add(productImage);
+            }
             return productImages;
         }
 
@@ -306,12 +324,13 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public void DeleteProductImages(IEnumerable<Image> productImages)
+        public void DeleteProductImages(IEnumerable<int> productImagesIds)
         {
+            var productImages = GetProductImagesByIds(productImagesIds);
             foreach (var productImage in productImages)
             {
                 var imagePath = Path.Combine(Directory.GetCurrentDirectory(),
-                    "wwwroot", "img", "Product",productImage.ImagePath);
+                    "wwwroot", "img", "Product", productImage.ImagePath);
                 File.Delete(imagePath);
                 _productRepository.DeleteImage(productImage);
             }
@@ -319,7 +338,7 @@ namespace Aroma_Shop.Application.Services
 
         public void AddProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
-            if (informationsNames.Count() > 0 && informationsValues.Count() > 0)
+            if (informationsNames.Any() && informationsValues.Any())
             {
                 for (int i = 0; i < informationsNames.Count(); i++)
                 {
@@ -338,9 +357,19 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public void DeleteProductInformations(Product product)
+        {
+            foreach (var productInformation in product.Informations)
+            {
+                _productRepository.DeleteProductInformation(productInformation);
+            }
+        }
+
+
         public void UpdateProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
-            throw new NotImplementedException();
+            DeleteProductInformations(product);
+            AddProductsInformations(product, informationsNames, informationsValues);
         }
 
     }

@@ -106,12 +106,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region EditProduct
 
         [HttpGet("/Admin/Products/EditProduct")]
+
         public IActionResult EditProduct(int productId)
         {
             var product = _productService.GetProduct(productId);
             if (product == null)
                 return NotFound();
-            TempData["productId"] = productId;
             var productCategories = _productService.GetCategoriesTreeView().Skip(1);
             foreach (var productCategory in productCategories)
             {
@@ -132,7 +132,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 InformationsValues = product.Informations.Select(p => p.Value),
                 CurrentProductImages = product.Images
             };
-            
+            TempData["productId"] = productId;
             return View(model);
         }
 
@@ -141,7 +141,29 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult EditProduct(AddEditProductViewModel model)
         {
             model.ProductId = Convert.ToInt32(TempData["productId"]);
-            return View();
+            if (ModelState.IsValid)
+            {
+                var result = _productService.UpdateProduct(model);
+                if (result)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", "مشکلی در زمان ویرایش محصول رخ داد.");
+            }
+            var product = _productService.GetProduct(model.ProductId);
+            var productCategories = _productService.GetCategoriesTreeView().Skip(1);
+            foreach (var productCategory in productCategories)
+            {
+                if (product.Categories.Any(p => p.CategoryId == Convert.ToInt32(productCategory.Value)))
+                {
+                    productCategory.Selected = true;
+                }
+            }
+
+            model.ProductCategories = productCategories;
+            model.CurrentProductImages = product.Images;
+            TempData.Keep("productId");
+            return View(model);
         }
         #endregion
 
@@ -202,10 +224,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 if (result)
                 {
                     ModelState.Clear();
-                    model = new AddEditCategoryViewModel()
-                    {
-                        AllCategories = _productService.GetCategoriesTreeView()
-                    };
+                    model.AllCategories =
+                        _productService.GetCategoriesTreeView();
                     ViewData["SuccessMessage"] = "دسته مورد نظر با موفقیت افزوده شد.";
                     return View(model);
                 }
@@ -242,11 +262,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult EditCategory(AddEditCategoryViewModel model)
         {
             model.CategoryId = Convert.ToInt32(TempData["categoryId"]);
-            var category = _productService.GetCategory(model.CategoryId);
-            if (category == null)
-                return NotFound();
-            var categoryTreeView =
-                _productService.GetCategoriesTreeViewForEdit(category);
             if (ModelState.IsValid)
             {
                 var result = _productService.UpdateCategory(model);
@@ -256,15 +271,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 }
                 ModelState.AddModelError("", "مشکلی در زمان ویرایش دسته رخ داد.");
             }
-
-            model = new AddEditCategoryViewModel()
-            {
-                CategoryName = category.CategoryName,
-                CategoryDescription = category.CategoryDescription,
-                AllCategories = categoryTreeView,
-                ParentCategoryId = category.ParentCategory?.CategoryId
-            };
-
+            var category = _productService.GetCategory(model.CategoryId);
+            var categoryTreeView =
+                _productService.GetCategoriesTreeViewForEdit(category);
+            model.AllCategories = categoryTreeView;
+            model.ParentCategoryId = category.ParentCategory?.CategoryId;
+            TempData.Keep("categoryId");
             return View(model);
         }
 
