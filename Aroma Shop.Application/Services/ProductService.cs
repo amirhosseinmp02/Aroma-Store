@@ -51,7 +51,7 @@ namespace Aroma_Shop.Application.Services
                     AddProductImages(product, productViewModel.ProductImagesFiles);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
-                    AddProductsInformations
+                    AddProductsInformation
                         (product, productViewModel.InformationNames, productViewModel.InformationValues);
 
                 _productRepository.AddProduct(product);
@@ -87,13 +87,13 @@ namespace Aroma_Shop.Application.Services
                 if (productViewModel.ProductImagesFiles.Any())
                     AddProductImages(product, productViewModel.ProductImagesFiles);
                 if (productViewModel.DeletedProductImagesIds != null)
-                    DeleteProductImages(productViewModel.DeletedProductImagesIds);
+                    DeleteProductImagesByIds(productViewModel.DeletedProductImagesIds);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
-                    UpdateProductsInformations
+                    UpdateProductsInformation
                         (product, productViewModel.InformationNames, productViewModel.InformationValues);
-                else if (product.ProductName.Any())
-                    DeleteProductInformations(product);
+                else if (product.Informations.Any())
+                    DeleteProductInformation(product);
 
                 _productRepository.UpdateProduct(product);
                 _productRepository.Save();
@@ -112,6 +112,14 @@ namespace Aroma_Shop.Application.Services
             {
                 var product = GetProduct(productId);
 
+                if (product.Images.Any())
+                    DeleteProductImages(product.Images);
+
+                if (product.Informations.Any())
+                    DeleteProductInformation(product);
+
+                _productRepository.DeleteProduct(product);
+                _productRepository.Save();
                 return true;
             }
             catch (Exception error)
@@ -340,26 +348,36 @@ namespace Aroma_Shop.Application.Services
 
         //Utilities Methods
 
-        private void DeleteCascadeCategoryById(int categoryId)
+        private bool DeleteCascadeCategoryById(int categoryId)
         {
-            var category = GetCategory(categoryId);
-            _productRepository.DeleteCategory(category);
-
-            if (category.ChildrenCategories.Count != 0)
+            try
             {
-                ChildrenCategoriesScrolling(category.ChildrenCategories);
+                var category = GetCategory(categoryId);
+                _productRepository.DeleteCategory(category);
 
-                void ChildrenCategoriesScrolling(IEnumerable<Category> children)
+                if (category.ChildrenCategories.Count != 0)
                 {
-                    foreach (var child in children)
-                    {
-                        _productRepository.DeleteCategory(child);
+                    ChildrenCategoriesScrolling(category.ChildrenCategories);
 
-                        var temp = GetCategory(child.CategoryId);
-                        if (temp.ChildrenCategories.Count != 0)
-                            ChildrenCategoriesScrolling(temp.ChildrenCategories);
+                    void ChildrenCategoriesScrolling(IEnumerable<Category> children)
+                    {
+                        foreach (var child in children)
+                        {
+                            _productRepository.DeleteCategory(child);
+
+                            var temp = GetCategory(child.CategoryId);
+                            if (temp.ChildrenCategories.Count != 0)
+                                ChildrenCategoriesScrolling(temp.ChildrenCategories);
+                        }
                     }
                 }
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
             }
         }
 
@@ -462,7 +480,7 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        private bool DeleteProductImages(IEnumerable<int> productImagesIds)
+        private bool DeleteProductImagesByIds(IEnumerable<int> productImagesIds)
         {
             try
             {
@@ -487,7 +505,31 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        private bool AddProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
+        private bool DeleteProductImages(IEnumerable<Image> productImages)
+        {
+            try
+            {
+
+                foreach (var productImage in productImages)
+                {
+                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot", "img", "Product", productImage.ImagePath);
+
+                    File.Delete(imagePath);
+
+                    _productRepository.DeleteImage(productImage);
+                }
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+
+        private bool AddProductsInformation(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
             try
             {
@@ -519,7 +561,7 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        private bool DeleteProductInformations(Product product)
+        private bool DeleteProductInformation(Product product)
         {
             try
             {
@@ -538,11 +580,22 @@ namespace Aroma_Shop.Application.Services
         }
 
 
-        private void UpdateProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
+        private bool UpdateProductsInformation(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
-            DeleteProductInformations(product);
+            try
+            {
+                if(product.Informations.Any())
+                    DeleteProductInformation(product);
 
-            AddProductsInformations(product, informationsNames, informationsValues);
+                AddProductsInformation(product, informationsNames, informationsValues);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
         }
 
     }

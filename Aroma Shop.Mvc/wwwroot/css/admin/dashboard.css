@@ -120,8 +120,10 @@ ul {
     margin-right: 25px
 }
 
-.admin-products {
-    max-width: 100px
+.admin-products-img {
+    width: 127px;
+    height: 127px;
+    border-radius: 3px;
 }
 
 .cart-item-cells {

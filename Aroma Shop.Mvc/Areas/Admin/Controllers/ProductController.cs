@@ -172,8 +172,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/DeleteProduct")]
         public IActionResult DeleteProduct(int productId)
         {
+            var result = _productService.DeleteProductById(productId);
 
-            return RedirectToAction("Index");
+            if (result)
+                return RedirectToAction("Index");
+
+            return NotFound();
         }
 
         #endregion
@@ -299,8 +303,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult DeleteCategory(int categoryId)
         {
             var result = _productService.DeleteCategoryById(categoryId);
+
             if (result)
                 return RedirectToAction("Categories");
+
             return NotFound();
         }
 
