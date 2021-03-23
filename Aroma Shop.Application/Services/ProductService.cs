@@ -106,6 +106,21 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public bool DeleteProductById(int productId)
+        {
+            try
+            {
+                var product = GetProduct(productId);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+
         public IEnumerable<Product> GetProducts()
         {
             return _productRepository.GetProducts();
@@ -174,7 +189,7 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public bool DeleteCategory(int categoryId)
+        public bool DeleteCategoryById(int categoryId)
         {
             try
             {

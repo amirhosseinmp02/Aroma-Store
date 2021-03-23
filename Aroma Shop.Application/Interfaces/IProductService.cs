@@ -13,11 +13,12 @@ namespace Aroma_Shop.Application.Interfaces
         Product GetProduct(int productId);
         bool AddProduct(AddEditProductViewModel productViewModel);
         bool UpdateProduct(AddEditProductViewModel productViewModel);
+        bool DeleteProductById(int productId);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
         bool UpdateCategory(AddEditCategoryViewModel categoryViewModel);
-        bool DeleteCategory(int categoryId);
+        bool DeleteCategoryById(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
     }

@@ -298,7 +298,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/DeleteCategory")]
         public IActionResult DeleteCategory(int categoryId)
         {
-            var result = _productService.DeleteCategory(categoryId);
+            var result = _productService.DeleteCategoryById(categoryId);
             if (result)
                 return RedirectToAction("Categories");
             return NotFound();
