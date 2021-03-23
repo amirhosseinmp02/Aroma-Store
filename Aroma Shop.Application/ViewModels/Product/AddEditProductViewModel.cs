@@ -15,8 +15,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         {
             ProductCategoriesId = new List<int>();
             ProductImagesFiles = new List<IFormFile>();
-            InformationsNames = new List<string>();
-            InformationsValues = new List<string>();
+            InformationNames = new List<string>();
+            InformationValues = new List<string>();
         }
 
         [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
@@ -40,8 +40,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public IEnumerable<int> ProductCategoriesId { get; set; }
         public IEnumerable<SelectListItem> ProductCategories { get; set; }
 
-        public IEnumerable<string> InformationsNames { get; set; }
-        public IEnumerable<string> InformationsValues { get; set; }
+        public IEnumerable<string> InformationNames { get; set; }
+        public IEnumerable<string> InformationValues { get; set; }
 
         //Properties For Editing Product
         public IEnumerable<Image> CurrentProductImages { get; set; }

@@ -12,11 +12,7 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Product> GetProducts();
         Product GetProduct(int productId);
         bool AddProduct(AddEditProductViewModel productViewModel);
-        void AddProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues);
-        void DeleteProductInformations(Product product);
-        void UpdateProductsInformations(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues);
         bool UpdateProduct(AddEditProductViewModel productViewModel);
-        void UpdateProductCategories(Product product, IEnumerable<int> productCategoriesId);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
@@ -24,8 +20,5 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategory(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
-        IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds);
-        void AddProductImages(Product product, IEnumerable<IFormFile> productImages);
-        void DeleteProductImages(IEnumerable<int> productImagesIds);
     }
 }

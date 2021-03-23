@@ -74,11 +74,11 @@
             </div>
             <label>مشخصات</label>
             <div class="form-group border border-secondary p-2 border-dark product-informations">
-                @for (int i = 0; i < Model.InformationsNames.Count(); i++)
+                @for (int i = 0; i < Model.InformationNames.Count(); i++)
                 {
                     <div class='row mb-2'>
-                        <div class='col'><input type='text' name='InformationsNames' class='form-control' value="@Model.InformationsNames.ElementAtOrDefault(i)" placeholder='نام'></div>
-                        <div class='col'><input type='text' name='InformationsValues' class='form-control' value="@Model.InformationsValues.ElementAtOrDefault(i)" placeholder='مقدار'></div>
+                        <div class='col'><input type='text' name='InformationsNames' class='form-control' value="@Model.InformationNames.ElementAtOrDefault(i)" placeholder='نام'></div>
+                        <div class='col'><input type='text' name='InformationsValues' class='form-control' value="@Model.InformationValues.ElementAtOrDefault(i)" placeholder='مقدار'></div>
                         <div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div>
                     </div>
                 }

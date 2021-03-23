@@ -128,8 +128,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ProductPrice = product.ProductPrice,
                 ProductQuantityInStock = product.ProductQuantityInStock,
                 ProductCategories = productCategories,
-                InformationsNames = product.Informations.Select(p => p.Name),
-                InformationsValues = product.Informations.Select(p => p.Value),
+                InformationNames = product.Informations.Select(p => p.Name),
+                InformationValues = product.Informations.Select(p => p.Value),
                 CurrentProductImages = product.Images
             };
             TempData["productId"] = productId;

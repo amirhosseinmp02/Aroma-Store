@@ -23,6 +23,7 @@ namespace Aroma_Shop.Data.Repositories
             var products = _context.Products
                 .Include(p => p.Categories)
                 .Include(p => p.Images);
+
             return products;
         }
 
@@ -34,6 +35,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Comments)
                 .Include(p => p.Images)
                 .SingleOrDefault(p => p.ProductId == productId);
+
             return product;
         }
 
@@ -44,6 +46,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.ChildrenCategories)
                 .ThenInclude(p=>p.ChildrenCategories).ThenInclude(p=>p.ChildrenCategories)
                 .ThenInclude(p=>p.ChildrenCategories).ThenInclude(p=>p.ChildrenCategories);
+
             return categories;
         }
 
@@ -53,6 +56,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.ParentCategory)
                 .Include(p => p.ChildrenCategories)
                 .SingleOrDefault(p => p.CategoryId == categoryId);
+
             return category;
         }
 
@@ -62,7 +66,7 @@ namespace Aroma_Shop.Data.Repositories
         }
 
 
-        public void AddProductInformations(ProductInformation productInformation)
+        public void AddProductInformation(ProductInformation productInformation)
         {
             _context.Add(productInformation);
         }
@@ -87,28 +91,15 @@ namespace Aroma_Shop.Data.Repositories
             _context.Update(category);
         }
 
+        public void DeleteCategory(Category category)
+        {
+            _context.Remove(category);
+        }
+
         public void DeleteCategoryById(int categoryId)
         {
             var category = GetCategory(categoryId);
-            _context.Remove(category);
-            if (category.ChildrenCategories.Count != 0)
-            {
-                ChildrenCategoriesScrolling(category.ChildrenCategories);
-                void ChildrenCategoriesScrolling(IEnumerable<Category> children)
-                {
-                    foreach (var child in children)
-                    {
-                        _context.Remove(child);
-                        var temp = GetCategory(child.CategoryId);
-                        if(temp.ChildrenCategories.Count != 0)
-                            ChildrenCategoriesScrolling(temp.ChildrenCategories);
-                    }
-                }
-            }
-        }
 
-        public void DeleteCategory(Category category)
-        {
             _context.Remove(category);
         }
 

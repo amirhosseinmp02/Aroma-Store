@@ -24,8 +24,9 @@ namespace Aroma_Shop.Application.Services
                 _messageRepository.Save();
                 return true;
             }
-            catch
+            catch (Exception error)
             {
+                Console.WriteLine(error);
                 return false;
             }
         }
