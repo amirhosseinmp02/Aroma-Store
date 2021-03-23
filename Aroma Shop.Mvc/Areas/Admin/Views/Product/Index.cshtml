@@ -52,8 +52,8 @@
                     <td class="cart-item-cells align-middle">@(!string.IsNullOrEmpty(product.ProductShortDescription)? product.ProductShortDescription:"")</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
-                            <a class="btn text-light btn-primary mb-3" asp-action="EditProduct" asp-route-productId="@product.ProductId">ویرایش</a>
-                            <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(product.ProductId)">حذف</button>
+                            <a class="btn text-light btn-primary m-3" asp-action="EditProduct" asp-route-productId="@product.ProductId">ویرایش</a>
+                            <button class="btn text-light btn-primary m-3" data-toggle="modal" data-target="#deletemodal@(product.ProductId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(product.ProductId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(product.ProductId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">

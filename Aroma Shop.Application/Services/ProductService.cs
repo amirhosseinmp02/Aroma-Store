@@ -81,7 +81,7 @@ namespace Aroma_Shop.Application.Services
                 if (productViewModel.ProductCategoriesId.Any())
                     UpdateProductCategories
                         (product, productViewModel.ProductCategoriesId);
-                else if(product.Categories.Any())
+                else if (product.Categories.Any())
                     product.Categories.Clear();
 
                 if (productViewModel.ProductImagesFiles.Any())
@@ -156,8 +156,8 @@ namespace Aroma_Shop.Application.Services
 
                 if (categoryViewModel.ParentCategoryId != null)
                 {
-                    var parentCategory = 
-                        GetCategory((int) categoryViewModel.ParentCategoryId);
+                    var parentCategory =
+                        GetCategory((int)categoryViewModel.ParentCategoryId);
                     category.ParentCategory = parentCategory;
                 }
 
@@ -234,7 +234,7 @@ namespace Aroma_Shop.Application.Services
                     items
                         .Add
                             (new SelectListItem
-                            (new string('─', count * 2) 
+                            (new string('─', count * 2)
                              + $" {parent.CategoryName}", parent.CategoryId.ToString()));
 
                     var category = _productRepository.GetCategory(parent.CategoryId);
@@ -255,7 +255,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     items
                         .Add(new SelectListItem
-                            (new string('─', counter * 2) 
+                            (new string('─', counter * 2)
                              + $" {child.CategoryName}", child.CategoryId.ToString()));
 
                     var category = _productRepository.GetCategory(child.CategoryId);
@@ -533,22 +533,19 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                if (informationsNames.Any() && informationsValues.Any())
+                for (int i = 0; i < informationsNames.Count(); i++)
                 {
-                    for (int i = 0; i < informationsNames.Count(); i++)
+                    if (!string.IsNullOrEmpty(informationsNames.ElementAtOrDefault(i))
+                        || !string.IsNullOrEmpty(informationsValues.ElementAtOrDefault(i)))
                     {
-                        if (!string.IsNullOrEmpty(informationsNames.ElementAtOrDefault(i))
-                            || !string.IsNullOrEmpty(informationsValues.ElementAtOrDefault(i)))
+                        var productInformations = new ProductInformation()
                         {
-                            var productInformations = new ProductInformation()
-                            {
-                                Name = informationsNames.ElementAtOrDefault(i),
-                                Value = informationsValues.ElementAtOrDefault(i),
-                                Product = product
-                            };
+                            Name = informationsNames.ElementAtOrDefault(i),
+                            Value = informationsValues.ElementAtOrDefault(i),
+                            Product = product
+                        };
 
-                            _productRepository.AddProductInformation(productInformations);
-                        }
+                        _productRepository.AddProductInformation(productInformations);
                     }
                 }
 
@@ -584,7 +581,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                if(product.Informations.Any())
+                if (product.Informations.Any())
                     DeleteProductInformation(product);
 
                 AddProductsInformation(product, informationsNames, informationsValues);

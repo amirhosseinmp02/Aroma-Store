@@ -4862,6 +4862,26 @@ input.input-validation-error {
     height: 255px !important;
 }
 .product-image-detail {
-    width: 677px !important;
-    height: 718px !important;
+    width: 100% !important;
+    height: 520px;
+}
+#carouselExampleControls {
+    width: 550px;
+}
+@media only screen and (max-width: 1200px) {
+    #carouselExampleControls {
+        width: 480px;
+    }
+}
+@media only screen and (max-width: 992px) {
+    #carouselExampleControls {
+        width: 500px;
+        margin: auto;
+    }
+}
+@media only screen and (max-width: 505px) {
+    #carouselExampleControls {
+        width: auto;
+        margin: auto;
+    }
 }
