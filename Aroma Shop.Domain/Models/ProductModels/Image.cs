@@ -9,6 +9,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 {
     public class Image
     {
+        public static string DefaultImagePath { get; set; } = "/img/default-image.jpg";
+
         [Key]
         public int ImageId { get; set; }
         [Required]

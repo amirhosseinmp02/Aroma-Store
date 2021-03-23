@@ -4805,22 +4805,28 @@ a {
         padding-bottom: 115px !important
     }
 }
+
 .field-validation-error {
     color: red;
 }
+
 .btn-buy {
     max-width: 150px;
     margin: auto
 }
+
 .list li:first-child span:nth-last-child(1) {
     display: none
 }
+
 #btn-addtocart {
     margin-right: 25px
 }
+
 .rememberme {
     text-align: right !important
 }
+
 .field-validation-error {
     color: #e80c4d;
     font-weight: bold;
@@ -4841,10 +4847,21 @@ input.input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
 .successregister {
     margin-top: 5vh;
     background: #ffffff
 }
+
 .forgot-password {
     color: seagreen !important
+}
+
+.product-images-card {
+    width: 255px !important;
+    height: 255px !important;
+}
+.product-image-detail {
+    width: 677px !important;
+    height: 718px !important;
 }

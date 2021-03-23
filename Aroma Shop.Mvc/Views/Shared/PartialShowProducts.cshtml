@@ -5,10 +5,19 @@
     {
         @foreach (var product in @Model)
         {
+            string productImagePath;
+            if (product.Images.Any())
+            {
+                productImagePath = $"/img/Product/{product.Images.FirstOrDefault().ImagePath}";
+            }
+            else
+            {
+                productImagePath = Aroma_Shop.Domain.Models.ProductModels.Image.DefaultImagePath;
+            }
             <div class="col-md-6 col-lg-4 col-xl-3">
                 <div class="card text-center card-product">
                     <div class="card-product__img">
-                        <img class="card-img" src="~/img/Product/@(product.Images.Count>0?product.Images.FirstOrDefault().ImagePath:"")" alt="">
+                        <img class="card-img product-images-card" src="@productImagePath" alt="">
                         <div class="card-product__imgOverlay">
                             <a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId" class="btn btn-block text-light btn-dark btn-buy">خرید</a>
                         </div>

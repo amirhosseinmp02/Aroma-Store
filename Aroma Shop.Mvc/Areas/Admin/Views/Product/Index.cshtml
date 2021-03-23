@@ -36,8 +36,17 @@
         <tbody>
             @foreach (var product in Model)
             {
+                string productImagePath;
+                if (product.Images.Any())
+                {
+                    productImagePath = $"/img/Product/{product.Images.FirstOrDefault().ImagePath}";
+                }
+                else
+                {
+                    productImagePath = Aroma_Shop.Domain.Models.ProductModels.Image.DefaultImagePath;
+                }
                 <tr>
-                    <th class="cart-item-cells"><img class="admin-products-img" src="~/img/Product/@(product.Images.Count>0?product.Images.FirstOrDefault().ImagePath:"")"></th>
+                    <th class="cart-item-cells"><img class="admin-products-img" src="@productImagePath"></th>
                     <td class="cart-item-cells align-middle">@product.ProductName</td>
                     <td class="cart-item-cells align-middle">@product.ProductPrice</td>
                     <td class="cart-item-cells align-middle">@(!string.IsNullOrEmpty(product.ProductShortDescription)? product.ProductShortDescription:"")</td>
