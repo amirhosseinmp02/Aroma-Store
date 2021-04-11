@@ -224,5 +224,21 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+
+        public async Task<bool> LogOutUser()
+        {
+            try
+            {
+                await _signInManager.SignOutAsync();
+
+                return true;
+
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
     }
 }

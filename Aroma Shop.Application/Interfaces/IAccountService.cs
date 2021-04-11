@@ -25,6 +25,6 @@ namespace Aroma_Shop.Application.Interfaces
             string returnUrl);
         Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null);
         Task<bool> LoginWithPassword(LoginViewModel vm);
-        Task<bool> LogOut();
+        Task<bool> LogOutUser();
     }
 }
