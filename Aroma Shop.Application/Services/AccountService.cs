@@ -46,7 +46,7 @@ namespace Aroma_Shop.Application.Services
                     await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
                 var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
-                    new {email = user.Email, token = emailConfirmationToken}
+                    new { email = user.Email, token = emailConfirmationToken }
                     , _accessor.HttpContext.Request.Scheme);
 
                 var emailMessage =
@@ -54,7 +54,7 @@ namespace Aroma_Shop.Application.Services
                         .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
                             , $"~/Views/Emails/EmailConfirmationTemplate.cshtml", url);
 
-                await 
+                await
                     _emailService.SendEmailAsync
                         (user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
                 return true;
@@ -73,12 +73,12 @@ namespace Aroma_Shop.Application.Services
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
                     return false;
 
-                var user = 
+                var user =
                     await _userManager.FindByEmailAsync(email);
 
-                if (user == null) 
+                if (user == null)
                     return false;
-                var result = 
+                var result =
                     await _userManager.ConfirmEmailAsync(user, token);
 
                 if (!result.Succeeded)
@@ -94,10 +94,10 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<JsonResult> IsUserNameExist(string userName)
         {
-            var user =  
+            var user =
                 await _userManager.FindByNameAsync(userName);
 
-            if (user == null) 
+            if (user == null)
                 return new JsonResult(true);
 
             return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
@@ -105,7 +105,7 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<JsonResult> IsEmailExist(string email)
         {
-            var emaill = 
+            var emaill =
                 await _userManager.FindByNameAsync(email);
 
             if (emaill == null)
@@ -137,7 +137,7 @@ namespace Aroma_Shop.Application.Services
                     .GetUriByAction
                     (_accessor.HttpContext
                         , actionName, controllerName
-                        , new {returnurl = returnUrl}
+                        , new { returnurl = returnUrl }
                         , _accessor.HttpContext.Request.Scheme);
 
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -152,7 +152,7 @@ namespace Aroma_Shop.Application.Services
                 if (!string.IsNullOrEmpty(remoteError))
                     return false;
 
-                var externalLoginInfo = 
+                var externalLoginInfo =
                     await _signInManager.GetExternalLoginInfoAsync();
 
                 if (externalLoginInfo == null)
@@ -164,7 +164,7 @@ namespace Aroma_Shop.Application.Services
                 if (signInResult.Succeeded)
                     return true;
 
-                var email = 
+                var email =
                     externalLoginInfo.Principal
                         .FindFirstValue(ClaimTypes.Email);
                 if (email != null)
@@ -205,13 +205,13 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var user = 
+                var user =
                     await _userManager.FindByEmailAsync(vm.Email);
 
                 var result =
                     await _signInManager.PasswordSignInAsync
                     (user.UserName, vm.Password
-                        , vm.RememberMe,false);
+                        , vm.RememberMe, false);
 
                 if (result.Succeeded)
                     return true;
@@ -233,6 +233,62 @@ namespace Aroma_Shop.Application.Services
 
                 return true;
 
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+
+        public async Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction)
+        {
+            try
+            {
+                var user =
+                    await _userManager.FindByEmailAsync(userEmail);
+                if (user == null)
+                    return false;
+
+                var restPasswordToken =
+                    await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var resetPasswordUrl = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
+                    new { email = user.Email, token = restPasswordToken }
+                    , _accessor.HttpContext.Request.Scheme);
+
+                var emailMessage =
+                    await ViewToStringRenderer
+                        .RenderViewToStringAsync(_accessor.HttpContext.RequestServices
+                            , $"~/Views/Emails/RestPasswordEmailTemplate.cshtml", resetPasswordUrl);
+
+                await
+                    _emailService.SendEmailAsync
+                        (user.Email, "تغییر کلمه عبور", emailMessage.ToString(), true);
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+
+        public async Task<bool> RestPassword(string userEmail, string token, string newPassword)
+        {
+            try
+            {
+                var user =
+                    await _userManager.FindByEmailAsync(userEmail);
+                if (user == null)
+                    return false;
+
+                var result = 
+                    await _userManager.ResetPasswordAsync(user, token, newPassword);
+                if (!result.Succeeded)
+                    return false;
+
+                return true;
             }
             catch (Exception error)
             {

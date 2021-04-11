@@ -111,6 +111,67 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region ForgotPassword
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _accountService
+                        .SendRestPasswordLink(model.Email,"Account", "ResetPassword");
+                ViewData["SuccessMessage"] =
+                    "در صورت معتبر بودن ایمیل وارد شده ، لینک تغییر کلمه عبور به ایمیل شما ارسال خواهد شد.";
+                ModelState.Clear();
+                return View();
+            }
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region ResetPassword
+
+        public IActionResult ResetPassword(string email,string token)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
+                return RedirectToAction("Index", "Home");
+            var model = new RestPasswordViewModel()
+            {
+                Email=email,
+                Token = token
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestPassword(RestPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result =
+                    await _accountService.RestPassword(model.Email, model.Token, model.NewPassword);
+                if (result)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                ModelState.AddModelError("","مشکلی در زمان تغییر کلمه عبور رخ داد.");
+            }
+
+            return View(model);
+        }
+
+        #endregion
+
         #region ExternalLogins
 
         [HttpPost]
