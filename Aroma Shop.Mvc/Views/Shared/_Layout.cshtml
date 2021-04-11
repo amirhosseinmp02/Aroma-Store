@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Aroma_Shop.Application.Interfaces
+@inject IAccountService AccountService
+<!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="utf-8" />
@@ -55,9 +57,9 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                    aria-expanded="false">صفحات</a>
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" href="login.html">ورود</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="register.html">ثبت نام</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="tracking-order.html">پیگیری سفارش</a></li>
+                                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">ورود</a></li>
+                                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">ثبت نام</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#">پیگیری سفارش</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="ContactUs">تماس با ما</a></li>
@@ -66,7 +68,19 @@
                         <ul class="nav-shop">
                             <li class="nav-item"><button><i class="ti-search"></i></button></li>
                             <li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button> </li>
-                            <li class="nav-item"><a class="button button-header" href="#">خرید</a></li>
+                            @if (AccountService.IsUserSignedIn(User))
+                            {
+                                <li class="nav-item"><a class="button button-header" href="#">@User.Identity.Name</a></li>
+                                <li class="nav-item text-danger">خروج</li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <div class="button button-header">
+                                        <a asp-controller="Account" asp-action="Login" class="text-dark">ورود</a> / <a asp-controller="Account" asp-action="Register" class="text-dark">عضویت</a>
+                                    </div>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>
@@ -87,32 +101,31 @@
                 <div class="row section_gap">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="single-footer-widget tp_widgets">
-                            <h4 class="footer_title large_title">Our Mission</h4>
+                            <h4 class="footer_title large_title">لورم ایپسوم</h4>
                             <p>
-                                So seed seed green that winged cattle in. Gathering thing made fly you're no
-                                divided deep moved us lan Gathering thing us land years living.
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.
                             </p>
                             <p>
-                                So seed seed green that winged cattle in. Gathering thing made fly you're no divided deep moved
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
                             </p>
                         </div>
                     </div>
                     <div class="offset-lg-1 col-lg-2 col-md-6 col-sm-6">
                         <div class="single-footer-widget tp_widgets">
-                            <h4 class="footer_title">Quick Links</h4>
+                            <h4 class="footer_title">لینک ها</h4>
                             <ul class="list">
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Shop</a></li>
-                                <li><a href="#">Blog</a></li>
-                                <li><a href="#">Product</a></li>
-                                <li><a href="#">Brand</a></li>
-                                <li><a href="#">Contact</a></li>
+                                <li><a asp-controller="Home">خانه</a></li>
+                                <li><a href="#">فروشگاه</a></li>
+                                <li><a href="#">وبلاگ</a></li>
+                                <li><a href="#">محصولات</a></li>
+                                <li><a href="#">برند ها</a></li>
+                                <li><a asp-controller="Home" asp-action="ContactUs">تماس با ما</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-6 col-sm-6">
                         <div class="single-footer-widget instafeed">
-                            <h4 class="footer_title">Gallery</h4>
+                            <h4 class="footer_title">گالری</h4>
                             <ul class="list instafeed d-flex flex-wrap">
                                 <li><img src="~/img/gallery/r1.jpg" alt=""></li>
                                 <li><img src="~/img/gallery/r2.jpg" alt=""></li>
@@ -125,30 +138,28 @@
                     </div>
                     <div class="offset-lg-1 col-lg-3 col-md-6 col-sm-6">
                         <div class="single-footer-widget tp_widgets">
-                            <h4 class="footer_title">Contact Us</h4>
+                            <h4 class="footer_title">تماس با ما</h4>
                             <div class="ml-40">
                                 <p class="sm-head">
                                     <span class="fa fa-location-arrow"></span>
-                                    Head Office
+                                    ایران ، مشهد
                                 </p>
-                                <p>123, Main Street, Your City</p>
+                                <p>بلوار دانشجو</p>
 
                                 <p class="sm-head">
                                     <span class="fa fa-phone"></span>
-                                    Phone Number
+                                    شماره تماس
                                 </p>
                                 <p>
-                                    +123 456 7890 <br>
-                                    +123 456 7890
+                                    ۰۷۸۹۶۵۳۳۶۵۸ 
                                 </p>
 
                                 <p class="sm-head">
                                     <span class="fa fa-envelope"></span>
-                                    Email
+                                    ایمیل
                                 </p>
                                 <p>
-                                    free@infoexample.com <br>
-                                    www.infoexample.com
+                                    exam@exam.ir
                                 </p>
                             </div>
                         </div>
@@ -162,7 +173,7 @@
                 <div class="row d-flex">
                     <p class="col-lg-12 footer-text text-center">
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        Copyright &copy;
+                        کپی رایت &copy;
                         <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </p>
