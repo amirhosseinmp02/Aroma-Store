@@ -71,7 +71,12 @@
                             @if (AccountService.IsUserSignedIn(User))
                             {
                                 <li class="nav-item"><a class="button button-header" href="#">@User.Identity.Name</a></li>
-                                <li class="nav-item text-danger">خروج</li>
+                                
+                                <li class="nav-item text-danger">
+                                    <form asp-controller="Account" asp-action="LogOut">
+                                        <button type="submit" class="text-danger">خروج</button>
+                                    </form>
+                                </li>
                             }
                             else
                             {
