@@ -98,6 +98,19 @@ namespace Aroma_Shop.Mvc.Controllers
         }
         #endregion
 
+        #region LogOut
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            var result =
+                await _accountService.LogOutUser();
+            return RedirectToAction("Index", "Home");
+        }
+
+        #endregion
+
         #region ExternalLogins
 
         [HttpPost]
