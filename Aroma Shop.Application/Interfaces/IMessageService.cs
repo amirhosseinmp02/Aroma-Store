@@ -9,6 +9,7 @@ namespace Aroma_Shop.Application.Interfaces
     {
         bool AddMessage(Message message);
         bool DeleteMessageById(int messageId);
+        Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
     }
 }
