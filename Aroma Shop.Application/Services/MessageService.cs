@@ -33,6 +33,13 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public Message GetMessage(int messageId)
+        {
+            var message = _messageRepository.GetMessage(messageId);
+
+            return message;
+        }
+
         public IEnumerable<Message> GetMessages()
         {
             return _messageRepository.GetMessages();
