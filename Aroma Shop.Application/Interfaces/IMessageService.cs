@@ -8,6 +8,7 @@ namespace Aroma_Shop.Application.Interfaces
     public interface IMessageService
     {
         bool AddMessage(Message message);
+        bool DeleteMessageById(int messageId);
         IEnumerable<Message> GetMessages();
     }
 }
