@@ -21,6 +21,11 @@ namespace Aroma_Shop.Data.Repositories
             _context.Add(message);
         }
 
+        public void DeleteMessage(Message message)
+        {
+            _context.Remove(message);
+        }
+
         public IEnumerable<Message> GetMessages()
         {
             var messages =
