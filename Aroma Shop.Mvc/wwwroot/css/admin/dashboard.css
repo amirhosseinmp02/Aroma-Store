@@ -194,3 +194,11 @@ input.input-validation-error {
 i.jstree-icon.jstree-themeicon {
     display: none !important;
 }
+
+.bi-envelope {
+    margin-left: 5px;
+}
+
+.products-dashbord-menu {
+    cursor: pointer;
+}
