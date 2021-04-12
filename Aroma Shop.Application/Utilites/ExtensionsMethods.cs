@@ -23,9 +23,9 @@ namespace Aroma_Shop.Application.Utilites
             PersianCalendar persianCalendar = new PersianCalendar();
 
             var solarCalendar =
-                $"{persianCalendar.GetYear(dateTime)}/{persianCalendar.GetMonth(dateTime)}" +
-                $"/{persianCalendar.GetDayOfMonth(dateTime)} - " +
-                $"{persianCalendar.GetHour(dateTime)}:{persianCalendar.GetMinute(dateTime)}";
+                $"{persianCalendar.GetHour(dateTime)}:{persianCalendar.GetMinute(dateTime)}" +
+                $" - {persianCalendar.GetYear(dateTime)}/{persianCalendar.GetMonth(dateTime)}" +
+                $"/{persianCalendar.GetDayOfMonth(dateTime)}";
 
             return solarCalendar;
         }

@@ -36,7 +36,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 products = _productService.GetProducts()
                     .Where(p => p.ProductName.Contains(search)
                                 || p.Categories
-                                    .Contains(new Category() { CategoryName = "search" }));
+                                    .Contains(new Category() { CategoryName = search }));
                 ViewBag.search = search;
             }
             else
