@@ -21,6 +21,14 @@ namespace Aroma_Shop.Data.Repositories
             _context.Add(message);
         }
 
+        public IEnumerable<Message> GetMessages()
+        {
+            var messages =
+                _context.Messages;
+
+            return messages;
+        }
+
         public void Save()
         {
             _context.SaveChanges();
