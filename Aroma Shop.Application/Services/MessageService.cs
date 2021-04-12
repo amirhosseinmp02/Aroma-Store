@@ -33,6 +33,26 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public bool DeleteMessageById(int messageId)
+        {
+            try
+            {
+                var message = GetMessage(messageId);
+
+                if (message == null)
+                    return false;
+
+                _messageRepository.DeleteMessage(message);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+
         public Message GetMessage(int messageId)
         {
             var message = _messageRepository.GetMessage(messageId);

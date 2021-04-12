@@ -112,6 +112,9 @@ namespace Aroma_Shop.Application.Services
             {
                 var product = GetProduct(productId);
 
+                if (product == null)
+                    return false;
+
                 if (product.Images.Any())
                     DeleteProductImages(product.Images);
 
@@ -353,6 +356,8 @@ namespace Aroma_Shop.Application.Services
             try
             {
                 var category = GetCategory(categoryId);
+                if (category == null)
+                    return false;
                 _productRepository.DeleteCategory(category);
 
                 if (category.ChildrenCategories.Count != 0)
