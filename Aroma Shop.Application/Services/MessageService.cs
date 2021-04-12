@@ -30,5 +30,10 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+
+        public IEnumerable<Message> GetMessages()
+        {
+            return _messageRepository.GetMessages();
+        }
     }
 }
