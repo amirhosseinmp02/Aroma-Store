@@ -48,7 +48,7 @@ namespace Aroma_Shop.Mvc.Controllers
                     ModelState.Clear();
                     return View();
                 }
-                ModelState.AddModelError("","مشکلی در زمان ارسال پیام رخ داد.");
+                ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
             }
 
             return View(model);

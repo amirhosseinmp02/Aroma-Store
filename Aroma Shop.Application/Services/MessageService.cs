@@ -20,6 +20,8 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
+                message.SubmitTime = DateTime.Now;
+
                 _messageRepository.AddMessage(message);
                 _messageRepository.Save();
                 return true;

@@ -9,6 +9,7 @@ namespace Aroma_Shop.Domain.Models
     {
         [Key]
         public int MessageId { get; set; }
+        public DateTime SubmitTime { get; set; }
         [MaxLength(150,ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا نام خود را وارد نمایید")]
         public string MessageSenderName { get; set; }
