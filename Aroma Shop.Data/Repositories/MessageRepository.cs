@@ -26,6 +26,13 @@ namespace Aroma_Shop.Data.Repositories
             _context.Remove(message);
         }
 
+        public Message GetMessage(int messageId)
+        {
+            var message = _context.Messages.Find(messageId);
+
+            return message;
+        }
+
         public IEnumerable<Message> GetMessages()
         {
             var messages =
