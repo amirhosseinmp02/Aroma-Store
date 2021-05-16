@@ -19,17 +19,19 @@ namespace Aroma_Shop.Application.Services
     {
         private readonly UserManager<CustomIdentityUser> _userManager;
         private readonly SignInManager<CustomIdentityUser> _signInManager;
+        private readonly RoleManager<CustomIdentityUser> _roleManager;
         private readonly LinkGenerator _linkGenerator;
         private readonly IHttpContextAccessor _accessor;
         private readonly IEmailService _emailService;
 
-        public AccountService(UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IEmailService emailService)
+        public AccountService(UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IEmailService emailService, RoleManager<CustomIdentityUser> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _linkGenerator = linkGenerator;
             _accessor = accessor;
             _emailService = emailService;
+            _roleManager = roleManager;
         }
 
         public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
