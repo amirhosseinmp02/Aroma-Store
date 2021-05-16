@@ -19,12 +19,12 @@ namespace Aroma_Shop.Application.Services
     {
         private readonly UserManager<CustomIdentityUser> _userManager;
         private readonly SignInManager<CustomIdentityUser> _signInManager;
-        private readonly RoleManager<CustomIdentityUser> _roleManager;
+        private readonly RoleManager<CustomIdentityRole> _roleManager;
         private readonly LinkGenerator _linkGenerator;
         private readonly IHttpContextAccessor _accessor;
         private readonly IEmailService _emailService;
 
-        public AccountService(UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IEmailService emailService, RoleManager<CustomIdentityUser> roleManager)
+        public AccountService(UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IEmailService emailService, RoleManager<CustomIdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -300,6 +300,18 @@ namespace Aroma_Shop.Application.Services
                 Console.WriteLine(error);
                 return false;
             }
+        }
+
+        public async Task AddRolesQuickly()
+        {
+            var founderRole = new CustomIdentityRole("Founder","موسس");
+            var managerRole = new CustomIdentityRole("Manager","مدیر");
+            var writerRole = new CustomIdentityRole("Writer","نویسنده");
+            var customerRole = new CustomIdentityRole("Customer","مشتری");
+            var founderResult = await _roleManager.CreateAsync(founderRole);
+            var managerResult = await _roleManager.CreateAsync(managerRole);
+            var writerResult = await _roleManager.CreateAsync(writerRole);
+            var customerResult = await _roleManager.CreateAsync(customerRole);
         }
     }
 }

@@ -10,5 +10,15 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
     {
         [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
         public string PersianName { get; set; }
+
+        public CustomIdentityRole()
+        {
+            
+        }
+
+        public CustomIdentityRole(string roleName,string persianRoleName):base(roleName)
+        {
+            PersianName = persianRoleName;
+        }
     }
 }

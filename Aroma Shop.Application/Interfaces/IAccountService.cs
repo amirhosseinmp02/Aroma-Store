@@ -28,5 +28,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> LogOutUser();
         Task<bool> SendRestPasswordLink(string userEmail,string returnController, string returnAction);
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
+        Task AddRolesQuickly();
     }
 }
