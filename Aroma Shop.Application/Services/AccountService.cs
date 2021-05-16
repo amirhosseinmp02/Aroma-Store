@@ -301,17 +301,5 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
-        public async Task AddRolesQuickly()
-        {
-            var founderRole = new CustomIdentityRole("Founder","موسس");
-            var managerRole = new CustomIdentityRole("Manager","مدیر");
-            var writerRole = new CustomIdentityRole("Writer","نویسنده");
-            var customerRole = new CustomIdentityRole("Customer","مشتری");
-            var founderResult = await _roleManager.CreateAsync(founderRole);
-            var managerResult = await _roleManager.CreateAsync(managerRole);
-            var writerResult = await _roleManager.CreateAsync(writerRole);
-            var customerResult = await _roleManager.CreateAsync(customerRole);
-        }
     }
 }

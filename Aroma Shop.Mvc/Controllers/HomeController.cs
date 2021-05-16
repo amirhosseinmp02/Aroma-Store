@@ -28,7 +28,6 @@ namespace Aroma_Shop.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            await accountService.AddRolesQuickly();
             var model = _productService.GetProducts();
             return View(model);
         }
