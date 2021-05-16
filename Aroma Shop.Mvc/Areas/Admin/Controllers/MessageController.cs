@@ -55,5 +55,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region DeleteMessage
+
+        [HttpGet("/Admin/Messages/DeleteMessage")]
+        public IActionResult DeleteMessage(int messageId)
+        {
+            var result = _messageService.DeleteMessageById(messageId);
+
+            if (result) 
+                return RedirectToAction("Index");
+
+            return NotFound();
+        }
+
+        #endregion
     }
 }

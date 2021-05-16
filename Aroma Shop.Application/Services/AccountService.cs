@@ -208,15 +208,18 @@ namespace Aroma_Shop.Application.Services
                 var user =
                     await _userManager.FindByEmailAsync(vm.Email);
 
+                if (user == null)
+                    return false;
+
                 var result =
                     await _signInManager.PasswordSignInAsync
                     (user.UserName, vm.Password
                         , vm.RememberMe, false);
 
-                if (result.Succeeded)
-                    return true;
+                if (!result.Succeeded)
+                    return false;
 
-                return false;
+                return true;
             }
             catch (Exception error)
             {

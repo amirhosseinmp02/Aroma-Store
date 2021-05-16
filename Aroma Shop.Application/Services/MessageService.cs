@@ -43,7 +43,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 _messageRepository.DeleteMessage(message);
-
+                _messageRepository.Save();
                 return true;
             }
             catch (Exception error)
