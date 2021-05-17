@@ -24,7 +24,7 @@ namespace Aroma_Shop.Mvc.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var model = _productService.GetProducts();
             return View(model);

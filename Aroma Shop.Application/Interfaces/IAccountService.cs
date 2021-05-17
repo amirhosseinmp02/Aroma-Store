@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Account;
+using Aroma_Shop.Application.ViewModels.User;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> LogOutUser();
         Task<bool> SendRestPasswordLink(string userEmail,string returnController, string returnAction);
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
-        Task<IEnumerable<CustomIdentityUser>> GetUsers(ClaimsPrincipal user);
+        Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal user);
     }
 }
