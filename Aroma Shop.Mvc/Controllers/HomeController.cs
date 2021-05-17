@@ -16,14 +16,12 @@ namespace Aroma_Shop.Mvc.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IMessageService _messageService;
         private readonly IProductService _productService;
-        private readonly IAccountService accountService;
 
-        public HomeController(ILogger<HomeController> logger, IMessageService messageService, IProductService productService, IAccountService accountService)
+        public HomeController(ILogger<HomeController> logger, IMessageService messageService, IProductService productService)
         {
             _logger = logger;
             _messageService = messageService;
             _productService = productService;
-            this.accountService = accountService;
         }
 
         public async Task<IActionResult> Index()
