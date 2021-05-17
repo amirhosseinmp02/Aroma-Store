@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
-    [Authorize(Policy = "Writer")]
+    [Authorize(Policy = "Manager")]
     [Area("Admin")]
     public class UserController : Controller
     {
