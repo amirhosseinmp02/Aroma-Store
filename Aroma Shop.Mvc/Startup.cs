@@ -34,33 +34,6 @@ namespace Aroma_Shop.Mvc
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AromaAppDBConnection"));
             });
-            services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
-                {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequiredUniqueChars = 0;
-                    options.User.RequireUniqueEmail = true;
-                    options.User.AllowedUserNameCharacters =
-                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-                    options.SignIn.RequireConfirmedEmail = false;
-                })
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders()
-                .AddErrorDescriber<PersianIdentityErrorDescriber>();
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Login";
-                options.LogoutPath = "/LogOut";
-            });
-            services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    options.ClientId = "168190188156-bl2bbkcna0bgd8f8s2ih1mhps80dogbc.apps.googleusercontent.com";
-                    options.ClientSecret = "5JhPg-OAJDEXQwm8v-fwbYrU";
-                });
             RegisterServices(services);
         }
 
