@@ -318,6 +318,7 @@ namespace Aroma_Shop.Application.Services
             {
                 result = users.Select(p => new UserViewModel()
                 {
+                    UserId = p.Id,
                     UserName = p.UserName,
                     UserEmail = p.Email,
                     PersianUserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
@@ -329,6 +330,7 @@ namespace Aroma_Shop.Application.Services
                     !_userManager.IsInRoleAsync(p,"Founder").Result &&
                     !_userManager.IsInRoleAsync(p,"Manager").Result).Select(p=>new UserViewModel()
                 {
+                    UserId = p.Id,
                     UserName = p.UserName,
                     UserEmail = p.Email,
                     PersianUserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
