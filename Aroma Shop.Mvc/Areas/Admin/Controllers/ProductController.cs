@@ -43,7 +43,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
             else
                 products = _productService.GetProducts();
-            if (products.Count() == 0)
+            if (!products.Any())
             {
                 ViewBag.isEmpty = true;
                 return View();
