@@ -9,12 +9,14 @@ using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.ProductModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
+    [Authorize(Policy = "Writer")]
     [Area("Admin")]
     public class ProductController : Controller
     {
