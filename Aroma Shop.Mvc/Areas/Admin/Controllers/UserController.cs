@@ -68,7 +68,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(CreateEditUserViewModel model)
         {
-
+            if (ModelState.IsValid)
+            {
+                
+            }
         }
 
         #endregion
