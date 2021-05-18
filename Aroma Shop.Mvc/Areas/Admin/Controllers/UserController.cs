@@ -56,6 +56,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region CreateUser
+
+        [HttpGet("/Admin/Users/CreateUser")]
+        public IActionResult CreateUser()
+        {
+
+        }
+
+        #endregion
+
         #region DeleteUser
 
         [HttpGet("/Admin/Users/DeleteUser")]
