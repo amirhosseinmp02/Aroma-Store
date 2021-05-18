@@ -15,7 +15,7 @@ namespace Aroma_Shop.Data.Context
             
         }
 
-        public DbSet<UserDetail> UserDetails { get; set; }
+        public DbSet<UserDetail> UsersDetails { get; set; }
 
         public DbSet<Message> Messages { get; set; }
         public DbSet<Product> Products { get; set; }
