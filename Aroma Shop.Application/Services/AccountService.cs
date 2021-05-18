@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Application.ViewModels.User;
+using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Aroma_Shop.Domain.Models.UserModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +25,12 @@ namespace Aroma_Shop.Application.Services
         private readonly UserManager<CustomIdentityUser> _userManager;
         private readonly SignInManager<CustomIdentityUser> _signInManager;
         private readonly RoleManager<CustomIdentityRole> _roleManager;
+        private readonly IUserRepository _userRepository;
         private readonly LinkGenerator _linkGenerator;
         private readonly IHttpContextAccessor _accessor;
         private readonly IEmailService _emailService;
 
-        public AccountService(UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IEmailService emailService, RoleManager<CustomIdentityRole> roleManager)
+        public AccountService(UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IEmailService emailService, RoleManager<CustomIdentityRole> roleManager, IUserRepository userRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,6 +38,7 @@ namespace Aroma_Shop.Application.Services
             _accessor = accessor;
             _emailService = emailService;
             _roleManager = roleManager;
+            _userRepository = userRepository;
         }
 
         public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
@@ -410,9 +414,33 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public Task<IdentityResult> CreateUserByAdmin(CreateEditUserViewModel userViewModel)
+        public async Task<IdentityResult> CreateUserByAdmin(CreateEditUserViewModel userViewModel)
         {
-            throw new NotImplementedException();
+            var user = new CustomIdentityUser()
+            {
+                UserName = userViewModel.UserName,
+                Email = userViewModel.UserEmail
+            };
+
+            var result =
+                await _userManager.CreateAsync(user, userViewModel.UserPassword);
+
+            var userDetail = new UserDetail()
+            {
+                FirstName = userViewModel.FirstName,
+                LastName = userViewModel.LastName,
+                UserProvince = userViewModel.UserProvince,
+                UserCity = userViewModel.UserCity,
+                UserAddress = userViewModel.UserAddress,
+                UserZipCode = userViewModel.UserZipCode
+            };
+            _userRepository.AddUserDetail(userDetail);
+
+            user.UserDetail = userDetail;
+
+            _userRepository.Save();
+
+            return result;
         }
     }
 }

@@ -20,5 +20,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(userDetail);
         }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
     }
 }

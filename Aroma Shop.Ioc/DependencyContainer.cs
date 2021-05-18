@@ -41,6 +41,8 @@ namespace Aroma_Shop.Ioc
                     policy.Requirements.Add(new PolicyRequirement("Customer")));
             });
             services.AddSingleton<IAuthorizationHandler, PolicyHandler>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }
