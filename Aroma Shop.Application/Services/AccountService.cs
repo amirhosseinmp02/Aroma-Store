@@ -339,5 +339,10 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
+
+        public Task<bool> DeleteUser(string userId)
+        {
+            
+        }
     }
 }
