@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Application.ViewModels.User
 {
     public class CreateEditUserViewModel
     {
+        public CreateEditUserViewModel()
+        {
+            Roles = new List<SelectListItem>();
+        }
+
         [Required(ErrorMessage = "لطفا نام کاربری مورد نظر را وارد نمایید")]
         [MaxLength(75, ErrorMessage = "حداکثر 75 کارکتر مجاز می باشد")]
         [Remote("IsUserNameExist", "Account", HttpMethod = "POST"
@@ -23,6 +29,8 @@ namespace Aroma_Shop.Application.ViewModels.User
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
         public string UserPassword { get; set; }
+
+        public IEnumerable<SelectListItem> Roles { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
         public string FirstName { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]

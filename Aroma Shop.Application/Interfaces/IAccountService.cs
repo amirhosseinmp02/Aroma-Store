@@ -31,5 +31,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
         Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal user);
         Task<bool> DeleteUser(ClaimsPrincipal user, string userId);
+        IEnumerable<CustomIdentityRole> GetRolesForEdit(ClaimsPrincipal user);
+        Task<IdentityResult> CreateUserByAdmin(CreateEditUserViewModel userViewModel);
     }
 }
