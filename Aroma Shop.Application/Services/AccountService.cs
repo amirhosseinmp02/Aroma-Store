@@ -85,9 +85,7 @@ namespace Aroma_Shop.Application.Services
                 var result =
                     await _userManager.ConfirmEmailAsync(user, token);
 
-                if (!result.Succeeded)
-                    return false;
-                return true;
+                return result.Succeeded;
             }
             catch (Exception error)
             {
@@ -220,10 +218,7 @@ namespace Aroma_Shop.Application.Services
                     (user.UserName, vm.Password
                         , vm.RememberMe, false);
 
-                if (!result.Succeeded)
-                    return false;
-
-                return true;
+                return result.Succeeded;
             }
             catch (Exception error)
             {
@@ -292,10 +287,8 @@ namespace Aroma_Shop.Application.Services
 
                 var result = 
                     await _userManager.ResetPasswordAsync(user, token, newPassword);
-                if (!result.Succeeded)
-                    return false;
 
-                return true;
+                return result.Succeeded;
             }
             catch (Exception error)
             {
@@ -306,22 +299,29 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal user)
         {
-            var loggedUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            var loggedUser = await _userManager.FindByIdAsync(loggedUserId);
-            var loggedUserRole = _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+            var loggedUserId = 
+                user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedUser = 
+                await _userManager.FindByIdAsync(loggedUserId);
+            var loggedUserRole = 
+                _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
 
-            var users = _userManager.Users;
+            var users = 
+                _userManager.Users.ToList();
 
             IEnumerable<UserViewModel> result;
 
             if (loggedUserRole=="Founder")
             {
-                result = users.Select(p => new UserViewModel()
+                result = users.Where(p=>
+                        !_userManager.IsInRoleAsync(p,"Founder").Result)
+                    .Select(p => new UserViewModel()
                 {
                     UserId = p.Id,
                     UserName = p.UserName,
                     UserEmail = p.Email,
-                    UserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                    UserRoleName =
+                        _userManager.GetRolesAsync(p).Result.FirstOrDefault()
                 });
             }
             else
@@ -333,16 +333,47 @@ namespace Aroma_Shop.Application.Services
                     UserId = p.Id,
                     UserName = p.UserName,
                     UserEmail = p.Email,
-                    UserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                    UserRoleName = 
+                        _userManager.GetRolesAsync(p).Result.FirstOrDefault()
                 });
             }
 
             return result;
         }
 
-        public Task<bool> DeleteUser(string userId)
+        public async Task<bool> DeleteUser(ClaimsPrincipal user, string userId)
         {
-            
+            try
+            {
+                var loggedUserId = 
+                    user.FindFirstValue(ClaimTypes.NameIdentifier);
+                var loggedUser = 
+                    await _userManager.FindByIdAsync(loggedUserId);
+                if (loggedUser == null)
+                    return false;
+
+                var loggedUserRole =
+                    _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+
+                var requestedUser =
+                    await _userManager.FindByIdAsync(userId);
+                var requestedUserRole =
+                    _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault();
+
+                if (loggedUserRole == "Founder" && requestedUserRole == "Founder") 
+                    return false;
+                if ((loggedUserRole == "Manager") && (requestedUserRole == "Founder" || requestedUserRole == "Manager"))
+                    return false;
+
+                var result = await _userManager.DeleteAsync(requestedUser);
+
+                return result.Succeeded;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
         }
     }
 }

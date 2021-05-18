@@ -55,5 +55,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region DeleteUser
+
+        [HttpGet("/Admin/Users/DeleteUser")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var result = await _accountService.DeleteUser(User, userId);
+
+            if (result)
+                return RedirectToAction("Index");
+
+            return NotFound();
+        }
+
+        #endregion
     }
 }
