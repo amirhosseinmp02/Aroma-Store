@@ -27,6 +27,11 @@
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
+                <label class="control-label">مقام</label>
+                <select class="form-control" asp-items="Model.Roles" asp-for="UserRole">
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="control-label">نام</label>
                 <input class="form-control" asp-for="FirstName">
                 <span class="text-danger field-validation-valid"></span>

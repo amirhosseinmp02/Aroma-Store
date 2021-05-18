@@ -59,9 +59,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region CreateUser
 
         [HttpGet("/Admin/Users/CreateUser")]
-        public IActionResult CreateUser()
+        public async Task<IActionResult>  CreateUser()
         {
-            return View();
+            var roles = await _accountService.GetRolesForEdit(User);
+            var model = new CreateEditUserViewModel()
+            {
+                Roles = roles
+            };
+            return View(model);
         }
 
         [HttpPost("/Admin/Users/CreateUser")]

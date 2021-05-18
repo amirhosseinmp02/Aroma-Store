@@ -409,5 +409,10 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
+
+        public Task<IdentityResult> CreateUserByAdmin(CreateEditUserViewModel userViewModel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
