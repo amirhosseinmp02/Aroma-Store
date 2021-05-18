@@ -1,0 +1,74 @@
+﻿@model Aroma_Shop.Application.ViewModels.User.CreateEditUserViewModel
+
+@{
+    ViewData["Title"] = "ساخت اکانت";
+}
+<div class="h2 mt-3">
+    <h1 class="h2 d-inline">ساخت اکانت</h1>
+    <a class="btn btn-warning float-left" asp-controller="User" asp-action="Index">بازگشت</a>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
+        <form asp-action="CreateUser">
+            <div class="form-group">
+                <label class="control-label">نام کاربری</label>
+                <input class="form-control" asp-for="UserName">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">ایمیل</label>
+                <input class="form-control" asp-for="UserEmail">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">کلمه عبور</label>
+                <input class="form-control" asp-for="UserPassword">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">نام</label>
+                <input class="form-control" asp-for="FirstName">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">نام خانوادگی</label>
+                <input class="form-control" asp-for="LastName">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">استان</label>
+                <input class="form-control" asp-for="UserProvince">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">شهر</label>
+                <input class="form-control" asp-for="UserCity">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">آدرس</label>
+                <textarea asp-for="UserAddress" rows="3" class="form-control none-resize">
+                </textarea>
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">کد پستی</label>
+                <input class="form-control" type="number" asp-for="UserZipCode">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ساخت" class="btn btn-block btn-primary">
+            </div>
+            @if (ViewData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+            }
+            <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

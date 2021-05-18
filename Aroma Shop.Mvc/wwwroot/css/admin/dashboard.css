@@ -202,3 +202,7 @@ i.jstree-icon.jstree-themeicon {
 .products-dashbord-menu {
     cursor: pointer;
 }
+
+.none-resize {
+    resize: none;
+}

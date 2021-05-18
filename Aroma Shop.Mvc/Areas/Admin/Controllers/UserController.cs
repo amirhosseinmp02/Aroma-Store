@@ -61,6 +61,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Users/CreateUser")]
         public IActionResult CreateUser()
         {
+            return View();
+        }
+
+        [HttpPost("/Admin/Users/CreateUser")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(CreateEditUserViewModel model)
+        {
 
         }
 
