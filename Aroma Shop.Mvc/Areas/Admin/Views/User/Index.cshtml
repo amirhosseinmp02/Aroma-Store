@@ -27,6 +27,7 @@
                 <th class="cart-item-cells">نام کاربری</th>
                 <th class="cart-item-cells">ایمیل</th>
                 <th class="cart-item-cells">مقام</th>
+                <th class="cart-item-cells">عملیات</th>
             </tr>
         </thead>
         <tbody>
@@ -34,8 +35,27 @@
             {
                 <tr>
                     <td class="cart-item-cells align-middle">@user.UserName</td>
-                    <td class="cart-item-cells align-middle">@user.UserEmail</td>
-                    <td class="cart-item-cells align-middle">@user.PersianUserRoleName</td>
+                    <td class="cart-item-cells align-middle">@user.UserEmail</td> 
+                    @{
+                        string persianUserRoleName;
+                        if (user.UserRoleName== "Founder")
+                        {
+                            persianUserRoleName = "موسس";
+                        }
+                        else if (user.UserRoleName == "Manager")
+                        {
+                            persianUserRoleName = "مدیر";
+                        }
+                        else if (user.UserRoleName == "Writer")
+                        {
+                            persianUserRoleName = "نویسنده";
+                        }
+                        else
+                        {
+                            persianUserRoleName = "مشتری";
+                        }
+                    }
+                    <td class="cart-item-cells align-middle">@persianUserRoleName</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
                             <a class="btn text-light btn-primary m-3" asp-action="EditUser" asp-route-userId="@user.UserId">ویرایش</a>

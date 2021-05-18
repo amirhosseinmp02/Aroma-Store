@@ -311,7 +311,6 @@ namespace Aroma_Shop.Application.Services
             var loggedUserRole = _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
 
             var users = _userManager.Users;
-
             IEnumerable<UserViewModel> result;
 
             if (loggedUserRole=="Founder")
@@ -321,7 +320,7 @@ namespace Aroma_Shop.Application.Services
                     UserId = p.Id,
                     UserName = p.UserName,
                     UserEmail = p.Email,
-                    PersianUserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                    UserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
                 });
             }
             else
@@ -333,7 +332,7 @@ namespace Aroma_Shop.Application.Services
                     UserId = p.Id,
                     UserName = p.UserName,
                     UserEmail = p.Email,
-                    PersianUserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                    UserRoleName = _userManager.GetRolesAsync(p).Result.FirstOrDefault()
                 });
             }
 

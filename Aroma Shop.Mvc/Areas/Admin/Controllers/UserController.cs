@@ -32,12 +32,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 users = _accountService.GetUsers(User)
                     .Result.Where(p => p.UserName.Contains(search) ||
                                        p.UserEmail.Contains(search) ||
-                                       p.PersianUserRoleName.Contains(search));
+                                       p.UserRoleName.Contains(search));
                 ViewBag.search = search;
             }
             else
                 users = await _accountService.GetUsers(User);
-            if (users.Any())
+            if (!users.Any())
             {
                 ViewBag.isEmpty = true;
                 return View();
