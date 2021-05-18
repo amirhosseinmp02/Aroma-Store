@@ -39,6 +39,9 @@ namespace Aroma_Shop.Application.Services
         public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
         {
             var result = await _userManager.CreateAsync(user, password);
+
+            await _userManager.AddToRoleAsync(user, "Customer");
+
             return result;
         }
 
