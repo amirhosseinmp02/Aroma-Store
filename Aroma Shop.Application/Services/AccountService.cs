@@ -311,6 +311,7 @@ namespace Aroma_Shop.Application.Services
             var loggedUserRole = _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
 
             var users = _userManager.Users;
+
             IEnumerable<UserViewModel> result;
 
             if (loggedUserRole=="Founder")
