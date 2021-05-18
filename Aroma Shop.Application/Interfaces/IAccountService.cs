@@ -9,6 +9,7 @@ using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Application.Interfaces
 {
@@ -31,7 +32,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
         Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal user);
         Task<bool> DeleteUser(ClaimsPrincipal user, string userId);
-        IEnumerable<CustomIdentityRole> GetRolesForEdit(ClaimsPrincipal user);
+        Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal user);
         Task<IdentityResult> CreateUserByAdmin(CreateEditUserViewModel userViewModel);
     }
 }

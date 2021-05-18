@@ -13,6 +13,7 @@ using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 
 namespace Aroma_Shop.Application.Services
@@ -288,7 +289,7 @@ namespace Aroma_Shop.Application.Services
                 if (user == null)
                     return false;
 
-                var result = 
+                var result =
                     await _userManager.ResetPasswordAsync(user, token, newPassword);
 
                 return result.Succeeded;
@@ -302,43 +303,43 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal user)
         {
-            var loggedUserId = 
+            var loggedUserId =
                 user.FindFirstValue(ClaimTypes.NameIdentifier);
-            var loggedUser = 
+            var loggedUser =
                 await _userManager.FindByIdAsync(loggedUserId);
-            var loggedUserRole = 
+            var loggedUserRole =
                 _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
 
-            var users = 
+            var users =
                 _userManager.Users.ToList();
 
             IEnumerable<UserViewModel> result;
 
-            if (loggedUserRole=="Founder")
+            if (loggedUserRole == "Founder")
             {
-                result = users.Where(p=>
-                        !_userManager.IsInRoleAsync(p,"Founder").Result)
+                result = users.Where(p =>
+                        !_userManager.IsInRoleAsync(p, "Founder").Result)
                     .Select(p => new UserViewModel()
-                {
-                    UserId = p.Id,
-                    UserName = p.UserName,
-                    UserEmail = p.Email,
-                    UserRoleName =
+                    {
+                        UserId = p.Id,
+                        UserName = p.UserName,
+                        UserEmail = p.Email,
+                        UserRoleName =
                         _userManager.GetRolesAsync(p).Result.FirstOrDefault()
-                });
+                    });
             }
             else
             {
                 result = users.Where(p =>
-                    !_userManager.IsInRoleAsync(p,"Founder").Result &&
-                    !_userManager.IsInRoleAsync(p,"Manager").Result).Select(p=>new UserViewModel()
-                {
-                    UserId = p.Id,
-                    UserName = p.UserName,
-                    UserEmail = p.Email,
-                    UserRoleName = 
-                        _userManager.GetRolesAsync(p).Result.FirstOrDefault()
-                });
+                    !_userManager.IsInRoleAsync(p, "Founder").Result &&
+                    !_userManager.IsInRoleAsync(p, "Manager").Result).Select(p => new UserViewModel()
+                    {
+                        UserId = p.Id,
+                        UserName = p.UserName,
+                        UserEmail = p.Email,
+                        UserRoleName =
+                         _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                    });
             }
 
             return result;
@@ -348,12 +349,10 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var loggedUserId = 
+                var loggedUserId =
                     user.FindFirstValue(ClaimTypes.NameIdentifier);
-                var loggedUser = 
+                var loggedUser =
                     await _userManager.FindByIdAsync(loggedUserId);
-                if (loggedUser == null)
-                    return false;
 
                 var loggedUserRole =
                     _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
@@ -363,7 +362,7 @@ namespace Aroma_Shop.Application.Services
                 var requestedUserRole =
                     _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault();
 
-                if (loggedUserRole == "Founder" && requestedUserRole == "Founder") 
+                if (loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     return false;
                 if ((loggedUserRole == "Manager") && (requestedUserRole == "Founder" || requestedUserRole == "Manager"))
                     return false;
@@ -377,6 +376,38 @@ namespace Aroma_Shop.Application.Services
                 Console.WriteLine(error);
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal user)
+        {
+            var loggedUserId =
+                user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedUser =
+                await _userManager.FindByIdAsync(loggedUserId);
+
+            var loggedUserRole =
+                _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+
+            var roles =
+                _roleManager.Roles;
+
+            IEnumerable<SelectListItem> result;
+
+            if (loggedUserRole == "Founder")
+            {
+                result = roles.Where(p => p.Name != "Founder")
+                    .Select(p => 
+                        new SelectListItem(p.PersianName, p.Name));
+            }
+            else
+            {
+                result = roles.Where(p => 
+                        p.Name != "Founder" && p.Name != "Manager")
+                    .Select(p => 
+                        new SelectListItem(p.PersianName, p.Name));
+            }
+
+            return result;
         }
     }
 }
