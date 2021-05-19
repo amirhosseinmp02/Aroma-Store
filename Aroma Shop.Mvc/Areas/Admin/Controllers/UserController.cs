@@ -109,6 +109,17 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(user);
         }
 
+        [HttpPost("/Admin/Users/EditUser")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(CreateEditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+            return View(model);
+        }
+
         #endregion
 
         #region DeleteUser

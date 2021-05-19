@@ -313,7 +313,7 @@ namespace Aroma_Shop.Application.Services
             var loggedUser =
                 await _userManager.FindByIdAsync(loggedUserId);
             var loggedUserRole =
-                _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+                GetUserRole(loggedUser);
 
             var users =
                 _userManager.Users.ToList();
@@ -388,7 +388,7 @@ namespace Aroma_Shop.Application.Services
                     await _userManager.FindByIdAsync(loggedUserId);
 
                 var loggedUserRole =
-                    _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+                    GetUserRole(loggedUser);
 
                 var requestedUser =
                     _userManager.Users
@@ -396,7 +396,7 @@ namespace Aroma_Shop.Application.Services
                         .Include(p => p.UserDetail)
                         .FirstOrDefault();
                 var requestedUserRole =
-                    _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault();
+                    GetUserRole(requestedUser);
 
                 if ((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     || ((loggedUserRole == "Manager") &&
@@ -425,7 +425,7 @@ namespace Aroma_Shop.Application.Services
                 await _userManager.FindByIdAsync(loggedUserId);
 
             var loggedUserRole =
-                _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+                GetUserRole(loggedUser);
 
             var roles =
                 _roleManager.Roles;
@@ -467,7 +467,7 @@ namespace Aroma_Shop.Application.Services
                 await _userManager.FindByIdAsync(loggedUserId);
 
             var loggedUserRole =
-                _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+                GetUserRole(loggedUser);
 
             string userRole;
 
@@ -500,6 +500,17 @@ namespace Aroma_Shop.Application.Services
             _userRepository.Save();
 
             return result;
+        }
+
+        //Utilities Methods
+
+        private string GetUserRole(CustomIdentityUser user)
+        {
+            var userRole = 
+                _userManager.GetRolesAsync(user)
+                    .Result.FirstOrDefault();
+
+            return userRole;
         }
     }
 }
