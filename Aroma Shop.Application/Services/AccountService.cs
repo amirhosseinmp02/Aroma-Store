@@ -350,6 +350,32 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
+        public async Task<CreateEditUserViewModel> GetUser(ClaimsPrincipal currentUser, string userId)
+        {
+            var requestedUser = 
+                _userManager.Users
+                    .Where(p => p.Id == userId)
+                    .Include(p => p.UserDetail)
+                    .FirstOrDefault();
+            var roles = 
+                await GetRolesForEdit(currentUser);
+            var user = new CreateEditUserViewModel()
+            {
+                UserName = requestedUser.UserName,
+                Email = requestedUser.Email,
+                Roles = roles,
+                UserRole = _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault(),
+                FirstName = requestedUser.UserDetail.FirstName,
+                LastName = requestedUser.UserDetail.LastName,
+                UserProvince = requestedUser.UserDetail.UserProvince,
+                UserCity = requestedUser.UserDetail.UserCity,
+                UserAddress = requestedUser.UserDetail.UserAddress,
+                UserZipCode = requestedUser.UserDetail.UserZipCode
+            };
+
+            return user;
+        }
+
         public async Task<bool> DeleteUser(ClaimsPrincipal currentUser, string userId)
         {
             try
@@ -362,7 +388,7 @@ namespace Aroma_Shop.Application.Services
                 var loggedUserRole =
                     _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
 
-                var requestedUser = 
+                var requestedUser =
                     _userManager.Users
                         .Where(p => p.Id == userId)
                         .Include(p => p.UserDetail)
@@ -370,13 +396,14 @@ namespace Aroma_Shop.Application.Services
                 var requestedUserRole =
                     _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault();
 
-                if ((loggedUserRole == "Founder" && requestedUserRole == "Founder") 
+                if ((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     || ((loggedUserRole == "Manager") &&
                         (requestedUserRole == "Founder" || requestedUserRole == "Manager")))
                     return false;
 
                 _userRepository.DeleteUserDetail(requestedUser.UserDetail);
-                var result = await _userManager.DeleteAsync(requestedUser);
+                var result = 
+                    await _userManager.DeleteAsync(requestedUser);
                 _userRepository.Save();
 
                 return result.Succeeded;
@@ -442,8 +469,8 @@ namespace Aroma_Shop.Application.Services
 
             string userRole;
 
-            if ((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder") 
-                || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager")) 
+            if ((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder")
+                || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager"))
                 || (userViewModel.UserRole != "Manager" && userViewModel.UserRole != "Writer" && userViewModel.UserRole != "Customer"))
             {
                 userRole = "Customer";
