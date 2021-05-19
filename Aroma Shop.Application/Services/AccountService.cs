@@ -395,6 +395,10 @@ namespace Aroma_Shop.Application.Services
                         .Where(p => p.Id == userId)
                         .Include(p => p.UserDetail)
                         .FirstOrDefault();
+
+                if (requestedUser == null)
+                    return false;
+
                 var requestedUserRole =
                     GetUserRole(requestedUser);
 
@@ -500,6 +504,11 @@ namespace Aroma_Shop.Application.Services
             _userRepository.Save();
 
             return result;
+        }
+
+        public Task<IdentityResult> EditUserByAdmin(ClaimsPrincipal currentUser, CreateEditUserViewModel userViewModel)
+        {
+            throw new NotImplementedException();
         }
 
         //Utilities Methods

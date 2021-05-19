@@ -105,6 +105,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var user = 
                 await _accountService.GetUser(User, userId);
+            if (user == null)
+                return NotFound();
 
             return View(user);
         }

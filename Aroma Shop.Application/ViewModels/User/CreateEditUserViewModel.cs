@@ -38,5 +38,9 @@ namespace Aroma_Shop.Application.ViewModels.User
         public string UserAddress { get; set; }
         [StringLength(10, MinimumLength = 10, ErrorMessage = "کد پستی شامل 10 رقم می باشد")]
         public string UserZipCode { get; set; }
+
+        //Properties For Editing Product
+
+        public string UserId { get; set; }
     }
 }
