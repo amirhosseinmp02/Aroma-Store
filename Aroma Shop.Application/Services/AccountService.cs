@@ -357,8 +357,10 @@ namespace Aroma_Shop.Application.Services
                     .Where(p => p.Id == userId)
                     .Include(p => p.UserDetail)
                     .FirstOrDefault();
+
             var roles = 
                 await GetRolesForEdit(currentUser);
+
             var user = new CreateEditUserViewModel()
             {
                 UserName = requestedUser.UserName,

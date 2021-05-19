@@ -98,6 +98,19 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region EditUser
+
+        [HttpGet("/Admin/Users/EditUser")]
+        public async Task<IActionResult> EditUser(string userId)
+        {
+            var user = 
+                await _accountService.GetUser(User, userId);
+
+            return View(user);
+        }
+
+        #endregion
+
         #region DeleteUser
 
         [HttpGet("/Admin/Users/DeleteUser")]
