@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aroma_Shop.Application.Services
 {
@@ -116,7 +117,7 @@ namespace Aroma_Shop.Application.Services
         public async Task<JsonResult> IsEmailExist(string email)
         {
             var emaill =
-                await _userManager.FindByNameAsync(email);
+                await _userManager.FindByEmailAsync(email);
 
             if (emaill == null)
                 return new JsonResult(true);
@@ -305,10 +306,10 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public async Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal user)
+        public async Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal currentUser)
         {
             var loggedUserId =
-                user.FindFirstValue(ClaimTypes.NameIdentifier);
+                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser =
                 await _userManager.FindByIdAsync(loggedUserId);
             var loggedUserRole =
@@ -349,29 +350,34 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public async Task<bool> DeleteUser(ClaimsPrincipal user, string userId)
+        public async Task<bool> DeleteUser(ClaimsPrincipal currentUser, string userId)
         {
             try
             {
                 var loggedUserId =
-                    user.FindFirstValue(ClaimTypes.NameIdentifier);
+                    currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
                 var loggedUser =
                     await _userManager.FindByIdAsync(loggedUserId);
 
                 var loggedUserRole =
                     _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
 
-                var requestedUser =
-                    await _userManager.FindByIdAsync(userId);
+                var requestedUser = 
+                    _userManager.Users
+                        .Where(p => p.Id == userId)
+                        .Include(p => p.UserDetail)
+                        .FirstOrDefault();
                 var requestedUserRole =
                     _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault();
 
-                if (loggedUserRole == "Founder" && requestedUserRole == "Founder")
-                    return false;
-                if ((loggedUserRole == "Manager") && (requestedUserRole == "Founder" || requestedUserRole == "Manager"))
+                if ((loggedUserRole == "Founder" && requestedUserRole == "Founder") 
+                    || ((loggedUserRole == "Manager") &&
+                        (requestedUserRole == "Founder" || requestedUserRole == "Manager")))
                     return false;
 
+                _userRepository.DeleteUserDetail(requestedUser.UserDetail);
                 var result = await _userManager.DeleteAsync(requestedUser);
+                _userRepository.Save();
 
                 return result.Succeeded;
             }
@@ -382,10 +388,10 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal user)
+        public async Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal currentUser)
         {
             var loggedUserId =
-                user.FindFirstValue(ClaimTypes.NameIdentifier);
+                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser =
                 await _userManager.FindByIdAsync(loggedUserId);
 
@@ -400,30 +406,54 @@ namespace Aroma_Shop.Application.Services
             if (loggedUserRole == "Founder")
             {
                 result = roles.Where(p => p.Name != "Founder")
-                    .Select(p => 
+                    .Select(p =>
                         new SelectListItem(p.PersianName, p.Name));
             }
             else
             {
-                result = roles.Where(p => 
+                result = roles.Where(p =>
                         p.Name != "Founder" && p.Name != "Manager")
-                    .Select(p => 
+                    .Select(p =>
                         new SelectListItem(p.PersianName, p.Name));
             }
 
-            return result;
+            return result.OrderBy(p => p.Value);
         }
 
-        public async Task<IdentityResult> CreateUserByAdmin(CreateEditUserViewModel userViewModel)
+        public async Task<IdentityResult> CreateUserByAdmin(ClaimsPrincipal currentUser, CreateEditUserViewModel userViewModel)
         {
             var user = new CustomIdentityUser()
             {
                 UserName = userViewModel.UserName,
-                Email = userViewModel.UserEmail
+                Email = userViewModel.Email,
+                EmailConfirmed = true
             };
 
             var result =
                 await _userManager.CreateAsync(user, userViewModel.UserPassword);
+
+            var loggedUserId =
+                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedUser =
+                await _userManager.FindByIdAsync(loggedUserId);
+
+            var loggedUserRole =
+                _userManager.GetRolesAsync(loggedUser).Result.FirstOrDefault();
+
+            string userRole;
+
+            if ((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder") 
+                || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager")) 
+                || (userViewModel.UserRole != "Manager" && userViewModel.UserRole != "Writer" && userViewModel.UserRole != "Customer"))
+            {
+                userRole = "Customer";
+            }
+            else
+            {
+                userRole = userViewModel.UserRole;
+            }
+
+            await _userManager.AddToRoleAsync(user, userRole);
 
             var userDetail = new UserDetail()
             {

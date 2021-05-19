@@ -241,8 +241,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 if (result)
                 {
                     ModelState.Clear();
-                    model.AllCategories =
-                        _productService.GetCategoriesTreeView();
+                    model = new AddEditCategoryViewModel()
+                    {
+                        AllCategories = _productService.GetCategoriesTreeView()
+                    };
                     ViewData["SuccessMessage"] = "دسته مورد نظر با موفقیت افزوده شد.";
                     return View(model);
                 }

@@ -27,7 +27,6 @@ namespace Aroma_Shop.Data.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-
             base.OnModelCreating(builder);
         }
     }

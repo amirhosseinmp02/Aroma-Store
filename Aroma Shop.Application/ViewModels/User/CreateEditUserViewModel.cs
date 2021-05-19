@@ -11,14 +11,14 @@ namespace Aroma_Shop.Application.ViewModels.User
     {
         [Required(ErrorMessage = "لطفا نام کاربری مورد نظر را وارد نمایید")]
         [MaxLength(75, ErrorMessage = "حداکثر 75 کارکتر مجاز می باشد")]
-        [Remote("IsUserNameExist", "Account", HttpMethod = "POST"
+        [Remote("IsUserNameExist", "Account", "", HttpMethod = "POST"
             , AdditionalFields = "__RequestVerificationToken")]
         public string UserName { get; set; }
         [EmailAddress(ErrorMessage = "فیلد وارد شده ایمیل نمی باشد")]
         [Required(ErrorMessage = "لطفا آدرس ایمیل خود را وارد نمایید")]
-        [Remote("IsEmailExist", "Account", HttpMethod = "POST"
+        [Remote("IsEmailExist", "Account", "", HttpMethod = "POST"
             , AdditionalFields = "__RequestVerificationToken")]
-        public string UserEmail { get; set; }
+        public string Email { get; set; }
         [Required(ErrorMessage = "لطفا کلمه عبور مورد نظر را وارد نمایید")]
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]

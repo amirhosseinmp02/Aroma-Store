@@ -59,7 +59,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region CreateUser
 
         [HttpGet("/Admin/Users/CreateUser")]
-        public async Task<IActionResult>  CreateUser()
+        public async Task<IActionResult> CreateUser()
         {
             var roles = await _accountService.GetRolesForEdit(User);
             var model = new CreateEditUserViewModel()
@@ -75,8 +75,25 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+                var result = await _accountService.CreateUserByAdmin(User, model);
+                if (result.Succeeded)
+                {
+                    ModelState.Clear();
+                    var roles = await _accountService.GetRolesForEdit(User);
+                    model = new CreateEditUserViewModel()
+                    {
+                        Roles = roles
+                    };
+                    ViewData["SuccessMessage"] = "اکانت مورد نظر با موفقیت ساخته شد";
+                    return View(model);
+                }
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
             }
+
+            return View(model);
         }
 
         #endregion
