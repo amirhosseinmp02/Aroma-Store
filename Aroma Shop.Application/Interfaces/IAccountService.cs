@@ -35,5 +35,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> DeleteUser(ClaimsPrincipal user, string userId);
         Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal currentUser);
         Task<IdentityResult> CreateUserByAdmin(ClaimsPrincipal currentUser, CreateEditUserViewModel userViewModel);
+        Task<IdentityResult> EditUserByAdmin(ClaimsPrincipal currentUser, CreateEditUserViewModel userViewModel);
     }
 }
