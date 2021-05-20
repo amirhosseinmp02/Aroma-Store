@@ -14,6 +14,7 @@ namespace Aroma_Shop.Domain.Models
         [Required(ErrorMessage = "لطفا نام خود را وارد نمایید")]
         public string MessageSenderName { get; set; }
         [EmailAddress(ErrorMessage = "فیلد وارد شده ایمیل نمی باشد")]
+        [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا آدرس ایمیل خود را وارد نمایید")]
         public string MessageSenderEmail { get; set; }
         [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
@@ -22,5 +23,6 @@ namespace Aroma_Shop.Domain.Models
         [Required(ErrorMessage = "لطفا پیام خود را شرح دهید")]
         [MaxLength(2000, ErrorMessage = "حداکثر 2000 کارکتر مجاز می باشد")]
         public string MessageDescription { get; set; }
+        public bool IsUnread { get; set; }
     }
 }

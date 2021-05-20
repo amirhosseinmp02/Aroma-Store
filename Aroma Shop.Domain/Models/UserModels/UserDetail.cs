@@ -18,6 +18,7 @@ namespace Aroma_Shop.Domain.Models.UserModels
         public string UserProvince { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
         public string UserCity { get; set; }
+        [MaxLength(2000, ErrorMessage = "حداکثر 2000 کارکتر مجاز می باشد")]
         public string UserAddress { get; set; }
         [StringLength(10,MinimumLength = 10,ErrorMessage = "کد پستی شامل 10 رقم می باشد")]
         public string UserZipCode { get; set; }
