@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Aroma_Shop.Ioc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,6 +55,11 @@ namespace Aroma_Shop.Mvc
             {
                 options.LoginPath = "/Login";
                 options.LogoutPath = "/LogOut";
+            });
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                // enables immediate logout, after updating the user's stat.
+                options.ValidationInterval = TimeSpan.Zero;
             });
             services.AddAuthentication()
                 .AddGoogle(options =>

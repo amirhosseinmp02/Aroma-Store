@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Aroma_Shop.Application.ViewModels.User
 {
-    public class CreateEditUserViewModel
+    public class CreateUserViewModel
     {
         [Required(ErrorMessage = "لطفا نام کاربری مورد نظر را وارد نمایید")]
         [MaxLength(75, ErrorMessage = "حداکثر 75 کارکتر مجاز می باشد")]

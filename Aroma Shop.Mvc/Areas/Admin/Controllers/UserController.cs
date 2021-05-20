@@ -62,7 +62,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> CreateUser()
         {
             var roles = await _accountService.GetRolesForEdit(User);
-            var model = new CreateEditUserViewModel()
+            var model = new CreateUserViewModel()
             {
                 Roles = roles
             };
@@ -71,7 +71,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Users/CreateUser")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(CreateEditUserViewModel model)
+        public async Task<IActionResult> CreateUser(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 {
                     ModelState.Clear();
                     var roles = await _accountService.GetRolesForEdit(User);
-                    model = new CreateEditUserViewModel()
+                    model = new CreateUserViewModel()
                     {
                         Roles = roles
                     };
@@ -107,18 +107,28 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 await _accountService.GetUser(User, userId);
             if (user == null)
                 return NotFound();
-
+            TempData["userId"] = user.UserId;
             return View(user);
         }
 
         [HttpPost("/Admin/Users/EditUser")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditUser(CreateEditUserViewModel model)
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-
+                model.UserId = TempData["userId"].ToString();
+                var result = await _accountService.EditUserByAdmin(User, model);
+                if (result.Succeeded)
+                    return RedirectToAction("Index");
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
             }
+            var roles = await _accountService.GetRolesForEdit(User);
+            model.Roles = roles;
+            TempData.Keep("userId");
             return View(model);
         }
 

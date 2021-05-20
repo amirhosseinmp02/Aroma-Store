@@ -308,10 +308,8 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<IEnumerable<UserViewModel>> GetUsers(ClaimsPrincipal currentUser)
         {
-            var loggedUserId =
-                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser =
-                await _userManager.FindByIdAsync(loggedUserId);
+                await GetLoggedUser(currentUser);
             var loggedUserRole =
                 GetUserRole(loggedUser);
 
@@ -350,7 +348,7 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public async Task<CreateEditUserViewModel> GetUser(ClaimsPrincipal currentUser, string userId)
+        public async Task<EditUserViewModel> GetUser(ClaimsPrincipal currentUser, string userId)
         {
             var requestedUser = 
                 _userManager.Users
@@ -361,8 +359,9 @@ namespace Aroma_Shop.Application.Services
             var roles = 
                 await GetRolesForEdit(currentUser);
 
-            var user = new CreateEditUserViewModel()
+            var user = new EditUserViewModel()
             {
+                UserId = requestedUser.Id,
                 UserName = requestedUser.UserName,
                 Email = requestedUser.Email,
                 Roles = roles,
@@ -382,10 +381,8 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var loggedUserId =
-                    currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
                 var loggedUser =
-                    await _userManager.FindByIdAsync(loggedUserId);
+                    await GetLoggedUser(currentUser);
 
                 var loggedUserRole =
                     GetUserRole(loggedUser);
@@ -423,10 +420,8 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal currentUser)
         {
-            var loggedUserId =
-                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser =
-                await _userManager.FindByIdAsync(loggedUserId);
+                await GetLoggedUser(currentUser);
 
             var loggedUserRole =
                 GetUserRole(loggedUser);
@@ -453,7 +448,7 @@ namespace Aroma_Shop.Application.Services
             return result.OrderBy(p => p.Value);
         }
 
-        public async Task<IdentityResult> CreateUserByAdmin(ClaimsPrincipal currentUser, CreateEditUserViewModel userViewModel)
+        public async Task<IdentityResult> CreateUserByAdmin(ClaimsPrincipal currentUser, CreateUserViewModel userViewModel)
         {
             var user = new CustomIdentityUser()
             {
@@ -465,10 +460,8 @@ namespace Aroma_Shop.Application.Services
             var result =
                 await _userManager.CreateAsync(user, userViewModel.UserPassword);
 
-            var loggedUserId =
-                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser =
-                await _userManager.FindByIdAsync(loggedUserId);
+                await GetLoggedUser(currentUser);
 
             var loggedUserRole =
                 GetUserRole(loggedUser);
@@ -506,13 +499,68 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public Task<IdentityResult> EditUserByAdmin(ClaimsPrincipal currentUser, CreateEditUserViewModel userViewModel)
+        public async Task<IdentityResult> EditUserByAdmin(ClaimsPrincipal currentUser, EditUserViewModel userViewModel)
         {
-            throw new NotImplementedException();
+            var user =
+                await _userManager.Users
+                    .Where(p => p.Id == userViewModel.UserId)
+                    .Include(p => p.UserDetail)
+                    .FirstOrDefaultAsync();
+
+            user.UserName = userViewModel.UserName;
+            user.Email = userViewModel.Email;
+            user.UserDetail.FirstName = userViewModel.FirstName;
+            user.UserDetail.LastName = userViewModel.LastName;
+            user.UserDetail.UserProvince = userViewModel.UserProvince;
+            user.UserDetail.UserCity = userViewModel.UserCity;
+            user.UserDetail.UserAddress = userViewModel.UserAddress;
+            user.UserDetail.UserZipCode = userViewModel.UserZipCode;
+
+            var oldUserRole = 
+                GetUserRole(user);
+            if (oldUserRole != userViewModel.UserRole)
+            {
+                var loggedUser =
+                    await GetLoggedUser(currentUser);
+                var loggedUserRole =
+                    GetUserRole(loggedUser);
+
+                if (!((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder")
+                      || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager"))
+                      || (userViewModel.UserRole != "Manager" && userViewModel.UserRole != "Writer" && userViewModel.UserRole != "Customer")))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, oldUserRole);
+                    await _userManager.AddToRoleAsync(user, userViewModel.UserRole);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(userViewModel.UserPassword))
+            {
+                await
+                    _userManager.RemovePasswordAsync(user);
+                await
+                    _userManager.AddPasswordAsync(user, userViewModel.UserPassword);
+            }
+
+            var result = 
+                await _userManager.UpdateAsync(user);
+
+            await _userManager.UpdateSecurityStampAsync(user);
+
+            return result;
         }
 
         //Utilities Methods
 
+        private async Task<CustomIdentityUser> GetLoggedUser(ClaimsPrincipal currentUser)
+        {
+            var loggedUserId = 
+                currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedUser =
+                await _userManager.FindByIdAsync(loggedUserId);
+
+            return loggedUser;
+        }
         private string GetUserRole(CustomIdentityUser user)
         {
             var userRole = 
