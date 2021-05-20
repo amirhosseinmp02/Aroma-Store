@@ -22,7 +22,9 @@
         <input class="form-control form-control-dark w-100 d-none" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link text-light" href="#">خروج</a>
+                <form asp-area="" asp-controller="Account" asp-action="LogOut">
+                    <a id="logout-a-submit" class="nav-link text-light">خروج</a>
+                </form>
             </li>
         </ul>
     </nav>

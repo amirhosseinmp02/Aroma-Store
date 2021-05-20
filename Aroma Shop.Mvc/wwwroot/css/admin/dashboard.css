@@ -206,3 +206,7 @@ i.jstree-icon.jstree-themeicon {
 .none-resize {
     resize: none;
 }
+
+#logout-a-submit {
+    cursor: pointer;
+}

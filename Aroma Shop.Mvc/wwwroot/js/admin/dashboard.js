@@ -3,6 +3,10 @@ $(document).ready(function () {
     $(".dropdown-btn").click(function () {
         $(".dropdown-container").toggle(500);
     });
+
+    $("#logout-a-submit").click(function() {
+        $(this).parent().submit();
+    });
 });
 
 
