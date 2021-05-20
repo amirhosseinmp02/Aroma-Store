@@ -55,7 +55,8 @@ namespace Aroma_Shop.Application.Services
 
         public Message GetMessage(int messageId)
         {
-            var message = _messageRepository.GetMessage(messageId);
+            var message = 
+                _messageRepository.GetMessage(messageId);
 
             return message;
         }

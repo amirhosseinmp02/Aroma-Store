@@ -1,10 +1,10 @@
 ﻿@model Aroma_Shop.Application.ViewModels.User.CreateUserViewModel
 
 @{
-    ViewData["Title"] = "ساخت اکانت";
+    ViewData["Title"] = "افزودن کاربر";
 }
 <div class="h2 mt-3">
-    <h1 class="h2 d-inline">ساخت اکانت</h1>
+    <h1 class="h2 d-inline">افزودن کاربر</h1>
     <a class="btn btn-warning float-left" asp-controller="User" asp-action="Index">بازگشت</a>
 </div>
 <hr>
@@ -63,7 +63,7 @@
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="ساخت" class="btn btn-block btn-primary">
+                <input type="submit" value="افزودن" class="btn btn-block btn-primary">
             </div>
             @if (ViewData["SuccessMessage"] != null)
             {

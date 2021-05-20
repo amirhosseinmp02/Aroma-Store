@@ -33,10 +33,9 @@
         <tbody>
             @foreach (var message in Model)
             {
-
                 <tr>
                     <td class="cart-item-cells align-middle">@message.MessageSubject</td>
-                    <td class="cart-item-cells align-middle">@message.MessageSenderName</td>
+                    <td class="cart-item-cells align-middle">@message.MessageSenderName | @message.MessageSenderEmail</td>
                     <td class="cart-item-cells align-middle">@message.SubmitTime.ToSolarWithTime()</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">

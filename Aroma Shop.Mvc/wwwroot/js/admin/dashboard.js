@@ -1,7 +1,7 @@
 ﻿//For DropDownMenu
 $(document).ready(function () {
     $(".dropdown-btn").click(function () {
-        $(".dropdown-container").toggle(500);
+        $(this).next().toggle(500);
     });
 
     $("#logout-a-submit").click(function() {
