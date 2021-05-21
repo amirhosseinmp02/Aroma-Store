@@ -33,11 +33,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 messages = _messageService.GetMessages()
                     .Where(p => p.MessageSenderName.Contains(search)
                                 || p.MessageDescription.Contains(search)
-                                || p.MessageSubject.Contains(search));
+                                || p.MessageSubject.Contains(search)
+                                || p.MessageSenderEmail.Contains(search))
+                    .OrderBy(p => p.IsRead);
                 ViewBag.search = search;
             }
             else
-                messages = _messageService.GetMessages();
+                messages = 
+                    _messageService.GetMessages()
+                        .OrderBy(p => p.IsRead);
             if (!messages.Any())
             {
                 ViewBag.isEmpty = true;

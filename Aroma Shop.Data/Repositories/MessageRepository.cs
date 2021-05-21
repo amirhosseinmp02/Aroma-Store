@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
@@ -28,7 +29,8 @@ namespace Aroma_Shop.Data.Repositories
 
         public Message GetMessage(int messageId)
         {
-            var message = _context.Messages.Find(messageId);
+            var message = 
+                _context.Messages.Find(messageId);
 
             return message;
         }
@@ -39,6 +41,14 @@ namespace Aroma_Shop.Data.Repositories
                 _context.Messages;
 
             return messages;
+        }
+
+        public int GetUnreadMessagesCount()
+        {
+            var unreadMessagesCount = 
+                _context.Messages.Count(p => !p.IsRead);
+
+            return unreadMessagesCount;
         }
 
         public void Save()

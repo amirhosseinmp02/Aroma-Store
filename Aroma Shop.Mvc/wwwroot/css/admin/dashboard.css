@@ -169,18 +169,18 @@ input.input-validation-error {
     background-color: #fff;
     border: 1px solid #dee2e6;
     border-radius: .25rem;
-    max-width: 100%;
+    max-width: 100%
 }
 
 .file-delete {
     position: relative;
     top: -40px;
-    right: 12px;
+    right: 12px
 }
 .delete-currentProductImage {
     position: relative;
     top: -40px;
-    right: 12px;
+    right: 12px
 }
 
 .upload-btn {
@@ -188,25 +188,29 @@ input.input-validation-error {
     padding: 45px;
     height: auto;
     display: block;
-    cursor: pointer;
+    cursor: pointer
 }
 
 i.jstree-icon.jstree-themeicon {
-    display: none !important;
+    display: none !important
 }
 
 .bi-envelope {
-    margin-left: 5px;
+    margin-left: 5px
 }
 
 .products-dashbord-menu {
-    cursor: pointer;
+    cursor: pointer
 }
 
 .none-resize {
-    resize: none;
+    resize: none
 }
 
 #logout-a-submit {
-    cursor: pointer;
+    cursor: pointer
+}
+
+.isunread {
+    background: #fef7f1
 }
