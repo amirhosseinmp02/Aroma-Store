@@ -39,6 +39,7 @@
                     <td class="cart-item-cells align-middle">@message.SubmitTime.ToSolarWithTime()</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
+                            <a class="btn text-light btn-primary m-3" asp-action="MessageDetail" asp-route-messageId="@message.MessageId">نمایش</a>
                             <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(message.MessageId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(message.MessageId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(message.MessageId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
