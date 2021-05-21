@@ -24,5 +24,9 @@ namespace Aroma_Shop.Domain.Models
         [MaxLength(2000, ErrorMessage = "حداکثر 2000 کارکتر مجاز می باشد")]
         public string MessageDescription { get; set; }
         public bool IsRead { get; set; }
+
+        //Navigations Properties
+
+        public Message MessageReply { get; set; }
     }
 }
