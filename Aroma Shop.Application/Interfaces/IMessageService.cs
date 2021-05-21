@@ -11,5 +11,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteMessageById(int messageId);
         Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
+        int GetUnreadMessagesCount();
     }
 }

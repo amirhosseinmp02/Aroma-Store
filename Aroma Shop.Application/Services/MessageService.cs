@@ -65,5 +65,13 @@ namespace Aroma_Shop.Application.Services
         {
             return _messageRepository.GetMessages();
         }
+
+        public int GetUnreadMessagesCount()
+        {
+            var getUnreadMessagesCount =
+                _messageRepository.GetUnreadMessagesCount();
+
+            return getUnreadMessagesCount;
+        }
     }
 }
