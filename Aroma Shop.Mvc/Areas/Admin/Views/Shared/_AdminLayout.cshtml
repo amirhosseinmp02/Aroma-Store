@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Aroma_Shop.Application.Interfaces
+@inject IMessageService MessageService
+<!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="utf-8" />
@@ -72,7 +74,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Message" asp-action="Index">
                                 <i class="bi bi-envelope"></i>
-                                صندوق پیام ها
+                                صندوق پیام ها @if (MessageService.GetUnreadMessagesCount() != 0) { <span class="badge badge-danger">@MessageService.GetUnreadMessagesCount()</span>}
                             </a>
                         </li>
                         <li class="nav-item">
