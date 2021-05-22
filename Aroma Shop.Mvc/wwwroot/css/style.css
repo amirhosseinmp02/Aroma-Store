@@ -4601,7 +4601,7 @@ a {
                 color: #777
             }
 
-            .review_item .media .media-body .reply_btn {
+            .reply_btn {
                 border: 1px solid #e0e0e0;
                 padding: 0px 28px;
                 display: inline-block;
@@ -4609,13 +4609,12 @@ a {
                 border-radius: 16px;
                 font-size: 14px;
                 color: #222;
-                position: absolute;
                 right: 0px;
                 top: 14px;
                 @icnlude transition
             }
 
-                .review_item .media .media-body .reply_btn:hover {
+                .reply_btn:hover {
                     background: #384aeb;
                     border-color: #384aeb;
                     color: #fff
@@ -4627,7 +4626,7 @@ a {
     }
 
     .review_item.reply {
-        padding-left: 28px
+        padding-right: 28px
     }
 
 .review_box h4 {
@@ -4883,5 +4882,10 @@ input.input-validation-error {
     #carouselExampleControls {
         width: auto;
         margin: auto;
+    }
+}
+@media only screen and (max-width: 1090px) {
+    .add-comment-section {
+        margin-top: 25px
     }
 }

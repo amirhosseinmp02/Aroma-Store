@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Aroma_Shop.Domain.Models.CustomIdentityModels;
 
 namespace Aroma_Shop.Domain.Models.ProductModels
 {
@@ -14,12 +15,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 
         [Key]
         public int CommentId { get; set; }
-        [MaxLength(100, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
-        [Required(ErrorMessage = "لطفا نام خود را وارد نمایید")]
-        public string CommentName { get; set; }
-        [Required(ErrorMessage = "لطفا ایمیل خود را وارد کنید")]
-        [EmailAddress(ErrorMessage = "عبارت وارد شده ایمیل نمی باشد")]
-        public string CommentEmail { get; set; }
         [Required(ErrorMessage = "لطفا نظر خود را وارد کنید")]
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string CommentMessage { get; set; }
@@ -28,5 +23,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 
         public ICollection<Comment> Replies { get; set; }
         public Product Product { get; set; }
+        public CustomIdentityUser User { get; set; }
     }
 }

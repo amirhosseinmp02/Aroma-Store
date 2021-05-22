@@ -1,5 +1,7 @@
 ﻿@using System.Text.RegularExpressions
 @model Aroma_Shop.Domain.Models.ProductModels.Product
+@using Aroma_Shop.Application.Interfaces
+@inject IAccountService AccountService
 @{
     ViewData["Title"] = Model.ProductName;
 }
@@ -25,7 +27,7 @@
                             }
                             <img class="product-image-detail" src="@productImagePath" alt="First slide">
                         </div>
-                        @if (Model.Images.Count>1)
+                        @if (Model.Images.Count > 1)
                         {
                             @foreach (var productImage in Model.Images.Skip(1))
                             {
@@ -141,88 +143,61 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="comment_list">
-                            <div class="review_item">
+                            <div class="review_item border border-info rounded p-2">
                                 <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/img/product/review-1.png" alt="">
-                                    </div>
                                     <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <h5>12th Feb, 2018 at 05:56 pm</h5>
-                                        <a class="reply_btn" href="#">Reply</a>
+                                        <h4>امیرحسین مرادی پور</h4>
+                                        <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
                                     </div>
                                 </div>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
+                                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
                                 </p>
+                                <div class="text-right mt-2 ">
+                                    <a class="reply_btn" href="#">پاسخ</a>
+                                </div>
                             </div>
-                            <div class="review_item reply">
+                            <div class="review_item border border-warning rounded p-2 ml-3">
                                 <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/img/product/review-2.png" alt="">
-                                    </div>
                                     <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <h5>12th Feb, 2018 at 05:56 pm</h5>
-                                        <a class="reply_btn" href="#">Reply</a>
+                                        <h4>امیر طهان</h4>
+                                        <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
                                     </div>
                                 </div>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/img/product/review-3.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <h5>12th Feb, 2018 at 05:56 pm</h5>
-                                        <a class="reply_btn" href="#">Reply</a>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
+                                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="review_box">
-                            <h4>Post a comment</h4>
-                            <form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
-                                <div class="col-md-12">
+                    <div class="col-lg-6 add-comment-section">
+                        @if (!AccountService.IsUserSignedIn(User))
+                        {
+                            <div class="alert alert-danger mt-1" role="alert">جهت ثبت نظر باید در سایت <a asp-controller="Account" asp-action="Register" class="alert-link">عضو</a> شوید و یا <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails",new {productId=Model.ProductId})" class="alert-link">وارد</a> سایت شده باشید .</div>
+                        }
+                        else
+                        {
+                            <div class="review_box">
+                                <h4>ثبت دیدگاه</h4>
+                                <form action="#/" class="form-contact form-review mt-3">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name">
+                                        <input class="form-control" name="name" type="text" placeholder="نام خود را وارد نمایید" required="">
                                     </div>
-                                </div>
-                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email Address">
+                                        <input class="form-control" name="email" type="email" placeholder="ایمیل خود را وارد نمایید " required="">
                                     </div>
-                                </div>
-                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="number" name="number" placeholder="Phone Number">
+                                        <input class="form-control" name="subject" type="text" placeholder="موضوع پیام را وارد نمایید">
                                     </div>
-                                </div>
-                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" name="message" id="message" rows="1" placeholder="Message"></textarea>
+                                        <textarea class="form-control different-control w-100" name="textarea" id="textarea" cols="30" rows="5" placeholder="پیام خود را وارد نمایید" style="margin-top: 0px; margin-bottom: 0px; height: 150px;"></textarea>
                                     </div>
-                                </div>
-                                <div class="col-md-12 text-right">
-                                    <button type="submit" value="submit" class="btn primary-btn">Submit Now</button>
-                                </div>
-                            </form>
-                        </div>
+                                    <div class="form-group text-center text-md-left mt-3">
+                                        <button type="submit" class="button button--active button-review">ثبت</button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
