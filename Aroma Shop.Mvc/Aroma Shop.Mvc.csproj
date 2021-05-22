@@ -15,13 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aroma Shop.Application\Aroma Shop.Application.csproj" />
-    <ProjectReference Include="..\Aroma Shop.Ioc\Aroma Shop.Ioc.csproj" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\img\Products\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="wwwroot\img\Products\" />
+    <ProjectReference Include="..\Aroma Shop.Application\Aroma Shop.Application.csproj" />
+    <ProjectReference Include="..\Aroma Shop.Ioc\Aroma Shop.Ioc.csproj" />
   </ItemGroup>
 
 </Project>

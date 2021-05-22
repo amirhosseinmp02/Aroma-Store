@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
-using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.MessageModels;
 
 namespace Aroma_Shop.Mvc.Controllers
 {

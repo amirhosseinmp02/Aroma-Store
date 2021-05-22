@@ -4,14 +4,16 @@ using Aroma_Shop.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aroma_Shop.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210521160427_AddIsRepliedPropertyToMessageModel")]
+    partial class AddIsRepliedPropertyToMessageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,7 +122,7 @@ namespace Aroma_Shop.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Aroma_Shop.Domain.Models.MessageModels.Message", b =>
+            modelBuilder.Entity("Aroma_Shop.Domain.Models.Message", b =>
                 {
                     b.Property<int>("MessageId")
                         .ValueGeneratedOnAdd()
@@ -138,7 +140,7 @@ namespace Aroma_Shop.Data.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int?>("MessageReplyId")
+                    b.Property<int?>("MessageReplyMessageId")
                         .HasColumnType("int");
 
                     b.Property<string>("MessageSenderEmail")
@@ -161,28 +163,9 @@ namespace Aroma_Shop.Data.Migrations
 
                     b.HasKey("MessageId");
 
-                    b.HasIndex("MessageReplyId");
+                    b.HasIndex("MessageReplyMessageId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("Aroma_Shop.Domain.Models.MessageModels.MessageReply", b =>
-                {
-                    b.Property<int>("MessageReplyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("MessageReplyDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("MessageReplySubmitTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("MessageReplyId");
-
-                    b.ToTable("MessagesReplies");
                 });
 
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.Category", b =>
@@ -491,11 +474,11 @@ namespace Aroma_Shop.Data.Migrations
                     b.Navigation("UserDetail");
                 });
 
-            modelBuilder.Entity("Aroma_Shop.Domain.Models.MessageModels.Message", b =>
+            modelBuilder.Entity("Aroma_Shop.Domain.Models.Message", b =>
                 {
-                    b.HasOne("Aroma_Shop.Domain.Models.MessageModels.MessageReply", "MessageReply")
+                    b.HasOne("Aroma_Shop.Domain.Models.Message", "MessageReply")
                         .WithMany()
-                        .HasForeignKey("MessageReplyId");
+                        .HasForeignKey("MessageReplyMessageId");
 
                     b.Navigation("MessageReply");
                 });

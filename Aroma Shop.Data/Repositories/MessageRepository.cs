@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
-using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.MessageModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aroma_Shop.Data.Repositories
 {
@@ -29,8 +30,10 @@ namespace Aroma_Shop.Data.Repositories
 
         public Message GetMessage(int messageId)
         {
-            var message = 
-                _context.Messages.Find(messageId);
+            var message =
+                _context.Messages.Where(p => p.MessageId == messageId)
+                    .Include(p => p.MessageReply)
+                    .FirstOrDefault();
 
             return message;
         }
@@ -49,6 +52,13 @@ namespace Aroma_Shop.Data.Repositories
                 _context.Messages.Count(p => !p.IsRead);
 
             return unreadMessagesCount;
+        }
+
+        public void SetMessageAsRead(Message message)
+        {
+            message.IsRead = true;
+
+            _context.SaveChanges();
         }
 
         public void Save()

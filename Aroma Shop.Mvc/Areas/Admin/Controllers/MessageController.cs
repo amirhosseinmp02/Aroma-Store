@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Message;
 using Aroma_Shop.Domain.Models;
-using Aroma_Shop.Domain.Models.ProductModels;
+using Aroma_Shop.Domain.Models.MessageModels;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
@@ -39,7 +40,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ViewBag.search = search;
             }
             else
-                messages = 
+                messages =
                     _messageService.GetMessages()
                         .OrderBy(p => p.IsRead);
             if (!messages.Any())
@@ -68,9 +69,36 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult MessageDetail(int messageId)
         {
             var message = _messageService.GetMessage(messageId);
-            return View(message);
+            var messageDetailViewModel = new MessageDetailViewModel()
+            {
+                Message = message,
+                MessageReplyDescription = message.MessageReply?.MessageReplyDescription
+            };
+            _messageService.SetAsRead(message);
+            return View(messageDetailViewModel);
         }
 
+        #endregion
+
+        #region ReplyToMessage
+
+        [HttpPost]
+        public async Task<IActionResult> ReplyToMessage(MessageDetailViewModel messageDetailViewModel)
+        {
+            var messageId = Convert.ToInt32(TempData["messageId"]);
+            var result = await _messageService.ReplyToMessage(messageDetailViewModel.MessageReplyDescription, messageId);
+            var message = _messageService.GetMessage(messageId);
+            messageDetailViewModel.Message = message;
+            if (result)
+            {
+                ViewData["SuccessMessage"] = "پیام شما با موفقیت ارسال شد.";
+                ModelState.Clear();
+                return View("MessageDetail", messageDetailViewModel);
+            }
+            ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
+            TempData.Keep("messageId");
+            return View("MessageDetail", messageDetailViewModel);
+        }
         #endregion
 
         #region DeleteMessage
@@ -80,7 +108,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var result = _messageService.DeleteMessageById(messageId);
 
-            if (result) 
+            if (result)
                 return RedirectToAction("Index");
 
             return NotFound();

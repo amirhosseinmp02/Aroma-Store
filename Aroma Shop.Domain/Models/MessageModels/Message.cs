@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Aroma_Shop.Domain.Models
+namespace Aroma_Shop.Domain.Models.MessageModels
 {
     public class Message
     {
@@ -24,9 +24,10 @@ namespace Aroma_Shop.Domain.Models
         [MaxLength(2000, ErrorMessage = "حداکثر 2000 کارکتر مجاز می باشد")]
         public string MessageDescription { get; set; }
         public bool IsRead { get; set; }
+        public bool IsReplied { get; set; }
 
         //Navigations Properties
 
-        public Message MessageReply { get; set; }
+        public MessageReply MessageReply { get; set; }
     }
 }

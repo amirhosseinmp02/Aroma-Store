@@ -1,4 +1,5 @@
-﻿@model Aroma_Shop.Domain.Models.Message
+﻿@using Aroma_Shop.Application.Utilites
+@model Aroma_Shop.Application.ViewModels.Message.MessageDetailViewModel
 
 @{
     ViewData["Title"] = "نمایش پیام";
@@ -9,32 +10,66 @@
 </div>
 <hr>
 <div class="row">
-    <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
-        @*<form asp-action="AddCategory">
-            <div class="form-group">
-                <label class="control-label" for="CategoryName">نام</label>
-                <input class="form-control" asp-for="CategoryName">
-                <span class="text-danger field-validation-valid"></span>
+    <div class="col-lg-10 col-md-11 col-sm-12">
+        <div class="card bg-light mb-3">
+            <div class="card-header h4">پیام</div>
+            <div class="card-body">
+                <div class="d-flex mb-2">
+                    <fieldset disabled="" class="mr-2">
+                        <label class="h6">نام</label>
+                        <input class="form-control" type="text" value="@Model.Message.MessageSenderName" disabled="">
+                    </fieldset>
+                    <fieldset disabled="" class="mr-2">
+                        <label class="h6">ایمیل</label>
+                        <input class="form-control" type="text" value="@Model.Message.MessageSenderEmail" disabled="">
+                    </fieldset>
+                    <fieldset disabled="" class="mr-2">
+                        <label class="h6">تاریخ</label>
+                        <input class="form-control" type="text" value="@Model.Message.SubmitTime.ToSolarWithTime()" disabled="">
+                    </fieldset>
+                </div>
+                <fieldset disabled="" class="mr-2 mb-3">
+                    <label class="h6">موضوع</label>
+                    <input class="form-control" type="text" value="@Model.Message.SubmitTime.ToSolarWithTime()" disabled="">
+                </fieldset>
+                <fieldset disabled="" class="mr-2">
+                    <label class="h6">شرح</label>
+                    <textarea class="form-control" rows="5" type="text" disabled="">@Model.Message.MessageDescription</textarea>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <label class="control-label">توضیحات</label>
-                <textarea class="form-control" asp-for="CategoryDescription"></textarea>
-                <span class="text-danger field-validation-valid"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">دسته پدر</label>
-                <select class="form-control" asp-items="Model.AllCategories" asp-for="ParentCategoryId">
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="افزودن" class="btn btn-block btn-primary">
-            </div>
-            @if (ViewData["SuccessMessage"] != null)
+        </div>
+        <div class="card bg-light mb-3">
+            @if (!Model.Message.IsReplied)
             {
-                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+                <div class="card-header h4">ارسال پاسخ</div>
+                <div class="card-body">
+                    <form asp-action="ReplyToMessage">
+                        @{
+                            TempData["messageId"] = Model.Message.MessageId;
+                        }
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" asp-for="MessageReplyDescription"></textarea>
+                            <span class="text-danger field-validation-valid"></span>
+                            <button type="submit" class="btn btn-block btn-danger mt-4">ارسال</button>
+                        </div>
+                        <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
+                    </form>
+                </div>
             }
-            <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
-        </form>*@
+            else
+            {
+                <div class="card-header h4">پاسخ شما</div>
+                <div class="card-body">
+                    <fieldset disabled="" class="mr-2">
+                        <textarea class="form-control" rows="5" type="text" disabled="" asp-for="MessageReplyDescription"></textarea>
+                    </fieldset>
+                    @if (ViewData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success mt-4" role="alert">@ViewData["SuccessMessage"]</div>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>
 

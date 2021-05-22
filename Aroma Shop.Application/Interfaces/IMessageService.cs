@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Aroma_Shop.Domain.Models;
+using System.Threading.Tasks;
+using Aroma_Shop.Domain.Models.MessageModels;
 
 namespace Aroma_Shop.Application.Interfaces
 {
@@ -12,5 +13,7 @@ namespace Aroma_Shop.Application.Interfaces
         Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
         int GetUnreadMessagesCount();
+        Task<bool> ReplyToMessage(string messageReplyDescription, int messageId);
+        bool SetAsRead(Message message);
     }
 }
