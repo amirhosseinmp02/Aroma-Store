@@ -63,10 +63,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
-        #region MessageDetail
+        #region MessageDetails
 
         [HttpGet("/Admin/Messages/{messageId}")]
-        public IActionResult MessageDetail(int messageId)
+        public IActionResult MessageDetails(int messageId)
         {
             var message = _messageService.GetMessage(messageId);
             var messageDetailViewModel = new MessageDetailViewModel()
