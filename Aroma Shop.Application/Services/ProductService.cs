@@ -364,6 +364,7 @@ namespace Aroma_Shop.Application.Services
 
                 var comment = new Comment()
                 {
+                    SubmitTime = DateTime.Now,
                     CommentMessage = commentMessage,
                     Product = product,
                     User = user

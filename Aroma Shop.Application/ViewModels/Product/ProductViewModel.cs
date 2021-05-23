@@ -11,5 +11,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [Required(ErrorMessage = "لطفا نظر خود را وارد کنید")]
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string CommentMessage { get; set; }
+
+        public int ParentCommentId { get; set; }
     }
 }

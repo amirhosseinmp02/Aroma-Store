@@ -33,6 +33,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Categories)
                 .Include(p => p.Informations)
                 .Include(p => p.Comments)
+                .ThenInclude(p=>p.User)
                 .Include(p => p.Images)
                 .SingleOrDefault(p => p.ProductId == productId);
 

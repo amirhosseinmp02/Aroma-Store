@@ -1,6 +1,7 @@
 ﻿@using System.Text.RegularExpressions
 @model Aroma_Shop.Application.ViewModels.Product.ProductViewModel
 @using Aroma_Shop.Application.Interfaces
+@using Aroma_Shop.Application.Utilites
 @inject IAccountService AccountService
 @{
     ViewData["Title"] = Model.Product.ProductName;
@@ -143,7 +144,24 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="comment_list">
-                            <div class="review_item border border-info rounded p-2">
+                            @foreach (var comment in Model.Product.Comments)
+                            {
+                                <div class="review_item border border-info rounded p-2">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h4>@comment.User.UserName</h4>
+                                            <h5 class="bg-light px-2 d-inline text-dark">@comment.SubmitTime.ToSolarWithTime()</h5>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        @comment.CommentMessage
+                                    </p>
+                                    <div class="text-right mt-2 ">
+                                        <a class="reply_btn" href="#">پاسخ</a>
+                                    </div>
+                                </div>
+                            }
+                            @*<div class="review_item border border-info rounded p-2">
                                 <div class="media">
                                     <div class="media-body">
                                         <h4>امیرحسین مرادی پور</h4>
@@ -167,7 +185,7 @@
                                 <p>
                                     لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
                                 </p>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                     <div class="col-lg-6 add-comment-section">
