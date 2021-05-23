@@ -18,6 +18,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [Required(ErrorMessage = "لطفا نظر خود را وارد کنید")]
         [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string CommentMessage { get; set; }
+        public bool IsConfirmed { get; set; }
 
         //Navigations Proterties
 
