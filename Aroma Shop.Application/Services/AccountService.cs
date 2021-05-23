@@ -549,18 +549,18 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
-
-        //Utilities Methods
-
-        private async Task<CustomIdentityUser> GetLoggedUser(ClaimsPrincipal currentUser)
+        public async Task<CustomIdentityUser> GetLoggedUser(ClaimsPrincipal currentUser)
         {
-            var loggedUserId = 
+            var loggedUserId =
                 currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser =
                 await _userManager.FindByIdAsync(loggedUserId);
 
             return loggedUser;
         }
+
+        //Utilities Methods
+
         private string GetUserRole(CustomIdentityUser user)
         {
             var userRole = 

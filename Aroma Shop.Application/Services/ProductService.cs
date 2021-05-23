@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
@@ -348,9 +349,17 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public bool AddCommentToProduct(int productId)
+        public bool AddCommentToProduct(int productId,ClaimsPrincipal currentUser)
         {
-            
+            var product = 
+                GetProduct(productId);
+
+            var comment = new Comment()
+            {
+
+            };
+
+            product.Comments.Add();
         }
 
 

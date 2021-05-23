@@ -36,5 +36,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<IEnumerable<SelectListItem>> GetRolesForEdit(ClaimsPrincipal currentUser);
         Task<IdentityResult> CreateUserByAdmin(ClaimsPrincipal currentUser, CreateUserViewModel userViewModel);
         Task<IdentityResult> EditUserByAdmin(ClaimsPrincipal currentUser, EditUserViewModel userViewModel);
+        Task<CustomIdentityUser> GetLoggedUser(ClaimsPrincipal currentUser);
     }
 }
