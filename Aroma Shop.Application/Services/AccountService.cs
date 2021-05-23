@@ -125,9 +125,9 @@ namespace Aroma_Shop.Application.Services
             return new JsonResult("امکان استفاده از این ایمیل وجود ندارد");
         }
 
-        public bool IsUserSignedIn(ClaimsPrincipal user)
+        public bool IsUserSignedIn()
         {
-            if (_signInManager.IsSignedIn(user))
+            if (_signInManager.IsSignedIn(_accessor.HttpContext.User))
                 return true;
 
             return false;

@@ -19,9 +19,10 @@ namespace Aroma_Shop.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IAccountService _accountService;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IAccountService accountService)
         {
             _productRepository = productRepository;
+            _accountService = accountService;
         }
 
         public Product GetProduct(int productId)

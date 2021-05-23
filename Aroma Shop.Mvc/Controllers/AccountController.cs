@@ -21,7 +21,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("Register")]
         public IActionResult Register()
         {
-            if (_accountService.IsUserSignedIn(User))
+            if (_accountService.IsUserSignedIn())
                 return RedirectToAction("Index", "Home");
             return View();
         }
@@ -30,7 +30,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (_accountService.IsUserSignedIn(User))
+            if (_accountService.IsUserSignedIn())
                 return RedirectToAction("Index", "Home");
             if (ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("Login")]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            if (_accountService.IsUserSignedIn(User))
+            if (_accountService.IsUserSignedIn())
                 return RedirectToAction("Index", "Home");
             var model = new LoginViewModel()
             {
@@ -79,7 +79,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> Login
             (LoginViewModel model, string returnUrl = null)
         {
-            if (_accountService.IsUserSignedIn(User))
+            if (_accountService.IsUserSignedIn())
                 return RedirectToAction("Index", "Home");
             if (ModelState.IsValid)
             {

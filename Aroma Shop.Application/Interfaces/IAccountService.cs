@@ -15,7 +15,7 @@ namespace Aroma_Shop.Application.Interfaces
 {
     public interface IAccountService
     {
-        bool IsUserSignedIn(ClaimsPrincipal user);
+        bool IsUserSignedIn();
         Task<IdentityResult> CreateUser(CustomIdentityUser user, string password);
         Task<bool> SendEmailConfirmation(CustomIdentityUser user, string controllerName, string actionName);
         Task<bool> EmailConfirmation(string email, string token);
