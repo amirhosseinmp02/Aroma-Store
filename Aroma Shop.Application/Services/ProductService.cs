@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
@@ -16,6 +17,7 @@ namespace Aroma_Shop.Application.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IAccountService _accountService;
 
         public ProductService(IProductRepository productRepository)
         {
@@ -349,17 +351,35 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public bool AddCommentToProduct(int productId,ClaimsPrincipal currentUser)
+        public async Task<bool> AddCommentToProduct(int productId,string commentMessage)
         {
-            var product = 
-                GetProduct(productId);
-
-            var comment = new Comment()
+            try
             {
+                if (string.IsNullOrWhiteSpace(commentMessage))
+                    return false;
 
-            };
+                var product = 
+                    GetProduct(productId);
 
-            product.Comments.Add();
+                var user = 
+                    await _accountService.GetLoggedUser();
+
+                var comment = new Comment()
+                {
+                    CommentMessage = commentMessage,
+                    Product = product,
+                    User = user
+                };
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
         }
 
 

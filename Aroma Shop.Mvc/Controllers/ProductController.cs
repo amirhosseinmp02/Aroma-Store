@@ -37,7 +37,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpPost]
         public IActionResult AddCommentToProduct(ProductViewModel model)
         {
-
+            throw new Exception();
         }
 
         #endregion

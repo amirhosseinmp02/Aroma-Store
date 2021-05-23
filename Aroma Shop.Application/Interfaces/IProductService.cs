@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +23,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategoryById(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
-        bool AddCommentToProduct(int productId);
+        Task<bool> AddCommentToProduct(int productId,string commentMessage);
     }
 }
