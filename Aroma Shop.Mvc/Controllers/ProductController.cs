@@ -42,12 +42,22 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 var productId = Convert.ToInt32(TempData["productId"]);
                 var product = _productService.GetProduct(productId);
-                var result = await _productService.AddCommentToProduct(product, model.CommentMessage);
                 model.Product = product;
+                bool result;
+                if (model.ParentCommentId == 0)
+                {
+                    result = await _productService.AddCommentToProduct(model);
+                    ViewData["SuccessMessage"] = "دیدگاه شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
+                }
+                else
+                {
+                    result = await _productService.AddReplyToProductComment(model);
+                    ViewData["SuccessMessage"] = "پاسخ شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
+                }
                 if (result)
                 {
                     model.CommentMessage = null;
-                    ViewData["SuccessMessage"] = "دیدگاه شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
+                    model.ParentCommentId = 0;
                     ModelState.Clear();
                     return View("ProductDetails", model);
                 }

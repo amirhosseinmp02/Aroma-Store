@@ -352,11 +352,11 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public async Task<bool> AddCommentToProduct(Product product, string commentMessage)
+        public async Task<bool> AddCommentToProduct(ProductViewModel productViewModel)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(commentMessage))
+                if (string.IsNullOrWhiteSpace(productViewModel.CommentMessage))
                     return false;
 
                 var user =
@@ -365,12 +365,12 @@ namespace Aroma_Shop.Application.Services
                 var comment = new Comment()
                 {
                     SubmitTime = DateTime.Now,
-                    CommentMessage = commentMessage,
-                    Product = product,
+                    CommentMessage = productViewModel.CommentMessage,
+                    Product = productViewModel.Product,
                     User = user
                 };
 
-                product.Comments.Add(comment);
+                productViewModel.Product.Comments.Add(comment);
 
                 _productRepository.Save();
 
@@ -383,9 +383,40 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public Task<bool> AddReplyToProductComment(int parentCommentId, string commentReplyMessage)
+        public async Task<bool> AddReplyToProductComment(ProductViewModel productViewModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(productViewModel.CommentMessage))
+                    return false;
+
+                var parentComment =
+                    _productRepository.GetComment(productViewModel.ParentCommentId);
+                if (parentComment == null)
+                    return false;
+
+                var user =
+                    await _accountService.GetLoggedUser();
+
+                var commentReply = new Comment()
+                {
+                    SubmitTime = DateTime.Now,
+                    CommentMessage = productViewModel.CommentMessage,
+                    Product = productViewModel.Product,
+                    User = user
+                };
+
+                parentComment.Replies.Add(commentReply);
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
         }
 
 
