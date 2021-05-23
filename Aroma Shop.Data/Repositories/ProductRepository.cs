@@ -125,6 +125,14 @@ namespace Aroma_Shop.Data.Repositories
             _context.Remove(image);
         }
 
+        public Comment GetComment(int commentId)
+        {
+            var comment = 
+                _context.Comments.Find(commentId);
+
+            return comment;
+        }
+
         public void Save()
         {
             _context.SaveChanges();
