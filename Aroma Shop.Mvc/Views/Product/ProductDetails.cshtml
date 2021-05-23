@@ -158,34 +158,35 @@
                                     </p>
                                     <div class="text-right mt-2 ">
                                         <a class="reply_btn" href="#">پاسخ</a>
+                                        <input type="hidden" value="@comment.CommentId" />
                                     </div>
                                 </div>
                             }
                             @*<div class="review_item border border-info rounded p-2">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <h4>امیرحسین مرادی پور</h4>
-                                        <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h4>امیرحسین مرادی پور</h4>
+                                            <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
+                                    </p>
+                                    <div class="text-right mt-2 ">
+                                        <a class="reply_btn" href="#">پاسخ</a>
                                     </div>
                                 </div>
-                                <p>
-                                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                </p>
-                                <div class="text-right mt-2 ">
-                                    <a class="reply_btn" href="#">پاسخ</a>
-                                </div>
-                            </div>
-                            <div class="review_item border border-warning rounded p-2 ml-3">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <h4>امیر طهان</h4>
-                                        <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
+                                <div class="review_item border border-warning rounded p-2 ml-3">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h4>امیر طهان</h4>
+                                            <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
+                                        </div>
                                     </div>
-                                </div>
-                                <p>
-                                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                </p>
-                            </div>*@
+                                    <p>
+                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
+                                    </p>
+                                </div>*@
                         </div>
                     </div>
                     <div class="col-lg-6 add-comment-section">
@@ -196,19 +197,19 @@
                         else
                         {
                             <div class="review_box">
-                                <h4>ثبت دیدگاه</h4>
+                                <h4 id="commentTitle">ثبت دیدگاه</h4>
                                 <form asp-action="AddCommentToProduct">
                                     @{
                                         TempData["productId"] = Model.Product.ProductId;
                                     }
                                     <div class="form-group">
                                         <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;" asp-for="CommentMessage"></textarea>
-                                        <span asp-validation-for="CommentMessage"></span>
                                     </div>
                                     <div class="form-group text-center text-md-left mt-3">
                                         <button type="submit" class="button button--active button-review">ثبت</button>
                                     </div>
-                                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                                    <input type="hidden" id="parentCommentId" asp-for="ParentCommentId" />
+                                    <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
                                 </form>
                             </div>
                             if (ViewData["SuccessMessage"] != null)
@@ -224,3 +225,28 @@
     </div>
 </section>
 <!--================End Product Description Area =================-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $(".reply_btn").click(function () {
+
+                $("#parentCommentId").val($(this).next().val());
+
+                document.getElementById("commentTitle").innerText = "ثبت پاسخ";
+
+                var coordinateTop = $("textarea").offset().top - 145;
+                $("textarea").addClass("border border-danger rounded shadow-lg");
+                $("textarea").attr("placeholder", "پاسخ خود را وارد نمایید...");
+
+                $("html, body").animate({
+                    scrollTop: coordinateTop
+                }, 1000);
+
+            });
+        });
+    </script>
+
+}

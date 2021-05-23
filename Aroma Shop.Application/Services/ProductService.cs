@@ -359,7 +359,7 @@ namespace Aroma_Shop.Application.Services
                 if (string.IsNullOrWhiteSpace(commentMessage))
                     return false;
 
-                var user = 
+                var user =
                     await _accountService.GetLoggedUser();
 
                 var comment = new Comment()
@@ -381,6 +381,11 @@ namespace Aroma_Shop.Application.Services
                 Console.WriteLine(error);
                 return false;
             }
+        }
+
+        public Task<bool> AddReplyToProductComment(int parentCommentId, string commentReplyMessage)
+        {
+            throw new NotImplementedException();
         }
 
 

@@ -35,6 +35,7 @@ namespace Aroma_Shop.Mvc.Controllers
         #region AddCommentToProduct
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCommentToProduct(ProductViewModel model)
         {
             if (ModelState.IsValid)

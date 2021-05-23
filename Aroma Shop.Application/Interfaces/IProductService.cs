@@ -24,5 +24,6 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
         Task<bool> AddCommentToProduct(Product product,string commentMessage);
+        Task<bool> AddReplyToProductComment(int parentCommentId,string commentReplyMessage);
     }
 }
