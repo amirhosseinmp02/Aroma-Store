@@ -348,6 +348,11 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
+        public bool AddCommentToProduct(int productId)
+        {
+            
+        }
+
 
         //Utilities Methods
 

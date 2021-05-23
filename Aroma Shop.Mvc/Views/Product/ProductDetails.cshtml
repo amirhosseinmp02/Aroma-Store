@@ -173,13 +173,16 @@
                     <div class="col-lg-6 add-comment-section">
                         @if (!AccountService.IsUserSignedIn(User))
                         {
-                            <div class="alert alert-danger mt-1" role="alert">جهت ثبت نظر باید در سایت <a asp-controller="Account" asp-action="Register" class="alert-link">عضو</a> شوید و یا <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails",new {productId=Model.ProductId})" class="alert-link">وارد</a> سایت شده باشید .</div>
+                            <div class="alert alert-danger mt-1" role="alert">جهت ثبت نظر باید در سایت <a asp-controller="Account" asp-action="Register" class="alert-link">عضو</a> شوید و یا <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails",new {productId=Model.Product.ProductId})" class="alert-link">وارد</a> سایت شده باشید .</div>
                         }
                         else
                         {
                             <div class="review_box">
                                 <h4>ثبت دیدگاه</h4>
                                 <form asp-action="AddCommentToProduct">
+                                    @{
+                                        TempData["productId"] = Model.CommentMessage;
+                                    }
                                     <div class="form-group">
                                         <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;" asp-for="CommentMessage"></textarea>
                                     </div>
