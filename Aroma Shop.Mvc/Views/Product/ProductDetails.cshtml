@@ -179,9 +179,9 @@
                         {
                             <div class="review_box">
                                 <h4>ثبت دیدگاه</h4>
-                                <form asp-action="">
+                                <form asp-action="AddCommentToProduct">
                                     <div class="form-group">
-                                        <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;"></textarea>
+                                        <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;" asp-for="CommentMessage"></textarea>
                                     </div>
                                     <div class="form-group text-center text-md-left mt-3">
                                         <button type="submit" class="button button--active button-review">ثبت</button>
