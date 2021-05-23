@@ -35,9 +35,24 @@ namespace Aroma_Shop.Mvc.Controllers
         #region AddCommentToProduct
 
         [HttpPost]
-        public IActionResult AddCommentToProduct(ProductViewModel model)
+        public async Task<IActionResult> AddCommentToProduct(ProductViewModel model)
         {
-            throw new Exception();
+            if (ModelState.IsValid)
+            {
+                var productId = Convert.ToInt32(TempData["productId"]);
+                var product = _productService.GetProduct(productId);
+                var result = await _productService.AddCommentToProduct(product, model.CommentMessage);
+                model.Product = product;
+                if (result)
+                {
+                    model.CommentMessage = null;
+                    ViewData["SuccessMessage"] = "دیدگاه شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
+                    ModelState.Clear();
+                    return View("ProductDetails", model);
+                }
+                ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
+            }
+            return View("ProductDetails", model);
         }
 
         #endregion

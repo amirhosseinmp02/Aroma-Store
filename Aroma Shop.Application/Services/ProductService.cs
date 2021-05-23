@@ -351,15 +351,12 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
-        public async Task<bool> AddCommentToProduct(int productId,string commentMessage)
+        public async Task<bool> AddCommentToProduct(Product product, string commentMessage)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(commentMessage))
                     return false;
-
-                var product = 
-                    GetProduct(productId);
 
                 var user = 
                     await _accountService.GetLoggedUser();

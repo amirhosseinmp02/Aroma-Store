@@ -23,6 +23,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategoryById(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
-        Task<bool> AddCommentToProduct(int productId,string commentMessage);
+        Task<bool> AddCommentToProduct(Product product,string commentMessage);
     }
 }
