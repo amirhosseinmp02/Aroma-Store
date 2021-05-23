@@ -369,6 +369,8 @@ namespace Aroma_Shop.Application.Services
                     User = user
                 };
 
+                product.Comments.Add(comment);
+
                 _productRepository.Save();
 
                 return true;
