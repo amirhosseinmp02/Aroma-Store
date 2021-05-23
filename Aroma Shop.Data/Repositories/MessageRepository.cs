@@ -31,9 +31,9 @@ namespace Aroma_Shop.Data.Repositories
         public Message GetMessage(int messageId)
         {
             var message =
-                _context.Messages.Where(p => p.MessageId == messageId)
+                _context.Messages
                     .Include(p => p.MessageReply)
-                    .FirstOrDefault();
+                    .SingleOrDefault(p => p.MessageId == messageId);
 
             return message;
         }

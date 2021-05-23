@@ -45,23 +45,19 @@ namespace Aroma_Shop.Mvc.Controllers
                 model.Product = product;
                 bool result;
                 if (model.ParentCommentId == 0)
-                {
                     result = await _productService.AddCommentToProduct(model);
-                    ViewData["SuccessMessage"] = "دیدگاه شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
-                }
                 else
-                {
                     result = await _productService.AddReplyToProductComment(model);
-                    ViewData["SuccessMessage"] = "پاسخ شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
-                }
                 if (result)
                 {
-                    model.CommentMessage = null;
+                    model.CommentDescription = null;
                     model.ParentCommentId = 0;
+                    ViewData["SuccessMessage"] = "دیدگاه / پاسخ شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
                     ModelState.Clear();
                     return View("ProductDetails", model);
                 }
-                ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
+
+                ModelState.AddModelError("", "مشکلی در زمان ثبت دیدگاه / پاسخ رخ داد.");
             }
             return View("ProductDetails", model);
         }

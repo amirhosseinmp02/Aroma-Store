@@ -154,13 +154,30 @@
                                         </div>
                                     </div>
                                     <p>
-                                        @comment.CommentMessage
+                                        @comment.CommentDescription
                                     </p>
-                                    <div class="text-right mt-2 ">
+                                    <div class="text-right mt-2 "> 
                                         <a class="reply_btn" href="#">پاسخ</a>
                                         <input type="hidden" value="@comment.CommentId" />
                                     </div>
                                 </div>
+                                if (comment.Replies.Any())
+                                {
+                                    @foreach (var commentReply in comment.Replies)
+                                    {
+                                        <div class="review_item border border-warning rounded p-2 ml-3">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4>@commentReply.User.UserName</h4>
+                                                    <h5 class="bg-light px-2 d-inline text-dark">@commentReply.SubmitTime.ToSolarWithTime()</h5>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                @commentReply.CommentDescription
+                                            </p>
+                                        </div>
+                                    }
+                                }
                             }
                             @*<div class="review_item border border-info rounded p-2">
                                     <div class="media">
@@ -203,7 +220,7 @@
                                         TempData["productId"] = Model.Product.ProductId;
                                     }
                                     <div class="form-group">
-                                        <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;" asp-for="CommentMessage"></textarea>
+                                        <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;" asp-for="CommentDescription"></textarea>
                                     </div>
                                     <div class="form-group text-center text-md-left mt-3">
                                         <button type="submit" class="button button--active button-review">ثبت</button>

@@ -356,7 +356,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(productViewModel.CommentMessage))
+                if (string.IsNullOrWhiteSpace(productViewModel.CommentDescription))
                     return false;
 
                 var user =
@@ -365,7 +365,7 @@ namespace Aroma_Shop.Application.Services
                 var comment = new Comment()
                 {
                     SubmitTime = DateTime.Now,
-                    CommentMessage = productViewModel.CommentMessage,
+                    CommentDescription = productViewModel.CommentDescription,
                     Product = productViewModel.Product,
                     User = user
                 };
@@ -387,7 +387,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(productViewModel.CommentMessage))
+                if (string.IsNullOrWhiteSpace(productViewModel.CommentDescription))
                     return false;
 
                 var parentComment =
@@ -401,7 +401,7 @@ namespace Aroma_Shop.Application.Services
                 var commentReply = new Comment()
                 {
                     SubmitTime = DateTime.Now,
-                    CommentMessage = productViewModel.CommentMessage,
+                    CommentDescription = productViewModel.CommentDescription,
                     Product = productViewModel.Product,
                     User = user
                 };

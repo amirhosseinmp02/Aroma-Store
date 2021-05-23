@@ -32,9 +32,12 @@ namespace Aroma_Shop.Data.Repositories
             var product = _context.Products
                 .Include(p => p.Categories)
                 .Include(p => p.Informations)
-                .Include(p => p.Comments)
-                .ThenInclude(p=>p.User)
                 .Include(p => p.Images)
+                .Include(p=>p.Comments)
+                .ThenInclude(p=>p.User)
+                .Include(p=>p.Comments)
+                .ThenInclude(p=>p.Replies)
+                .ThenInclude(p=>p.User)
                 .SingleOrDefault(p => p.ProductId == productId);
 
             return product;
