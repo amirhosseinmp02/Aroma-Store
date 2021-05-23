@@ -1,9 +1,9 @@
 ﻿@using System.Text.RegularExpressions
-@model Aroma_Shop.Domain.Models.ProductModels.Product
+@model Aroma_Shop.Application.ViewModels.Product.ProductViewModel
 @using Aroma_Shop.Application.Interfaces
 @inject IAccountService AccountService
 @{
-    ViewData["Title"] = Model.ProductName;
+    ViewData["Title"] = Model.Product.ProductName;
 }
 
 <!--================Single Product Area =================-->
@@ -16,9 +16,9 @@
                         <div class="carousel-item active">
                             @{
                                 string productImagePath;
-                                if (Model.Images.Any())
+                                if (Model.Product.Images.Any())
                                 {
-                                    productImagePath = $"/img/Product/{Model.Images.FirstOrDefault().ImagePath}";
+                                    productImagePath = $"/img/Product/{Model.Product.Images.FirstOrDefault().ImagePath}";
                                 }
                                 else
                                 {
@@ -27,9 +27,9 @@
                             }
                             <img class="product-image-detail" src="@productImagePath" alt="First slide">
                         </div>
-                        @if (Model.Images.Count > 1)
+                        @if (Model.Product.Images.Count > 1)
                         {
-                            @foreach (var productImage in Model.Images.Skip(1))
+                            @foreach (var productImage in Model.Product.Images.Skip(1))
                             {
                                 <div class="carousel-item">
                                     <img class="product-image-detail" src="~/img/Product/@productImage.ImagePath" alt="First slide">
@@ -53,18 +53,18 @@
             </div>
             <div class="col-lg-5 offset-lg-1">
                 <div class="s_product_text">
-                    <h3>@Model.ProductName</h3>
-                    <h2>@Model.ProductPrice تومان</h2>
+                    <h3>@Model.Product.ProductName</h3>
+                    <h2>@Model.Product.ProductPrice تومان</h2>
                     <ul class="list">
                         <li>
                             <span>دسته :</span>
-                            @foreach (var category in Model.Categories)
+                            @foreach (var category in Model.Product.Categories)
                             {
                                 <a>@category.CategoryName</a> <span> , </span>
                             }
                         </li>
                         <li>
-                            وضعیت : @if (Model.ProductQuantityInStock > 0)
+                            وضعیت : @if (Model.Product.ProductQuantityInStock > 0)
                             {
                                 <span class='text-success'>موجود</span>
                             }
@@ -75,7 +75,7 @@
                         </li>
                     </ul>
                     <p class="mb-4">
-                        @(!string.IsNullOrEmpty(Model.ProductShortDescription)? Model.ProductShortDescription:"")
+                        @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
                     </p>
                     <div class="product_count">
                         <label for="qty">تعداد :</label>
@@ -118,13 +118,13 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-                @Html.Raw(Model.ProductDescription)
+                @Html.Raw(Model.Product.ProductDescription)
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="table-responsive">
                     <table class="table">
                         <tbody>
-                            @foreach (var information in Model.Informations)
+                            @foreach (var information in Model.Product.Informations)
                             {
                                 <tr>
                                     <td>
@@ -179,7 +179,7 @@
                         {
                             <div class="review_box">
                                 <h4>ثبت دیدگاه</h4>
-                                <form action="#/" class="form-contact form-review mt-3">
+                                <form asp-action="">
                                     <div class="form-group">
                                         <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;"></textarea>
                                     </div>

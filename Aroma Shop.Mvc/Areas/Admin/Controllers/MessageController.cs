@@ -69,13 +69,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult MessageDetails(int messageId)
         {
             var message = _messageService.GetMessage(messageId);
-            var messageDetailViewModel = new MessageDetailViewModel()
+            var model = new MessageDetailViewModel()
             {
                 Message = message,
                 MessageReplyDescription = message.MessageReply?.MessageReplyDescription
             };
             _messageService.SetAsRead(message);
-            return View(messageDetailViewModel);
+            return View(model);
         }
 
         #endregion
@@ -83,21 +83,21 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ReplyToMessage
 
         [HttpPost]
-        public async Task<IActionResult> ReplyToMessage(MessageDetailViewModel messageDetailViewModel)
+        public async Task<IActionResult> ReplyToMessage(MessageDetailViewModel model)
         {
             var messageId = Convert.ToInt32(TempData["messageId"]);
-            var result = await _messageService.ReplyToMessage(messageDetailViewModel.MessageReplyDescription, messageId);
+            var result = await _messageService.ReplyToMessage(model.MessageReplyDescription, messageId);
             var message = _messageService.GetMessage(messageId);
-            messageDetailViewModel.Message = message;
+            model.Message = message;
             if (result)
             {
                 ViewData["SuccessMessage"] = "پیام شما با موفقیت ارسال شد.";
                 ModelState.Clear();
-                return View("MessageDetail", messageDetailViewModel);
+                return View("MessageDetail", model);
             }
             ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
             TempData.Keep("messageId");
-            return View("MessageDetail", messageDetailViewModel);
+            return View("MessageDetail", model);
         }
         #endregion
 
