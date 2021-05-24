@@ -22,6 +22,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddImage(Image image);
         void DeleteImage(Image image);
         Comment GetComment(int commentId);
+        IEnumerable<Comment> GetComments();
         void Save();
     }
 }
