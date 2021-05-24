@@ -136,6 +136,16 @@ namespace Aroma_Shop.Data.Repositories
             return comment;
         }
 
+        public IEnumerable<Comment> GetComments()
+        {
+            var comments =
+                _context.Comments
+                    .Include(p => p.Product)
+                    .Include(p => p.User);
+
+            return comments;
+        }
+
         public void Save()
         {
             _context.SaveChanges();
