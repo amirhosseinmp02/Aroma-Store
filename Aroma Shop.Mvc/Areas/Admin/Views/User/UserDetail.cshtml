@@ -1,0 +1,64 @@
+﻿@model Aroma_Shop.Application.ViewModels.User.EditUserViewModel
+
+@{
+    ViewData["Title"] = $"کاربر {Model.UserName}";
+}
+<div class="h2 mt-3">
+    <h1 class="h2 d-inline">کاربر</h1>
+    <a class="btn btn-warning float-left" asp-controller="User" asp-action="Index">بازگشت</a>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
+        <div class="form-group">
+            <label class="control-label">نام کاربری</label>
+            <input class="form-control" asp-for="UserName" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">ایمیل</label>
+            <input class="form-control" asp-for="Email" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">مقام</label>
+            <input class="form-control" asp-for="UserRole" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label">نام</label>
+            <input class="form-control" asp-for="FirstName" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">نام خانوادگی</label>
+            <input class="form-control" asp-for="LastName" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">استان</label>
+            <input class="form-control" asp-for="UserProvince" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">شهر</label>
+            <input class="form-control" asp-for="UserCity" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">آدرس</label>
+            <textarea asp-for="UserAddress" rows="3" class="form-control none-resize" readonly>
+                </textarea>
+        </div>
+        <div class="form-group">
+            <label class="control-label" type="hidden">کد پستی</label>
+            <input class="form-control" type="number" asp-for="UserZipCode" readonly>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('#change-password').click(function () {
+                $(this).next().removeClass('d-none');
+                $(this).addClass('d-none');
+            });
+        });
+    </script>
+}

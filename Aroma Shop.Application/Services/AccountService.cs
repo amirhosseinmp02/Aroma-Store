@@ -348,7 +348,7 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public async Task<EditUserViewModel> GetUser(string userId)
+        public async Task<EditUserViewModel> GetUserForEdit(string userId)
         {
             var requestedUser =
                 _userManager.Users
