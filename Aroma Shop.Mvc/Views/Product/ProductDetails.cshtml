@@ -144,66 +144,51 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="comment_list">
-                            @foreach (var comment in Model.Product.Comments)
+                            @{
+                                var comments = Model.Product.Comments.Where(p => p.IsConfirmed);
+                            }
+                            @if (comments.Any())
                             {
-                                <div class="review_item border border-info rounded p-2">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <h4>@comment.User.UserName</h4>
-                                            <h5 class="bg-light px-2 d-inline text-dark">@comment.SubmitTime.ToSolarWithTime()</h5>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        @comment.CommentDescription
-                                    </p>
-                                    <div class="text-right mt-2 "> 
-                                        <a class="reply_btn" href="#">پاسخ</a>
-                                        <input type="hidden" value="@comment.CommentId" />
-                                    </div>
-                                </div>
-                                if (comment.Replies.Any())
+                                @foreach (var comment in comments)
                                 {
-                                    @foreach (var commentReply in comment.Replies)
-                                    {
-                                        <div class="review_item border border-warning rounded p-2 ml-3">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4>@commentReply.User.UserName</h4>
-                                                    <h5 class="bg-light px-2 d-inline text-dark">@commentReply.SubmitTime.ToSolarWithTime()</h5>
-                                                </div>
+                                    <div class="review_item border border-info rounded p-2">
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <h4>@comment.User.UserName</h4>
+                                                <h5 class="bg-light px-2 d-inline text-dark">@comment.SubmitTime.ToSolarWithTime()</h5>
                                             </div>
-                                            <p>
-                                                @commentReply.CommentDescription
-                                            </p>
                                         </div>
+                                        <p>
+                                            @comment.CommentDescription
+                                        </p>
+                                        <div class="text-right mt-2 ">
+                                            <a class="reply_btn" href="#">پاسخ</a>
+                                            <input type="hidden" value="@comment.CommentId" />
+                                        </div>
+                                    </div>
+                                    if (comment.Replies.Any())
+                                    {
+                                        @foreach (var commentReply in comment.Replies.Where(p => p.IsConfirmed))
+                                        {
+                                            <div class="review_item border border-warning rounded p-2 ml-3">
+                                                <div class="media">
+                                                    <div class="media-body">
+                                                        <h4>@commentReply.User.UserName</h4>
+                                                        <h5 class="bg-light px-2 d-inline text-dark">@commentReply.SubmitTime.ToSolarWithTime()</h5>
+                                                    </div>
+                                                </div>
+                                                <p>
+                                                    @commentReply.CommentDescription
+                                                </p>
+                                            </div>
+                                        }
                                     }
                                 }
                             }
-                            @*<div class="review_item border border-info rounded p-2">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <h4>امیرحسین مرادی پور</h4>
-                                            <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                    <div class="text-right mt-2 ">
-                                        <a class="reply_btn" href="#">پاسخ</a>
-                                    </div>
-                                </div>
-                                <div class="review_item border border-warning rounded p-2 ml-3">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <h4>امیر طهان</h4>
-                                            <h5 class="bg-light px-2 d-inline text-dark">14 اردیبهشت 1400</h5>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>*@
+                            else
+                            {
+                                <p class="alert alert-success">نظری وجود ندارد! شما اولین نفری باشید که دیدگاهتان را ثبت میکنید !</p>
+                            }
                         </div>
                     </div>
                     <div class="col-lg-6 add-comment-section">
