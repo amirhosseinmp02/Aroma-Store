@@ -352,6 +352,14 @@ namespace Aroma_Shop.Application.Services
             return items;
         }
 
+        public IEnumerable<Comment> GetComments()
+        {
+            var comments =
+                _productRepository.GetComments();
+
+            return comments;
+        }
+
         public async Task<bool> AddCommentToProduct(ProductViewModel productViewModel)
         {
             try
