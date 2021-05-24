@@ -316,5 +316,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region ShowComments
+
+        [HttpGet("/Admin/Products/Comments")]
+        public IActionResult Comments()
+        {
+            throw new Exception();
+        }
+
+        #endregion
+
     }
 }
