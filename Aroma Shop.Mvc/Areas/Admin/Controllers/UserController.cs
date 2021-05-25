@@ -62,7 +62,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> UserDetail(string userId)
         {
             var user =
-                await _accountService.GetUserForEdit(userId);
+                await _accountService.GetUser(userId);
             if (user == null)
                 return NotFound();
             return View(user);

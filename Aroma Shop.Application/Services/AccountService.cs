@@ -354,6 +354,7 @@ namespace Aroma_Shop.Application.Services
                 await _userManager.Users
                     .Include(p => p.UserDetail)
                     .Include(p => p.UserComments)
+                    .ThenInclude(p=>p.Product)
                     .SingleOrDefaultAsync(p=>p.Id==userId);
 
             var userRole =
