@@ -354,17 +354,27 @@ namespace Aroma_Shop.Application.Services
                 await _userManager.Users
                     .Include(p => p.UserDetail)
                     .Include(p => p.UserComments)
-                    .ThenInclude(p=>p.Product)
-                    .SingleOrDefaultAsync(p=>p.Id==userId);
+                    .ThenInclude(p => p.Product)
+                    .SingleOrDefaultAsync(p => p.Id == userId);
 
-            var userRole =
+            var requestedUserRole =
                 GetUserRole(requestedUser);
 
-            var user = new UserDetailViewModel()
+            var loggedUserRole =
+                await GetLoggedUserRole();
+
+            UserDetailViewModel user = null;
+
+            if (!((loggedUserRole == "Founder" && requestedUserRole == "Founder")
+                  || ((loggedUserRole == "Manager") && (requestedUserRole == "Founder" || requestedUserRole == "Manager"))
+                  || (requestedUserRole != "Manager" && requestedUserRole != "Writer" && requestedUserRole != "Customer")))
             {
-                User = requestedUser,
-                UserRole = userRole
-            };
+                user = new UserDetailViewModel()
+                {
+                    User = requestedUser,
+                    UserRole = requestedUserRole
+                };
+            }
 
             return user;
         }
@@ -372,28 +382,41 @@ namespace Aroma_Shop.Application.Services
         public async Task<EditUserViewModel> GetUserForEdit(string userId)
         {
             var requestedUser =
-                _userManager.Users
+                await _userManager.Users
                     .Where(p => p.Id == userId)
                     .Include(p => p.UserDetail)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
 
-            var roles =
-                await GetRolesForEdit();
+            var requestedUserRole =
+                GetUserRole(requestedUser);
 
-            var user = new EditUserViewModel()
+            var loggedUserRole =
+                await GetLoggedUserRole();
+
+            EditUserViewModel user = null;
+
+            if (!((loggedUserRole == "Founder" && requestedUserRole == "Founder")
+                  || ((loggedUserRole == "Manager") && (requestedUserRole == "Founder" || requestedUserRole == "Manager"))
+                  || (requestedUserRole != "Manager" && requestedUserRole != "Writer" && requestedUserRole != "Customer")))
             {
-                UserId = requestedUser.Id,
-                UserName = requestedUser.UserName,
-                Email = requestedUser.Email,
-                Roles = roles,
-                UserRole = _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault(),
-                FirstName = requestedUser.UserDetail.FirstName,
-                LastName = requestedUser.UserDetail.LastName,
-                UserProvince = requestedUser.UserDetail.UserProvince,
-                UserCity = requestedUser.UserDetail.UserCity,
-                UserAddress = requestedUser.UserDetail.UserAddress,
-                UserZipCode = requestedUser.UserDetail.UserZipCode
-            };
+                var roles =
+                    await GetRolesForEdit();
+
+                user = new EditUserViewModel()
+                {
+                    UserId = requestedUser.Id,
+                    UserName = requestedUser.UserName,
+                    Email = requestedUser.Email,
+                    Roles = roles,
+                    UserRole = _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault(),
+                    FirstName = requestedUser.UserDetail.FirstName,
+                    LastName = requestedUser.UserDetail.LastName,
+                    UserProvince = requestedUser.UserDetail.UserProvince,
+                    UserCity = requestedUser.UserDetail.UserCity,
+                    UserAddress = requestedUser.UserDetail.UserAddress,
+                    UserZipCode = requestedUser.UserDetail.UserZipCode
+                };
+            }
 
             return user;
         }
@@ -590,7 +613,7 @@ namespace Aroma_Shop.Application.Services
 
             return userRole;
         }
-        private async Task<string> GetLoggedUserRole()    
+        private async Task<string> GetLoggedUserRole()
         {
             var user =
                 await GetLoggedUser();
