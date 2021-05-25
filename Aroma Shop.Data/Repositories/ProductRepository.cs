@@ -146,6 +146,11 @@ namespace Aroma_Shop.Data.Repositories
             return comments;
         }
 
+        public void DeleteComment(int commentId)
+        {
+            _context.Remove(commentId);
+        }
+
         public void Save()
         {
             _context.SaveChanges();
