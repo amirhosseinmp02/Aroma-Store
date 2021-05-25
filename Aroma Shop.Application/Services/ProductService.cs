@@ -427,6 +427,11 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public bool DeleteComment(int commentId)
+        {
+            throw new NotImplementedException();
+        }
+
 
         //Utilities Methods
 
