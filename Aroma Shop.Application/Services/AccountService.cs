@@ -311,7 +311,7 @@ namespace Aroma_Shop.Application.Services
             var loggedUser =
                 await GetLoggedUser();
             var loggedUserRole =
-                await GetUserRole();
+                await GetLoggedUserRole();
 
             var users =
                 _userManager.Users.ToList();
@@ -346,6 +346,26 @@ namespace Aroma_Shop.Application.Services
             }
 
             return result;
+        }
+
+        public async Task<UserDetailViewModel> GetUser(string userId)
+        {
+            var requestedUser =
+                await _userManager.Users
+                    .Include(p => p.UserDetail)
+                    .Include(p => p.UserComments)
+                    .SingleOrDefaultAsync(p=>p.Id==userId);
+
+            var userRole =
+                GetUserRole(requestedUser);
+
+            var user = new UserDetailViewModel()
+            {
+                User = requestedUser,
+                UserRole = userRole
+            };
+
+            return user;
         }
 
         public async Task<EditUserViewModel> GetUserForEdit(string userId)
@@ -385,7 +405,7 @@ namespace Aroma_Shop.Application.Services
                     await GetLoggedUser();
 
                 var loggedUserRole =
-                    await GetUserRole();
+                    await GetLoggedUserRole();
 
                 var requestedUser =
                     _userManager.Users
@@ -397,7 +417,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var requestedUserRole =
-                    await GetUserRole();
+                    await GetLoggedUserRole();
 
                 if ((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     || ((loggedUserRole == "Manager") &&
@@ -424,7 +444,7 @@ namespace Aroma_Shop.Application.Services
                 await GetLoggedUser();
 
             var loggedUserRole =
-                await GetUserRole();
+                await GetLoggedUserRole();
 
             var roles =
                 _roleManager.Roles;
@@ -464,7 +484,7 @@ namespace Aroma_Shop.Application.Services
                 await GetLoggedUser();
 
             var loggedUserRole =
-                await GetUserRole();
+                await GetLoggedUserRole();
 
             string userRole;
 
@@ -517,13 +537,13 @@ namespace Aroma_Shop.Application.Services
             user.UserDetail.UserZipCode = userViewModel.UserZipCode;
 
             var oldUserRole =
-                await GetUserRole();
+                await GetLoggedUserRole();
             if (oldUserRole != userViewModel.UserRole)
             {
                 var loggedUser =
                     await GetLoggedUser();
                 var loggedUserRole =
-                    await GetUserRole();
+                    await GetLoggedUserRole();
 
                 if (!((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder")
                       || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager"))
@@ -561,7 +581,15 @@ namespace Aroma_Shop.Application.Services
 
         //Utilities Methods
 
-        private async Task<string> GetUserRole()
+        private string GetUserRole(CustomIdentityUser user)
+        {
+            var userRole =
+                _userManager.GetRolesAsync(user)
+                    .Result.FirstOrDefault();
+
+            return userRole;
+        }
+        private async Task<string> GetLoggedUserRole()    
         {
             var user =
                 await GetLoggedUser();
