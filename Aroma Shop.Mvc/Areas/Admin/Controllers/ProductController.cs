@@ -327,5 +327,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region DeleteComment
+
+        [HttpGet("Admin/Product/DeleteComment")]
+        public IActionResult DeleteComment(int commentId)
+        {
+            throw new Exception();
+        }
+
+        #endregion
+
     }
 }
