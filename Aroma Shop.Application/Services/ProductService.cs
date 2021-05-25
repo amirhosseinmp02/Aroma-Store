@@ -429,7 +429,17 @@ namespace Aroma_Shop.Application.Services
 
         public bool DeleteComment(int commentId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _productRepository.DeleteCommentById(commentId);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
         }
 
 

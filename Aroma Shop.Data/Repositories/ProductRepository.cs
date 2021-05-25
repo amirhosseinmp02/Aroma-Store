@@ -107,7 +107,8 @@ namespace Aroma_Shop.Data.Repositories
 
         public void DeleteCategoryById(int categoryId)
         {
-            var category = GetCategory(categoryId);
+            var category = 
+                GetCategory(categoryId);
 
             _context.Remove(category);
         }
@@ -146,9 +147,12 @@ namespace Aroma_Shop.Data.Repositories
             return comments;
         }
 
-        public void DeleteComment(int commentId)
+        public void DeleteCommentById(int commentId)
         {
-            _context.Remove(commentId);
+            var comment =
+                GetComment(commentId);
+
+            _context.Remove(comment);
         }
 
         public void Save()
