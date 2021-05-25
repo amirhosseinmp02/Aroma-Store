@@ -34,7 +34,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<UserDetailViewModel> GetUser(string userId);
         Task<EditUserViewModel> GetUserForEdit(string userId);
         Task<bool> DeleteUser(string userId);
-        Task<IEnumerable<SelectListItem>> GetRolesForEdit();
+        Task<IEnumerable<SelectListItem>> GetRoles();
         Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel);
         Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel);
         Task<CustomIdentityUser> GetLoggedUser();

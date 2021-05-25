@@ -9,6 +9,28 @@ namespace Aroma_Shop.Application.ViewModels.User
     public class UserDetailViewModel
     {
         public CustomIdentityUser User { get; set; }
-        public string UserRole { get; set; }
+        public string UserRoleName { get; set; }
+        public string PersianUserRoleName
+        {
+            get
+            {
+                if (UserRoleName == "Founder")
+                {
+                    return "موسس";
+                }
+                else if (UserRoleName == "Manager")
+                {
+                    return "مدیر";
+                }
+                else if (UserRoleName == "Writer")
+                {
+                    return "نویسنده";
+                }
+                else
+                {
+                    return "مشتری";
+                }
+            }
+        }
     }
 }

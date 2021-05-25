@@ -75,7 +75,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Users/CreateUser")]
         public async Task<IActionResult> CreateUser()
         {
-            var roles = await _accountService.GetRolesForEdit();
+            var roles = await _accountService.GetRoles();
             var model = new CreateUserViewModel()
             {
                 Roles = roles
@@ -93,7 +93,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 if (result.Succeeded)
                 {
                     ModelState.Clear();
-                    var roles = await _accountService.GetRolesForEdit();
+                    var roles = await _accountService.GetRoles();
                     model = new CreateUserViewModel()
                     {
                         Roles = roles
@@ -140,7 +140,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     ModelState.AddModelError("", item.Description);
                 }
             }
-            var roles = await _accountService.GetRolesForEdit();
+            var roles = await _accountService.GetRoles();
             model.Roles = roles;
             TempData.Keep("userId");
             return View(model);

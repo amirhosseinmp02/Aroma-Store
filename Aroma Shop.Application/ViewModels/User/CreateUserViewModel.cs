@@ -26,7 +26,29 @@ namespace Aroma_Shop.Application.ViewModels.User
         public string UserPassword { get; set; }
 
         public IEnumerable<SelectListItem> Roles { get; set; }
-        public string UserRole { get; set; }
+        public string UserRoleName { get; set; }
+        public string PersianUserRoleName
+        {
+            get
+            {
+                if (UserRoleName == "Founder")
+                {
+                    return "موسس";
+                }
+                else if (UserRoleName == "Manager")
+                {
+                    return "مدیر";
+                }
+                else if (UserRoleName == "Writer")
+                {
+                    return "نویسنده";
+                }
+                else
+                {
+                    return "مشتری";
+                }
+            }
+        }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
         public string FirstName { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]

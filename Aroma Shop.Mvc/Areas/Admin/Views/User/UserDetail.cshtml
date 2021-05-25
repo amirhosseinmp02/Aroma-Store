@@ -21,7 +21,7 @@
         </div>
         <div class="form-group">
             <label class="control-label">مقام</label>
-            <input class="form-control" asp-for="UserRole" readonly />
+            <input class="form-control" asp-for="PersianUserRoleName" readonly />
         </div>
         <div class="form-group">
             <label class="control-label">نام</label>
@@ -50,29 +50,36 @@
         </div>
         <div>
             <h1 class="py-3">دیدگاه ها</h1>
-            <table class="table table-striped table-bordered text-center table-light">
-                <thead>
-                <tr>
-                    <th class="cart-item-cells">دیدگاه</th>
-                    <th class="cart-item-cells">در پاسخ به</th>
-                    <th class="cart-item-cells">در تاریخ</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var comment in Model.User.UserComments)
-                {
+            @if (Model.User.UserComments.Any())
+            {
+                <table class="table table-striped table-bordered text-center table-light">
+                    <thead>
                     <tr>
-                        <td class="cart-item-cells align-middle">@comment.CommentDescription</td>
-                        <td class="cart-item-cells align-middle">
-                            <a class="text-info" asp-controller="Product" asp-action="EditProduct" asp-route-productId="@comment.Product.ProductId">@comment.Product.ProductName</a>
-                            <hr />
-                            <a class="text-info" asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@comment.Product.ProductId">نمایش محصول</a>
-                        </td>
-                        <td class="cart-item-cells align-middle">@comment.SubmitTime.ToSolarWithTime()</td>
+                        <th class="cart-item-cells">دیدگاه</th>
+                        <th class="cart-item-cells">در پاسخ به</th>
+                        <th class="cart-item-cells">در تاریخ</th>
                     </tr>
-                }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach (var comment in Model.User.UserComments)
+                    {
+                        <tr>
+                            <td class="cart-item-cells align-middle">@comment.CommentDescription</td>
+                            <td class="cart-item-cells align-middle">
+                                <a class="text-info" asp-controller="Product" asp-action="EditProduct" asp-route-productId="@comment.Product.ProductId">@comment.Product.ProductName</a>
+                                <hr />
+                                <a class="text-info" asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@comment.Product.ProductId">نمایش محصول</a>
+                            </td>
+                            <td class="cart-item-cells align-middle">@comment.SubmitTime.ToSolarWithTime()</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-danger">این کاربر تا به حال دیدگاهی به ثبت نرسانده است.</div>
+            }
         </div>
     </div>
 </div>

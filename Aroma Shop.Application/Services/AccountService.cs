@@ -327,8 +327,8 @@ namespace Aroma_Shop.Application.Services
                         UserId = p.Id,
                         UserName = p.UserName,
                         UserEmail = p.Email,
-                        UserRoleName =
-                        _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                        UserRoleName = GetUserRole(p),
+                        RegisterTime = p.RegisterTime
                     });
             }
             else
@@ -340,8 +340,7 @@ namespace Aroma_Shop.Application.Services
                         UserId = p.Id,
                         UserName = p.UserName,
                         UserEmail = p.Email,
-                        UserRoleName =
-                         _userManager.GetRolesAsync(p).Result.FirstOrDefault()
+                        UserRoleName = GetUserRole(p)
                     });
             }
 
@@ -372,7 +371,7 @@ namespace Aroma_Shop.Application.Services
                 user = new UserDetailViewModel()
                 {
                     User = requestedUser,
-                    UserRole = requestedUserRole
+                    UserRoleName = requestedUserRole
                 };
             }
 
@@ -400,7 +399,7 @@ namespace Aroma_Shop.Application.Services
                   || (requestedUserRole != "Manager" && requestedUserRole != "Writer" && requestedUserRole != "Customer")))
             {
                 var roles =
-                    await GetRolesForEdit();
+                    await GetRoles();
 
                 user = new EditUserViewModel()
                 {
@@ -408,7 +407,7 @@ namespace Aroma_Shop.Application.Services
                     UserName = requestedUser.UserName,
                     Email = requestedUser.Email,
                     Roles = roles,
-                    UserRole = _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault(),
+                    UserRoleName = _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault(),
                     FirstName = requestedUser.UserDetail.FirstName,
                     LastName = requestedUser.UserDetail.LastName,
                     UserProvince = requestedUser.UserDetail.UserProvince,
@@ -462,7 +461,7 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetRolesForEdit()
+        public async Task<IEnumerable<SelectListItem>> GetRoles()
         {
             var loggedUser =
                 await GetLoggedUser();
@@ -512,15 +511,15 @@ namespace Aroma_Shop.Application.Services
 
             string userRole;
 
-            if ((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder")
-                || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager"))
-                || (userViewModel.UserRole != "Manager" && userViewModel.UserRole != "Writer" && userViewModel.UserRole != "Customer"))
+            if ((loggedUserRole == "Founder" && userViewModel.UserRoleName == "Founder")
+                || ((loggedUserRole == "Manager") && (userViewModel.UserRoleName == "Founder" || userViewModel.UserRoleName == "Manager"))
+                || (userViewModel.UserRoleName != "Manager" && userViewModel.UserRoleName != "Writer" && userViewModel.UserRoleName != "Customer"))
             {
                 userRole = "Customer";
             }
             else
             {
-                userRole = userViewModel.UserRole;
+                userRole = userViewModel.UserRoleName;
             }
 
             await _userManager.AddToRoleAsync(user, userRole);
@@ -562,19 +561,19 @@ namespace Aroma_Shop.Application.Services
 
             var oldUserRole =
                 await GetLoggedUserRole();
-            if (oldUserRole != userViewModel.UserRole)
+            if (oldUserRole != userViewModel.UserRoleName)
             {
                 var loggedUser =
                     await GetLoggedUser();
                 var loggedUserRole =
                     await GetLoggedUserRole();
 
-                if (!((loggedUserRole == "Founder" && userViewModel.UserRole == "Founder")
-                      || ((loggedUserRole == "Manager") && (userViewModel.UserRole == "Founder" || userViewModel.UserRole == "Manager"))
-                      || (userViewModel.UserRole != "Manager" && userViewModel.UserRole != "Writer" && userViewModel.UserRole != "Customer")))
+                if (!((loggedUserRole == "Founder" && userViewModel.UserRoleName == "Founder")
+                      || ((loggedUserRole == "Manager") && (userViewModel.UserRoleName == "Founder" || userViewModel.UserRoleName == "Manager"))
+                      || (userViewModel.UserRoleName != "Manager" && userViewModel.UserRoleName != "Writer" && userViewModel.UserRoleName != "Customer")))
                 {
                     await _userManager.RemoveFromRoleAsync(user, oldUserRole);
-                    await _userManager.AddToRoleAsync(user, userViewModel.UserRole);
+                    await _userManager.AddToRoleAsync(user, userViewModel.UserRoleName);
                 }
             }
 
