@@ -10,5 +10,7 @@ namespace Aroma_Shop.Application.ViewModels.Message
         public Domain.Models.MessageModels.Message Message { get; set; }
         [Required(ErrorMessage = "لطفا پاسخ پیام را شرح دهید")]
         public string MessageReplyDescription { get; set; }
+
+        public DateTime MessageSubmitTime { get; set; } 
     }
 }

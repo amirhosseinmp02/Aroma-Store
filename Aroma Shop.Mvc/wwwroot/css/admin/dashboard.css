@@ -214,3 +214,7 @@ i.jstree-icon.jstree-themeicon {
 .isunread {
     background: #fef7f1
 }
+
+.messageReplyTime {
+    font-size: 12px
+}

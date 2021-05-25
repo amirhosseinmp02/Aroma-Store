@@ -58,7 +58,7 @@
             }
             else
             {
-                <div class="card-header h4">پاسخ شما</div>
+                <div class="card-header h4">پاسخ شما <span class="badge badge-warning messageReplyTime">@Model.MessageSubmitTime.ToSolarWithTime()</span></div>
                 <div class="card-body">
                     <fieldset disabled="" class="mr-2">
                         <textarea class="form-control" rows="5" type="text" disabled="" asp-for="MessageReplyDescription"></textarea>

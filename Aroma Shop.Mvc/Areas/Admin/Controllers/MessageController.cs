@@ -72,7 +72,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var model = new MessageDetailViewModel()
             {
                 Message = message,
-                MessageReplyDescription = message.MessageReply?.MessageReplyDescription
+                MessageReplyDescription = message.MessageReply?.MessageReplyDescription,
+                MessageSubmitTime = message.SubmitTime
             };
             _messageService.SetAsRead(message);
             return View(model);
