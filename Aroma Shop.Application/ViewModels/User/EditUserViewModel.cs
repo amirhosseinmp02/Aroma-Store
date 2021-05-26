@@ -20,7 +20,6 @@ namespace Aroma_Shop.Application.ViewModels.User
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
         public string UserPassword { get; set; }
-
         public IEnumerable<SelectListItem> Roles { get; set; }
         public string UserRoleName { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]

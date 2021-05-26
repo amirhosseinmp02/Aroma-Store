@@ -32,6 +32,7 @@ namespace Aroma_Shop.Application.Services
                 
                 client.Send(emailMessage);
             }
+
             return Task.CompletedTask;
         }
     }

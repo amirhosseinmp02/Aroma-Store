@@ -29,6 +29,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [Required(ErrorMessage = "لطفا تعداد محصول را وارد نمایید")]
         public int ProductQuantityInStock { get; set; }
 
+        public DateTime RegistrationTime { get; set; }  
+
         //Navigations Properties
 
         public ICollection<Category> Categories { get; set; }

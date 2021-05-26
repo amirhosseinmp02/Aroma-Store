@@ -42,7 +42,7 @@
                 <td class="cart-item-cells align-middle">@user.RegisterTime.ToSolarWithTime()</td>
                 <td class="align-middle">
                     <div class="admin-products-actions">
-                        <a class="btn text-light btn-primary m-3" asp-action="UserDetail" asp-route-userId="@user.UserId">نمایش</a>
+                        <a class="btn text-light btn-primary m-3" asp-action="UserDetails" asp-route-userId="@user.UserId">نمایش</a>
                         <a class="btn text-light btn-primary m-3" asp-action="EditUser" asp-route-userId="@user.UserId">ویرایش</a>
                         <button class="btn text-light btn-primary m-3" data-toggle="modal" data-target="#deletemodal@(user.UserId)">حذف</button>
                         <div class="modal fade" id="deletemodal@(user.UserId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(user.UserId)" aria-hidden="true">

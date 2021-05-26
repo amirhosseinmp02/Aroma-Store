@@ -26,9 +26,13 @@ namespace Aroma_Shop.Mvc.Controllers
 
         public IActionResult Index()
         {
-            var model = _productService.GetProducts();
+            var model = 
+                _productService.GetProducts();
+
             return View(model);
         }
+
+        #region ContactUs
 
         [HttpGet("/Contact-Us")]
         public IActionResult ContactUs()
@@ -41,18 +45,25 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _messageService.AddMessage(model);
+                var result = 
+                    _messageService.AddMessage(model);
+
                 if (result)
                 {
                     ViewData["SuccessMessage"] = "پیام شما با موفقیت ارسال شد.";
+
                     ModelState.Clear();
+
                     return View();
                 }
+
                 ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
             }
 
             return View(model);
         }
+
+        #endregion
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

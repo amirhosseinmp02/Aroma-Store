@@ -6,7 +6,7 @@ using Aroma_Shop.Domain.Models.CustomIdentityModels;
 
 namespace Aroma_Shop.Domain.Models.UserModels
 {
-    public class UserDetail
+    public class UserDetails
     {
         [Key]
         public int UserDetailId { get; set; }

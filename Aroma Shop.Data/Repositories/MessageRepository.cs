@@ -17,17 +17,14 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context = context;
         }
-
         public void AddMessage(Message message)
         {
             _context.Add(message);
         }
-
         public void DeleteMessage(Message message)
         {
             _context.Remove(message);
         }
-
         public Message GetMessage(int messageId)
         {
             var message =
@@ -37,7 +34,6 @@ namespace Aroma_Shop.Data.Repositories
 
             return message;
         }
-
         public IEnumerable<Message> GetMessages()
         {
             var messages =
@@ -45,7 +41,6 @@ namespace Aroma_Shop.Data.Repositories
 
             return messages;
         }
-
         public int GetUnreadMessagesCount()
         {
             var unreadMessagesCount = 
@@ -53,14 +48,12 @@ namespace Aroma_Shop.Data.Repositories
 
             return unreadMessagesCount;
         }
-
         public void SetMessageAsRead(Message message)
         {
             message.IsRead = true;
 
             _context.SaveChanges();
         }
-
         public void Save()
         {
             _context.SaveChanges();

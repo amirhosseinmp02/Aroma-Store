@@ -144,12 +144,9 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="comment_list">
-                            @{
-                                var comments = Model.Product.Comments.Where(p => p.IsConfirmed);
-                            }
-                            @if (comments.Any())
+                            @if (Model.Product.Comments.Any())
                             {
-                                @foreach (var comment in comments)
+                                @foreach (var comment in Model.Product.Comments)
                                 {
                                     <div class="review_item border border-info rounded p-2">
                                         <div class="media">

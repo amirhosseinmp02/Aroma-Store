@@ -27,44 +27,58 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int pageNumber = 1, string search = null)
         {
             IEnumerable<UserViewModel> users;
+
             if (!string.IsNullOrEmpty(search))
             {
                 users = _accountService.GetUsers()
                     .Result.Where(p => p.UserName.Contains(search) ||
                                        p.UserEmail.Contains(search) ||
                                        p.UserRoleName.Contains(search));
+
                 ViewBag.search = search;
             }
             else
-                users = await _accountService.GetUsers();
+                users = 
+                    await _accountService.GetUsers();
+
             if (!users.Any())
             {
                 ViewBag.isEmpty = true;
+
                 return View();
             }
-            var page = new Paging<UserViewModel>(users, 11, pageNumber);
+
+            var page = 
+                new Paging<UserViewModel>(users, 11, pageNumber);
+
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
-            var usersPage = page.QueryResult;
+
+            var usersPage = 
+                page.QueryResult;
+
             ViewBag.pageNumber = pageNumber;
             ViewBag.firstPage = page.FirstPage;
             ViewBag.lastPage = page.LastPage;
             ViewBag.prevPage = page.PreviousPage;
             ViewBag.nextPage = page.NextPage;
+
             return View(usersPage);
         }
 
         #endregion
 
-        #region UserDetail
+        #region UserDetails
 
         [HttpGet("/Admin/Users/{userId}")]
-        public async Task<IActionResult> UserDetail(string userId)
+        public async Task<IActionResult> UserDetails(string userId)
         {
             var user =
                 await _accountService.GetUser(userId);
+
             if (user == null)
                 return NotFound();
+
             return View(user);
         }
 
@@ -75,11 +89,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Users/CreateUser")]
         public async Task<IActionResult> CreateUser()
         {
-            var roles = await _accountService.GetRoles();
+            var roles = 
+                await _accountService.GetRoles();
+
             var model = new CreateUserViewModel()
             {
                 Roles = roles
             };
+
             return View(model);
         }
 
@@ -89,16 +106,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.CreateUserByAdmin( model);
+                var result = 
+                    await _accountService.CreateUserByAdmin( model);
                 if (result.Succeeded)
                 {
                     ModelState.Clear();
-                    var roles = await _accountService.GetRoles();
+
+                    var roles = 
+                        await _accountService.GetRoles();
+
                     model = new CreateUserViewModel()
                     {
                         Roles = roles
                     };
+
                     ViewData["SuccessMessage"] = "اکانت مورد نظر با موفقیت ساخته شد";
+
                     return View(model);
                 }
                 foreach (var item in result.Errors)
@@ -119,9 +142,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var user = 
                 await _accountService.GetUserForEdit(userId);
+
             if (user == null)
                 return NotFound();
+
             TempData["userId"] = user.UserId;
+
             return View(user);
         }
 
@@ -131,18 +157,27 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.UserId = TempData["userId"].ToString();
-                var result = await _accountService.EditUserByAdmin(model);
+                model.UserId = 
+                    TempData["userId"].ToString();
+
+                var result = 
+                    await _accountService.EditUserByAdmin(model);
+
                 if (result.Succeeded)
                     return RedirectToAction("Index");
+
                 foreach (var item in result.Errors)
                 {
                     ModelState.AddModelError("", item.Description);
                 }
             }
-            var roles = await _accountService.GetRoles();
+            var roles = 
+                await _accountService.GetRoles();
+
             model.Roles = roles;
+
             TempData.Keep("userId");
+
             return View(model);
         }
 

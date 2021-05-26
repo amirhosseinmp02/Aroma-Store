@@ -29,6 +29,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult Index(int pageNumber = 1, string search = null)
         {
             IEnumerable<Message> messages;
+
             if (!string.IsNullOrEmpty(search))
             {
                 messages = _messageService.GetMessages()
@@ -36,22 +37,31 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                                 || p.MessageDescription.Contains(search)
                                 || p.MessageSubject.Contains(search)
                                 || p.MessageSenderEmail.Contains(search))
-                    .OrderBy(p => p.IsRead);
+                    .OrderBy(p=>p.IsRead);
+
                 ViewBag.search = search;
             }
             else
                 messages =
                     _messageService.GetMessages()
-                        .OrderBy(p => p.IsRead);
+                        .OrderBy(p=>p.IsRead);
+
             if (!messages.Any())
             {
                 ViewBag.isEmpty = true;
+
                 return View();
             }
-            var page = new Paging<Message>(messages, 11, pageNumber);
+
+            var page = 
+                new Paging<Message>(messages, 11, pageNumber);
+
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
-            var messagesPage = page.QueryResult;
+
+            var messagesPage = 
+                page.QueryResult;
+
             ViewBag.pageNumber = pageNumber;
             ViewBag.firstPage = page.FirstPage;
             ViewBag.lastPage = page.LastPage;
@@ -68,14 +78,18 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Messages/{messageId}")]
         public IActionResult MessageDetails(int messageId)
         {
-            var message = _messageService.GetMessage(messageId);
+            var message = 
+                _messageService.GetMessage(messageId);
+
             var model = new MessageDetailViewModel()
             {
                 Message = message,
                 MessageReplyDescription = message.MessageReply?.MessageReplyDescription,
                 MessageSubmitTime = message.SubmitTime
             };
+
             _messageService.SetAsRead(message);
+
             return View(model);
         }
 
@@ -86,19 +100,30 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ReplyToMessage(MessageDetailViewModel model)
         {
-            var messageId = Convert.ToInt32(TempData["messageId"]);
-            var result = await _messageService.ReplyToMessage(model.MessageReplyDescription, messageId);
-            var message = _messageService.GetMessage(messageId);
+            var messageId = 
+                Convert.ToInt32(TempData["messageId"]);
+
+            var result = 
+                await _messageService.ReplyToMessage(model.MessageReplyDescription, messageId);
+
+            var message = 
+                _messageService.GetMessage(messageId);
+
             model.Message = message;
+
             if (result)
             {
                 ViewData["SuccessMessage"] = "پیام شما با موفقیت ارسال شد.";
+
                 ModelState.Clear();
-                return View("MessageDetail", model);
+
+                return View("MessageDetails", model);
             }
             ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
+
             TempData.Keep("messageId");
-            return View("MessageDetail", model);
+
+            return View("MessageDetails", model);
         }
         #endregion
 

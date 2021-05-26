@@ -4,14 +4,16 @@ using Aroma_Shop.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aroma_Shop.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210525200838_UserDetailWasRenamedToUserDetail")]
+    partial class UserDetailWasRenamedToUserDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,14 +228,14 @@ namespace Aroma_Shop.Data.Migrations
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CommentId1")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ParentCommentCommentId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
@@ -246,7 +248,7 @@ namespace Aroma_Shop.Data.Migrations
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("ParentCommentCommentId");
+                    b.HasIndex("CommentId1");
 
                     b.HasIndex("ProductId");
 
@@ -302,9 +304,6 @@ namespace Aroma_Shop.Data.Migrations
                     b.Property<string>("ProductShortDescription")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
-
-                    b.Property<DateTime>("RegistrationTime")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("ProductId");
 
@@ -522,9 +521,9 @@ namespace Aroma_Shop.Data.Migrations
 
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.Comment", b =>
                 {
-                    b.HasOne("Aroma_Shop.Domain.Models.ProductModels.Comment", "ParentComment")
+                    b.HasOne("Aroma_Shop.Domain.Models.ProductModels.Comment", null)
                         .WithMany("Replies")
-                        .HasForeignKey("ParentCommentCommentId");
+                        .HasForeignKey("CommentId1");
 
                     b.HasOne("Aroma_Shop.Domain.Models.ProductModels.Product", "Product")
                         .WithMany("Comments")
@@ -533,8 +532,6 @@ namespace Aroma_Shop.Data.Migrations
                     b.HasOne("Aroma_Shop.Domain.Models.CustomIdentityModels.CustomIdentityUser", "User")
                         .WithMany("UserComments")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("ParentComment");
 
                     b.Navigation("Product");
 

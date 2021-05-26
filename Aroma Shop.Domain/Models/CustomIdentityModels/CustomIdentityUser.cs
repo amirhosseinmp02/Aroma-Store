@@ -10,12 +10,16 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
 {
     public class CustomIdentityUser : IdentityUser
     {
+        public CustomIdentityUser()
+        {
+            UserDetails = new UserDetails();
+        }
         [Required]
         public DateTime RegisterTime { get; set; }  
 
         //Navigations Properties
 
-        public UserDetail UserDetail { get; set; }
+        public UserDetails UserDetails { get; set; }
         public ICollection<Comment> UserComments { get; set; }
     }
 }

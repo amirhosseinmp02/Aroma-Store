@@ -30,7 +30,7 @@ namespace Aroma_Shop.Application.Security.Policy
                                                                 context.User.IsInRole("Manager") ||
                                                                 context.User.IsInRole("Founder")))
             {
-
+                context.Succeed(requirement);
             }
 
             return Task.CompletedTask;

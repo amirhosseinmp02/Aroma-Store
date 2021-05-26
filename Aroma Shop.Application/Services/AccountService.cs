@@ -44,13 +44,15 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
         {
-            var result = await _userManager.CreateAsync(user, password);
+            user.RegisterTime = DateTime.Now;
+
+            var result =
+                await _userManager.CreateAsync(user, password);
 
             await _userManager.AddToRoleAsync(user, "Customer");
 
             return result;
         }
-
         public async Task<bool> SendEmailConfirmation(CustomIdentityUser user, string returnController, string returnAction)
         {
             try
@@ -58,7 +60,8 @@ namespace Aroma_Shop.Application.Services
                 var emailConfirmationToken =
                     await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                var url = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
+                var url =
+                    _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
                     new { email = user.Email, token = emailConfirmationToken }
                     , _accessor.HttpContext.Request.Scheme);
 
@@ -70,6 +73,7 @@ namespace Aroma_Shop.Application.Services
                 await
                     _emailService.SendEmailAsync
                         (user.Email, "تأیید ایمیل", emailMessage.ToString(), true);
+
                 return true;
             }
             catch (Exception error)
@@ -78,7 +82,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<bool> EmailConfirmation(string email, string token)
         {
             try
@@ -102,7 +105,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<JsonResult> IsUserNameExist(string userName)
         {
             var user =
@@ -113,26 +115,26 @@ namespace Aroma_Shop.Application.Services
 
             return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
         }
-
-        public async Task<JsonResult> IsEmailExist(string email)
+        public async Task<JsonResult> IsEmailExist(string userEmail)
         {
-            var emaill =
-                await _userManager.FindByEmailAsync(email);
+            var user =
+                await _userManager.FindByEmailAsync(userEmail);
 
-            if (emaill == null)
+            if (user == null)
                 return new JsonResult(true);
 
             return new JsonResult("امکان استفاده از این ایمیل وجود ندارد");
         }
-
         public bool IsUserSignedIn()
         {
-            if (_signInManager.IsSignedIn(_accessor.HttpContext.User))
+            var isUserSignedIn =
+                _signInManager.IsSignedIn(_accessor.HttpContext.User);
+
+            if (isUserSignedIn)
                 return true;
 
             return false;
         }
-
         public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications()
         {
             var externalLogins =
@@ -140,7 +142,6 @@ namespace Aroma_Shop.Application.Services
 
             return externalLogins;
         }
-
         public ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName, string returnUrl)
         {
             var redirectUrl =
@@ -151,11 +152,12 @@ namespace Aroma_Shop.Application.Services
                         , new { returnurl = returnUrl }
                         , _accessor.HttpContext.Request.Scheme);
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var properties = 
+                _signInManager
+                    .ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
             return new ChallengeResult(provider, properties);
         }
-
         public async Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null)
         {
             try
@@ -169,7 +171,9 @@ namespace Aroma_Shop.Application.Services
                 if (externalLoginInfo == null)
                     return false;
 
-                var signInResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
+                var signInResult = 
+                    await _signInManager
+                        .ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
                     externalLoginInfo.ProviderKey, false, true);
 
                 if (signInResult.Succeeded)
@@ -191,7 +195,8 @@ namespace Aroma_Shop.Application.Services
                         {
                             UserName = (userName.Length <= 10 ? userName : userName.Substring(0, 7)),
                             Email = email,
-                            EmailConfirmed = true
+                            EmailConfirmed = true,
+                            RegisterTime = DateTime.Now
                         };
 
                         await _userManager.CreateAsync(user);
@@ -211,7 +216,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<bool> LoginWithPassword(LoginViewModel vm)
         {
             try
@@ -235,7 +239,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<bool> LogOutUser()
         {
             try
@@ -251,20 +254,22 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction)
         {
             try
             {
                 var user =
                     await _userManager.FindByEmailAsync(userEmail);
+
                 if (user == null)
                     return false;
 
                 var restPasswordToken =
-                    await _userManager.GeneratePasswordResetTokenAsync(user);
+                    await _userManager
+                        .GeneratePasswordResetTokenAsync(user);
 
-                var resetPasswordUrl = _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
+                var resetPasswordUrl = 
+                    _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
                     new { email = user.Email, token = restPasswordToken }
                     , _accessor.HttpContext.Request.Scheme);
 
@@ -276,6 +281,7 @@ namespace Aroma_Shop.Application.Services
                 await
                     _emailService.SendEmailAsync
                         (user.Email, "تغییر کلمه عبور", emailMessage.ToString(), true);
+
                 return true;
             }
             catch (Exception error)
@@ -284,13 +290,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<bool> RestPassword(string userEmail, string token, string newPassword)
         {
             try
             {
                 var user =
                     await _userManager.FindByEmailAsync(userEmail);
+
                 if (user == null)
                     return false;
 
@@ -305,11 +311,8 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<IEnumerable<UserViewModel>> GetUsers()
         {
-            var loggedUser =
-                await GetLoggedUser();
             var loggedUserRole =
                 await GetLoggedUserRole();
 
@@ -346,12 +349,11 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
-
-        public async Task<UserDetailViewModel> GetUser(string userId)
+        public async Task<UserDetailsViewModel> GetUser(string userId)
         {
             var requestedUser =
                 await _userManager.Users
-                    .Include(p => p.UserDetail)
+                    .Include(p => p.UserDetails)
                     .Include(p => p.UserComments)
                     .ThenInclude(p => p.Product)
                     .SingleOrDefaultAsync(p => p.Id == userId);
@@ -362,13 +364,13 @@ namespace Aroma_Shop.Application.Services
             var loggedUserRole =
                 await GetLoggedUserRole();
 
-            UserDetailViewModel user = null;
+            UserDetailsViewModel user = null;
 
             if (!((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                   || ((loggedUserRole == "Manager") && (requestedUserRole == "Founder" || requestedUserRole == "Manager"))
                   || (requestedUserRole != "Manager" && requestedUserRole != "Writer" && requestedUserRole != "Customer")))
             {
-                user = new UserDetailViewModel()
+                user = new UserDetailsViewModel()
                 {
                     User = requestedUser,
                     UserRoleName = requestedUserRole
@@ -377,13 +379,12 @@ namespace Aroma_Shop.Application.Services
 
             return user;
         }
-
         public async Task<EditUserViewModel> GetUserForEdit(string userId)
         {
             var requestedUser =
                 await _userManager.Users
                     .Where(p => p.Id == userId)
-                    .Include(p => p.UserDetail)
+                    .Include(p => p.UserDetails)
                     .FirstOrDefaultAsync();
 
             var requestedUserRole =
@@ -407,19 +408,18 @@ namespace Aroma_Shop.Application.Services
                     UserName = requestedUser.UserName,
                     Email = requestedUser.Email,
                     Roles = roles,
-                    UserRoleName = _userManager.GetRolesAsync(requestedUser).Result.FirstOrDefault(),
-                    FirstName = requestedUser.UserDetail.FirstName,
-                    LastName = requestedUser.UserDetail.LastName,
-                    UserProvince = requestedUser.UserDetail.UserProvince,
-                    UserCity = requestedUser.UserDetail.UserCity,
-                    UserAddress = requestedUser.UserDetail.UserAddress,
-                    UserZipCode = requestedUser.UserDetail.UserZipCode
+                    UserRoleName = GetUserRole(requestedUser),
+                    FirstName = requestedUser.UserDetails.FirstName,
+                    LastName = requestedUser.UserDetails.LastName,
+                    UserProvince = requestedUser.UserDetails.UserProvince,
+                    UserCity = requestedUser.UserDetails.UserCity,
+                    UserAddress = requestedUser.UserDetails.UserAddress,
+                    UserZipCode = requestedUser.UserDetails.UserZipCode
                 };
             }
 
             return user;
         }
-
         public async Task<bool> DeleteUser(string userId)
         {
             try
@@ -433,7 +433,7 @@ namespace Aroma_Shop.Application.Services
                 var requestedUser =
                     _userManager.Users
                         .Where(p => p.Id == userId)
-                        .Include(p => p.UserDetail)
+                        .Include(p => p.UserDetails)
                         .FirstOrDefault();
 
                 if (requestedUser == null)
@@ -447,7 +447,7 @@ namespace Aroma_Shop.Application.Services
                         (requestedUserRole == "Founder" || requestedUserRole == "Manager")))
                     return false;
 
-                _userRepository.DeleteUserDetail(requestedUser.UserDetail);
+                _userRepository.DeleteUserDetail(requestedUser.UserDetails);
                 var result =
                     await _userManager.DeleteAsync(requestedUser);
                 _userRepository.Save();
@@ -460,7 +460,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<IEnumerable<SelectListItem>> GetRoles()
         {
             var loggedUser =
@@ -490,14 +489,14 @@ namespace Aroma_Shop.Application.Services
 
             return result.OrderBy(p => p.Value);
         }
-
         public async Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel)
         {
             var user = new CustomIdentityUser()
             {
                 UserName = userViewModel.UserName,
                 Email = userViewModel.Email,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                RegisterTime = DateTime.Now
             };
 
             var result =
@@ -524,7 +523,7 @@ namespace Aroma_Shop.Application.Services
 
             await _userManager.AddToRoleAsync(user, userRole);
 
-            var userDetail = new UserDetail()
+            var userDetail = new UserDetails()
             {
                 FirstName = userViewModel.FirstName,
                 LastName = userViewModel.LastName,
@@ -535,36 +534,33 @@ namespace Aroma_Shop.Application.Services
             };
             _userRepository.AddUserDetail(userDetail);
 
-            user.UserDetail = userDetail;
+            user.UserDetails = userDetail;
 
             _userRepository.Save();
 
             return result;
         }
-
         public async Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel)
         {
             var user =
                 await _userManager.Users
                     .Where(p => p.Id == userViewModel.UserId)
-                    .Include(p => p.UserDetail)
+                    .Include(p => p.UserDetails)
                     .FirstOrDefaultAsync();
 
             user.UserName = userViewModel.UserName;
             user.Email = userViewModel.Email;
-            user.UserDetail.FirstName = userViewModel.FirstName;
-            user.UserDetail.LastName = userViewModel.LastName;
-            user.UserDetail.UserProvince = userViewModel.UserProvince;
-            user.UserDetail.UserCity = userViewModel.UserCity;
-            user.UserDetail.UserAddress = userViewModel.UserAddress;
-            user.UserDetail.UserZipCode = userViewModel.UserZipCode;
+            user.UserDetails.FirstName = userViewModel.FirstName;
+            user.UserDetails.LastName = userViewModel.LastName;
+            user.UserDetails.UserProvince = userViewModel.UserProvince;
+            user.UserDetails.UserCity = userViewModel.UserCity;
+            user.UserDetails.UserAddress = userViewModel.UserAddress;
+            user.UserDetails.UserZipCode = userViewModel.UserZipCode;
 
             var oldUserRole =
-                await GetLoggedUserRole();
+                GetUserRole(user);
             if (oldUserRole != userViewModel.UserRoleName)
             {
-                var loggedUser =
-                    await GetLoggedUser();
                 var loggedUserRole =
                     await GetLoggedUserRole();
 

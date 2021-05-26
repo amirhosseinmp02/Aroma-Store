@@ -1,5 +1,5 @@
 ﻿@using Aroma_Shop.Application.Utilites
-@model Aroma_Shop.Application.ViewModels.User.UserDetailViewModel
+@model Aroma_Shop.Application.ViewModels.User.UserDetailsViewModel
 
 @{
     ViewData["Title"] = $"کاربر {Model.User.UserName}";
@@ -25,28 +25,28 @@
         </div>
         <div class="form-group">
             <label class="control-label">نام</label>
-            <input class="form-control" asp-for="User.UserDetail.FirstName" readonly>
+            <input class="form-control" asp-for="User.UserDetails.FirstName" readonly>
         </div>
         <div class="form-group">
             <label class="control-label">نام خانوادگی</label>
-            <input class="form-control" asp-for="User.UserDetail.LastName" readonly>
+            <input class="form-control" asp-for="User.UserDetails.LastName" readonly>
         </div>
         <div class="form-group">
             <label class="control-label">استان</label>
-            <input class="form-control" asp-for="User.UserDetail.UserProvince" readonly>
+            <input class="form-control" asp-for="User.UserDetails.UserProvince" readonly>
         </div>
         <div class="form-group">
             <label class="control-label">شهر</label>
-            <input class="form-control" asp-for="User.UserDetail.UserCity" readonly>
+            <input class="form-control" asp-for="User.UserDetails.UserCity" readonly>
         </div>
         <div class="form-group">
             <label class="control-label">آدرس</label>
-            <textarea asp-for="User.UserDetail.UserAddress" rows="3" class="form-control none-resize" readonly>
+            <textarea asp-for="User.UserDetails.UserAddress" rows="3" class="form-control none-resize" readonly>
                 </textarea>
         </div>
         <div class="form-group">
             <label class="control-label" type="hidden">کد پستی</label>
-            <input class="form-control" type="number" asp-for="User.UserDetail.UserZipCode" readonly>
+            <input class="form-control" type="number" asp-for="User.UserDetails.UserZipCode" readonly>
         </div>
         <div>
             <h1 class="py-3">دیدگاه ها</h1>

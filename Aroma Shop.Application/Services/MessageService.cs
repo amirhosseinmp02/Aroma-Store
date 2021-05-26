@@ -23,7 +23,6 @@ namespace Aroma_Shop.Application.Services
             _accessor = accessor;
             _emailService = emailService;
         }
-
         public bool AddMessage(Message message)
         {
             try
@@ -32,6 +31,7 @@ namespace Aroma_Shop.Application.Services
 
                 _messageRepository.AddMessage(message);
                 _messageRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -40,7 +40,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public bool DeleteMessageById(int messageId)
         {
             try
@@ -52,6 +51,7 @@ namespace Aroma_Shop.Application.Services
 
                 _messageRepository.DeleteMessage(message);
                 _messageRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -60,7 +60,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public Message GetMessage(int messageId)
         {
             var message =
@@ -68,12 +67,13 @@ namespace Aroma_Shop.Application.Services
 
             return message;
         }
-
         public IEnumerable<Message> GetMessages()
         {
-            return _messageRepository.GetMessages();
-        }
+            var messages =
+                _messageRepository.GetMessages();
 
+            return messages;
+        }
         public int GetUnreadMessagesCount()
         {
             var getUnreadMessagesCount =
@@ -81,7 +81,6 @@ namespace Aroma_Shop.Application.Services
 
             return getUnreadMessagesCount;
         }
-
         public async Task<bool> ReplyToMessage(string messageReplyDescription, int messageId)
         {
             try
@@ -128,7 +127,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public bool SetAsRead(Message message)
         {
             try

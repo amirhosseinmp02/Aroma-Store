@@ -6,7 +6,7 @@ using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Application.ViewModels.User
 {
-    public class UserDetailViewModel
+    public class UserDetailsViewModel
     {
         public CustomIdentityUser User { get; set; }
         public string UserRoleName { get; set; }

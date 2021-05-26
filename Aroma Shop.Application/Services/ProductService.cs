@@ -24,12 +24,13 @@ namespace Aroma_Shop.Application.Services
             _productRepository = productRepository;
             _accountService = accountService;
         }
-
         public Product GetProduct(int productId)
         {
-            return _productRepository.GetProduct(productId);
-        }
+            var product =
+                _productRepository.GetProduct(productId);
 
+            return product;
+        }
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {
             try
@@ -43,7 +44,8 @@ namespace Aroma_Shop.Application.Services
                     ProductShortDescription = productViewModel.ProductShortDescription,
                     ProductPrice = productViewModel.ProductPrice,
                     ProductQuantityInStock = productViewModel.ProductQuantityInStock,
-                    Categories = productCategories
+                    Categories = productCategories,
+                    RegistrationTime = DateTime.Now
                 };
 
                 if (productViewModel.ProductCategoriesId.Any())
@@ -69,7 +71,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public bool UpdateProduct(AddEditProductViewModel productViewModel)
         {
             try
@@ -85,22 +86,26 @@ namespace Aroma_Shop.Application.Services
                 if (productViewModel.ProductCategoriesId.Any())
                     UpdateProductCategories
                         (product, productViewModel.ProductCategoriesId);
+
                 else if (product.Categories.Any())
                     product.Categories.Clear();
 
                 if (productViewModel.ProductImagesFiles.Any())
                     AddProductImages(product, productViewModel.ProductImagesFiles);
+
                 if (productViewModel.DeletedProductImagesIds != null)
                     DeleteProductImagesByIds(productViewModel.DeletedProductImagesIds);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
                     UpdateProductsInformation
                         (product, productViewModel.InformationNames, productViewModel.InformationValues);
+
                 else if (product.Informations.Any())
                     DeleteProductInformation(product);
 
                 _productRepository.UpdateProduct(product);
                 _productRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -109,7 +114,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public bool DeleteProductById(int productId)
         {
             try
@@ -127,6 +131,7 @@ namespace Aroma_Shop.Application.Services
 
                 _productRepository.DeleteProduct(product);
                 _productRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -135,22 +140,27 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public IEnumerable<Product> GetProducts()
         {
-            return _productRepository.GetProducts();
-        }
+            var products =
+                _productRepository.GetProducts();
 
+            return products;
+        }
         public IEnumerable<Category> GetCategories()
         {
-            return _productRepository.GetCategories();
-        }
+            var categories =
+                _productRepository.GetCategories();
 
+            return categories;
+        }
         public Category GetCategory(int categoryId)
         {
-            return _productRepository.GetCategory(categoryId);
-        }
+            var category =
+                _productRepository.GetCategory(categoryId);
 
+            return category;
+        }
         public bool AddCategory(AddEditCategoryViewModel categoryViewModel)
         {
             try
@@ -170,6 +180,7 @@ namespace Aroma_Shop.Application.Services
 
                 _productRepository.AddCategory(category);
                 _productRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -179,7 +190,6 @@ namespace Aroma_Shop.Application.Services
             }
 
         }
-
         public bool UpdateCategory(AddEditCategoryViewModel categoryViewModel)
         {
             try
@@ -195,6 +205,7 @@ namespace Aroma_Shop.Application.Services
 
                 _productRepository.UpdateCategory(category);
                 _productRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -203,13 +214,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public bool DeleteCategoryById(int categoryId)
         {
             try
             {
                 DeleteCascadeCategoryById(categoryId);
                 _productRepository.Save();
+
                 return true;
             }
             catch (Exception error)
@@ -218,12 +229,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public IEnumerable<SelectListItem> GetCategoriesTreeView()
         {
-            var categories = _productRepository.GetCategories();
+            var categories = 
+                _productRepository.GetCategories();
 
-            List<SelectListItem> items = new List<SelectListItem>();
+            List<SelectListItem> items = 
+                new List<SelectListItem>();
 
             items.Add(new SelectListItem("انتخاب کنید", ""));
 
@@ -244,7 +256,8 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', count * 2)
                              + $" {parent.CategoryName}", parent.CategoryId.ToString()));
 
-                    var category = _productRepository.GetCategory(parent.CategoryId);
+                    var category = 
+                        _productRepository.GetCategory(parent.CategoryId);
 
                     if (category.ChildrenCategories.Any())
                     {
@@ -265,7 +278,8 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', counter * 2)
                              + $" {child.CategoryName}", child.CategoryId.ToString()));
 
-                    var category = _productRepository.GetCategory(child.CategoryId);
+                    var category = 
+                        _productRepository.GetCategory(child.CategoryId);
 
                     if (category.ChildrenCategories.Any())
                     {
@@ -279,12 +293,13 @@ namespace Aroma_Shop.Application.Services
 
             return items;
         }
-
         public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory)
         {
-            var categories = _productRepository.GetCategories();
+            var categories = 
+                _productRepository.GetCategories();
 
-            List<SelectListItem> items = new List<SelectListItem>();
+            List<SelectListItem> items = 
+                new List<SelectListItem>();
 
             items.Add(new SelectListItem("انتخاب کنید", ""));
 
@@ -306,7 +321,8 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', count * 2) +
                              $" {parent.CategoryName}", parent.CategoryId.ToString()));
 
-                        var category = _productRepository.GetCategory(parent.CategoryId);
+                        var category = 
+                            _productRepository.GetCategory(parent.CategoryId);
 
                         if (category.ChildrenCategories.Any())
                         {
@@ -329,7 +345,8 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', counter * 2) +
                              $" {child.CategoryName}", child.CategoryId.ToString()));
 
-                        var category = _productRepository.GetCategory(child.CategoryId);
+                        var category = 
+                            _productRepository.GetCategory(child.CategoryId);
 
                         if (category.ChildrenCategories.Any())
                         {
@@ -351,7 +368,6 @@ namespace Aroma_Shop.Application.Services
             }
             return items;
         }
-
         public IEnumerable<Comment> GetComments()
         {
             var comments =
@@ -359,7 +375,6 @@ namespace Aroma_Shop.Application.Services
 
             return comments;
         }
-
         public async Task<bool> AddCommentToProduct(ProductViewModel productViewModel)
         {
             try
@@ -390,7 +405,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public async Task<bool> AddReplyToProductComment(ProductViewModel productViewModel)
         {
             try
@@ -426,12 +440,24 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
-        public bool DeleteComment(int commentId)
+        public bool DeleteCommentById(int commentId)
         {
             try
             {
-                _productRepository.DeleteCommentById(commentId);
+                var comment =
+                    _productRepository.GetComment(commentId);
+
+                if (comment.Replies.Any())
+                {
+                    foreach (var commentReply in comment.Replies)
+                    {
+                        _productRepository.DeleteComment(commentReply);
+                    }
+                }
+
+                _productRepository.DeleteComment(comment);
+
+                _productRepository.Save();
 
                 return true;
             }
@@ -449,9 +475,11 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var category = GetCategory(categoryId);
+                var category = 
+                    GetCategory(categoryId);
                 if (category == null)
                     return false;
+
                 _productRepository.DeleteCategory(category);
 
                 if (category.ChildrenCategories.Count != 0)
@@ -464,7 +492,9 @@ namespace Aroma_Shop.Application.Services
                         {
                             _productRepository.DeleteCategory(child);
 
-                            var temp = GetCategory(child.CategoryId);
+                            var temp = 
+                                GetCategory(child.CategoryId);
+
                             if (temp.ChildrenCategories.Count != 0)
                                 ChildrenCategoriesScrolling(temp.ChildrenCategories);
                         }
@@ -479,14 +509,15 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         private bool AddProductCategories(Product product, IEnumerable<int> productCategoriesId)
         {
             try
             {
                 foreach (var productCategoryId in productCategoriesId)
                 {
-                    var productCategory = GetCategory(productCategoryId);
+                    var productCategory = 
+                        GetCategory(productCategoryId);
+
                     product.Categories.Add(productCategory);
                 }
 
@@ -498,7 +529,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         private bool UpdateProductCategories(Product product, IEnumerable<int> productCategoriesId)
         {
             try
@@ -517,11 +547,13 @@ namespace Aroma_Shop.Application.Services
         }
         private IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds)
         {
-            var productImages = new List<Image>();
+            var productImages = 
+                new List<Image>();
 
             foreach (var productImagesId in productImagesIds)
             {
-                var productImage = _productRepository.GetImage(productImagesId);
+                var productImage = 
+                    _productRepository.GetImage(productImagesId);
 
                 productImages.Add(productImage);
             }
@@ -532,7 +564,8 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var persianCalendar = new PersianCalendar();
+                var persianCalendar = 
+                    new PersianCalendar();
 
                 var monthProductImagesDirName =
                     $"{persianCalendar.GetYear(DateTime.Now)} - {persianCalendar.GetMonth(DateTime.Now)}";
@@ -578,16 +611,17 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         private bool DeleteProductImagesByIds(IEnumerable<int> productImagesIds)
         {
             try
             {
-                var productImages = GetProductImagesByIds(productImagesIds);
+                var productImages = 
+                    GetProductImagesByIds(productImagesIds);
 
                 foreach (var productImage in productImages)
                 {
-                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(),
+                    var imagePath = 
+                        Path.Combine(Directory.GetCurrentDirectory(),
                         "wwwroot", "img", "Product", productImage.ImagePath);
 
                     File.Delete(imagePath);
@@ -603,7 +637,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         private bool DeleteProductImages(IEnumerable<Image> productImages)
         {
             try
@@ -611,7 +644,8 @@ namespace Aroma_Shop.Application.Services
 
                 foreach (var productImage in productImages)
                 {
-                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(),
+                    var imagePath = 
+                        Path.Combine(Directory.GetCurrentDirectory(),
                         "wwwroot", "img", "Product", productImage.ImagePath);
 
                     File.Delete(imagePath);
@@ -627,7 +661,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         private bool AddProductsInformation(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
             try
@@ -656,7 +689,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         private bool DeleteProductInformation(Product product)
         {
             try
@@ -674,8 +706,6 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
-
         private bool UpdateProductsInformation(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
             try

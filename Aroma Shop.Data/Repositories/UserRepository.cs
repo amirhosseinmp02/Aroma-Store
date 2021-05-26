@@ -16,12 +16,12 @@ namespace Aroma_Shop.Data.Repositories
             _context = context;
         }
 
-        public void AddUserDetail(UserDetail userDetail)
+        public void AddUserDetail(UserDetails userDetail)
         {
             _context.Add(userDetail);
         }
 
-        public void DeleteUserDetail(UserDetail userDetail)
+        public void DeleteUserDetail(UserDetails userDetail)
         {
             _context.Remove(userDetail);
         }
