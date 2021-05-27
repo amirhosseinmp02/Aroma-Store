@@ -231,10 +231,10 @@ namespace Aroma_Shop.Application.Services
         }
         public IEnumerable<SelectListItem> GetCategoriesTreeView()
         {
-            var categories = 
+            var categories =
                 _productRepository.GetCategories();
 
-            List<SelectListItem> items = 
+            List<SelectListItem> items =
                 new List<SelectListItem>();
 
             items.Add(new SelectListItem("انتخاب کنید", ""));
@@ -256,7 +256,7 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', count * 2)
                              + $" {parent.CategoryName}", parent.CategoryId.ToString()));
 
-                    var category = 
+                    var category =
                         _productRepository.GetCategory(parent.CategoryId);
 
                     if (category.ChildrenCategories.Any())
@@ -278,7 +278,7 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', counter * 2)
                              + $" {child.CategoryName}", child.CategoryId.ToString()));
 
-                    var category = 
+                    var category =
                         _productRepository.GetCategory(child.CategoryId);
 
                     if (category.ChildrenCategories.Any())
@@ -295,10 +295,10 @@ namespace Aroma_Shop.Application.Services
         }
         public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory)
         {
-            var categories = 
+            var categories =
                 _productRepository.GetCategories();
 
-            List<SelectListItem> items = 
+            List<SelectListItem> items =
                 new List<SelectListItem>();
 
             items.Add(new SelectListItem("انتخاب کنید", ""));
@@ -321,7 +321,7 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', count * 2) +
                              $" {parent.CategoryName}", parent.CategoryId.ToString()));
 
-                        var category = 
+                        var category =
                             _productRepository.GetCategory(parent.CategoryId);
 
                         if (category.ChildrenCategories.Any())
@@ -345,7 +345,7 @@ namespace Aroma_Shop.Application.Services
                             (new string('─', counter * 2) +
                              $" {child.CategoryName}", child.CategoryId.ToString()));
 
-                        var category = 
+                        var category =
                             _productRepository.GetCategory(child.CategoryId);
 
                         if (category.ChildrenCategories.Any())
@@ -468,6 +468,30 @@ namespace Aroma_Shop.Application.Services
             }
         }
 
+        public bool ConfirmComment(int commentId)
+        {
+            try
+            {
+                var comment =
+                    _productRepository.GetComment(commentId);
+
+                if (comment == null)
+                    return false;
+
+                comment.IsRead = true;
+                comment.IsConfirmed = true;
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+
 
         //Utilities Methods
 
@@ -475,7 +499,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var category = 
+                var category =
                     GetCategory(categoryId);
                 if (category == null)
                     return false;
@@ -492,7 +516,7 @@ namespace Aroma_Shop.Application.Services
                         {
                             _productRepository.DeleteCategory(child);
 
-                            var temp = 
+                            var temp =
                                 GetCategory(child.CategoryId);
 
                             if (temp.ChildrenCategories.Count != 0)
@@ -515,7 +539,7 @@ namespace Aroma_Shop.Application.Services
             {
                 foreach (var productCategoryId in productCategoriesId)
                 {
-                    var productCategory = 
+                    var productCategory =
                         GetCategory(productCategoryId);
 
                     product.Categories.Add(productCategory);
@@ -547,12 +571,12 @@ namespace Aroma_Shop.Application.Services
         }
         private IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds)
         {
-            var productImages = 
+            var productImages =
                 new List<Image>();
 
             foreach (var productImagesId in productImagesIds)
             {
-                var productImage = 
+                var productImage =
                     _productRepository.GetImage(productImagesId);
 
                 productImages.Add(productImage);
@@ -564,7 +588,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var persianCalendar = 
+                var persianCalendar =
                     new PersianCalendar();
 
                 var monthProductImagesDirName =
@@ -615,12 +639,12 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var productImages = 
+                var productImages =
                     GetProductImagesByIds(productImagesIds);
 
                 foreach (var productImage in productImages)
                 {
-                    var imagePath = 
+                    var imagePath =
                         Path.Combine(Directory.GetCurrentDirectory(),
                         "wwwroot", "img", "Product", productImage.ImagePath);
 
@@ -644,7 +668,7 @@ namespace Aroma_Shop.Application.Services
 
                 foreach (var productImage in productImages)
                 {
-                    var imagePath = 
+                    var imagePath =
                         Path.Combine(Directory.GetCurrentDirectory(),
                         "wwwroot", "img", "Product", productImage.ImagePath);
 
