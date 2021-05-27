@@ -27,5 +27,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> AddCommentToProduct(ProductViewModel productViewModel);
         Task<bool> AddReplyToProductComment(ProductViewModel productViewModel);
         bool DeleteCommentById(int commentId);
+        bool ConfirmComment(int commentId);
     }
 }
