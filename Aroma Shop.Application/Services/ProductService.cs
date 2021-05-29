@@ -413,7 +413,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var parentComment =
-                    _productRepository.GetComment(productViewModel.ParentCommentId);
+                    GetComment(productViewModel.ParentCommentId);
                 if (parentComment == null)
                     return false;
 
@@ -440,12 +440,19 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public Comment GetComment(int commentId)
+        {
+            var comment =
+                _productRepository.GetComment(commentId);
+
+            return comment;
+        }
         public bool DeleteCommentById(int commentId)
         {
             try
             {
                 var comment =
-                    _productRepository.GetComment(commentId);
+                    GetComment(commentId);
 
                 if (comment.Replies.Any())
                 {
@@ -467,13 +474,12 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-
         public bool ConfirmComment(int commentId)
         {
             try
             {
                 var comment =
-                    _productRepository.GetComment(commentId);
+                    GetComment(commentId);
 
                 if (comment == null)
                     return false;
