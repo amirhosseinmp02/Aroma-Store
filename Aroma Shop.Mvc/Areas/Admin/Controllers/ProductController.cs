@@ -52,13 +52,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
                 return View();
             }
-            var page = 
+            var page =
                 new Paging<Product>(products, 11, pageNumber);
 
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var categoriesPage = 
+            var categoriesPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -77,7 +77,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddProduct")]
         public IActionResult AddProduct()
         {
-            var productCategories = 
+            var productCategories =
                 _productService.GetCategoriesTreeView();
 
             var model = new AddEditProductViewModel()
@@ -94,14 +94,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = 
+                var result =
                     _productService.AddProduct(model);
 
                 if (result)
                 {
                     ModelState.Clear();
 
-                    var returnProductCategories = 
+                    var returnProductCategories =
                         _productService.GetCategoriesTreeView();
 
                     model = new AddEditProductViewModel()
@@ -117,7 +117,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ModelState.AddModelError("", "مشکلی در زمان افزودن محصول رخ داد.");
             }
 
-            var productCategories = 
+            var productCategories =
                 _productService.GetCategoriesTreeView();
 
             model = new AddEditProductViewModel()
@@ -136,12 +136,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         public IActionResult EditProduct(int productId)
         {
-            var product = 
+            var product =
                 _productService.GetProduct(productId);
             if (product == null)
                 return NotFound();
 
-            var productCategories = 
+            var productCategories =
                 _productService.GetCategoriesTreeView().Skip(1);
 
             foreach (var productCategory in productCategories)
@@ -175,12 +175,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditProduct(AddEditProductViewModel model)
         {
-            model.ProductId = 
+            model.ProductId =
                 Convert.ToInt32(TempData["productId"]);
 
             if (ModelState.IsValid)
             {
-                var result = 
+                var result =
                     _productService.UpdateProduct(model);
 
                 if (result)
@@ -190,10 +190,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
                 ModelState.AddModelError("", "مشکلی در زمان ویرایش محصول رخ داد.");
             }
-            var product = 
+            var product =
                 _productService.GetProduct(model.ProductId);
 
-            var productCategories = 
+            var productCategories =
                 _productService.GetCategoriesTreeView().Skip(1);
 
             foreach (var productCategory in productCategories)
@@ -220,7 +220,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/DeleteProduct")]
         public IActionResult DeleteProduct(int productId)
         {
-            var result = 
+            var result =
                 _productService.DeleteProductById(productId);
 
             if (result)
@@ -240,7 +240,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                categories = 
+                categories =
                     _productService.GetCategories().Where(p =>
                     p.CategoryName.Contains(search) ||
                     (Convert.ToBoolean(p.ParentCategory?.CategoryName.Contains(search))));
@@ -248,7 +248,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ViewBag.search = search;
             }
             else
-                categories = 
+                categories =
                     _productService.GetCategories();
 
             if (!categories.Any())
@@ -258,13 +258,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 return View();
             }
 
-            var page = 
+            var page =
                 new Paging<Category>(categories, 11, pageNumber);
 
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var categoriesPage = 
+            var categoriesPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -283,7 +283,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddCategory")]
         public IActionResult AddCategory()
         {
-            var categories = 
+            var categories =
                 _productService.GetCategories();
 
             var model = new AddEditCategoryViewModel()
@@ -300,7 +300,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = 
+                var result =
                     _productService.AddCategory(model);
 
                 if (result)
@@ -309,7 +309,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
                     model = new AddEditCategoryViewModel()
                     {
-                        AllCategories = 
+                        AllCategories =
                             _productService.GetCategoriesTreeView()
                     };
 
@@ -334,7 +334,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/EditCategory")]
         public IActionResult EditCategory(int categoryId)
         {
-            var category = 
+            var category =
                 _productService.GetCategory(categoryId);
             if (category == null)
                 return NotFound();
@@ -356,12 +356,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditCategory(AddEditCategoryViewModel model)
         {
-            model.CategoryId = 
+            model.CategoryId =
                 Convert.ToInt32(TempData["categoryId"]);
 
             if (ModelState.IsValid)
             {
-                var result = 
+                var result =
                     _productService.UpdateCategory(model);
 
                 if (result)
@@ -372,14 +372,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ModelState.AddModelError("", "مشکلی در زمان ویرایش دسته رخ داد.");
             }
 
-            var category = 
+            var category =
                 _productService.GetCategory(model.CategoryId);
 
             var categoryTreeView =
                 _productService.GetCategoriesTreeViewForEdit(category);
 
             model.AllCategories = categoryTreeView;
-            model.ParentCategoryId = 
+            model.ParentCategoryId =
                 category.ParentCategory?.CategoryId;
 
             TempData.Keep("categoryId");
@@ -394,7 +394,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/DeleteCategory")]
         public IActionResult DeleteCategory(int categoryId)
         {
-            var result = 
+            var result =
                 _productService.DeleteCategoryById(categoryId);
 
             if (result)
@@ -414,7 +414,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                comments = 
+                comments =
                     _productService.GetComments().Where(p =>
                     p.CommentDescription.Contains(search) ||
                     p.User.UserName.Contains(search) ||
@@ -424,7 +424,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ViewBag.search = search;
             }
             else
-                comments = 
+                comments =
                     _productService.GetComments()
                     .OrderBy(p => p.IsRead);
 
@@ -435,13 +435,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 return View();
             }
 
-            var page = 
+            var page =
                 new Paging<Comment>(comments, 11, pageNumber);
 
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var commentsPage = 
+            var commentsPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -471,12 +471,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region CommentDetails
+
+        [HttpGet("Admin/Product/CommentDetails")]
+        public IActionResult CommentDetails(int commentId, bool isCommentReply = false)
+        {
+
+        }
+
+        #endregion
+
         #region DeleteComment
 
         [HttpGet("Admin/Product/DeleteComment")]
         public IActionResult DeleteComment(int commentId)
         {
-            var result = 
+            var result =
                 _productService.DeleteCommentById(commentId);
 
             if (result)

@@ -63,7 +63,8 @@
                             }
                             else
                             {
-                                <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId">نمایش</a>
+                                <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId" 
+                                   asp-route-isCommentReply="true">نمایش</a>
                             }
                             <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(comment.CommentId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(comment.CommentId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(comment.CommentId)" aria-hidden="true">
