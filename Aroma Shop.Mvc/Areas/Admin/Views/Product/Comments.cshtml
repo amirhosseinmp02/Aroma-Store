@@ -34,47 +34,65 @@
         <tbody>
             @foreach (var comment in Model)
             {
-            <tr class="@(comment.IsRead==false?"isunread":"") commentsTrBottomBorders">
-                <td class="cart-item-cells align-middle"><a class="text-dark" asp-controller="User" asp-action="UserDetails" asp-route-userId="@comment.User.Id">@comment.User.UserName</a></td>
-                <td class="cart-item-cells align-top p-3">@comment.CommentDescription</td>
-                <td class="cart-item-cells align-middle">
-                    <a class="text-success" asp-action="EditProduct" asp-route-productId="@comment.Product.ProductId">@comment.Product.ProductName</a>
-                    <hr />
-                    <a class="text-success" asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@comment.Product.ProductId">نمایش محصول</a>
-                </td>
-                <td class="cart-item-cells align-middle">@comment.SubmitTime.ToSolarWithTime()</td>
-                <td class="align-middle">
-                    <div class="admin-products-actions">
-                        <a class="btn text-light btn-danger m-3" asp-action="MessageDetails" asp-route-messageId="@comment.CommentId">پذیرفتن</a>
-                        <a class="btn text-light btn-primary m-3" asp-action="MessageDetails" asp-route-messageId="@comment.CommentId">نمایش</a>
-                        <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(comment.CommentId)">حذف</button>
-                        <div class="modal fade" id="deletemodal@(comment.CommentId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(comment.CommentId)" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header justify-content-center">
-                                        <h5 class="modal-title text-center" id="deletemodalLabel">حذف دیدگاه</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h1 class="text-info">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                                <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                            </svg>
-                                        </h1>
-                                        <p class="lead">آیا از حذف این دیدگاه مطمئن هستید ؟</p>
-                                    </div>
-                                    <div class="modal-footer justify-content-center">
-                                        <a type="button" class="btn btn-danger" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId">حذف</a>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                <tr class="@(comment.IsRead==false?"isunread":"") commentsTrBottomBorders">
+                    <td class="cart-item-cells align-middle"><a class="text-dark" asp-controller="User" asp-action="UserDetails" asp-route-userId="@comment.User.Id">@comment.User.UserName</a></td>
+                    <td class="cart-item-cells align-top p-3">
+                        @if (comment.ParentComment != null)
+                        {
+                            <div class="text-left">
+                                <span class="parentCommentUserName mb-2 text-right">در پاسخ به <a class="text-dark" asp-controller="User" asp-action="UserDetails" asp-route-userId="@comment.ParentComment.User.Id">@comment.ParentComment.User.UserName</a></span>
+                            </div>
+                        }
+                        @comment.CommentDescription
+                    </td>
+                    <td class="cart-item-cells align-middle">
+                        <a class="text-success" asp-action="EditProduct" asp-route-productId="@comment.Product.ProductId">@comment.Product.ProductName</a>
+                        <hr />
+                        <a class="text-success" asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@comment.Product.ProductId">نمایش محصول</a>
+                    </td>
+                    <td class="cart-item-cells align-middle">@comment.SubmitTime.ToSolarWithTime()</td>
+                    <td class="align-middle">
+                        <div class="admin-products-actions">
+                            @if (!comment.IsConfirmed)
+                            {
+                                <a class="btn text-light btn-danger m-3" asp-action="ConfirmComment" asp-route-commentId="@comment.CommentId">پذیرفتن</a>
+                            }
+                            @if (comment.ParentComment == null)
+                            {
+                                <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId">پاسخ</a>
+                            }
+                            else
+                            {
+                                <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId">نمایش</a>
+                            }
+                            <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(comment.CommentId)">حذف</button>
+                            <div class="modal fade" id="deletemodal@(comment.CommentId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(comment.CommentId)" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header justify-content-center">
+                                            <h5 class="modal-title text-center" id="deletemodalLabel">حذف دیدگاه</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h1 class="text-info">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                    <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                </svg>
+                                            </h1>
+                                            <p class="lead">آیا از حذف این دیدگاه مطمئن هستید ؟</p>
+                                        </div>
+                                        <div class="modal-footer justify-content-center">
+                                            <a type="button" class="btn btn-danger" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId">حذف</a>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

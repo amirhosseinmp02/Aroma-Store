@@ -128,16 +128,16 @@ namespace Aroma_Shop.Data.Repositories
             var comments =
                 _context.Comments
                     .Include(p => p.Product)
-                    .Include(p => p.User);
+                    .Include(p => p.User)
+                    .Include(p=>p.ParentComment)
+                    .ThenInclude(p=>p.User);
 
             return comments;
         }
-
         public void DeleteComment(Comment comment)
         {
             _context.Remove(comment);
         }
-
         public void DeleteCommentById(int commentId)
         {
             var comment =

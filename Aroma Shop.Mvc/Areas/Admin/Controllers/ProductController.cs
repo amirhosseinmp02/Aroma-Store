@@ -455,6 +455,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region ConfirmComment
+
+        [HttpGet("Admin/Product/ConfirmComment")]
+        public IActionResult ConfirmComment(int commentId)
+        {
+            var result =
+                _productService.ConfirmComment(commentId);
+
+            if (result)
+                return RedirectToAction("Comments");
+
+            return NotFound();
+        }
+
+        #endregion
+
         #region DeleteComment
 
         [HttpGet("Admin/Product/DeleteComment")]
