@@ -474,9 +474,9 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region CommentDetails
 
         [HttpGet("Admin/Product/CommentDetails")]
-        public IActionResult CommentDetails(int commentId, bool isCommentReply = false)
+        public IActionResult CommentDetails(int commentId)
         {
-
+            throw new Exception();
         }
 
         #endregion

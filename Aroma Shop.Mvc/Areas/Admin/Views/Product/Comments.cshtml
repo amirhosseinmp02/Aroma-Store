@@ -57,15 +57,7 @@
                             {
                                 <a class="btn text-light btn-danger m-3" asp-action="ConfirmComment" asp-route-commentId="@comment.CommentId">پذیرفتن</a>
                             }
-                            @if (comment.ParentComment == null)
-                            {
-                                <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId">پاسخ</a>
-                            }
-                            else
-                            {
-                                <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId" 
-                                   asp-route-isCommentReply="true">نمایش</a>
-                            }
+                            <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId">نمایش</a>
                             <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(comment.CommentId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(comment.CommentId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(comment.CommentId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">

@@ -26,6 +26,7 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Comment> GetComments();
         Task<bool> AddCommentToProduct(ProductViewModel productViewModel);
         Task<bool> AddReplyToProductComment(ProductViewModel productViewModel);
+        Comment GetComment(int commentId);
         bool DeleteCommentById(int commentId);
         bool ConfirmComment(int commentId);
     }
