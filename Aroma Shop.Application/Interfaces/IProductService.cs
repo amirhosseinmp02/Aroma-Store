@@ -24,10 +24,15 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
         IEnumerable<Comment> GetComments();
+        int GetUnreadCommentsCount();
+        Task<bool> AddReplyToCommentByAdmin(int commentId, string newCommentReplyDescription);
         Task<bool> AddCommentToProduct(ProductViewModel productViewModel);
         Task<bool> AddReplyToProductComment(ProductViewModel productViewModel);
         Comment GetComment(int commentId);
+        bool UpdateComment(Comment comment);
+        bool SetCommentAsRead(Comment comment);
         bool DeleteCommentById(int commentId);
         bool ConfirmComment(int commentId);
+        bool RejectComment(int commentId);
     }
 }

@@ -48,12 +48,6 @@ namespace Aroma_Shop.Data.Repositories
 
             return unreadMessagesCount;
         }
-        public void SetMessageAsRead(Message message)
-        {
-            message.IsRead = true;
-
-            _context.SaveChanges();
-        }
         public void Save()
         {
             _context.SaveChanges();

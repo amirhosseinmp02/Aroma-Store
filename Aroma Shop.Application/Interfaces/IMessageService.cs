@@ -14,6 +14,6 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Message> GetMessages();
         int GetUnreadMessagesCount();
         Task<bool> ReplyToMessage(string messageReplyDescription, int messageId);
-        bool SetAsRead(Message message);
+        bool SetMessageAsRead(Message message);
     }
 }

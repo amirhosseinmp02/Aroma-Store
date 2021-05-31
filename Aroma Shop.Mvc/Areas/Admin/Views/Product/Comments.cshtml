@@ -39,7 +39,7 @@
                     <td class="cart-item-cells align-top p-3">
                         @if (comment.ParentComment != null)
                         {
-                            <div class="text-left">
+                            <div class="text-left mb-2">
                                 <span class="parentCommentUserName mb-2 text-right">در پاسخ به <a class="text-dark" asp-controller="User" asp-action="UserDetails" asp-route-userId="@comment.ParentComment.User.Id">@comment.ParentComment.User.UserName</a></span>
                             </div>
                         }
@@ -57,7 +57,7 @@
                             {
                                 <a class="btn text-light btn-danger m-3" asp-action="ConfirmComment" asp-route-commentId="@comment.CommentId">پذیرفتن</a>
                             }
-                            <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-messageId="@comment.CommentId">نمایش</a>
+                            <a class="btn text-light btn-primary m-3" asp-action="CommentDetails" asp-route-commentId="@comment.CommentId">نمایش</a>
                             <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(comment.CommentId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(comment.CommentId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(comment.CommentId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">

@@ -165,12 +165,17 @@
                                     </div>
                                     if (comment.Replies.Any())
                                     {
-                                        @foreach (var commentReply in comment.Replies.Where(p => p.IsConfirmed))
+                                        var commentReplies =
+                                            comment.Replies.Where(p => p.IsConfirmed)
+                                                .OrderBy(p => !p.IsAdminReplied);
+
+                                        foreach (var commentReply in commentReplies)
                                         {
                                             <div class="review_item border border-warning rounded p-2 ml-3">
                                                 <div class="media">
                                                     <div class="media-body">
-                                                        <h4>@commentReply.User.UserName</h4>
+                                                        <h4>@commentReply.User.UserName @if (commentReply.IsAdminReplied)
+                                                        {<span class="badge badge-danger adminReply">ادمین</span>}</h4>
                                                         <h5 class="bg-light px-2 d-inline text-dark">@commentReply.SubmitTime.ToSolarWithTime()</h5>
                                                     </div>
                                                 </div>

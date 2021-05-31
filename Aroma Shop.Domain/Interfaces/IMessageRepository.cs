@@ -12,7 +12,6 @@ namespace Aroma_Shop.Domain.Interfaces
         Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
         int GetUnreadMessagesCount();
-        void SetMessageAsRead(Message message);
         void Save();
     }
 }

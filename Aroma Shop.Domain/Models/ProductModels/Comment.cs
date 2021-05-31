@@ -22,6 +22,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public string CommentDescription { get; set; }
         public bool IsRead { get; set; }
         public bool IsConfirmed { get; set; }
+        public bool IsAdminReplied { get; set; }    
 
         //Navigations Proterties
 

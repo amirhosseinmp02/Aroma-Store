@@ -455,28 +455,118 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
-        #region ConfirmComment
+        #region CommentDetails
 
-        [HttpGet("Admin/Product/ConfirmComment")]
-        public IActionResult ConfirmComment(int commentId)
+        [HttpGet("Admin/Product/CommentDetails")]
+        public IActionResult CommentDetails(int commentId)
         {
+            var comment =
+                _productService.GetComment(commentId);
+
+            if (comment == null)
+                return NotFound();
+
+            _productService.SetCommentAsRead(comment);
+
+            return View(comment);
+        }
+
+        #endregion
+
+        #region ReplyToCommentByAdmin
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReplyToCommentByAdmin(string NewCommentReplyDescription)
+        {
+            var commentId =
+                Convert.ToInt32(TempData["commentId"]);
+
             var result =
-                _productService.ConfirmComment(commentId);
+                await _productService.AddReplyToCommentByAdmin(commentId, NewCommentReplyDescription);
 
             if (result)
-                return RedirectToAction("Comments");
+            {
+                ViewData["SuccessMessageForAddCommentReply"] = "پاسخ شما با موفقیت ثبت شد";
+
+                var comment =
+                    _productService.GetComment(commentId);
+
+                return View("CommentDetails", comment);
+            }
 
             return NotFound();
         }
 
         #endregion
 
-        #region CommentDetails
+        #region EditComment
 
-        [HttpGet("Admin/Product/CommentDetails")]
-        public IActionResult CommentDetails(int commentId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditComment(string NewCommentDescription)
         {
-            throw new Exception();
+            var commentId =
+                Convert.ToInt32(TempData["commentId"]);
+
+            var comment =
+                _productService.GetComment(commentId);
+
+            comment.CommentDescription = NewCommentDescription;
+
+            var result =
+                _productService.UpdateComment(comment);
+
+            if (result)
+            {
+                ViewData["SuccessMessageForEditComment"] = "دیدگاه مورد نظر با موفقیت ویرایش شد";
+
+                return View("CommentDetails", comment);
+            }
+
+            return NotFound();
+        }
+
+        #endregion
+
+        #region ConfirmComment
+
+        [HttpGet("Admin/Product/ConfirmComment")]
+        public IActionResult ConfirmComment(int commentId,string returnUrl)
+        {
+            var result =
+                _productService.ConfirmComment(commentId);
+
+            if (result)
+            {
+                if (string.IsNullOrEmpty(returnUrl))
+                    returnUrl = Url.Action("Comments");
+
+                return Redirect(returnUrl);
+            }
+
+            return NotFound();
+        }
+
+        #endregion
+
+        #region RejectComment
+
+        [HttpGet("Admin/Product/RejectComment")]
+        public IActionResult RejectComment(int commentId,string returnUrl)
+        {
+            var result =
+                _productService.RejectComment(commentId);
+
+            if (result)
+            {
+                if (string.IsNullOrEmpty(returnUrl))
+                    returnUrl = Url.Action("Comments");
+
+                return Redirect(returnUrl);
+            }
+
+            return NotFound();
         }
 
         #endregion
@@ -484,18 +574,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteComment
 
         [HttpGet("Admin/Product/DeleteComment")]
-        public IActionResult DeleteComment(int commentId)
+        public IActionResult DeleteComment(int commentId, string returnUrl = null)
         {
             var result =
                 _productService.DeleteCommentById(commentId);
 
             if (result)
-                return RedirectToAction("Comments");
+            {
+                if (string.IsNullOrEmpty(returnUrl))
+                    returnUrl = Url.Action("Comments");
+
+                return Redirect(returnUrl);
+            }
 
             return NotFound();
         }
 
         #endregion
-
     }
 }

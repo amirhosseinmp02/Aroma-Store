@@ -118,10 +118,18 @@ namespace Aroma_Shop.Data.Repositories
         {
             var comment =
                 _context.Comments
+                    .Include(p=>p.ParentComment)
+                    .Include(p=>p.User)
+                    .Include(p=>p.Product)
                     .Include(p => p.Replies)
+                    .ThenInclude(p=>p.User)
                     .SingleOrDefault(p => p.CommentId == commentId);
 
             return comment;
+        }
+        public void UpdateComment(Comment comment)
+        {
+            _context.Update(comment);
         }
         public IEnumerable<Comment> GetComments()
         {
@@ -133,6 +141,13 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p=>p.User);
 
             return comments;
+        }
+        public int GetUnreadCommentsCount()
+        {
+            var unreadMessagesCount =
+                _context.Comments.Count(p => !p.IsRead);
+
+            return unreadMessagesCount;
         }
         public void DeleteComment(Comment comment)
         {

@@ -375,6 +375,51 @@ namespace Aroma_Shop.Application.Services
 
             return comments;
         }
+
+        public int GetUnreadCommentsCount()
+        {
+            var unreadCommentsCount =
+                _productRepository.GetUnreadCommentsCount();
+
+            return unreadCommentsCount;
+        }
+
+        public async Task<bool> AddReplyToCommentByAdmin(int commentId, string newCommentReplyDescription)
+        {
+            try
+            {
+                var comment =
+                    GetComment(commentId);
+
+                if (comment == null)
+                    return false;
+
+                var loggedUser =
+                    await _accountService.GetLoggedUser();
+
+                var commentReply = new Comment()
+                {
+                    SubmitTime = DateTime.Now,
+                    CommentDescription = newCommentReplyDescription,
+                    Product = comment.Product,
+                    User = loggedUser,
+                    IsRead = true,
+                    IsConfirmed = true,
+                    IsAdminReplied = true
+                };
+
+                comment.Replies.Add(commentReply);
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
         public async Task<bool> AddCommentToProduct(ProductViewModel productViewModel)
         {
             try
@@ -417,7 +462,7 @@ namespace Aroma_Shop.Application.Services
                 if (parentComment == null)
                     return false;
 
-                var user =
+                var loggedUser =
                     await _accountService.GetLoggedUser();
 
                 var commentReply = new Comment()
@@ -425,7 +470,7 @@ namespace Aroma_Shop.Application.Services
                     SubmitTime = DateTime.Now,
                     CommentDescription = productViewModel.CommentDescription,
                     Product = productViewModel.Product,
-                    User = user
+                    User = loggedUser
                 };
 
                 parentComment.Replies.Add(commentReply);
@@ -446,6 +491,38 @@ namespace Aroma_Shop.Application.Services
                 _productRepository.GetComment(commentId);
 
             return comment;
+        }
+        public bool UpdateComment(Comment comment)
+        {
+            try
+            {
+                _productRepository.UpdateComment(comment);
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+        public bool SetCommentAsRead(Comment comment)
+        {
+            try
+            {
+                comment.IsRead = true;
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
         }
         public bool DeleteCommentById(int commentId)
         {
@@ -497,7 +574,33 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool RejectComment(int commentId)
+        {
+            try
+            {
+                var comment =
+                    GetComment(commentId);
 
+                if (comment.Replies.Any())
+                {
+                    foreach (var commentReply in comment.Replies)
+                    {
+                        commentReply.IsConfirmed = false;
+                    }
+                }
+
+                comment.IsConfirmed = false;
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
 
         //Utilities Methods
 

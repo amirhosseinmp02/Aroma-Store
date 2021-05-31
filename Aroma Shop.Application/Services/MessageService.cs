@@ -127,11 +127,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool SetAsRead(Message message)
+        public bool SetMessageAsRead(Message message)
         {
             try
             {
-                _messageRepository.SetMessageAsRead(message);
+                message.IsRead = true;
+
+                _messageRepository.Save();
 
                 return true;
             }

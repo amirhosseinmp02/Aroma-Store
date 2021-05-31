@@ -88,7 +88,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 MessageSubmitTime = message.SubmitTime
             };
 
-            _messageService.SetAsRead(message);
+            _messageService.SetMessageAsRead(message);
 
             return View(model);
         }
@@ -98,6 +98,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ReplyToMessage
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ReplyToMessage(MessageDetailViewModel model)
         {
             var messageId = 
