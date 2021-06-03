@@ -5,10 +5,9 @@ using Aroma_Shop.Domain.Models.UserModels;
 
 namespace Aroma_Shop.Domain.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGeneralRepository
     {
         void AddUserDetail(UserDetails userDetail);
         void DeleteUserDetail(UserDetails userDetail);
-        void Save();
     }
 }

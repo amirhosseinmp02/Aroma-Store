@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Aroma_Shop.Domain.Models.MediaModels;
 
 namespace Aroma_Shop.Domain.Models.ProductModels
 {

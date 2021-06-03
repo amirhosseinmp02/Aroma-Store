@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Aroma_Shop.Domain.Models.ProductModels;
 
-namespace Aroma_Shop.Domain.Models.ProductModels
+namespace Aroma_Shop.Domain.Models.MediaModels
 {
     public class Comment
     {

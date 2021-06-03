@@ -8,6 +8,7 @@ using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels;
 using Aroma_Shop.Application.ViewModels.Product;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +22,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IMediaService _mediaService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IMediaService mediaService)
         {
             _productService = productService;
+            _mediaService = mediaService;
         }
 
         #region ShowProducts
@@ -213,6 +216,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             return View(model);
         }
+
         #endregion
 
         #region DeleteProduct
@@ -399,193 +403,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (result)
                 return RedirectToAction("Categories");
-
-            return NotFound();
-        }
-
-        #endregion
-
-        #region ShowComments
-
-        [HttpGet("/Admin/Products/Comments")]
-        public IActionResult Comments(int pageNumber = 1, string search = null)
-        {
-            IEnumerable<Comment> comments;
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                comments =
-                    _productService.GetComments().Where(p =>
-                    p.CommentDescription.Contains(search) ||
-                    p.User.UserName.Contains(search) ||
-                    p.Product.ProductName.Contains(search))
-                    .OrderBy(p => p.IsRead);
-
-                ViewBag.search = search;
-            }
-            else
-                comments =
-                    _productService.GetComments()
-                    .OrderBy(p => p.IsRead);
-
-            if (!comments.Any())
-            {
-                ViewBag.isEmpty = true;
-
-                return View();
-            }
-
-            var page =
-                new Paging<Comment>(comments, 11, pageNumber);
-
-            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
-                return NotFound();
-
-            var commentsPage =
-                page.QueryResult;
-
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
-
-            return View(commentsPage);
-        }
-
-        #endregion
-
-        #region CommentDetails
-
-        [HttpGet("Admin/Product/CommentDetails")]
-        public IActionResult CommentDetails(int commentId)
-        {
-            var comment =
-                _productService.GetComment(commentId);
-
-            if (comment == null)
-                return NotFound();
-
-            _productService.SetCommentAsRead(comment);
-
-            return View(comment);
-        }
-
-        #endregion
-
-        #region ReplyToCommentByAdmin
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddReplyToCommentByAdmin(string NewCommentReplyDescription)
-        {
-            var commentId =
-                Convert.ToInt32(TempData["commentId"]);
-
-            var result =
-                await _productService.AddReplyToCommentByAdmin(commentId, NewCommentReplyDescription);
-
-            if (result)
-            {
-                ViewData["SuccessMessageForAddCommentReply"] = "پاسخ شما با موفقیت ثبت شد";
-
-                var comment =
-                    _productService.GetComment(commentId);
-
-                return View("CommentDetails", comment);
-            }
-
-            return NotFound();
-        }
-
-        #endregion
-
-        #region EditComment
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditComment(string NewCommentDescription)
-        {
-            var commentId =
-                Convert.ToInt32(TempData["commentId"]);
-
-            var comment =
-                _productService.GetComment(commentId);
-
-            comment.CommentDescription = NewCommentDescription;
-
-            var result =
-                _productService.UpdateComment(comment);
-
-            if (result)
-            {
-                ViewData["SuccessMessageForEditComment"] = "دیدگاه مورد نظر با موفقیت ویرایش شد";
-
-                return View("CommentDetails", comment);
-            }
-
-            return NotFound();
-        }
-
-        #endregion
-
-        #region ConfirmComment
-
-        [HttpGet("Admin/Product/ConfirmComment")]
-        public IActionResult ConfirmComment(int commentId,string returnUrl)
-        {
-            var result =
-                _productService.ConfirmComment(commentId);
-
-            if (result)
-            {
-                if (string.IsNullOrEmpty(returnUrl))
-                    returnUrl = Url.Action("Comments");
-
-                return Redirect(returnUrl);
-            }
-
-            return NotFound();
-        }
-
-        #endregion
-
-        #region RejectComment
-
-        [HttpGet("Admin/Product/RejectComment")]
-        public IActionResult RejectComment(int commentId,string returnUrl)
-        {
-            var result =
-                _productService.RejectComment(commentId);
-
-            if (result)
-            {
-                if (string.IsNullOrEmpty(returnUrl))
-                    returnUrl = Url.Action("Comments");
-
-                return Redirect(returnUrl);
-            }
-
-            return NotFound();
-        }
-
-        #endregion
-
-        #region DeleteComment
-
-        [HttpGet("Admin/Product/DeleteComment")]
-        public IActionResult DeleteComment(int commentId, string returnUrl = null)
-        {
-            var result =
-                _productService.DeleteCommentById(commentId);
-
-            if (result)
-            {
-                if (string.IsNullOrEmpty(returnUrl))
-                    returnUrl = Url.Action("Comments");
-
-                return Redirect(returnUrl);
-            }
 
             return NotFound();
         }

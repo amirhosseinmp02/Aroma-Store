@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,6 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context = context;
         }
-
         public IEnumerable<Product> GetProducts()
         {
             var products = _context.Products
@@ -113,52 +113,6 @@ namespace Aroma_Shop.Data.Repositories
         public void DeleteImage(Image image)
         {
             _context.Remove(image);
-        }
-        public Comment GetComment(int commentId)
-        {
-            var comment =
-                _context.Comments
-                    .Include(p=>p.ParentComment)
-                    .Include(p=>p.User)
-                    .Include(p=>p.Product)
-                    .Include(p => p.Replies)
-                    .ThenInclude(p=>p.User)
-                    .SingleOrDefault(p => p.CommentId == commentId);
-
-            return comment;
-        }
-        public void UpdateComment(Comment comment)
-        {
-            _context.Update(comment);
-        }
-        public IEnumerable<Comment> GetComments()
-        {
-            var comments =
-                _context.Comments
-                    .Include(p => p.Product)
-                    .Include(p => p.User)
-                    .Include(p=>p.ParentComment)
-                    .ThenInclude(p=>p.User);
-
-            return comments;
-        }
-        public int GetUnreadCommentsCount()
-        {
-            var unreadMessagesCount =
-                _context.Comments.Count(p => !p.IsRead);
-
-            return unreadMessagesCount;
-        }
-        public void DeleteComment(Comment comment)
-        {
-            _context.Remove(comment);
-        }
-        public void DeleteCommentById(int commentId)
-        {
-            var comment =
-                GetComment(commentId);
-
-            _context.Remove(comment);
         }
         public void Save()
         {

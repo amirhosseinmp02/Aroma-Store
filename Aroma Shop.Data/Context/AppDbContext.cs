@@ -1,8 +1,8 @@
 ﻿using Aroma_Shop.Domain.Models;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Aroma_Shop.Domain.Models.UserModels;
-using Aroma_Shop.Domain.Models.MessageModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

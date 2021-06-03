@@ -1,5 +1,5 @@
 ﻿@using Aroma_Shop.Application.Utilites
-@model IEnumerable<Aroma_Shop.Domain.Models.MessageModels.Message>
+@model IEnumerable<Aroma_Shop.Domain.Models.MediaModels.Message>
 
 @{
     ViewData["Title"] = "صندوق پیام ها";
@@ -11,7 +11,7 @@
 <hr />
 @if (!Convert.ToBoolean(ViewBag.isEmpty))
 {
-    <form asp-action="Index" method="get">
+    <form asp-action="Messages" method="get">
         <div class="input-group mb-4">
             <input name="search" type="text" value="@ViewBag.search" class="form-control" placeholder="جستجو..." aria-label="جستجو...">
             <button type="submit" class="input-group-text" id="search-textbox">

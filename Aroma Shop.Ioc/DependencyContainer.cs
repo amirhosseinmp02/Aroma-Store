@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Security.Policy;
 using Aroma_Shop.Application.Services;
@@ -19,13 +20,14 @@ namespace Aroma_Shop.Ioc
     {
         public static void RegisterServices(IServiceCollection services)
         {
-            services.AddScoped<IMessageRepository, MessageRepository>();
-            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMediaRepository, MediaRepository>();
+            services.AddScoped<IMediaService, MediaService>();
+
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
 
-            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddHttpContextAccessor();
 

@@ -7,20 +7,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
-using Aroma_Shop.Domain.Models.MessageModels;
+using Aroma_Shop.Domain.Models.MediaModels;
 
 namespace Aroma_Shop.Mvc.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IMessageService _messageService;
         private readonly IProductService _productService;
 
-        public HomeController(ILogger<HomeController> logger, IMessageService messageService, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService)
         {
             _logger = logger;
-            _messageService = messageService;
             _productService = productService;
         }
 
@@ -31,39 +29,6 @@ namespace Aroma_Shop.Mvc.Controllers
 
             return View(model);
         }
-
-        #region ContactUs
-
-        [HttpGet("/Contact-Us")]
-        public IActionResult ContactUs()
-        {
-            return View();
-        }
-
-        [HttpPost("/Contact-Us")]
-        public IActionResult ContactUs(Message model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = 
-                    _messageService.AddMessage(model);
-
-                if (result)
-                {
-                    ViewData["SuccessMessage"] = "پیام شما با موفقیت ارسال شد.";
-
-                    ModelState.Clear();
-
-                    return View();
-                }
-
-                ModelState.AddModelError("", "مشکلی در زمان ارسال پیام رخ داد.");
-            }
-
-            return View(model);
-        }
-
-        #endregion
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

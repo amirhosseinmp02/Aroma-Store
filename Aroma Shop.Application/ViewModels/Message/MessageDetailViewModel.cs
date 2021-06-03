@@ -7,7 +7,7 @@ namespace Aroma_Shop.Application.ViewModels.Message
 {
     public class MessageDetailViewModel
     {
-        public Domain.Models.MessageModels.Message Message { get; set; }
+        public Domain.Models.MediaModels.Message Message { get; set; }
         [Required(ErrorMessage = "لطفا پاسخ پیام را شرح دهید")]
         public string MessageReplyDescription { get; set; }
 

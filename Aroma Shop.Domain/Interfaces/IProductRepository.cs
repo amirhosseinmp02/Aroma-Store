@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Domain.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductRepository : IGeneralRepository
     {
         IEnumerable<Product> GetProducts();
         Product GetProduct(int productId);
@@ -21,12 +22,5 @@ namespace Aroma_Shop.Domain.Interfaces
         Image GetImage(int imageId);
         void AddImage(Image image);
         void DeleteImage(Image image);
-        Comment GetComment(int commentId);
-        void UpdateComment(Comment comment);
-        IEnumerable<Comment> GetComments();
-        int GetUnreadCommentsCount();
-        void DeleteComment(Comment comment);
-        void DeleteCommentById(int commentId);
-        void Save();
     }
 }

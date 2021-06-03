@@ -1,6 +1,5 @@
 ﻿@using Aroma_Shop.Application.Interfaces
-@inject IMessageService MessageService
-@inject IProductService ProductService
+@inject IMediaService MediaService  
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -73,17 +72,17 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Message" asp-action="Index">
+                            <a class="nav-link" asp-controller="Media" asp-action="Messages">
                                 <i class="bi bi-envelope"></i>
-                                صندوق پیام ها @if (MessageService.GetUnreadMessagesCount() != 0)
-                                {<span class="badge badge-danger">@MessageService.GetUnreadMessagesCount()</span>}
+                                صندوق پیام ها @if (MediaService.GetUnreadMessagesCount() != 0)
+                                {<span class="badge badge-danger">@MediaService.GetUnreadMessagesCount()</span>}
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Product" asp-action="Comments">
+                            <a class="nav-link" asp-controller="Media" asp-action="Comments">
                                 <i class="fa fa-comments-o mr-1" aria-hidden="true"></i>
-                                دیدگاه ها @if (ProductService.GetUnreadCommentsCount() != 0)
-                                {<span class="badge badge-danger">@ProductService.GetUnreadCommentsCount()</span>}
+                                دیدگاه ها @if (MediaService.GetUnreadCommentsCount() != 0)
+                                {<span class="badge badge-danger">@MediaService.GetUnreadCommentsCount()</span>}
                             </a>
                         </li>
                         <li class="nav-item">

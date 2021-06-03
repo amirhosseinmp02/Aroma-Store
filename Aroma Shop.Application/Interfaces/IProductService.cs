@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Product;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,16 +24,5 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategoryById(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
-        IEnumerable<Comment> GetComments();
-        int GetUnreadCommentsCount();
-        Task<bool> AddReplyToCommentByAdmin(int commentId, string newCommentReplyDescription);
-        Task<bool> AddCommentToProduct(ProductViewModel productViewModel);
-        Task<bool> AddReplyToProductComment(ProductViewModel productViewModel);
-        Comment GetComment(int commentId);
-        bool UpdateComment(Comment comment);
-        bool SetCommentAsRead(Comment comment);
-        bool DeleteCommentById(int commentId);
-        bool ConfirmComment(int commentId);
-        bool RejectComment(int commentId);
     }
 }

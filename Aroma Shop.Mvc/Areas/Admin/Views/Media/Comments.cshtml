@@ -1,5 +1,5 @@
 ﻿@using Aroma_Shop.Application.Utilites
-@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Comment>
+@model IEnumerable<Aroma_Shop.Domain.Models.MediaModels.Comment>
 
 @{
     ViewData["Title"] = "دیدگاه ها";
@@ -46,7 +46,7 @@
                         @comment.CommentDescription
                     </td>
                     <td class="cart-item-cells align-middle">
-                        <a class="text-success" asp-action="EditProduct" asp-route-productId="@comment.Product.ProductId">@comment.Product.ProductName</a>
+                        <a class="text-success" asp-controller="Product" asp-action="EditProduct" asp-route-productId="@comment.Product.ProductId">@comment.Product.ProductName</a>
                         <hr />
                         <a class="text-success" asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@comment.Product.ProductId">نمایش محصول</a>
                     </td>

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace Aroma_Shop.Domain.Models.MessageModels
+namespace Aroma_Shop.Domain.Models.MediaModels
 {
     public class MessageReply
     {
