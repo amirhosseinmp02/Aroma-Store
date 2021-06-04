@@ -44,10 +44,16 @@ namespace Aroma_Shop.Application.Services
 
         public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
         {
+            var userDetails = new UserDetails();
+
             user.RegisterTime = DateTime.Now;
+            user.UserDetails = userDetails;
 
             var result =
                 await _userManager.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+                return result;
 
             await _userManager.AddToRoleAsync(user, "Customer");
 
@@ -200,6 +206,9 @@ namespace Aroma_Shop.Application.Services
                         };
 
                         await _userManager.CreateAsync(user);
+
+                        await 
+                            _userManager.AddToRoleAsync(user, "Customer");
                     }
                     await _userManager.AddLoginAsync(user, externalLoginInfo);
 
@@ -383,9 +392,8 @@ namespace Aroma_Shop.Application.Services
         {
             var requestedUser =
                 await _userManager.Users
-                    .Where(p => p.Id == userId)
                     .Include(p => p.UserDetails)
-                    .FirstOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.Id == userId);
 
             var requestedUserRole =
                 GetUserRole(requestedUser);
@@ -424,32 +432,30 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var loggedUser =
-                    await GetLoggedUser();
-
                 var loggedUserRole =
                     await GetLoggedUserRole();
 
                 var requestedUser =
                     _userManager.Users
-                        .Where(p => p.Id == userId)
                         .Include(p => p.UserDetails)
-                        .FirstOrDefault();
+                        .SingleOrDefault(p => p.Id == userId);
 
                 if (requestedUser == null)
                     return false;
 
                 var requestedUserRole =
-                    await GetLoggedUserRole();
+                    GetUserRole(requestedUser);
 
                 if ((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     || ((loggedUserRole == "Manager") &&
                         (requestedUserRole == "Founder" || requestedUserRole == "Manager")))
                     return false;
 
-                _userRepository.DeleteUserDetail(requestedUser.UserDetails);
+                _userRepository.DeleteUserDetails(requestedUser.UserDetails);
+
                 var result =
                     await _userManager.DeleteAsync(requestedUser);
+
                 _userRepository.Save();
 
                 return result.Succeeded;
@@ -462,9 +468,6 @@ namespace Aroma_Shop.Application.Services
         }
         public async Task<IEnumerable<SelectListItem>> GetRoles()
         {
-            var loggedUser =
-                await GetLoggedUser();
-
             var loggedUserRole =
                 await GetLoggedUserRole();
 
@@ -491,19 +494,30 @@ namespace Aroma_Shop.Application.Services
         }
         public async Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel)
         {
+            var userDetail = new UserDetails()
+            {
+                FirstName = userViewModel.FirstName,
+                LastName = userViewModel.LastName,
+                UserProvince = userViewModel.UserProvince,
+                UserCity = userViewModel.UserCity,
+                UserAddress = userViewModel.UserAddress,
+                UserZipCode = userViewModel.UserZipCode
+            };
+
             var user = new CustomIdentityUser()
             {
                 UserName = userViewModel.UserName,
                 Email = userViewModel.Email,
                 EmailConfirmed = true,
-                RegisterTime = DateTime.Now
+                RegisterTime = DateTime.Now,
+                UserDetails = userDetail
             };
 
             var result =
                 await _userManager.CreateAsync(user, userViewModel.UserPassword);
 
-            var loggedUser =
-                await GetLoggedUser();
+            if (!result.Succeeded)
+                return result;
 
             var loggedUserRole =
                 await GetLoggedUserRole();
@@ -523,30 +537,14 @@ namespace Aroma_Shop.Application.Services
 
             await _userManager.AddToRoleAsync(user, userRole);
 
-            var userDetail = new UserDetails()
-            {
-                FirstName = userViewModel.FirstName,
-                LastName = userViewModel.LastName,
-                UserProvince = userViewModel.UserProvince,
-                UserCity = userViewModel.UserCity,
-                UserAddress = userViewModel.UserAddress,
-                UserZipCode = userViewModel.UserZipCode
-            };
-            _userRepository.AddUserDetail(userDetail);
-
-            user.UserDetails = userDetail;
-
-            _userRepository.Save();
-
             return result;
         }
         public async Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel)
         {
             var user =
                 await _userManager.Users
-                    .Where(p => p.Id == userViewModel.UserId)
                     .Include(p => p.UserDetails)
-                    .FirstOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.Id == userViewModel.UserId);
 
             user.UserName = userViewModel.UserName;
             user.Email = userViewModel.Email;
@@ -559,6 +557,7 @@ namespace Aroma_Shop.Application.Services
 
             var oldUserRole =
                 GetUserRole(user);
+
             if (oldUserRole != userViewModel.UserRoleName)
             {
                 var loggedUserRole =
@@ -583,6 +582,9 @@ namespace Aroma_Shop.Application.Services
 
             var result =
                 await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return result;
 
             await _userManager.UpdateSecurityStampAsync(user);
 

@@ -30,7 +30,7 @@
                 </div>
                 <fieldset disabled="" class="mr-2 mb-3">
                     <label class="h6">موضوع</label>
-                    <input class="form-control" type="text" value="@Model.Message.SubmitTime.ToSolarWithTime()" disabled="">
+                    <input class="form-control" type="text" value="@Model.Message.MessageSubject" disabled="">
                 </fieldset>
                 <fieldset disabled="" class="mr-2">
                     <label class="h6">شرح</label>
@@ -62,11 +62,11 @@
                 <div class="card-body">
                     <fieldset disabled="" class="mr-2">
                         <textarea class="form-control" rows="5" type="text" disabled="" asp-for="MessageReplyDescription"></textarea>
+                        @if (ViewData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success mt-4" role="alert">@ViewData["SuccessMessage"]</div>
+                        }
                     </fieldset>
-                    @if (ViewData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success mt-4" role="alert">@ViewData["SuccessMessage"]</div>
-                    }
                 </div>
             }
         </div>

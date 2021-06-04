@@ -8,6 +8,7 @@ namespace Aroma_Shop.Application.ViewModels.Account
 {
     public class RegisterViewModel
     {
+        [RegularExpression("^[a-z0-9]*$", ErrorMessage = "نام کاربری تنها میتواند شامل اعداد و حروف کوچک باشد")]
         [Required(ErrorMessage = "لطفا نام کاربری مورد نظر را وارد نمایید")]
         [MaxLength(75, ErrorMessage = "حداکثر 75 کارکتر مجاز می باشد")]
         [Remote("IsUserNameExist", "Account", HttpMethod = "POST"

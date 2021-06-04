@@ -10,6 +10,7 @@ using Aroma_Shop.Domain.Models.MediaModels;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class MediaController : Controller
     {
         private readonly IMediaService _mediaService;
@@ -101,7 +102,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 Convert.ToInt32(TempData["messageId"]);
 
             var result =
-                await _mediaService.ReplyToMessage(model.MessageReplyDescription, messageId);
+                await _mediaService
+                    .ReplyToMessage(model.MessageReplyDescription, messageId);
 
             var message =
                 _mediaService.GetMessage(messageId);
@@ -113,6 +115,9 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ViewData["SuccessMessage"] = "پیام شما با موفقیت ارسال شد.";
 
                 ModelState.Clear();
+
+                model.MessageSubmitTime = 
+                    message.MessageReply.MessageReplySubmitTime;
 
                 return View("MessageDetails", model);
             }

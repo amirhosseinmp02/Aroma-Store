@@ -13,8 +13,9 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
     {
         public CustomIdentityUser()
         {
-            UserDetails = new UserDetails();
+
         }
+
         [Required]
         public DateTime RegisterTime { get; set; }  
 

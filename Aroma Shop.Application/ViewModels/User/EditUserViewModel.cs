@@ -11,6 +11,7 @@ namespace Aroma_Shop.Application.ViewModels.User
     {
         public string UserId { get; set; }
         [Required(ErrorMessage = "لطفا نام کاربری مورد نظر را وارد نمایید")]
+        [RegularExpression("^[a-z0-9]*$", ErrorMessage = "نام کاربری تنها میتواند شامل اعداد و حروف کوچک باشد")]
         [MaxLength(75, ErrorMessage = "حداکثر 75 کارکتر مجاز می باشد")]
         public string UserName { get; set; }
         [EmailAddress(ErrorMessage = "فیلد وارد شده ایمیل نمی باشد")]

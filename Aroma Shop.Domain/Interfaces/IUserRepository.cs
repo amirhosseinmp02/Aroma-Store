@@ -7,7 +7,6 @@ namespace Aroma_Shop.Domain.Interfaces
 {
     public interface IUserRepository : IGeneralRepository
     {
-        void AddUserDetail(UserDetails userDetail);
-        void DeleteUserDetail(UserDetails userDetail);
+        void DeleteUserDetails(UserDetails userDetail);
     }
 }

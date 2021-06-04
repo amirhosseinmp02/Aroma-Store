@@ -24,13 +24,13 @@
                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop3" style="">
                                 @if (Model.IsConfirmed)
                                 {
-                                    <a class="dropdown-item btn btn-danger" asp-action="RejectComment" asp-route-commentId="@Model.CommentId" asp-route-returnUrl="@returnUrl">رد دیدگاه</a>
+                                    <a class="dropdown-item" asp-action="RejectComment" asp-route-commentId="@Model.CommentId" asp-route-returnUrl="@returnUrl">رد دیدگاه</a>
                                 }
                                 else
                                 {
-                                    <a class="dropdown-item btn btn-danger" asp-action="ConfirmComment" asp-route-commentId="@Model.CommentId" asp-route-returnUrl="@returnUrl">پذیرش دیدگاه</a>
+                                    <a class="dropdown-item" asp-action="ConfirmComment" asp-route-commentId="@Model.CommentId" asp-route-returnUrl="@returnUrl">پذیرش دیدگاه</a>
                                 }
-                                <a class="dropdown-item" href="#">حذف دیدگاه</a>
+                                <a class="dropdown-item" asp-action="DeleteComment" asp-route-commentId="@Model.CommentId">حذف دیدگاه</a>
                             </div>
                         </div>
                     </div>
@@ -88,15 +88,15 @@
                                     <div class="btn-group" role="group">
                                         <button id="btnGroupDrop3" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop3" style="">
-                                            @if (Model.IsConfirmed)
+                                            @if (commentReply.IsConfirmed)
                                             {
-                                                <a class="dropdown-item btn btn-danger" asp-action="RejectComment" asp-route-commentId="@commentReply.CommentId" asp-route-returnUrl="@returnUrl">رد دیدگاه</a>
+                                                <a class="dropdown-item" asp-action="RejectComment" asp-route-commentId="@commentReply.CommentId" asp-route-returnUrl="@returnUrl">رد دیدگاه</a>
                                             }
                                             else
                                             {
-                                                <a class="dropdown-item btn btn-danger" asp-action="ConfirmComment" asp-route-commentId="@commentReply.CommentId" asp-route-returnUrl="@returnUrl">پذیرش دیدگاه</a>
+                                                <a class="dropdown-item" asp-action="ConfirmComment" asp-route-commentId="@commentReply.CommentId" asp-route-returnUrl="@returnUrl">پذیرش دیدگاه</a>
                                             }
-                                            <a class="dropdown-item" href="#">حذف دیدگاه</a>
+                                            <a class="dropdown-item" asp-action="DeleteComment" asp-route-commentId="@commentReply.CommentId" asp-route-returnUrl="@returnUrl">حذف دیدگاه</a>
                                         </div>
                                     </div>
                                 </div>

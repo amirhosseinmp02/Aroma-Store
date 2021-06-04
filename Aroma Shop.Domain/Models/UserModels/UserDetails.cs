@@ -9,7 +9,7 @@ namespace Aroma_Shop.Domain.Models.UserModels
     public class UserDetails
     {
         [Key]
-        public int UserDetailId { get; set; }
+        public int UserDetailsId { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
         public string FirstName { get; set; }
         [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
