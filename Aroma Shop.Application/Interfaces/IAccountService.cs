@@ -38,5 +38,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel);
         Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel);
         Task<CustomIdentityUser> GetLoggedUser();
+        Task<string> GetLoggedUserRole();
     }
 }

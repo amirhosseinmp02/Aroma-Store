@@ -599,22 +599,22 @@ namespace Aroma_Shop.Application.Services
 
             return loggedUser;
         }
-
-        //Utilities Methods
-
-        private string GetUserRole(CustomIdentityUser user)
+        public async Task<string> GetLoggedUserRole()
         {
+            var user =
+                await GetLoggedUser();
+
             var userRole =
                 _userManager.GetRolesAsync(user)
                     .Result.FirstOrDefault();
 
             return userRole;
         }
-        private async Task<string> GetLoggedUserRole()
-        {
-            var user =
-                await GetLoggedUser();
 
+        //Utilities Methods
+
+        private string GetUserRole(CustomIdentityUser user)
+        {
             var userRole =
                 _userManager.GetRolesAsync(user)
                     .Result.FirstOrDefault();
