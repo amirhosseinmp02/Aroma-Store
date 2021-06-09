@@ -45,6 +45,9 @@ namespace Aroma_Shop.Ioc
             services.AddSingleton<IAuthorizationHandler, PolicyHandler>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<IPageService, PageService>();
         }
     }
 }
