@@ -1,30 +1,25 @@
-﻿@model Aroma_Shop.Application.ViewModels.Product.AddEditCategoryViewModel
+﻿@model Aroma_Shop.Domain.Models.PageModels.Page
 
 @{
-    ViewData["Title"] = "افزودن دسته بندی";
+    ViewData["Title"] = "افزودن صفحه";
 }
 <div class="h2 mt-3">
-    <h1 class="h2 d-inline">افزودن دسته بندی</h1>
-    <a class="btn btn-warning float-left" asp-action="Categories">بازگشت</a>
+    <h1 class="h2 d-inline">افزودن صفحه</h1>
+    <a class="btn btn-warning float-left" asp-action="Index">بازگشت</a>
 </div>
 <hr>
 <div class="row">
     <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
-        <form asp-action="AddCategory">
+        <form asp-action="">
             <div class="form-group">
                 <label class="control-label" for="CategoryName">نام</label>
-                <input class="form-control" asp-for="CategoryName">
+                <input class="form-control">
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">توضیحات</label>
-                <textarea class="form-control" asp-for="CategoryDescription"></textarea>
+                <textarea class="form-control"></textarea>
                 <span class="text-danger field-validation-valid"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">دسته پدر</label>
-                <select class="form-control" asp-items="Model.AllCategories" asp-for="ParentCategoryId">
-                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
