@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Aroma_Shop.Domain.Models.PageModels;
+
+namespace Aroma_Shop.Application.Interfaces
+{
+    public interface IPageService
+    {
+        bool AddPage(Page page);
+    }
+}
