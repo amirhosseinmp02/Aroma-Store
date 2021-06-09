@@ -9,16 +9,21 @@
 </div>
 <hr>
 <div class="row">
-    <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
+    <div class="col-lg-10 col-md-12 m-auto">
         <form asp-action="">
             <div class="form-group">
-                <label class="control-label" for="CategoryName">نام</label>
+                <label class="control-label">عنوان</label>
+                <input class="form-control">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">پیوند یکتا</label>
                 <input class="form-control">
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">توضیحات</label>
-                <textarea class="form-control"></textarea>
+                <div id="editor"></div>
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
@@ -35,4 +40,28 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'),
+                {
+                    language: 'fa',
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
+                        ]
+                    },
+                    ckfinder: { uploadUrl: '/index/UploadImage' }
+                })
+            .catch(error => {
+                console.error(error);
+            });
+        $(document).ready(function () {
+            //$(".ck-blurred").css("min-height", "400px");
+            //$(".ck-content").css("min-height", "400px");
+        });
+    </script>
 }
