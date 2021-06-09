@@ -16,6 +16,13 @@ namespace Aroma_Shop.Application.Services
             _pageRepository = pageRepository;
         }
 
+        public IEnumerable<Page> GetPages()
+        {
+            var pages =
+                _pageRepository.GetPages();
+
+            return pages;
+        }
         public bool AddPage(Page page)
         {
             try
