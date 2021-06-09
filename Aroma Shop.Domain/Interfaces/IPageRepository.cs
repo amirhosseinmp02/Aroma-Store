@@ -7,6 +7,7 @@ namespace Aroma_Shop.Domain.Interfaces
 {
     public interface IPageRepository : IGeneralRepository
     {
+        IEnumerable<Page> GetPages();
         void AddPage(Page page);
     }
 }
