@@ -15,13 +15,21 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context = context;
         }
+
+        public IEnumerable<Page> GetPages()
+        {
+            var pages =
+                _context.Pages;
+
+            return pages;
+        }
         public void AddPage(Page page)
         {
             _context.Add(page);
         }
         public void Save()
         {
-            throw new NotImplementedException();
+            _context.SaveChanges();
         }
     }
 }
