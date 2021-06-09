@@ -7,6 +7,7 @@ namespace Aroma_Shop.Application.Interfaces
 {
     public interface IPageService
     {
+        IEnumerable<Page> GetPages();
         bool AddPage(Page page);
     }
 }
