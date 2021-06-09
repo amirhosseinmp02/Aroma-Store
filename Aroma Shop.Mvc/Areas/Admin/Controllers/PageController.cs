@@ -29,5 +29,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region AddPage
+
+        [HttpGet("/Admin/Pages/AddPage")]
+        public IActionResult AddPage()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }
