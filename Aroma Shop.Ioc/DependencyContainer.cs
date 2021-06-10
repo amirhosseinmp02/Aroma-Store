@@ -24,6 +24,8 @@ namespace Aroma_Shop.Ioc
             services.AddScoped<IMediaRepository, MediaRepository>();
             services.AddScoped<IMediaService, MediaService>();
 
+            services.AddScoped<IFileRepository, FileRepository>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();

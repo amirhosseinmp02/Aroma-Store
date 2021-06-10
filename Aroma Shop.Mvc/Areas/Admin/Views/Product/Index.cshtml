@@ -1,6 +1,7 @@
 ﻿@using System.Web
 @using System.Text.RegularExpressions
 @using Aroma_Shop.Application.Utilites
+@using Aroma_Shop.Domain.Models.FileModels
 @model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
 
 @{
@@ -41,11 +42,11 @@
                 string productImagePath;
                 if (product.Images.Any())
                 {
-                    productImagePath = $"/img/Product/{product.Images.FirstOrDefault().ImagePath}";
+                    productImagePath = $"/img/{product.Images.FirstOrDefault().ImagePath}";
                 }
                 else
                 {
-                    productImagePath = Aroma_Shop.Domain.Models.ProductModels.Image.DefaultImagePath;
+                    productImagePath = Image.DefaultImagePath;
                 }
             <tr>
                 <th class="cart-item-cells"><img class="admin-products-img" src="@productImagePath"></th>

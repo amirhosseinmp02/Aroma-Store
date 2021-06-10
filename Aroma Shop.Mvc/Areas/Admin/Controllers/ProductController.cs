@@ -123,10 +123,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var productCategories =
                 _productService.GetCategoriesTreeView();
 
-            model = new AddEditProductViewModel()
-            {
-                ProductCategories = productCategories
-            };
+            model.ProductCategories = productCategories;
 
             return View(model);
         }

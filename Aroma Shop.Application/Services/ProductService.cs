@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
+using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
@@ -18,10 +19,12 @@ namespace Aroma_Shop.Application.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IFileService _fileService;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IFileService fileService)
         {
             _productRepository = productRepository;
+            _fileService = fileService;
         }
         public Product GetProduct(int productId)
         {
@@ -53,7 +56,7 @@ namespace Aroma_Shop.Application.Services
                 }
 
                 if (productViewModel.ProductImagesFiles.Any())
-                    AddProductImages(product, productViewModel.ProductImagesFiles);
+                    _fileService.AddProductImages(product, productViewModel.ProductImagesFiles);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
                     AddProductsInformation
@@ -90,10 +93,10 @@ namespace Aroma_Shop.Application.Services
                     product.Categories.Clear();
 
                 if (productViewModel.ProductImagesFiles.Any())
-                    AddProductImages(product, productViewModel.ProductImagesFiles);
+                    _fileService.AddProductImages(product, productViewModel.ProductImagesFiles);
 
                 if (productViewModel.DeletedProductImagesIds != null)
-                    DeleteProductImagesByIds(productViewModel.DeletedProductImagesIds);
+                    _fileService.DeleteProductImagesByIds(productViewModel.DeletedProductImagesIds);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
                     UpdateProductsInformation
@@ -123,7 +126,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 if (product.Images.Any())
-                    DeleteProductImages(product.Images);
+                    _fileService.DeleteProductImages(product.Images);
 
                 if (product.Informations.Any())
                     DeleteProductInformation(product);
@@ -236,8 +239,6 @@ namespace Aroma_Shop.Application.Services
             List<SelectListItem> items =
                 new List<SelectListItem>();
 
-            items.Add(new SelectListItem("انتخاب کنید", ""));
-
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
 
@@ -299,8 +300,6 @@ namespace Aroma_Shop.Application.Services
 
             List<SelectListItem> items =
                 new List<SelectListItem>();
-
-            items.Add(new SelectListItem("انتخاب کنید", ""));
 
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
@@ -435,122 +434,6 @@ namespace Aroma_Shop.Application.Services
                 product.Categories.Clear();
 
                 AddProductCategories(product, productCategoriesId);
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error);
-                return false;
-            }
-        }
-        private IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds)
-        {
-            var productImages =
-                new List<Image>();
-
-            foreach (var productImagesId in productImagesIds)
-            {
-                var productImage =
-                    _productRepository.GetImage(productImagesId);
-
-                productImages.Add(productImage);
-            }
-
-            return productImages;
-        }
-        private bool AddProductImages(Product product, IEnumerable<IFormFile> productImagesFiles)
-        {
-            try
-            {
-                var persianCalendar =
-                    new PersianCalendar();
-
-                var monthProductImagesDirName =
-                    $"{persianCalendar.GetYear(DateTime.Now)} - {persianCalendar.GetMonth(DateTime.Now)}";
-                var rootPath =
-                    Path.Combine(Directory.GetCurrentDirectory(),
-                        "wwwroot", "img", "Product");
-                var productImagesPath =
-                    Path.Combine(rootPath, "Products", monthProductImagesDirName);
-
-                var isYearMonthProductImagesDirExists =
-                    Directory.Exists(productImagesPath);
-                if (!isYearMonthProductImagesDirExists)
-                {
-                    Directory.CreateDirectory(productImagesPath);
-                }
-
-                foreach (var productImageFile in productImagesFiles)
-                {
-                    var productImageFileName =
-                        $"{Guid.NewGuid().ToString()} - {productImageFile.FileName}";
-                    var fullProductImagesPath
-                        = Path.Combine(productImagesPath, productImageFileName);
-
-                    using (var stream = new FileStream(fullProductImagesPath, FileMode.Create))
-                    {
-                        productImageFile.CopyTo(stream);
-                    }
-
-                    var productImage = new Image()
-                    {
-                        ImagePath = $"Products/{monthProductImagesDirName}/{productImageFileName}",
-                        Product = product
-                    };
-
-                    _productRepository.AddImage(productImage);
-                }
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error);
-                return false;
-            }
-        }
-        private bool DeleteProductImagesByIds(IEnumerable<int> productImagesIds)
-        {
-            try
-            {
-                var productImages =
-                    GetProductImagesByIds(productImagesIds);
-
-                foreach (var productImage in productImages)
-                {
-                    var imagePath =
-                        Path.Combine(Directory.GetCurrentDirectory(),
-                        "wwwroot", "img", "Product", productImage.ImagePath);
-
-                    File.Delete(imagePath);
-
-                    _productRepository.DeleteImage(productImage);
-                }
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error);
-                return false;
-            }
-        }
-        private bool DeleteProductImages(IEnumerable<Image> productImages)
-        {
-            try
-            {
-
-                foreach (var productImage in productImages)
-                {
-                    var imagePath =
-                        Path.Combine(Directory.GetCurrentDirectory(),
-                        "wwwroot", "img", "Product", productImage.ImagePath);
-
-                    File.Delete(imagePath);
-
-                    _productRepository.DeleteImage(productImage);
-                }
 
                 return true;
             }

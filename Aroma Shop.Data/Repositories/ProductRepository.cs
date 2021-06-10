@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
+using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.EntityFrameworkCore;
@@ -98,21 +99,6 @@ namespace Aroma_Shop.Data.Repositories
                 GetCategory(categoryId);
 
             _context.Remove(category);
-        }
-        public Image GetImage(int imageId)
-        {
-            var image =
-                _context.Images.Find(imageId);
-
-            return image;
-        }
-        public void AddImage(Image image)
-        {
-            _context.Add(image);
-        }
-        public void DeleteImage(Image image)
-        {
-            _context.Remove(image);
         }
         public void Save()
         {

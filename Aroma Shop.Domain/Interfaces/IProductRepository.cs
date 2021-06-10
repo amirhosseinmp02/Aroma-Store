@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 
@@ -19,8 +20,5 @@ namespace Aroma_Shop.Domain.Interfaces
         void DeleteCategory(Category category);
         void DeleteCategoryById(int categoryId);
         void UpdateCategory(Category category);
-        Image GetImage(int imageId);
-        void AddImage(Image image);
-        void DeleteImage(Image image);
     }
 }

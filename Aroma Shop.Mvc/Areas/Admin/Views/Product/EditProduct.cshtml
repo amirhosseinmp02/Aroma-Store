@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">شرح</label>
-                <textarea id="matn" asp-for="ProductDescription" class="form-control">
+                <textarea id="editor" asp-for="ProductDescription" class="form-control">
                 </textarea>
                 <span class="text-danger field-validation-valid"></span>
             </div>
@@ -40,14 +40,14 @@
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
-                    <label>دسته بندی ها</label>
-                    <select class="form-control" multiple size="9"  multiple aria-label="select example" asp-for="ProductCategoriesId">
-                        @foreach (var c in Model.ProductCategories)
-                        {
-                            <option value="@c.Value" selected="@c.Selected">@c.Text</option>
-                        }
-                    </select>
-                </div>
+                <label>دسته بندی ها</label>
+                <select class="form-control" multiple size="9" aria-label="select example" asp-for="ProductCategoriesId">
+                    @foreach (var c in Model.ProductCategories)
+                    {
+                        <option value="@c.Value" selected="@c.Selected">@c.Text</option>
+                    }
+                </select>
+            </div>
             <div class="form-group">
                 <label>انتخاب تصاویر</label>
                 <label for="attachment" class="w-100 text-center">
@@ -65,7 +65,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                                             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
                                         </svg>
-                                    </span><img class="productimages" src="~/img/Product/@currentProductImage.ImagePath" alt="@currentProductImage.ImageId">
+                                    </span><img class="productimages" src="~/img/@currentProductImage.ImagePath" alt="@currentProductImage.ImageId">
                                 </span>
                             }
                         </span>
@@ -95,7 +95,6 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/vendors/ckeditor/ckeditor.js"></script>
     @*Manage Current Product Images*@
     <script>
         $(".delete-currentProductImage").on("click",
@@ -142,14 +141,30 @@
             });
         });
     </script>
-
-    <script type="text/javascript">
-        CKEDITOR.replace('matn',
-            {
-                language: 'fa',
-                font_defaultLabel: "Samim"
+    <script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'),
+                {
+                    language: 'fa',
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
+                        ]
+                    }
+                    //,
+                    //ckfinder: { uploadUrl: '/index/UploadImage' }
+                })
+            .catch(error => {
+                console.error(error);
             });
-        CKEDITOR.addCss(".cke_editable{font-family: 'Samim', sans-serif;}");
+        $(document).ready(function () {
+            //$(".ck-blurred").css("min-height", "400px");
+            //$(".ck-content").css("min-height", "400px");
+        });
 
         //Add Informations Button Scripts
         var content = "<div class='row mb-2'><div class='col' ><input type='text' name='InformationNames' class='form-control' placeholder='نام'></div><div class='col'><input type='text' name='InformationValues' class='form-control' placeholder='مقدار'></div><div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
