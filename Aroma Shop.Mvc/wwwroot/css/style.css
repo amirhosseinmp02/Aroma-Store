@@ -4893,3 +4893,7 @@ input.input-validation-error {
 .adminReply {
     font-size: 12px
 }
+
+.ck-editor__editable_inline {
+    min-height: 400px
+}

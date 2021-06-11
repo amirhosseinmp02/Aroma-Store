@@ -226,6 +226,11 @@ i.jstree-icon.jstree-themeicon {
 .commentsTrBottomBorders:nth-last-child(1) {
     border-bottom: unset !important
 }
+
 .parentCommentUserName {
     font-size: 12px
+}
+
+.ck-editor__editable_inline {
+    min-height: 400px
 }

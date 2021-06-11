@@ -4,10 +4,12 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.ViewModels.File;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Aroma_Shop.Application.Services
 {
@@ -20,6 +22,44 @@ namespace Aroma_Shop.Application.Services
             _fileRepository = fileRepository;
         }
 
+        public JsonResult UploadEditorFile(IFormFile file)
+        {
+            try
+            {
+                if (file.Length <= 0)
+                    return null;
+
+                var fileName =
+                    Guid.NewGuid() + Path.GetExtension(file.FileName).ToLower();
+
+                var filePath =
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","img", "Editor", fileName);
+
+                using (var stream = new FileStream(filePath,FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                var url = $"/img/Editor/{fileName}";
+
+                var successfulResult = new SuccessfulUploadResult()
+                {
+                    Uploaded = 1,
+                    FileName = fileName,
+                    Url = url
+                };
+
+                var successfulJsonResult = 
+                    new JsonResult(successfulResult);
+
+                return successfulJsonResult;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return null;
+            }
+        }
         public IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds)
         {
             var productImages =
@@ -63,7 +103,7 @@ namespace Aroma_Shop.Application.Services
                 foreach (var productImageFile in productImagesFiles)
                 {
                     var productImageFileName =
-                        $"{Guid.NewGuid().ToString()} - {productImageFile.FileName}";
+                        $"{Guid.NewGuid().ToString()} - {productImageFile.FileName.ToLower()}";
                     var fullProductImagesPath
                         = Path.Combine(productImagesPath, productImageFileName);
 
