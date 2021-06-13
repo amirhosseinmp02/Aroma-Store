@@ -115,6 +115,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(page);
         }
 
+        [HttpPost("/Admin/Pages/EditPage")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPage(Page model)
+        {
+            throw new Exception();
+        }
+
         #endregion
 
         #region DeletePage
