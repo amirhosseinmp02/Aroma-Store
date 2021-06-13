@@ -27,6 +27,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(page);
         }
+        public void DeletePage(Page page)
+        {
+            _context.Pages.Remove(page);
+        }
         public void Save()
         {
             _context.SaveChanges();
