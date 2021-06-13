@@ -119,7 +119,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditPage(Page model)
         {
-            throw new Exception();
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _pageService.UpdatePage(model);
+
+                if (result)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError("","مشکلی در زمان ویرایش صفحه رخ داد");
+            }
+
+            return View(model);
         }
 
         #endregion
