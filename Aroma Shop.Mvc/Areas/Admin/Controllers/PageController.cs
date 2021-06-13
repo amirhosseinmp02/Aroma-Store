@@ -101,6 +101,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region EditPage
+
+        [HttpGet("/Admin/Pages/EditPage")]
+        public IActionResult EditPage(int pageId)
+        {
+            var page =
+                _pageService.GetPage(pageId);
+
+            if (page == null)
+                return NotFound();
+
+            return View(page);
+        }
+
+        #endregion
+
         #region DeletePage
 
         [HttpGet("Admin/Pages/DeletePage")]
