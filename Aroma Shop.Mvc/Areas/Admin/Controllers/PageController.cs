@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Domain.Models.PageModels;
+using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
@@ -21,12 +23,46 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowPages
 
         [HttpGet("/Admin/Pages")]
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, string search = null)
         {
-            var pages =
-                _pageService.GetPages();
+            IEnumerable<Page> pages;
 
-            return View(pages);
+            if (!string.IsNullOrEmpty(search))
+            {
+                pages =
+                    _pageService.GetPages().Where(p =>
+                        p.PageTitle.Contains(search) ||
+                        p.PageLink.Contains(search));
+
+                ViewBag.search = search;
+            }
+            else
+                pages =
+                    _pageService.GetPages();
+
+            if (!pages.Any())
+            {
+                ViewBag.isEmpty = true;
+
+                return View();
+            }
+
+            var page =
+                new Paging<Page>(pages, 11, pageNumber);
+
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+
+            var pagesPage =
+                page.QueryResult;
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+
+            return View(pagesPage);
         }
 
         #endregion
