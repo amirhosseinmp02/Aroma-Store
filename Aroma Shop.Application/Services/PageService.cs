@@ -46,5 +46,26 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool DeletePageById(int pageId)
+        {
+            try
+            {
+                var page =
+                    GetPage(pageId);
+
+                if (page == null)
+                    return false;
+
+                _pageRepository.DeletePage(page);
+                _pageRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
     }
 }
