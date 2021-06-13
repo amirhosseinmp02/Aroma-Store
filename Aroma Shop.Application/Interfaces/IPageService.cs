@@ -10,6 +10,7 @@ namespace Aroma_Shop.Application.Interfaces
         Page GetPage(int pageId);
         IEnumerable<Page> GetPages();
         bool AddPage(Page page);
+        bool UpdatePage(Page page);
         bool DeletePageById(int pageId);
     }
 }
