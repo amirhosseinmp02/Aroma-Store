@@ -134,7 +134,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Messages/DeleteMessage")]
         public IActionResult DeleteMessage(int messageId)
         {
-            var result = _mediaService.DeleteMessageById(messageId);
+            var result = 
+                _mediaService.DeleteMessageById(messageId);
 
             if (result)
                 return RedirectToAction("Messages");

@@ -100,5 +100,21 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region DeletePage
+
+        [HttpGet("Admin/Pages/DeletePage")]
+        public IActionResult DeletePage(int pageId)
+        {
+            var result =
+                _pageService.DeletePageById(pageId);
+
+            if (result)
+                return RedirectToAction("Index");
+
+            return NotFound();
+        }
+
+        #endregion
     }
 }
