@@ -16,6 +16,13 @@ namespace Aroma_Shop.Data.Repositories
             _context = context;
         }
 
+        public Page GetPage(int pageId)
+        {
+            var page =
+                _context.Pages.Find(pageId);
+
+            return page;
+        }
         public IEnumerable<Page> GetPages()
         {
             var pages =
