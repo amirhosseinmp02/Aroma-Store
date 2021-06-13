@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Domain.Models.PageModels;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
@@ -36,6 +37,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult AddPage()
         {
             return View();
+        }
+
+        [HttpPost("/Admin/Pages/AddPage")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddPage(Page model)
+        {
+            throw new Exception();
         }
 
         #endregion
