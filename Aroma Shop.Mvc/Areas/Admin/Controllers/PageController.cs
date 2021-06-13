@@ -43,7 +43,24 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddPage(Page model)
         {
-            throw new Exception();
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _pageService.AddPage(model);
+
+                if (result)
+                {
+                    ModelState.Clear();
+
+                    ViewData["SuccessMessage"] = "صفحه مورد نظر با موفقیت ساخته شد";
+
+                    return View();
+                }
+
+                ModelState.AddModelError("","مشکلی در زمان ساخت صفحه رخ داد");
+            }
+
+            return View(model);
         }
 
         #endregion

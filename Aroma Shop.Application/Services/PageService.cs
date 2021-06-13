@@ -29,6 +29,8 @@ namespace Aroma_Shop.Application.Services
             {
                 _pageRepository.AddPage(page);
 
+                _pageRepository.Save();
+
                 return true;
             }
             catch (Exception error)
