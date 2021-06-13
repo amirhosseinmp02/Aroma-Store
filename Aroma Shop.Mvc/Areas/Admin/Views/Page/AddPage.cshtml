@@ -10,19 +10,29 @@
 <hr>
 <div class="row">
     <div class="col-lg-10 col-md-12 m-auto">
-        <form asp-action="">
-            <div class="form-group">
-                <label class="control-label">عنوان</label>
-                <input class="form-control">
-                <span class="text-danger field-validation-valid"></span>
+        <form asp-action="AddPage">
+            <div class="form-row mb-4">
+                <div class="col-5">
+                    <label class="control-label">عنوان صفحه</label>
+                    <input class="form-control" id="pagetitle" asp-for="PageTitle">
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+                <div class="col-7">
+                    <label class="control-label">آدرس صفحه</label>
+                    <div class="input-group mr-sm-2">
+                        <input class="form-control text-right ltr" placeholder="example-address" id="pagelink" asp-for="PageLink">
+                        <div class="input-group-prepend">
+                            @{
+                                var baseAddress = 
+                                    Url.ActionLink("Index", "Home", new { Area = "" });
+                            }
+                            <div class="input-group-text text-right ltr">@baseAddress</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label class="control-label">پیوند یکتا</label>
-                <input class="form-control">
-                <span class="text-danger field-validation-valid"></span>
-            </div>
-            <div class="form-group">
-                <textarea id="editor"></textarea>
+                <textarea id="editor" asp-for="PageDescription"></textarea>
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">
@@ -43,45 +53,51 @@
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
     <script>
+        $(document).ready(function() {
+            $("#pagetitle").keyup(function() {
+                $("#pagelink").val($(this).val().replaceAll(" ", "-"));
+            });
+        });
+
         ClassicEditor.create(document.querySelector('#editor'),
-            {
-                language: 'fa',
-                ckfinder: { uploadUrl: "/UploadEditorFile" },
-                heading: {
-                    options: [
-                        { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
-                        { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
-                        { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
-                        { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
-                    ]
-                },
-                toolbar: {
-                    items: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'alignment', 'indent', 'outdent', '|',
-                        'insertTable', 'htmlEmbed', 'codeBlock', '|',
-                        'imageInsert', 'mediaEmbed', '|',
-                        'removeFormat', 'redo', 'undo'
-                    ],
-                    shouldNotGroupWhenFull: true
-                },
-                image: {
-                    // You need to configure the image toolbar, too, so it uses the new style buttons.
-                    toolbar: ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+                {
+                    language: 'fa',
+                    ckfinder: { uploadUrl: "/UploadEditorFile" },
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
+                        ]
+                    },
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                            'alignment', 'indent', 'outdent', '|',
+                            'insertTable', 'htmlEmbed', 'codeBlock', '|',
+                            'imageInsert', 'mediaEmbed', '|',
+                            'removeFormat', 'redo', 'undo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    image: {
+                        // You need to configure the image toolbar, too, so it uses the new style buttons.
+                        toolbar: ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
 
-                    styles: [
-                        // This option is equal to a situation where no style is applied.
-                        'full',
+                        styles: [
+                            // This option is equal to a situation where no style is applied.
+                            'full',
 
-                        // This represents an image aligned to the left.
-                        'alignLeft',
+                            // This represents an image aligned to the left.
+                            'alignLeft',
 
-                        // This represents an image aligned to the right.
-                        'alignRight'
-                    ]
-                }
-            })
+                            // This represents an image aligned to the right.
+                            'alignRight'
+                        ]
+                    }
+                })
             .catch(error => {
                 console.error(error);
             });

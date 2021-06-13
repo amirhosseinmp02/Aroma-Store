@@ -234,3 +234,7 @@ i.jstree-icon.jstree-themeicon {
 .ck-editor__editable_inline {
     min-height: 400px
 }
+
+.ltr {
+    direction: ltr
+}

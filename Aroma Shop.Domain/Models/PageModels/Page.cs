@@ -14,7 +14,8 @@ namespace Aroma_Shop.Domain.Models.PageModels
         public string PageTitle { get; set; }
         public string PageDescription { get; set; }
         [MaxLength(300, ErrorMessage = "حداکثر 500 کارکتر مجاز می باشد")]
-        [Required]
+        [Required(ErrorMessage = "لطفا آدرس صفحه را وارد نمایید")]
+        [RegularExpression("^[A-Za-z0-9آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی/-]+$", ErrorMessage = "آدرس صفحه تنها میتواند شامل - ، / ، اعداد و حروف فارسی و انگلیسی باشد")]
         public string PageLink { get; set; }    
     }
 }

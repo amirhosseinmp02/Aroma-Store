@@ -4897,3 +4897,7 @@ input.input-validation-error {
 .ck-editor__editable_inline {
     min-height: 400px
 }
+
+.ltr {
+    direction: ltr
+}
