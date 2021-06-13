@@ -9,5 +9,6 @@ namespace Aroma_Shop.Application.Interfaces
     {
         IEnumerable<Page> GetPages();
         bool AddPage(Page page);
+        bool DeletePage(Page page);
     }
 }
