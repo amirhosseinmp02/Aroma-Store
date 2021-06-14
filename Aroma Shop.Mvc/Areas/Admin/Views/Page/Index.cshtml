@@ -6,7 +6,7 @@
 
 <div class="h2 mt-3">
     <h1 class="h2 d-inline">صفحه ها</h1>
-    <a class="btn btn-warning float-left" asp-action="AddPage">ساخت</a>
+    <a class="btn btn-warning float-left" asp-action="CreatePage">ساخت</a>
 </div>
 <hr />
 <form asp-action="Index" method="get">
@@ -35,7 +35,7 @@
 
                 <tr>
                     <td class="cart-item-cells align-middle">@aPage.PageTitle</td>
-                    <td class="cart-item-cells align-middle">@aPage.PageLink</td>
+                    <td class="cart-item-cells align-middle">@aPage.PagePathAddress</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
                             <a class="btn text-light btn-primary" asp-action="EditPage" asp-route-pageId="@aPage.PageId">ویرایش</a>

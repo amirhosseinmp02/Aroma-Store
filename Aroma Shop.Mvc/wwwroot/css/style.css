@@ -4901,3 +4901,9 @@ input.input-validation-error {
 .ltr {
     direction: ltr
 }
+
+.page_content {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    font-size: 18px
+}

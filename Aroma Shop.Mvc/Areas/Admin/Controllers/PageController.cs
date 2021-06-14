@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Page;
 using Aroma_Shop.Domain.Models.PageModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 
@@ -32,7 +33,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 pages =
                     _pageService.GetPages().Where(p =>
                         p.PageTitle.Contains(search) ||
-                        p.PageLink.Contains(search));
+                        p.PagePathAddress.Contains(search));
 
                 ViewBag.search = search;
             }
@@ -67,24 +68,24 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
-        #region AddPage
+        #region CreatePage
 
         [HttpGet("/Admin/Pages/AddPage")]
-        public IActionResult AddPage()
+        public IActionResult CreatePage()
         {
             return View();
         }
 
         [HttpPost("/Admin/Pages/AddPage")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPage(Page model)
+        public IActionResult CreatePage(AddPageViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _pageService.AddPage(model);
+                    _pageService.CreatePage(model);
 
-                if (result)
+                if (result == PageCreateUpdateResult.Successful)
                 {
                     ModelState.Clear();
 
@@ -93,7 +94,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     return View();
                 }
 
-                ModelState.AddModelError("","مشکلی در زمان ساخت صفحه رخ داد");
+                if(result == PageCreateUpdateResult.PathAddressExist)
+                    ModelState.AddModelError("", "این آدرس صفحه در حال حاضر موجود است");
+
+                else if(result == PageCreateUpdateResult.Failed)
+                    ModelState.AddModelError("", "مشکلی در زمان ساخت صفحه رخ داد");
             }
 
             return View(model);
@@ -112,25 +117,42 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (page == null)
                 return NotFound();
 
-            return View(page);
+            var model = new EditPageViewModel()
+            {
+                PageId = page.PageId,
+                PageTitle = page.PageTitle,
+                PagePathAddress = page.PagePathAddress,
+                PageDescription = page.PageDescription
+            };
+
+            TempData["pageId"] = pageId;
+
+            return View(model);
         }
 
         [HttpPost("/Admin/Pages/EditPage")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPage(Page model)
+        public IActionResult EditPage(EditPageViewModel model)
         {
             if (ModelState.IsValid)
             {
+                model.PageId =
+                    Convert.ToInt32(TempData["pageId"]);
+
                 var result =
                     _pageService.UpdatePage(model);
 
-                if (result)
-                {
+                if (result == PageCreateUpdateResult.Successful)
                     return RedirectToAction("Index");
-                }
 
-                ModelState.AddModelError("","مشکلی در زمان ویرایش صفحه رخ داد");
+                if (result == PageCreateUpdateResult.PathAddressExist)
+                    ModelState.AddModelError("", "این آدرس صفحه در حال حاضر موجود است");
+
+                else if (result == PageCreateUpdateResult.Failed)
+                    ModelState.AddModelError("", "مشکلی در زمان ویرایش صفحه رخ داد");
             }
+
+            TempData.Keep("pageId");
 
             return View(model);
         }
@@ -149,6 +171,30 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 return RedirectToAction("Index");
 
             return NotFound();
+        }
+
+        #endregion
+
+        #region IsPagePathAddressExist
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult IsPagePathAddressExistForAdd(string pagePathAddress)
+        {
+            var isPagePathAddressExist =
+                _pageService.IsPagePathAddressExistForAddJsonResult(pagePathAddress);
+
+            return isPagePathAddressExist;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult IsPagePathAddressExistForEdit(string pagePathAddress, int pageId)
+        {
+            var isPagePathAddressExist =
+                _pageService.IsPagePathAddressExistForEditJsonResult(pagePathAddress, pageId);
+
+            return isPagePathAddressExist;
         }
 
         #endregion

@@ -51,11 +51,15 @@
                                 سفارشات
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Page" asp-action="Index">
+                        <li class="nav-item ">
+                            <a class="nav-link dropdown-btn products-dashbord-menu">
                                 <i class="bi bi-files mr-1"></i>
                                 صفحه ها
                             </a>
+                            <div class="dropdown-container">
+                                <a class="dropdown-item" asp-controller="Page" asp-action="Index">همه صفحه ها</a>
+                                <a class="dropdown-item" asp-controller="Page" asp-action="CreatePage">ساخت صفحه</a>
+                            </div>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link dropdown-btn products-dashbord-menu">

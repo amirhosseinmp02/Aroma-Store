@@ -1,4 +1,4 @@
-﻿@model Aroma_Shop.Domain.Models.PageModels.Page
+﻿@model Aroma_Shop.Application.ViewModels.Page.EditPageViewModel
 
 @{
     ViewData["Title"] = "ویرایش صفحه";
@@ -20,7 +20,7 @@
                 <div class="col-7">
                     <label class="control-label">آدرس صفحه</label>
                     <div class="input-group mr-sm-2">
-                        <input class="form-control text-right ltr" placeholder="example-address" id="pagelink" asp-for="PageLink">
+                        <input class="form-control text-right ltr" placeholder="example-address" id="pagelink" asp-for="PagePathAddress">
                         <div class="input-group-prepend">
                             @{
                                 var baseAddress =
@@ -84,18 +84,38 @@
                         shouldNotGroupWhenFull: true
                     },
                     image: {
-                        // You need to configure the image toolbar, too, so it uses the new style buttons.
-                        toolbar: ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
-
+                        // Configure the available styles.
                         styles: [
-                            // This option is equal to a situation where no style is applied.
-                            'full',
+                            'alignLeft', 'alignCenter', 'alignRight'
+                        ],
 
-                            // This represents an image aligned to the left.
-                            'alignLeft',
+                        // Configure the available image resize options.
+                        resizeOptions: [
+                            {
+                                name: 'resizeImage:original',
+                                label: 'Original',
+                                value: null
+                            },
+                            {
+                                name: 'resizeImage:50',
+                                label: '50%',
+                                value: '50'
+                            },
+                            {
+                                name: 'resizeImage:75',
+                                label: '75%',
+                                value: '75'
+                            }
+                        ],
 
-                            // This represents an image aligned to the right.
-                            'alignRight'
+                        // You need to configure the image toolbar, too, so it shows the new style
+                        // buttons as well as the resize buttons.
+                        toolbar: [
+                            'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
+                            '|',
+                            'resizeImage',
+                            '|',
+                            'imageTextAlternative'
                         ]
                     }
                 })

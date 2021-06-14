@@ -30,7 +30,7 @@ namespace Aroma_Shop.Data.Repositories
 
             return pages;
         }
-        public void AddPage(Page page)
+        public void CreatePage(Page page)
         {
             _context.Add(page);
         }

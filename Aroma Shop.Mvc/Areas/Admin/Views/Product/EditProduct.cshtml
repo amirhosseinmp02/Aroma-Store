@@ -147,44 +147,64 @@
         });
 
         ClassicEditor.create(document.querySelector('#editor'),
-                {
-                    language: 'fa',
-                    ckfinder: { uploadUrl: "/UploadEditorFile" },
-                    heading: {
-                        options: [
-                            { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
-                            { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
-                            { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
-                            { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
-                        ]
-                    },
-                    toolbar: {
-                        items: [
-                            'heading', '|',
-                            'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                            'alignment', 'indent', 'outdent', '|',
-                            'insertTable', 'htmlEmbed', 'codeBlock', '|',
-                            'imageInsert', 'mediaEmbed', '|',
-                            'removeFormat', 'redo', 'undo'
-                        ],
-                        shouldNotGroupWhenFull: true
-                    },
-                    image: {
-                        // You need to configure the image toolbar, too, so it uses the new style buttons.
-                        toolbar: ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+            {
+                language: 'fa',
+                ckfinder: { uploadUrl: "/UploadEditorFile" },
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
+                    ]
+                },
+                toolbar: {
+                    items: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                        'alignment', 'indent', 'outdent', '|',
+                        'insertTable', 'htmlEmbed', 'codeBlock', '|',
+                        'imageInsert', 'mediaEmbed', '|',
+                        'removeFormat', 'redo', 'undo'
+                    ],
+                    shouldNotGroupWhenFull: true
+                },
+                image: {
+                    // Configure the available styles.
+                    styles: [
+                        'alignLeft', 'alignCenter', 'alignRight'
+                    ],
 
-                        styles: [
-                            // This option is equal to a situation where no style is applied.
-                            'full',
+                    // Configure the available image resize options.
+                    resizeOptions: [
+                        {
+                            name: 'resizeImage:original',
+                            label: 'Original',
+                            value: null
+                        },
+                        {
+                            name: 'resizeImage:50',
+                            label: '50%',
+                            value: '50'
+                        },
+                        {
+                            name: 'resizeImage:75',
+                            label: '75%',
+                            value: '75'
+                        }
+                    ],
 
-                            // This represents an image aligned to the left.
-                            'alignLeft',
-
-                            // This represents an image aligned to the right.
-                            'alignRight'
-                        ]
-                    }
-                })
+                    // You need to configure the image toolbar, too, so it shows the new style
+                    // buttons as well as the resize buttons.
+                    toolbar: [
+                        'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
+                        '|',
+                        'resizeImage',
+                        '|',
+                        'imageTextAlternative'
+                    ]
+                }
+            })
             .catch(error => {
                 console.error(error);
             });

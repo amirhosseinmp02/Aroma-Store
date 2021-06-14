@@ -9,7 +9,7 @@ namespace Aroma_Shop.Domain.Interfaces
     {
         Page GetPage(int pageId);
         IEnumerable<Page> GetPages();
-        void AddPage(Page page);
+        void CreatePage(Page page);
         void UpdatePage(Page page);
         void DeletePage(Page page);
     }

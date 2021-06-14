@@ -8,6 +8,8 @@
     ViewData["Title"] = Model.Product.ProductName;
 }
 
+<link href="~/vendors/ckeditor5/ckeditor-styles.css" rel="stylesheet" />
+
 <!--================Single Product Area =================-->
 <div class="product_image_area">
     <div class="container">
@@ -119,7 +121,7 @@
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade active show ck-content" id="home" role="tabpanel" aria-labelledby="home-tab">
                 @Html.Raw(Model.Product.ProductDescription)
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -175,8 +177,10 @@
                                             <div class="review_item border border-warning rounded p-2 ml-3">
                                                 <div class="media">
                                                     <div class="media-body">
-                                                        <h4>@commentReply.User.UserName @if (commentReply.IsAdminReplied)
-                                                        {<span class="badge badge-danger adminReply">ادمین</span>}</h4>
+                                                        <h4>
+                                                            @commentReply.User.UserName @if (commentReply.IsAdminReplied)
+                                                        {<span class="badge badge-danger adminReply">ادمین</span>}
+                                                        </h4>
                                                         <h5 class="bg-light px-2 d-inline text-dark">@commentReply.SubmitTime.ToSolarWithTime()</h5>
                                                     </div>
                                                 </div>
@@ -253,5 +257,7 @@
             });
         });
     </script>
+
+    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
 }

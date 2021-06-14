@@ -1,0 +1,25 @@
+﻿@model Aroma_Shop.Domain.Models.PageModels.Page
+
+@{
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-3">
+        <li class="container">
+            <ol class="breadcrumb m-0 p-0 font-weight-bold">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home text-dark" aria-hidden="true"></i></a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.PageTitle</li>
+            </ol>
+        </li>
+    </ol>
+</nav>
+
+<div class="page_content container ck-content">
+    @Html.Raw(Model.PageDescription)
+</div>
+
+@section Scripts
+{
+    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
+}
