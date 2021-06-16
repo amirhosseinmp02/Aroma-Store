@@ -196,14 +196,23 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var parentCategory =
-                    GetCategory(Convert.ToInt32(categoryViewModel.ParentCategoryId));
+                Category parentCategory = null;
+
+                if (categoryViewModel.ParentCategoryId != null)
+                {
+                    var parentCategoryId =
+                        Convert.ToInt32(categoryViewModel.ParentCategoryId);
+
+                    parentCategory =
+                        GetCategory(parentCategoryId);
+                }
 
                 var category = GetCategory(categoryViewModel.CategoryId);
 
                 category.CategoryName = categoryViewModel.CategoryName;
                 category.CategoryDescription = categoryViewModel.CategoryDescription;
-                category.ParentCategory = parentCategory;
+                if (parentCategory != null)
+                    category.ParentCategory = parentCategory;
 
                 _productRepository.UpdateCategory(category);
                 _productRepository.Save();
@@ -314,10 +323,11 @@ namespace Aroma_Shop.Application.Services
                 {
                     if (parent.CategoryId != selfCategory.CategoryId)
                     {
-                        items.Add
-                            (new SelectListItem
-                            (new string('─', count * 2) +
-                             $" {parent.CategoryName}", parent.CategoryId.ToString()));
+                        var item = new SelectListItem
+                        (new string('─', count * 2) +
+                         $" {parent.CategoryName}", parent.CategoryId.ToString());
+
+                        items.Add(item);
 
                         var category =
                             _productRepository.GetCategory(parent.CategoryId);
@@ -363,6 +373,13 @@ namespace Aroma_Shop.Application.Services
                     (p =>
                         p.Value == selfCategory.ParentCategory.CategoryId.ToString())
                     .Selected = true;
+            }
+
+            else
+            {
+                var item = new SelectListItem("انتخاب کنید", null);
+
+                items.Insert(0, item);
             }
             return items;
         }
