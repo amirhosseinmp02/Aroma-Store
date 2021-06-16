@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Controllers
 {
@@ -116,10 +117,25 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #region ManageAccount
 
+        [Authorize]
         [HttpGet("/My-Account")]
         public IActionResult ManageAccount()
         {
             return View();
+        }
+
+        #endregion
+
+        #region EditAccount
+
+        [Authorize]
+        [HttpGet("/My-Account/Edit-Account")]
+        public async Task<IActionResult> EditAccount()
+        {
+            var loggedUser = 
+                await _accountService.GetLoggedUser();
+
+            return View(loggedUser);
         }
 
         #endregion

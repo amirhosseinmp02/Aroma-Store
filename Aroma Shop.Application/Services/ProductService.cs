@@ -20,11 +20,13 @@ namespace Aroma_Shop.Application.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IFileService _fileService;
+        private readonly IMediaService _mediaService;
 
-        public ProductService(IProductRepository productRepository, IFileService fileService)
+        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService)
         {
             _productRepository = productRepository;
             _fileService = fileService;
+            _mediaService = mediaService;
         }
         public Product GetProduct(int productId)
         {
@@ -130,6 +132,11 @@ namespace Aroma_Shop.Application.Services
 
                 if (product.Informations.Any())
                     DeleteProductInformation(product);
+
+                foreach (var productComment in product.Comments)
+                {
+                    _mediaService.DeleteComment(productComment);
+                }
 
                 _productRepository.DeleteProduct(product);
                 _productRepository.Save();

@@ -184,13 +184,10 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteCommentById(int commentId)
+        public bool DeleteComment(Comment comment)
         {
             try
             {
-                var comment =
-                    GetComment(commentId);
-
                 if (comment.Replies.Any())
                 {
                     foreach (var commentReply in comment.Replies)
@@ -202,6 +199,23 @@ namespace Aroma_Shop.Application.Services
                 _mediaRepository.DeleteComment(comment);
 
                 _mediaRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return false;
+            }
+        }
+        public bool DeleteCommentById(int commentId)
+        {
+            try
+            {
+                var comment =
+                    GetComment(commentId);
+
+                DeleteComment(comment);
 
                 return true;
             }
