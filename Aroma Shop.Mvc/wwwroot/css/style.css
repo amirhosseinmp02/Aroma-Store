@@ -4907,3 +4907,35 @@ input.input-validation-error {
     margin-bottom: 80px;
     font-size: 18px
 }
+
+/* buttons */
+.custombtn {
+    border: none;
+    outline: none;
+    padding: 10px 50px;
+    color: #fff;
+    animation-timing-function: ease-in-out;
+}
+
+.custombtn:focus {
+    outline: none;
+}
+
+/* button1 */
+.button1 {
+    transition: 0.5s;
+    color: #fff;
+    background: #397d9c;
+    min-width: 220px;
+    width: 100%;
+}
+
+.button1:hover {
+    background: #1e4354;
+}
+
+.myaccount_content {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    font-size: 17px;
+}

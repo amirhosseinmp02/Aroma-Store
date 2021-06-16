@@ -114,6 +114,16 @@ namespace Aroma_Shop.Mvc.Controllers
         }
         #endregion
 
+        #region ManageAccount
+
+        [HttpGet("/My-Account")]
+        public IActionResult ManageAccount()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region LogOut
 
         [HttpPost]
