@@ -150,6 +150,18 @@ namespace Aroma_Shop.Mvc.Controllers
             return View(editAccountViewModel);
         }
 
+        [Authorize]
+        [HttpGet("My-Account/Edit-Account")]
+        public async Task<IActionResult> EditAccount(EditAccountViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+
+            return View(model);
+        }
+
         #endregion
 
         #region LogOut
