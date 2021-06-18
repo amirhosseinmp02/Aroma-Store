@@ -133,9 +133,21 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> EditAccount()
         {
             var loggedUser = 
-                await _accountService.GetLoggedUser();
+                await _accountService.GetLoggedUserWithDetails();
 
-            return View(loggedUser);
+            var editAccountViewModel = new EditAccountViewModel()
+            {
+                FirstName = loggedUser.UserDetails.FirstName,
+                LastName = loggedUser.UserDetails.LastName,
+                UserName = loggedUser.UserName,
+                Email = loggedUser.Email,
+                UserProvince = loggedUser.UserDetails.UserProvince,
+                UserCity = loggedUser.UserDetails.UserCity,
+                UserAddress = loggedUser.UserDetails.UserAddress,
+                UserZipCode = loggedUser.UserDetails.UserZipCode
+            };
+
+            return View(editAccountViewModel);
         }
 
         #endregion

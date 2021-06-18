@@ -594,8 +594,22 @@ namespace Aroma_Shop.Application.Services
         {
             var loggedUserId =
                 _accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var loggedUser =
                 await _userManager.FindByIdAsync(loggedUserId);
+
+            return loggedUser;
+        }
+        public async Task<CustomIdentityUser> GetLoggedUserWithDetails()
+        {
+            var loggedUserId =
+                _accessor.HttpContext
+                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loggedUser =
+                await _userManager.Users
+                    .Include(p => p.UserDetails)
+                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
 
             return loggedUser;
         }

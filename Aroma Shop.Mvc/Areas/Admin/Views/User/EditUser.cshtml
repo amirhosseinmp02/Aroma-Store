@@ -48,7 +48,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">استان</label>
-                <input type="hidden" id="province" class="form-control" asp-for="UserProvince">
+                <input type="hidden" id="province" asp-for="UserProvince">
                 <select id="provinces" class="form-control" onchange="AddCitiesByProvince(this.value)">
                     <option value="">انتخاب کنید</option>
                     <option value="  ,آذرشهر ,اسکو ,اهر ,بستان‌آباد ,بناب ,تبریز ,جلفا ,چاراویماق ,سراب ,شبستر ,عجب‌شیر ,کلیبر ,مراغه ,مرند ,ملکان ,میانه ,ورزقان ,هریس ,هشترود">آذربایجان شرقی</option>
@@ -86,9 +86,9 @@
             </div>
             <div class="form-group">
                 <label class="control-label">شهر</label>
-                <input type="hidden" id="city" class="form-control" asp-for="UserCity">
+                <input type="hidden" id="city" asp-for="UserCity">
                 <select id="cities" class="form-control">
-                    <option>ابتدا استان خود را انتخاب کنید</option>
+                    <option>لطفا استان خود را انتخاب کنید</option>
                 </select>
                 <span class="text-danger field-validation-valid"></span>
             </div>
@@ -162,7 +162,9 @@
 
     $(document).ready(function () {
         $("#cities").change(function () {
-            $(this).prev().val($(this).val());
+            if ($(this).val() != "لطفا استان خود را انتخاب کنید") {
+                $(this).prev().val($(this).val());
+            }
         });
     });
 </script>
