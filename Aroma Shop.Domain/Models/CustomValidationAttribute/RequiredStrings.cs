@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
 {
-    public class RequiredStrings : ValidationAttribute
+    public class RequiredStringsAttribute : ValidationAttribute
     {
 
         protected override ValidationResult IsValid(

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
 {
-    public class MaxFilesCount : ValidationAttribute
+    public class MaxFilesCountAttribute : ValidationAttribute   
     {
         private readonly int _maxFileCount;
-        public MaxFilesCount(int maxFileCount)
+        public MaxFilesCountAttribute(int maxFileCount)
         {
             _maxFileCount = maxFileCount;
         }

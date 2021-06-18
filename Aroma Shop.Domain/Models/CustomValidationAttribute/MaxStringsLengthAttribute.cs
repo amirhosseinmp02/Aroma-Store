@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
 {
-    public class MaxStringsLength : ValidationAttribute
+    public class MaxStringsLengthAttribute : ValidationAttribute
     {
         private readonly int _maxStringsLength;
-        public MaxStringsLength(int maxStringsLength)
+        public MaxStringsLengthAttribute(int maxStringsLength)
         {
             _maxStringsLength = maxStringsLength;
         }

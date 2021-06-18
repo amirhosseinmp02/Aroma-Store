@@ -22,8 +22,8 @@
 <div class="myaccount_content container">
     <div class="row">
         <div class="col-lg-3 col-md-4 col-sm-11 mb-xl-0 mb-lg-0 mb-md-0 mb-4">
-            <button class="custombtn button1 mb-2">پیشخوان</button>
-            <a class="custombtn button1 text-center mb-2 bg-dark" >جزئیات حساب</a>
+            <a class="custombtn button1 text-center mb-2" asp-action="ManageAccount">پیشخوان</a>
+            <button class="custombtn button1 text-center mb-2 bg-dark text-light">جزئیات حساب</button>
             <button class="custombtn button1 mb-2">علاقه مندی ها</button>
             <button class="custombtn button1 mb-2">سفارش ها</button>
             <form asp-action="LogOut">
@@ -31,15 +31,16 @@
             </form>
         </div>
         <div class="col-lg-9 col-md-8 col-sm-11">
-            @{
-                var loggedUser =
-                    await AccountService.GetLoggedUser();
-
-                var loggedUserName =
-                    loggedUser.UserName;
-            }
-            <p class="mb-3">سلام @loggedUserName</p>
-            <p>از طریق پیشخوان حساب کاربری‌تان، می‌توانید سفارش‌های اخیرتان را مشاهده , جزییات حساب کاربری و کلمه عبور خود را ویرایش کنید.</p>
+            <form class="row contact_form">
+                <div class="col-md-6 form-group p_star">
+                    <input class="form-control" id="first">
+                    <span class="placeholder" data-placeholder="First name"></span>
+                </div>
+                <div class="col-md-6 form-group p_star">
+                    <input type="text" class="form-control" id="last" name="name">
+                    <span class="placeholder" data-placeholder="Last name"></span>
+                </div>
+            </form>
         </div>
     </div>
 </div>
