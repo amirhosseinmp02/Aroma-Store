@@ -4908,7 +4908,6 @@ input.input-validation-error {
     font-size: 18px
 }
 
-/* buttons */
 .custombtn {
     border: none;
     outline: none;
@@ -4921,7 +4920,6 @@ input.input-validation-error {
     outline: none;
 }
 
-/* button1 */
 .button1 {
     transition: 0.5s;
     color: #fff;
@@ -4939,4 +4937,21 @@ input.input-validation-error {
     margin-top: 80px;
     margin-bottom: 80px;
     font-size: 17px;
+}
+
+.current-password-label {
+    font-size: 14px;
+}
+
+.button2 {
+    transition: 0.5s;
+    color: #fff;
+    background: mediumaquamarine;
+    min-width: 220px;
+    width: 100%;
+}
+
+.button2:hover {
+    background: seagreen;
+    color: white;
 }

@@ -34,22 +34,22 @@
             <form class="row contact_form">
                 <div class="col-md-6 form-group p_star">
                     <label class="control-label">نام</label>
-                    <input class="form-control" id="first" asp-for="FirstName">
+                    <input class="form-control" id="first" placeholder="نام خود را وارد نمایید" asp-for="FirstName">
                     <span class="text-danger field-validation-valid"></span>
                 </div>
                 <div class="col-md-6 form-group p_star">
                     <label class="control-label">نام خانوادگی</label>
-                    <input class="form-control" id="last" asp-for="LastName">
+                    <input class="form-control" id="last" placeholder="نام خانوادگی خود را وارد نمایید" asp-for="LastName">
                     <span class="text-danger field-validation-valid"></span>
                 </div>
                 <div class="col-md-12 form-group">
                     <label class="control-label">نام کاربری</label>
-                    <input class="form-control" id="company" asp-for="UserName">
+                    <input class="form-control" id="company" placeholder="نام کاربری خود را وارد نمایید" asp-for="UserName">
                     <span class="text-danger field-validation-valid"></span>
                 </div>
                 <div class="col-md-12 form-group">
-                    <label class="control-label">ایمیل</label>
-                    <input class="form-control" id="company" asp-for="Email" readonly>
+                    <label class="control-label">ایمیل <span class="current-password-label">(امکان تغییر ایمیل وجود ندارد)</span></label>
+                    <input class="form-control" id="company" placeholder="ایمیل خود را وارد نمایید" asp-for="Email" readonly>
                     <span class="text-danger field-validation-valid"></span>
                 </div>
                 <div class="col-md-12 form-group p_star">
@@ -100,7 +100,32 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label class="control-label">آدرس</label>
-                    <textarea class="form-control" rows="5"></textarea>
+                    <textarea class="form-control" rows="5" placeholder="آدرس خود را وارد نمایید" asp-for="UserAddress"></textarea>
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+                <div class="col-md-12 form-group">
+                    <h5 class="mt-3">تغییر گذرواژه</h5>
+                    <div class="form-group">
+                        <label class="control-label current-password-label">کلمه عبور فعلی (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
+                        <input class="form-control" placeholder="کلمه عبور خود را وارد نمایید" asp-for="UserCurrentPassword" />
+                        <span class="text-danger field-validation-valid"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label current-password-label">کلمه عبور جدید (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
+                        <input class="form-control" placeholder="کلمه عبور جدید را وارد نمایید" asp-for="UserNewPassword" />
+                        <span class="text-danger field-validation-valid"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label current-password-label">تکرار کلمه عبور جدید</label>
+                        <input class="form-control" placeholder="تکرار کلمه عبور جدید را وارد نمایید" asp-for="RePassword" />
+                        <span class="text-danger field-validation-valid"></span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <input type="submit" value="ویرایش" class="custombtn button2">
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="alert alert-danger text-left" role="alert" asp-validation-summary="All"></div>
                 </div>
             </form>
         </div>

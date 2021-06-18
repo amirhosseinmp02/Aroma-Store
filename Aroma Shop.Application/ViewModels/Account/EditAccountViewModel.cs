@@ -32,11 +32,15 @@ namespace Aroma_Shop.Application.ViewModels.Account
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
-        public string UserPassword { get; set; }
+        public string UserCurrentPassword { get; set; }
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
-        [Compare(nameof(UserPassword), ErrorMessage = "تکرار کلمه عبور با کلمه عبور مطابقت ندارد")]
+        public string UserNewPassword { get; set; }
+        [DataType(DataType.Password)]
+        [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
+        [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
+        [Compare(nameof(UserNewPassword), ErrorMessage = "تکرار کلمه عبور با کلمه عبور مطابقت ندارد")]
         public string RePassword { get; set; }
     }
 }
