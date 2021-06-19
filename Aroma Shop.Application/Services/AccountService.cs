@@ -84,7 +84,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -107,7 +107,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -224,7 +224,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -247,7 +247,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -262,7 +262,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -298,7 +298,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -319,7 +319,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -334,6 +334,27 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        public async Task<bool> IsUserHasPasswordById(string userId)
+        {
+            try
+            {
+                var user =
+                    await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                    return false;
+
+                var result =
+                    await IsUserHasPassword(user);
+
+                return result;
             }
             catch (Exception error)
             {
@@ -366,31 +387,56 @@ namespace Aroma_Shop.Application.Services
 
             IdentityResult result;
 
-            if (!string.IsNullOrEmpty(editAccountViewModel.UserCurrentPassword) &&
-                !string.IsNullOrEmpty(editAccountViewModel.UserNewPassword))
+            if (!string.IsNullOrEmpty(editAccountViewModel.UserCurrentPassword) ||
+                !string.IsNullOrEmpty(editAccountViewModel.UserFirstPassword))
             {
-                var isCurrentPasswordValid =
-                    await _userManager
-                        .CheckPasswordAsync
-                            (loggedUser, editAccountViewModel.UserCurrentPassword);
+                var isLoggedUserHasPassword =
+                    await IsUserHasPassword(loggedUser);
 
-                if (!isCurrentPasswordValid)
+                if (isLoggedUserHasPassword)
                 {
-                    var errorMessage = new IdentityError
+                    var isCurrentPasswordValid =
+                        await _userManager
+                            .CheckPasswordAsync
+                                (loggedUser, editAccountViewModel.UserCurrentPassword);
+
+                    if (!isCurrentPasswordValid)
                     {
-                        Description = "کلمه عبور صحیح نمی باشد"
-                    };
+                        var errorMessage = new IdentityError
+                        {
+                            Description = "کلمه عبور صحیح نمی باشد"
+                        };
 
-                    result = 
-                        IdentityResult.Failed(errorMessage);
+                        result =
+                            IdentityResult.Failed(errorMessage);
 
-                    return result;
+                        return result;
+                    }
+
+                    result =
+                        await _userManager.RemovePasswordAsync(loggedUser);
+
+                    if (!result.Succeeded)
+                        return result;
+
+                    result =
+                        await
+                            _userManager
+                                .AddPasswordAsync(loggedUser, editAccountViewModel.UserNewPassword);
+
+                    if (!result.Succeeded)
+                        return result;
                 }
 
-                await
-                    _userManager.RemovePasswordAsync(loggedUser);
-                await
-                    _userManager.AddPasswordAsync(loggedUser, editAccountViewModel.UserNewPassword);
+                else
+                {
+                    result = await
+                        _userManager
+                            .AddPasswordAsync(loggedUser, editAccountViewModel.UserFirstPassword);
+
+                    if (!result.Succeeded)
+                        return result;
+                }
             }
 
             loggedUser.UserName = editAccountViewModel.UserName;
@@ -549,7 +595,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -661,8 +707,15 @@ namespace Aroma_Shop.Application.Services
 
             if (!string.IsNullOrWhiteSpace(userViewModel.UserPassword))
             {
-                await
-                    _userManager.RemovePasswordAsync(user);
+                var isUserHasPassword =
+                    await IsUserHasPassword(user);
+
+                if (isUserHasPassword)
+                {
+                    await
+                        _userManager.RemovePasswordAsync(user);
+                }
+
                 await
                     _userManager.AddPasswordAsync(user, userViewModel.UserPassword);
             }

@@ -162,7 +162,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 if (result.Succeeded)
                 {
                     ModelState.Clear();
-                    ViewData["SuccessMessage"] = "اطلاعات با موفقیت ویرایش شد ، در صورت تغییر کلمه عبور باید دوباره وارد شوید";
+                    ViewData["SuccessMessage"] = "اطلاعات با موفقیت ویرایش شد ، در صورت تغییر یا افزودن کلمه عبور باید دوباره وارد شوید";
                 }
 
                 else

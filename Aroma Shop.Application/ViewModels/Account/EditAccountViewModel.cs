@@ -33,16 +33,27 @@ namespace Aroma_Shop.Application.ViewModels.Account
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
+        [RequiredIfNotNull(nameof(UserNewPassword), ErrorMessage = "کلمه عبور فعلی را نیز وارد نمایید")]
         public string UserCurrentPassword { get; set; }
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
-        [RequiredIfNotNull(nameof(UserCurrentPassword), ErrorMessage = "در صورت وارد کردن کلمه عبور فعلی ، کلمه عبور جدید را نیز وارد نمایید")]
+        [RequiredIfNotNull(nameof(UserCurrentPassword), ErrorMessage = "کلمه عبور جدید را وارد نمایید")]
         public string UserNewPassword { get; set; }
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
         [Compare(nameof(UserNewPassword), ErrorMessage = "تکرار کلمه عبور با کلمه عبور مطابقت ندارد")]
-        public string RePassword { get; set; }
+        public string ReNewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
+        [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
+        public string UserFirstPassword { get; set; }
+        [DataType(DataType.Password)]
+        [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
+        [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
+        [Compare(nameof(UserFirstPassword), ErrorMessage = "تکرار کلمه عبور با کلمه عبور مطابقت ندارد")]
+        public string ReFirstPassword { get; set; }
     }
 }

@@ -109,22 +109,43 @@
                     <span class="text-danger field-validation-valid"></span>
                 </div>
                 <div class="col-md-12 form-group">
-                    <h5 class="mt-3">تغییر کلمه عبور</h5>
-                    <div class="form-group">
-                        <label class="control-label current-password-label">کلمه عبور فعلی (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
-                        <input class="form-control" placeholder="کلمه عبور خود را وارد نمایید" asp-for="UserCurrentPassword" />
-                        <span class="text-danger field-validation-valid"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label current-password-label">کلمه عبور جدید (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
-                        <input class="form-control" placeholder="کلمه عبور جدید را وارد نمایید" asp-for="UserNewPassword" />
-                        <span class="text-danger field-validation-valid"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label current-password-label">تکرار کلمه عبور جدید</label>
-                        <input class="form-control" placeholder="تکرار کلمه عبور جدید را وارد نمایید" asp-for="RePassword" />
-                        <span class="text-danger field-validation-valid"></span>
-                    </div>
+                    @{
+                        var isLoggedUserHasPassword =
+                            await AccountService.IsLoggedUserHasPassword();
+                    }
+                    @if (isLoggedUserHasPassword)
+                    {
+                        <h5 class="mt-3">تغییر کلمه عبور</h5>
+                        <div class="form-group">
+                            <label class="control-label current-password-label">کلمه عبور فعلی (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
+                            <input class="form-control" placeholder="کلمه عبور خود را وارد نمایید" asp-for="UserCurrentPassword" />
+                            <span class="text-danger field-validation-valid"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label current-password-label">کلمه عبور جدید (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
+                            <input class="form-control" placeholder="کلمه عبور جدید را وارد نمایید" asp-for="UserNewPassword" />
+                            <span class="text-danger field-validation-valid"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label current-password-label">تکرار کلمه عبور جدید</label>
+                            <input class="form-control" placeholder="تکرار کلمه عبور جدید را وارد نمایید" asp-for="ReNewPassword" />
+                            <span class="text-danger field-validation-valid"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <h5 class="mt-3">افزودن کلمه عبور</h5>
+                        <div class="form-group">
+                            <label class="control-label current-password-label">کلمه عبور جدید (در صورتی که قصد افزودن ندارید خالی بگذارید)</label>
+                            <input class="form-control" placeholder="کلمه عبور جدید را وارد نمایید" asp-for="UserFirstPassword" />
+                            <span class="text-danger field-validation-valid"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label current-password-label">تکرار کلمه عبور جدید</label>
+                            <input class="form-control" placeholder="تکرار کلمه عبور جدید را وارد نمایید" asp-for="ReFirstPassword" />
+                            <span class="text-danger field-validation-valid"></span>
+                        </div>
+                    }
                 </div>
                 <div class="col-md-12 form-group">
                     <input type="submit" value="ویرایش" class="custombtn button2">

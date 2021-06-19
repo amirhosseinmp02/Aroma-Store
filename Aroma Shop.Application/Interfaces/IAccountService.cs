@@ -30,6 +30,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction);
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
         Task<bool> IsUserHasPassword(CustomIdentityUser user);
+        Task<bool> IsUserHasPasswordById(string userId);  
         Task<bool> IsLoggedUserHasPassword();
         Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel); 
 

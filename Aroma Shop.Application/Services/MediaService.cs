@@ -76,7 +76,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -106,7 +106,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -141,7 +141,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -164,7 +164,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -180,7 +180,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -204,7 +204,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -221,7 +221,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -244,7 +244,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -271,7 +271,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -289,7 +289,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -309,7 +309,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -376,7 +376,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
@@ -392,7 +392,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
