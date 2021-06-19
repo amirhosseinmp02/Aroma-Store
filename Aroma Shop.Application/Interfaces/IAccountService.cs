@@ -22,7 +22,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<JsonResult> IsUserNameExist(string userName);
         Task<JsonResult> IsEmailExist(string email);
         Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications();
-
         ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
             string returnUrl);
         Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null);
@@ -30,6 +29,8 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> LogOutUser();
         Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction);
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
+        Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel); 
+
         Task<IEnumerable<UserViewModel>> GetUsers();
         Task<UserDetailsViewModel> GetUser(string userId);
         Task<EditUserViewModel> GetUserForEdit(string userId);

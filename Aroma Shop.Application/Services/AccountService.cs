@@ -320,6 +320,11 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<UserViewModel>> GetUsers()
         {
             var loggedUserRole =
