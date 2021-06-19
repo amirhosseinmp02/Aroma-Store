@@ -158,7 +158,7 @@ namespace Aroma_Shop.Application.Services
                         , new { returnurl = returnUrl }
                         , _accessor.HttpContext.Request.Scheme);
 
-            var properties = 
+            var properties =
                 _signInManager
                     .ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
@@ -177,7 +177,7 @@ namespace Aroma_Shop.Application.Services
                 if (externalLoginInfo == null)
                     return false;
 
-                var signInResult = 
+                var signInResult =
                     await _signInManager
                         .ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
                     externalLoginInfo.ProviderKey, false, true);
@@ -197,17 +197,20 @@ namespace Aroma_Shop.Application.Services
                     {
                         var userName = email.Split("@")[0];
 
+                        var userDetails = new UserDetails();
+
                         user = new CustomIdentityUser()
                         {
                             UserName = (userName.Length <= 10 ? userName : userName.Substring(0, 7)),
                             Email = email,
                             EmailConfirmed = true,
-                            RegisterTime = DateTime.Now
+                            RegisterTime = DateTime.Now,
+                            UserDetails = userDetails
                         };
 
                         await _userManager.CreateAsync(user);
 
-                        await 
+                        await
                             _userManager.AddToRoleAsync(user, "Customer");
                     }
                     await _userManager.AddLoginAsync(user, externalLoginInfo);
@@ -225,20 +228,20 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> LoginWithPassword(LoginViewModel vm)
+        public async Task<bool> LoginWithPassword(LoginViewModel loginViewModel)
         {
             try
             {
                 var user =
-                    await _userManager.FindByEmailAsync(vm.Email);
+                    await _userManager.FindByEmailAsync(loginViewModel.Email);
 
                 if (user == null)
                     return false;
 
                 var result =
                     await _signInManager.PasswordSignInAsync
-                    (user.UserName, vm.Password
-                        , vm.RememberMe, false);
+                    (user.UserName, loginViewModel.Password
+                        , loginViewModel.RememberMe, false);
 
                 return result.Succeeded;
             }
@@ -277,7 +280,7 @@ namespace Aroma_Shop.Application.Services
                     await _userManager
                         .GeneratePasswordResetTokenAsync(user);
 
-                var resetPasswordUrl = 
+                var resetPasswordUrl =
                     _linkGenerator.GetUriByAction(_accessor.HttpContext, returnAction, returnController,
                     new { email = user.Email, token = restPasswordToken }
                     , _accessor.HttpContext.Request.Scheme);
@@ -320,9 +323,52 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel)
+        public async Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel)
         {
-            throw new NotImplementedException();
+            var loggedUser =
+                await GetLoggedUserWithDetails();
+
+            IdentityResult result;
+
+            if (!string.IsNullOrEmpty(editAccountViewModel.UserCurrentPassword) &&
+                !string.IsNullOrEmpty(editAccountViewModel.UserNewPassword))
+            {
+                var isCurrentPasswordValid =
+                    await _userManager
+                        .CheckPasswordAsync
+                            (loggedUser, editAccountViewModel.UserCurrentPassword);
+
+                if (!isCurrentPasswordValid)
+                {
+                    var errorMessage = new IdentityError
+                    {
+                        Description = "کلمه عبور صحیح نمی باشد"
+                    };
+
+                    result = 
+                        IdentityResult.Failed(errorMessage);
+
+                    return result;
+                }
+
+                await
+                    _userManager.RemovePasswordAsync(loggedUser);
+                await
+                    _userManager.AddPasswordAsync(loggedUser, editAccountViewModel.UserNewPassword);
+            }
+
+            loggedUser.UserName = editAccountViewModel.UserName;
+            loggedUser.UserDetails.FirstName = editAccountViewModel.FirstName;
+            loggedUser.UserDetails.LastName = editAccountViewModel.LastName;
+            loggedUser.UserDetails.UserProvince = editAccountViewModel.UserProvince;
+            loggedUser.UserDetails.UserCity = editAccountViewModel.UserCity;
+            loggedUser.UserDetails.UserAddress = editAccountViewModel.UserAddress;
+            loggedUser.UserDetails.UserZipCode = editAccountViewModel.UserZipCode;
+
+            result =
+                await _userManager.UpdateAsync(loggedUser);
+
+            return result;
         }
 
         public async Task<IEnumerable<UserViewModel>> GetUsers()

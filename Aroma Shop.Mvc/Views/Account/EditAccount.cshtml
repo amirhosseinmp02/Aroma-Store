@@ -130,6 +130,10 @@
                     <input type="submit" value="ویرایش" class="custombtn button2">
                 </div>
                 <div class="col-md-12 mt-3">
+                    @if (ViewData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success current-password-label" role="alert">@ViewData["SuccessMessage"]</div>
+                    }
                     <div class="alert alert-danger text-left current-password-label" role="alert" asp-validation-summary="All"></div>
                 </div>
             </form>

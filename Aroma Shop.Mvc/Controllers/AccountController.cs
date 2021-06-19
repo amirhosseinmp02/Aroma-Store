@@ -93,7 +93,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = 
+                var result =
                     await _accountService.LoginWithPassword(model);
 
                 if (result)
@@ -106,7 +106,7 @@ namespace Aroma_Shop.Mvc.Controllers
             }
             model.ReturnUrl = returnUrl;
 
-            model.ExternalsLogins = 
+            model.ExternalsLogins =
                 (await _accountService.GetExternalAuthentications()).ToList();
 
             ModelState.AddModelError("", "نام کاربری یا رمز عبور اشتباه است.");
@@ -132,7 +132,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("/My-Account/Edit-Account")]
         public async Task<IActionResult> EditAccount()
         {
-            var loggedUser = 
+            var loggedUser =
                 await _accountService.GetLoggedUserWithDetails();
 
             var editAccountViewModel = new EditAccountViewModel()
@@ -156,7 +156,22 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                var result =
+                    await _accountService.EditAccount(model);
 
+                if (result.Succeeded)
+                {
+                    ModelState.Clear();
+                    ViewData["SuccessMessage"] = "اطلاعات با موفقیت ویرایش شد ، در صورت تغییر کلمه عبور باید دوباره وارد شوید";
+                }
+
+                else
+                {
+                    foreach (var identityError in result.Errors)
+                    {
+                        ModelState.AddModelError("", identityError.Description);
+                    }
+                }
             }
 
             return View(model);
@@ -191,7 +206,7 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 await _accountService
-                        .SendRestPasswordLink(model.Email,"Account", "ResetPassword");
+                        .SendRestPasswordLink(model.Email, "Account", "ResetPassword");
 
                 ViewData["SuccessMessage"] =
                     "در صورت معتبر بودن ایمیل وارد شده ، لینک تغییر کلمه عبور به ایمیل شما ارسال خواهد شد.";
@@ -208,14 +223,14 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #region ResetPassword
 
-        public IActionResult ResetPassword(string email,string token)
+        public IActionResult ResetPassword(string email, string token)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
                 return RedirectToAction("Index", "Home");
 
             var model = new RestPasswordViewModel()
             {
-                Email=email,
+                Email = email,
                 Token = token
             };
 
@@ -236,7 +251,7 @@ namespace Aroma_Shop.Mvc.Controllers
                     return RedirectToAction("Login");
                 }
 
-                ModelState.AddModelError("","مشکلی در زمان تغییر کلمه عبور رخ داد.");
+                ModelState.AddModelError("", "مشکلی در زمان تغییر کلمه عبور رخ داد.");
             }
 
             return View(model);
