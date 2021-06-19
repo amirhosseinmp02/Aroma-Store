@@ -23,10 +23,11 @@ namespace Aroma_Shop.Application.ViewModels.Account
         public string Email { get; set; }
 
         public string UserProvince { get; set; }
-        [RequiredIfNotNull(nameof(UserProvince))]
+        [RequiredIfNotNull(nameof(UserProvince), ErrorMessage = "در صورت انتخاب استان ، شهر خود را هم انتخاب نمایید")]
         public string UserCity { get; set; }
         public string UserAddress { get; set; }
         [StringLength(10, MinimumLength = 10, ErrorMessage = "کد پستی شامل 10 رقم می باشد")]
+        [RegularExpression("([0-9]+)",ErrorMessage = "کد پستی تنها میتواند شامل عدد باشد")]
         public string UserZipCode { get; set; }
 
         [DataType(DataType.Password)]
@@ -36,6 +37,7 @@ namespace Aroma_Shop.Application.ViewModels.Account
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]
+        [RequiredIfNotNull(nameof(UserCurrentPassword), ErrorMessage = "در صورت وارد کردن کلمه عبور فعلی ، کلمه عبور جدید را نیز وارد نمایید")]
         public string UserNewPassword { get; set; }
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]

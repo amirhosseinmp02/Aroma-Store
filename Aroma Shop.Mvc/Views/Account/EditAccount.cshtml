@@ -31,7 +31,7 @@
             </form>
         </div>
         <div class="col-lg-9 col-md-8 col-sm-11">
-            <form class="row contact_form">
+            <form class="row contact_form" asp-action="EditAccount">
                 <div class="col-md-6 form-group p_star">
                     <label class="control-label">نام</label>
                     <input class="form-control" id="first" placeholder="نام خود را وارد نمایید" asp-for="FirstName">
@@ -104,7 +104,12 @@
                     <span class="text-danger field-validation-valid"></span>
                 </div>
                 <div class="col-md-12 form-group">
-                    <h5 class="mt-3">تغییر گذرواژه</h5>
+                    <label class="control-label">کد پستی</label>
+                    <input type="number" class="form-control" id="zip" placeholder="کد پستی خود را وارد نمایید" asp-for="UserZipCode">
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+                <div class="col-md-12 form-group">
+                    <h5 class="mt-3">تغییر کلمه عبور</h5>
                     <div class="form-group">
                         <label class="control-label current-password-label">کلمه عبور فعلی (در صورتی که قصد تغییر ندارید خالی بگذارید)</label>
                         <input class="form-control" placeholder="کلمه عبور خود را وارد نمایید" asp-for="UserCurrentPassword" />
@@ -125,7 +130,7 @@
                     <input type="submit" value="ویرایش" class="custombtn button2">
                 </div>
                 <div class="col-md-12 mt-3">
-                    <div class="alert alert-danger text-left" role="alert" asp-validation-summary="All"></div>
+                    <div class="alert alert-danger text-left current-password-label" role="alert" asp-validation-summary="All"></div>
                 </div>
             </form>
         </div>

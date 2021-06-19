@@ -151,7 +151,7 @@ namespace Aroma_Shop.Mvc.Controllers
         }
 
         [Authorize]
-        [HttpGet("My-Account/Edit-Account")]
+        [HttpPost("/My-Account/Edit-Account")]
         public async Task<IActionResult> EditAccount(EditAccountViewModel model)
         {
             if (ModelState.IsValid)
