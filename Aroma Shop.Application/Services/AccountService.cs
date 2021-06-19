@@ -323,6 +323,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public Task<bool> IsUserHasPassword(CustomIdentityUser user)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<bool> IsLoggedUserHasPassword()
+        {
+            throw new NotImplementedException();
+        }
         public async Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel)
         {
             var loggedUser =
