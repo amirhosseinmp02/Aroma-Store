@@ -25,10 +25,12 @@ namespace Aroma_Shop.Application.Interfaces
         ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
             string returnUrl);
         Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null);
-        Task<bool> LoginWithPassword(LoginViewModel loginViewModel);    
+        Task<bool> LoginWithPassword(LoginViewModel loginViewModel); 
         Task<bool> LogOutUser();
         Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction);
         Task<bool> RestPassword(string userEmail, string token, string newPassword);
+        Task<bool> IsUserHasPassword(CustomIdentityUser user);
+        Task<bool> IsLoggedUserHasPassword();
         Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel); 
 
         Task<IEnumerable<UserViewModel>> GetUsers();
