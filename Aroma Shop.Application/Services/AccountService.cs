@@ -323,13 +323,41 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public Task<bool> IsUserHasPassword(CustomIdentityUser user)
+        public async Task<bool> IsUserHasPassword(CustomIdentityUser user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result =
+                    await _userManager.HasPasswordAsync(user);
+
+                if (!result)
+                    return false;
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
-        public Task<bool> IsLoggedUserHasPassword()
+        public async Task<bool> IsLoggedUserHasPassword()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUser =
+                    await GetLoggedUser();
+
+                var result =
+                    await IsUserHasPassword(loggedUser);
+
+                return result;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
         public async Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel)
         {
