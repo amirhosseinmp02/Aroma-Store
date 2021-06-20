@@ -485,6 +485,16 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public async Task<IEnumerable<Product>> GetLoggedUserFavoriteProducts()
+        {
+            var loggedUser =
+                await _accountService.GetLoggedUserWithDetails();
+
+            var loggedUserFavoriteProducts =
+                loggedUser.FavoriteProducts;
+
+            return loggedUserFavoriteProducts;
+        }
 
         //Utilities Methods
 
