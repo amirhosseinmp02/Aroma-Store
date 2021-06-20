@@ -11,10 +11,12 @@ namespace Aroma_Shop.Mvc.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IProductService _productService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IProductService productService)
         {
             _accountService = accountService;
+            _productService = productService;
         }
 
         #region Register
@@ -175,6 +177,20 @@ namespace Aroma_Shop.Mvc.Controllers
             }
 
             return View(model);
+        }
+
+        #endregion
+
+        #region ShowFavoriteProducts
+
+        [Authorize]
+        [HttpGet("/My-Account/Favorite-Products")]
+        public async Task<IActionResult> FavoriteProducts()
+        {
+            var loggedUserFavoriteProducts =
+                await _productService.GetLoggedUserFavoriteProducts();
+
+            return View(loggedUserFavoriteProducts);
         }
 
         #endregion
