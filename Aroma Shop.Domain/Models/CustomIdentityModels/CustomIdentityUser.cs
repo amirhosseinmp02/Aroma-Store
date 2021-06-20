@@ -13,7 +13,7 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
     {
         public CustomIdentityUser()
         {
-
+            FavoriteProducts = new List<Product>();
         }
 
         [Required]

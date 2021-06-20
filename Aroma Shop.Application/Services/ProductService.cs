@@ -21,12 +21,14 @@ namespace Aroma_Shop.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IFileService _fileService;
         private readonly IMediaService _mediaService;
+        private readonly IAccountService _accountService;
 
-        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService)
+        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService, IAccountService accountService)
         {
             _productRepository = productRepository;
             _fileService = fileService;
             _mediaService = mediaService;
+            _accountService = accountService;
         }
         public Product GetProduct(int productId)
         {
@@ -389,6 +391,31 @@ namespace Aroma_Shop.Application.Services
                 items.Insert(0, item);
             }
             return items;
+        }
+        public async Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId)
+        {
+            try
+            {
+                var favoriteProduct =
+                    GetProduct(favoriteProductId);
+
+                if (favoriteProduct == null)
+                    return false;
+
+                var loggedUser =
+                    await _accountService
+                        .GetLoggedUserWithDetails();
+
+                loggedUser
+                    .FavoriteProducts.Add(favoriteProduct);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
 
         //Utilities Methods
