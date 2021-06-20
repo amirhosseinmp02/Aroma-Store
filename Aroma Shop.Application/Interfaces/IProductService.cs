@@ -27,5 +27,6 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> IsProductInLoggedUserFavoriteProducts(int favoriteProductId);
         Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId);
         Task<bool> RemoveProductByIdFromLoggedUserFavoriteProducts(int favoriteProductId);
+        Task<IEnumerable<Product>> GetLoggedUserFavoriteProducts();
     }
 }
