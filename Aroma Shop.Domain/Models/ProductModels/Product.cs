@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
 
@@ -39,5 +40,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public ICollection<ProductInformation> Informations { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Image> Images { get; set; }
+        public ICollection<CustomIdentityUser> InterestedUsers { get; set; }
     }
 }
