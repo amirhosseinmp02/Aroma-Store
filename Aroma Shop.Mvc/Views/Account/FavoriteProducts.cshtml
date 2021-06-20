@@ -38,7 +38,7 @@
             </form>
         </div>
         <div class="col-lg-9 col-md-8 col-sm-11">
-            <div class="d-flex flex-lg-row flex-md-column flex-sm-column flex-column justify-content-around flex-wrap">
+            <div class="d-flex flex-lg-row flex-md-column flex-sm-column flex-column justify-content-between flex-wrap">
                 @if (Model.Any())
                 {
                     @foreach (var favoriteProduct in @Model)
@@ -78,6 +78,10 @@
                             </div>
                         </div>
                     }
+                }
+                else
+                {
+                    <div class="alert alert-danger w-100 text-left" role="alert">لیست علاقه مندی های شما خالیست !</div>
                 }
             </div>
         </div>
