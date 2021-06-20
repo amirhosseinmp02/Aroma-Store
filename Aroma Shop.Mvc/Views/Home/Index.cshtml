@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
+
 @{
     ViewData["Title"] = "خانه";
 }
@@ -24,7 +25,6 @@
     </div>
 </section>
 <!--================ Hero banner end =================-->
-
 <!-- ================ trending product section start ================= -->
 <section class="section-margin calc-60px">
     <div class="container">
@@ -33,16 +33,16 @@
             <h2><span class="section-intro__style">محصولات</span> پرطرفدار</h2>
         </div>
 
-        @{
+        @if (Model.Any())
+        {
             await Html.RenderPartialAsync("PartialShowProducts", Model);
         }
 
     </div>
 </section>
 <!-- ================ trending product section end ================= -->
-
 <!-- ================ offer section start ================= -->
-<section class="offer" id="parallax-1" data-anchor-target="#parallax-1" >
+<section class="offer" id="parallax-1" data-anchor-target="#parallax-1">
     <div class="container">
         <div class="row">
             <div class="col-xl-5">

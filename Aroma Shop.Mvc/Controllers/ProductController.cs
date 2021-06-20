@@ -52,7 +52,12 @@ namespace Aroma_Shop.Mvc.Controllers
                     .AddProductByIdToLoggedUserFavoriteProducts(favoriteProductId);
 
             if (result)
-                return RedirectToAction("ProductDetails", new { productId = favoriteProductId });
+            {
+                var returnUrl =
+                    Request.Headers["Referer"].ToString();
+
+                return Redirect(returnUrl);
+            }
 
             return NotFound();
 
@@ -71,7 +76,12 @@ namespace Aroma_Shop.Mvc.Controllers
                     .RemoveProductByIdFromLoggedUserFavoriteProducts(favoriteProductId);
 
             if (result)
-                return RedirectToAction("ProductDetails", new { productId = favoriteProductId });
+            {
+                var returnUrl =
+                    Request.Headers["Referer"].ToString();
+
+                return Redirect(returnUrl);
+            }
 
             return NotFound();
         }

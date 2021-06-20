@@ -750,6 +750,7 @@ namespace Aroma_Shop.Application.Services
                 await _userManager.Users
                     .Include(p => p.UserDetails)
                     .Include(p=>p.FavoriteProducts)
+                    .ThenInclude(p=>p.Images)
                     .SingleOrDefaultAsync(p => p.Id == loggedUserId);
 
             return loggedUser;

@@ -1,35 +1,49 @@
 ﻿@using Aroma_Shop.Domain.Models.FileModels
+@using Aroma_Shop.Application.Interfaces
+
 @model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
 
+@inject IAccountService AccountService
+@inject IProductService ProductService
+
 <div class="row">
-    @if (Model.Count() > 0)
+    @foreach (var product in @Model)
     {
-        @foreach (var product in @Model)
+        string productImagePath;
+        if (product.Images.Any())
         {
-            string productImagePath;
-            if (product.Images.Any())
-            {
-                productImagePath = $"/img/{product.Images.FirstOrDefault().ImagePath}";
-            }
-            else
-            {
-                productImagePath = Image.DefaultImagePath;
-            }
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="card text-center card-product">
-                    <div class="card-product__img">
-                        <img class="card-img product-images-card" src="@productImagePath" alt="">
-                        <div class="card-product__imgOverlay">
-                            <a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId" class="btn btn-block text-light btn-dark btn-buy">خرید</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
-                        <h4 class="card-product__title"><a href="single-product.html">@product.ProductName</a></h4>
-                        <p class="card-product__price">@product.ProductPrice تومان</p>
-                    </div>
+            productImagePath = $"/img/{product.Images.FirstOrDefault().ImagePath}";
+        }
+        else
+        {
+            productImagePath = Image.DefaultImagePath;
+        }
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+                <div class="card-product__img">
+                    <img class="card-img product-images-card" src="@productImagePath" alt="">
+                    <ul class="card-product__imgOverlay">
+                        <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-search"></i></a></li>
+                        <li><button><i class="bi bi-bag"></i></button></li>
+                        @if (AccountService.IsUserSignedIn())
+                        {
+                            if (!await ProductService.IsProductInLoggedUserFavoriteProducts(product.ProductId))
+                            {
+                                <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="ti-heart"></i></a></li>
+                            }
+                            else
+                            {
+                                <li><a asp-controller="Product" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="bi bi-heart-fill"></i></a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
+                    <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
+                    <p class="card-product__price">@product.ProductPrice تومان</p>
                 </div>
             </div>
-        }
+        </div>
     }
 </div>

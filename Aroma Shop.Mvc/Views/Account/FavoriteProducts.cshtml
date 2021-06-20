@@ -1,0 +1,85 @@
+﻿@using Aroma_Shop.Domain.Models.FileModels
+@using Aroma_Shop.Application.Interfaces
+
+@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
+
+@inject IAccountService AccountService
+@inject IProductService ProductService
+
+@{
+    ViewData["Title"] = "حساب کاربری";
+}
+
+<section class="blog-banner-area" id="contact">
+    <div class="container h-100">
+        <div class="blog-banner">
+            <div class="text-center">
+                <h1>حساب کاربری</h1>
+                <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="text-dark" asp-controller="Home" asp-action="Index">خانه</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">حساب کاربری</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="myaccount_content container">
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-11 mb-xl-0 mb-lg-0 mb-md-0 mb-4">
+            <a class="custombtn button1 text-center mb-2" asp-action="ManageAccount">پیشخوان</a>
+            <a class="custombtn button1 text-center mb-2" asp-action="EditAccount">جزئیات حساب</a>
+            <button class="custombtn button1 mb-2 bg-dark text-light">علاقه مندی ها</button>
+            <button class="custombtn button1 mb-2">سفارش ها</button>
+            <form asp-action="LogOut">
+                <button class="custombtn button1 mb-2" type="submit">خروج از سیستم</button>
+            </form>
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-11">
+            <div class="d-flex flex-lg-row flex-md-column flex-sm-column flex-column justify-content-around flex-wrap">
+                @if (Model.Any())
+                {
+                    @foreach (var favoriteProduct in @Model)
+                    {
+                        string productImagePath;
+                        if (favoriteProduct.Images.Any())
+                        {
+                            productImagePath = $"/img/{favoriteProduct.Images.FirstOrDefault().ImagePath}";
+                        }
+                        else
+                        {
+                            productImagePath = Image.DefaultImagePath;
+                        }
+                        <div class="">
+                            <div class="card text-center card-product">
+                                <div class="card-product__img">
+                                    <img class="card-img product-images-card" src="@productImagePath" alt="">
+                                    <ul class="card-product__imgOverlay">
+                                        <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@favoriteProduct.ProductId"><i class="bi bi-search"></i></a></li>
+                                        <li><button><i class="bi bi-bag"></i></button></li>
+                                        @if (AccountService.IsUserSignedIn())
+                                        {
+                                            if (!await ProductService.IsProductInLoggedUserFavoriteProducts(favoriteProduct.ProductId))
+                                            {
+                                                <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@favoriteProduct.ProductId"><i class="ti-heart"></i></a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a asp-controller="Product" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@favoriteProduct.ProductId"><i class="bi bi-heart-fill"></i></a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@favoriteProduct.ProductId">@favoriteProduct.ProductName</a></h4>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -926,26 +926,28 @@ a {
         display: inline-block
     }
 
-        .card-product__imgOverlay li button {
+        .card-product__imgOverlay li button, .card-product__imgOverlay li a {
             border: 0;
             border-radius: 0;
             padding: 7px 12px;
             background: #8894ff
         }
 
+        .card-product__imgOverlay li a {
+            color: #fff;
+        }
+
             .card-product__imgOverlay li button i,
-            .card-product__imgOverlay li button span {
+            .card-product__imgOverlay li button span,
+            .card-product__imgOverlay li a i,
+            .card-product__imgOverlay li a  span{
                 font-size: 15px;
                 color: #fff;
                 vertical-align: middle
             }
 
-            .card-product__imgOverlay li button:hover {
-                background: #384aeb
-            }
-
-        .card-product__imgOverlay li:not(:last-child) {
-            margin-right: 5px
+        .card-product__imgOverlay li button:hover, .card-product__imgOverlay li a:hover {
+            background: #384aeb
         }
 
 .card-product__title a {
@@ -4601,33 +4603,33 @@ a {
                 color: #777
             }
 
-            .reply_btn {
-                border: 1px solid #e0e0e0;
-                padding: 0px 28px;
-                display: inline-block;
-                line-height: 32px;
-                border-radius: 16px;
-                font-size: 14px;
-                color: #222;
-                right: 0px;
-                top: 14px;
-                @icnlude transition
-            }
+.reply_btn {
+    border: 1px solid #e0e0e0;
+    padding: 0px 28px;
+    display: inline-block;
+    line-height: 32px;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #222;
+    right: 0px;
+    top: 14px;
+    @icnlude transition
+}
 
-                .reply_btn:hover {
-                    background: #384aeb;
-                    border-color: #384aeb;
-                    color: #fff
-                }
-
-    .review_item p {
-        padding-top: 10px;
-        margin-bottom: 0px
+    .reply_btn:hover {
+        background: #384aeb;
+        border-color: #384aeb;
+        color: #fff
     }
 
-    .review_item.reply {
-        padding-right: 28px
-    }
+.review_item p {
+    padding-top: 10px;
+    margin-bottom: 0px
+}
+
+.review_item.reply {
+    padding-right: 28px
+}
 
 .review_box h4 {
     font-size: 20px;
@@ -4860,30 +4862,36 @@ input.input-validation-error {
     width: 255px !important;
     height: 255px !important;
 }
+
 .product-image-detail {
     width: 100% !important;
     height: 520px;
 }
+
 #carouselExampleControls {
     width: 550px;
 }
+
 @media only screen and (max-width: 1200px) {
     #carouselExampleControls {
         width: 480px;
     }
 }
+
 @media only screen and (max-width: 992px) {
     #carouselExampleControls {
         width: 500px;
         margin: auto;
     }
 }
+
 @media only screen and (max-width: 505px) {
     #carouselExampleControls {
         width: auto;
         margin: auto;
     }
 }
+
 @media only screen and (max-width: 1090px) {
     .add-comment-section {
         margin-top: 25px
@@ -4916,9 +4924,9 @@ input.input-validation-error {
     animation-timing-function: ease-in-out;
 }
 
-.custombtn:focus {
-    outline: none;
-}
+    .custombtn:focus {
+        outline: none;
+    }
 
 .button1 {
     transition: 0.5s;
@@ -4928,10 +4936,10 @@ input.input-validation-error {
     width: 100%;
 }
 
-.button1:hover {
-    background: #1e4354;
-    color: white;
-}
+    .button1:hover {
+        background: #1e4354;
+        color: white;
+    }
 
 .myaccount_content {
     margin-top: 80px;
@@ -4951,10 +4959,10 @@ input.input-validation-error {
     width: 100%;
 }
 
-.button2:hover {
-    background: seagreen;
-    color: white;
-}
+    .button2:hover {
+        background: seagreen;
+        color: white;
+    }
 
 .tooltip-inner {
     font-family: 'Samim', sans-serif;
