@@ -406,8 +406,17 @@ namespace Aroma_Shop.Application.Services
                     await _accountService
                         .GetLoggedUserWithDetails();
 
+                var isFavoriteProductExistInUserFavoriteList =
+                    loggedUser.FavoriteProducts
+                        .Any(p => p.ProductId == favoriteProductId);
+
+                if (isFavoriteProductExistInUserFavoriteList)
+                    return false;
+
                 loggedUser
-                    .FavoriteProducts.Add(favoriteProduct);
+                .FavoriteProducts.Add(favoriteProduct);
+
+                _productRepository.Save();
 
                 return true;
             }

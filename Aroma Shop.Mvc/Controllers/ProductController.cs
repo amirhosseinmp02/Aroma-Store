@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Product;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Controllers
 {
@@ -24,7 +25,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("/Products/{productId}")]
         public IActionResult ProductDetails(int productId)
         {
-            var product = 
+            var product =
                 _productService.GetProduct(productId);
 
             product.Comments = product.Comments
@@ -36,6 +37,25 @@ namespace Aroma_Shop.Mvc.Controllers
             };
 
             return View(model);
+        }
+
+        #endregion
+
+        #region AddProductToUserFavoriteProducts
+
+        [Authorize]
+        [HttpGet("/Products/AddToFavoriteProducts")]
+        public async Task<IActionResult> AddProductToUserFavoriteProducts(int favoriteProductId)
+        {
+            var result =
+                await _productService
+                    .AddProductByIdToLoggedUserFavoriteProducts(favoriteProductId);
+
+            if (result)
+                return RedirectToAction("ProductDetails", new { productId = favoriteProductId });
+
+            return NotFound();
+
         }
 
         #endregion

@@ -95,7 +95,7 @@
                         <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
                     </div>
                     <div class="card_area d-flex align-items-center">
-                        <a class="icon_btn" href="#" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                        <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
                     </div>
                 </div>
             </div>
