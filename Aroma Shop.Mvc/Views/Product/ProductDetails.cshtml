@@ -3,7 +3,11 @@
 @using Aroma_Shop.Application.Interfaces
 @using Aroma_Shop.Application.Utilites
 @using Aroma_Shop.Domain.Models.FileModels
+
 @inject IAccountService AccountService
+@inject IProductService ProductService
+
+
 @{
     ViewData["Title"] = Model.Product.ProductName;
 }
@@ -94,9 +98,23 @@
                         </button>
                         <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
                     </div>
-                    <div class="card_area d-flex align-items-center">
-                        <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
-                    </div>
+                    @{
+                        var isProductInLoggedUserFavoriteProducts =
+                            await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
+                    }
+                    @if (!isProductInLoggedUserFavoriteProducts)
+                    {
+                        <div class="card_area d-flex align-items-center">
+                            <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="card_area d-flex align-items-center">
+                            <a class="icon_btn" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="حذف از علاقه مندی ها"><i class="bi bi-heart-fill"></i></a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -178,7 +196,7 @@
                                                     <div class="media-body">
                                                         <h4>
                                                             @commentReply.User.UserName @if (commentReply.IsAdminReplied)
-                                                        {<span class="badge badge-danger adminReply">ادمین</span>}
+                                                            {<span class="badge badge-danger adminReply">ادمین</span>}
                                                         </h4>
                                                         <h5 class="bg-light px-2 d-inline text-dark">@commentReply.SubmitTime.ToSolarWithTime()</h5>
                                                     </div>

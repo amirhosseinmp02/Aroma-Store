@@ -59,5 +59,23 @@ namespace Aroma_Shop.Mvc.Controllers
         }
 
         #endregion
+
+        #region RemoveProductFromUserFavoriteProducts
+
+        [Authorize]
+        [HttpGet("/Products/RemoveFromFavoriteProducts")]
+        public async Task<IActionResult> RemoveProductFromUserFavoriteProducts(int favoriteProductId)
+        {
+            var result =
+                await _productService
+                    .RemoveProductByIdFromLoggedUserFavoriteProducts(favoriteProductId);
+
+            if (result)
+                return RedirectToAction("ProductDetails", new { productId = favoriteProductId });
+
+            return NotFound();
+        }
+
+        #endregion
     }
 }

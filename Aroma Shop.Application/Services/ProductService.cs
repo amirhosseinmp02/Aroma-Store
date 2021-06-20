@@ -392,6 +392,31 @@ namespace Aroma_Shop.Application.Services
             }
             return items;
         }
+        public async Task<bool> IsProductInLoggedUserFavoriteProducts(int favoriteProductId)
+        {
+            try
+            {
+                var favoriteProduct =
+                    GetProduct(favoriteProductId);
+
+                if (favoriteProduct == null)
+                    return false;
+
+                var loggedUser =
+                    await _accountService.GetLoggedUserWithDetails();
+
+                var isProductInLoggedUserFavoriteProducts =
+                    loggedUser.FavoriteProducts
+                        .Any(p => p.ProductId == favoriteProductId);
+
+                return isProductInLoggedUserFavoriteProducts;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public async Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId)
         {
             try
@@ -415,6 +440,40 @@ namespace Aroma_Shop.Application.Services
 
                 loggedUser
                 .FavoriteProducts.Add(favoriteProduct);
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        public async Task<bool> RemoveProductByIdFromLoggedUserFavoriteProducts(int favoriteProductId)
+        {
+            try
+            {
+                var favoriteProduct =
+                    GetProduct(favoriteProductId);
+
+                if (favoriteProduct == null)
+                    return false;
+
+                var loggedUser =
+                    await _accountService.GetLoggedUserWithDetails();
+
+                var isFavoriteProductExistInUserFavoriteList =
+                    loggedUser.FavoriteProducts
+                        .Any(p => p.ProductId == favoriteProductId);
+
+                if (!isFavoriteProductExistInUserFavoriteList)
+                    return false;
+
+                loggedUser
+                    .FavoriteProducts
+                    .Remove(favoriteProduct);
 
                 _productRepository.Save();
 
