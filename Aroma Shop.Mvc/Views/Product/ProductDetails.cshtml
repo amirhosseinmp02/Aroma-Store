@@ -95,8 +95,7 @@
                         <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
                     </div>
                     <div class="card_area d-flex align-items-center">
-                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                        <a class="icon_btn" href="#" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
                     </div>
                 </div>
             </div>
@@ -240,6 +239,11 @@
 
     <script>
         $(document).ready(function () {
+
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            })
+
             $(".reply_btn").click(function () {
 
                 $("#parentCommentId").val($(this).next().val());
@@ -253,7 +257,6 @@
                 $("html, body").animate({
                     scrollTop: coordinateTop
                 }, 1000);
-
             });
         });
     </script>

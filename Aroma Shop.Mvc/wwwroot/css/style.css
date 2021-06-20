@@ -1376,7 +1376,7 @@ a {
 
 @media (min-width: 1000px) {
     .blog-banner-area {
-        height: 410px
+        height: 250px
     }
 }
 
@@ -4347,7 +4347,7 @@ a {
 
         .s_product_text .card_area .icon_btn i,
         .s_product_text .card_area .icon_btn span {
-            line-height: 40px
+            line-height: 45px
         }
 
         .s_product_text .card_area .icon_btn:after {
@@ -4954,4 +4954,10 @@ input.input-validation-error {
 .button2:hover {
     background: seagreen;
     color: white;
+}
+
+.tooltip-inner {
+    font-family: 'Samim', sans-serif;
+    background: teal;
+    margin: 5px;
 }
