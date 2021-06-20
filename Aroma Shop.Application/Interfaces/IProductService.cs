@@ -24,6 +24,8 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteCategoryById(int categoryId);
         IEnumerable<SelectListItem> GetCategoriesTreeView();
         IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
+        Task<bool> IsProductInLoggedUserFavoriteProducts(int favoriteProductId);
         Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId);
+        Task<bool> RemoveProductByIdFromLoggedUserFavoriteProducts(int favoriteProductId);
     }
 }
