@@ -40,6 +40,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public ICollection<ProductInformation> Informations { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Image> Images { get; set; }
+        public ICollection<ProductAttribute> ProductAttributes { get; set; }
         public ICollection<CustomIdentityUser> InterestedUsers { get; set; }
     }
 }
