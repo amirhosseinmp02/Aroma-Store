@@ -24,7 +24,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [Required(ErrorMessage = "لطفا نام محصول را وارد نمایید")]
         public string ProductName { get; set; }
         [Required(ErrorMessage = "لطفا قیمت محصول را وارد نمایید")]
-        [Range(0,999999999,ErrorMessage = "حداقل مقدار 0 می باشد")] 
+        [Range(0, 999999999, ErrorMessage = "حداقل مقدار 0 می باشد")]
         public double ProductPrice { get; set; }
         [Required(ErrorMessage = "لطفا تعداد محصول را وارد نمایید")]
         [Range(0, 999999999, ErrorMessage = "حداقل مقدار 0 می باشد")]
@@ -34,9 +34,12 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         public string ProductShortDescription { get; set; }
 
+        [Required(ErrorMessage = "لطفا نوع محصول را انتخاب نمایید")]
+        public bool IsSimpleProduct { get; set; } = true;
+
         [MaxFilesCount(6)]
         [MaxFileSize(4194304)]
-        [AllowedExtensions(new string[]{".png",".jpg",".jpeg"})]
+        [AllowedExtensions(new string[] { ".png", ".jpg", ".jpeg" })]
         public IEnumerable<IFormFile> ProductImagesFiles { get; set; }
         public IEnumerable<int> ProductCategoriesId { get; set; }
         public IEnumerable<SelectListItem> ProductCategories { get; set; }
