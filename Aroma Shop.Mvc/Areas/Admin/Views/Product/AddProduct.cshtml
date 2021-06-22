@@ -28,15 +28,32 @@
                 </textarea>
                 <span class="text-danger field-validation-valid"></span>
             </div>
-            <div class="form-group">
-                <label class="control-label" for="ProductPrice">قیمت</label>
-                <input class="form-control" asp-for="ProductPrice">
-                <span class="text-danger field-validation-valid"></span>
+            <div id="adjectives-radio-buttons" class="form-group">
+                <label class="control-label">نوع محصول</label>
+                <br />
+                <div class="form-check form-check-inline ml-4">
+                    <input id="without-adjectives-button" class="form-check-input" type="radio" asp-for="IsSimpleProduct" value="true">
+                    <label class="form-check-label pl-2">محصول ساده</label>
+                </div>
+                <div class="form-check form-check-inline ml-5">
+                    <input id="with-adjectives-button" class="form-check-input" type="radio" asp-for="IsSimpleProduct" value="false">
+                    <label class="form-check-label pl-2">محصول چند صفتی</label>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="control-label" for="ProductQuantityInStock">تعداد</label>
-                <input class="form-control" asp-for="ProductQuantityInStock">
-                <span class="text-danger field-validation-valid"></span>
+            <div id="without-adjectives-section">
+                <div class="form-group">
+                    <label class="control-label" for="ProductPrice">قیمت</label>
+                    <input class="form-control" asp-for="ProductPrice">
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ProductQuantityInStock">تعداد</label>
+                    <input class="form-control" asp-for="ProductQuantityInStock">
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+            </div>
+            <div id="with-adjectives-section" style="display: none">
+                with-adjective
             </div>
             <div class="form-group">
                 <label>دسته بندی ها</label>
@@ -76,8 +93,26 @@
 
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
-    //Manage Images
+
     <script>
+
+        //Manage Product Adjective
+
+        $(document).ready(function () {
+            $('input:radio[name="IsSimpleProduct"]').change(
+                function () {
+                    if (this.checked && this.value == 'true') {
+                        $('#with-adjectives-section').css('display', 'none');
+                        $('#without-adjectives-section').css('display', 'unset');
+                    }
+                    else if (this.checked && this.value == 'false') {
+                        $('#without-adjectives-section').css('display', 'none');
+                        $('#with-adjectives-section').css('display', 'unset');
+                    }
+                });
+        });
+
+        //Manage Images
 
         const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
 
