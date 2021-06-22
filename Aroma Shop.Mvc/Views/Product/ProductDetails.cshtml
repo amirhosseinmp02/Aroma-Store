@@ -10,6 +10,8 @@
 
 @{
     ViewData["Title"] = Model.Product.ProductName;
+    var isUserSignedIn =
+        AccountService.IsUserSignedIn();
 }
 
 <link href="~/vendors/ckeditor5/ckeditor-styles.css" rel="stylesheet" />
@@ -98,21 +100,31 @@
                         </button>
                         <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
                     </div>
-                    @{
+                    @if (isUserSignedIn)
+                    {
                         var isProductInLoggedUserFavoriteProducts =
                             await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
-                    }
-                    @if (!isProductInLoggedUserFavoriteProducts)
-                    {
-                        <div class="card_area d-flex align-items-center">
-                            <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
-                        </div>
 
+                        @if (!isProductInLoggedUserFavoriteProducts)
+                        {
+                            <div class="card_area d-flex align-items-center">
+                                <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="card_area d-flex align-items-center">
+                                <a class="icon_btn" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="حذف از علاقه مندی ها"><i class="bi bi-heart-fill"></i></a>
+                            </div>
+                        }
                     }
                     else
                     {
+                        var returnUrl =
+                            Url.Action("ProductDetails", "Product", new { productId = Model.Product.ProductId });
                         <div class="card_area d-flex align-items-center">
-                            <a class="icon_btn" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="حذف از علاقه مندی ها"><i class="bi bi-heart-fill"></i></a>
+                            <a class="icon_btn" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@returnUrl" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
                         </div>
                     }
                 </div>
@@ -216,7 +228,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 add-comment-section">
-                        @if (!AccountService.IsUserSignedIn())
+                        @if (!isUserSignedIn)
                         {
                             <div class="alert alert-danger mt-1" role="alert">جهت ثبت نظر باید در سایت <a asp-controller="Account" asp-action="Register" class="alert-link">عضو</a> شوید و یا <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails",new {productId=Model.Product.ProductId})" class="alert-link">وارد</a> سایت شده باشید .</div>
                         }
