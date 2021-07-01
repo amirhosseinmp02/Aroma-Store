@@ -3,6 +3,8 @@
     ViewData["Title"] = "افزودن محصول";
 }
 
+<link href="~/vendors/tags/tags.min.css" rel="stylesheet" />
+
 <div class="h2 mt-3">
     <h1 class="h2 d-inline">افزودن محصول</h1>
     <a class="btn btn-warning float-left" asp-action="Index">بازگشت</a>
@@ -53,8 +55,35 @@
                 </div>
             </div>
             <div id="with-attributes-section" style="display: none">
-                <div class="form-group">
+                <h3 class="mb-4">صفت ها و تنوع ها</h3>
+                <div class="form-group border border-secondary p-2 border-dark">
+                    <div class="form-group">
+                        <div class='row mb-2 product-attributes'>
+                            <div class='col-4'>
+                                <input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت'>
+                            </div>
+                            <div class='col-6'>
+                                <input id="attribute-1" name="AttributesValues" class="form-control attributes-values" placeholder="مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)">
+                            </div>
+                            <div class='col-2'>
 
+                            </div>
+                        </div>
+                        <button id="add-attribute-btn" type="button" class="btn btn-success">افزودن</button>
+                    </div>
+                    <div class="form-group variations-section" style="display: none;">
+                        <div class="row">
+                            <div class="col">
+                                <p class="font-weight-bold">نام تنوع</p>
+                            </div>
+                            <div class="col">
+                                <p class="font-weight-bold">قیمت</p>
+                            </div>
+                            <div class="col">
+                                <p class="font-weight-bold">تعداد موجود</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -91,14 +120,14 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+    <script src="~/vendors/tags/tags.min.js"></script>
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
 
     <script>
 
-        //Manage Product Adjective
+        //Manage Product Attributes
 
         $(document).ready(function () {
             $('input:radio[name="IsSimpleProduct"]').change(
@@ -113,6 +142,85 @@
                     }
                 });
         });
+
+
+        var tags = new Tags('#attribute-1');
+
+        $("#add-attribute-btn").click(function () {
+            var currentElementId = "id" + GuidGenerator().toString();
+            var content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت'></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)'></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+            $(content).insertBefore("#add-attribute-btn");
+            var currentElementIdSelector = "#" + currentElementId;
+            var tags = new Tags(currentElementIdSelector);
+        });
+        $(document).on("click",
+            ".remove-attribute-btn",
+            function () {
+                $(this).parent().parent().remove();
+                AttributeValueChanged();
+            });
+
+        var mixedAttributesList = [];
+        var productAttributesLengths = [];
+        var productAttributesValues = [];
+        function AttributeValueChanged(currentElement = null) {
+            var productAttributes = $(".product-attributes");
+            var productAttributesLengths = [];
+            var productAttributesValues = [];
+            for (var i = 0; i < productAttributes.length; i++) {
+                var currentAttributeValue = productAttributes.eq(i).children().eq(1).children().eq(0).val();
+                if (currentAttributeValue) {
+                    var currentAttributeValuesList = currentAttributeValue.split(",");
+                    productAttributesValues[i] = currentAttributeValuesList;
+                    var currentAttributeValuesListLength = currentAttributeValuesList.length;
+                    productAttributesLengths[i] = currentAttributeValuesListLength;
+                }
+            }
+            var firstAttributeLength = productAttributesLengths[0];
+            var maximumAttributes = firstAttributeLength;
+            if (productAttributesLengths.length > 1) {
+                for (var v = 1; v < productAttributesLengths.length; v++) {
+                    maximumAttributes *= productAttributesLengths[v];
+                }
+            }
+
+            var attributesVariationsCount = [];
+            var lastVariationCount = maximumAttributes;
+            for (var g = 0; g < productAttributesLengths.length; g++) {
+                attributesVariationsCount[g] = lastVariationCount / productAttributesLengths[g];
+                lastVariationCount = attributesVariationsCount[g];
+            }
+
+            mixedAttributesList = [];
+            for (var u = 0; u < productAttributesValues.length; u++) {
+                scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
+            }
+
+            $('.variations-section').css('display', 'unset');
+            $(".all-variations").remove();
+
+            for (var q = 0; q < mixedAttributesList.length; q++) {
+                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" + mixedAttributesList[q] + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].replaceAll(/\s/g, '') + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' /></div></div>";
+                $(".variations-section").append(variationContent);
+            }
+
+            function scrollingAttributes(values, count) {
+                var localCount = 1;
+                var i, c;
+                for (var i = 0, c = 0; c < maximumAttributes / count; i++, c++) {
+                    for (var v = c * count; v < count * localCount; v++) {
+                        if (mixedAttributesList[v] === undefined) {
+                            mixedAttributesList[v] = values[i];
+                        } else {
+                            mixedAttributesList[v] += " - " + values[i];
+                        }
+                    }
+                    ++localCount;
+                    if (i === values.length - 1)
+                        i = -1;
+                }
+            }
+        }
 
         //Manage Images
 
@@ -217,9 +325,9 @@
 
         //Add Informations Button Scripts
 
-        var content = "<div class='row mb-2'><div class='col' ><input type='text' name='InformationNames' class='form-control' placeholder='نام'></div><div class='col'><input type='text' name='InformationValues' class='form-control' placeholder='مقدار'></div><div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+        var content2 = "<div class='row mb-2'><div class='col' ><input type='text' name='InformationNames' class='form-control' placeholder='نام'></div><div class='col'><input type='text' name='InformationValues' class='form-control' placeholder='مقدار'></div><div class='col'><button type='button' class='btn btn-danger remove-information-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
         $("#add-information-btn").click(function () {
-            $(content).insertBefore("#add-information-btn");
+            $(content2).insertBefore("#add-information-btn");
         });
         $(document).on("click",
             ".remove-information-btn",
@@ -227,5 +335,14 @@
                 $(this).parent().parent().remove();
             });
 
+
+        //Js Guid Generator
+
+        function GuidGenerator() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
     </script>
 }
