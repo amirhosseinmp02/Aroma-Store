@@ -61,9 +61,11 @@
                         <div class='row mb-2 product-attributes'>
                             <div class='col-4'>
                                 <input id="attribute-name-1" type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value="@Model.AttributesNames.FirstOrDefault()">
+                                <span class="text-danger field-validation-valid"></span>
                             </div>
                             <div class='col-6'>
                                 <input id="attribute-value-1" name="AttributesValues" class="form-control attributes-values" placeholder="مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)" value="@Model.AttributesValues.FirstOrDefault()">
+                                <span class="text-danger field-validation-valid"></span>
                             </div>
                             <div class='col-2'>
 
@@ -112,7 +114,7 @@
             </div>
             @if (ViewData["SuccessMessage"] != null)
             {
-                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+            <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
             }
             <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
         </form>
@@ -121,11 +123,11 @@
 
 @section Scripts {
 
-    <script src="~/vendors/tags/tags.min.js"></script>
-    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
+<script src="~/vendors/tags/tags.min.js"></script>
+<script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
 
-    <script>
+<script>
 
     //Manage Product Attributes
 
@@ -138,7 +140,7 @@
             {
         <text>
             currentElementId = "id" + GuidGenerator().toString();
-            content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value='@Model.AttributesNames.ElementAtOrDefault(i)'></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)' value='@Model.AttributesValues.ElementAtOrDefault(i)'></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+            content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value='@Model.AttributesNames.ElementAtOrDefault(i)'><span class='text-danger field-validation-valid'></span></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)' value='@Model.AttributesValues.ElementAtOrDefault(i)'><span class='text-danger field-validation-valid'></span></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
             $(content).insertBefore("#add-attribute-btn");
             currentElementIdSelector = "#" + currentElementId;
                 var tags = new Tags(currentElementIdSelector);
@@ -168,7 +170,7 @@
 
         $("#add-attribute-btn").click(function () {
             var currentElementId = "id" + GuidGenerator().toString();
-            var content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت'></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)'></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+            var content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت'><span class='text-danger field-validation-valid'></span></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)'><span class='text-danger field-validation-valid'></span></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
             $(content).insertBefore("#add-attribute-btn");
             var currentElementIdSelector = "#" + currentElementId;
             var tags = new Tags(currentElementIdSelector);
@@ -236,7 +238,7 @@
             $(".all-variations").remove();
 
             for (var q = 0; q < mixedAttributesList.length; q++) {
-                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" + mixedAttributesList[q] + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].replaceAll(/\s/g, '') + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /></div></div>";
+                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" + mixedAttributesList[q] + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].replaceAll(/\s/g, '') + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
                 $(".variations-section").append(variationContent);
             }
 
@@ -380,5 +382,5 @@
                 return v.toString(16);
             });
         }
-    </script>
+</script>
 }

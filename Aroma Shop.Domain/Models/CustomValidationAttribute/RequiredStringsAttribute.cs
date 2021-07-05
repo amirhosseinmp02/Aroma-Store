@@ -13,7 +13,7 @@ namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
             object value, ValidationContext validationContext)
         {
             var strings = value as IEnumerable<string>;
-            if (strings.Count()>0)
+            if (strings.Any())
             {
                 if (strings.Any(p=>string.IsNullOrEmpty(p)))
                 {

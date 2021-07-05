@@ -41,11 +41,11 @@ namespace Aroma_Shop.Application.ViewModels.Product
 
         [Required(ErrorMessage = "لطفا نوع محصول را انتخاب نمایید")]
         public bool IsSimpleProduct { get; set; } = true;
-        [RequiredStrings]
+        [RequiredStringsIf(nameof(IsSimpleProduct),false, ErrorMessage = "لطفا نام صفت را وارد نمایید")]
         public IEnumerable<string> AttributesNames { get; set; }
-        [RequiredStrings]
+        [RequiredStringsIf(nameof(IsSimpleProduct), false, ErrorMessage = "لطفا مقادیر صفت را وارد نمایید")]
         public IEnumerable<string> AttributesValues { get; set; }
-        [RequiredStrings]
+        [RequiredStringsIf(nameof(IsSimpleProduct), false,ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
         public IEnumerable<string> MixedProductAttributesNames { get; set; }
         public IEnumerable<double?> MixedProductAttributesPrices { get; set; }
         public IEnumerable<int?> MixedProductAttributesQuantityInStocks { get; set; }
