@@ -16,6 +16,11 @@ namespace Aroma_Shop.Application.ViewModels.Product
         {
             ProductCategoriesId = new List<int>();
             ProductImagesFiles = new List<IFormFile>();
+            AttributesNames = new List<string>();
+            AttributesValues = new List<string>();
+            MixedProductAttributesNames = new List<string>();
+            MixedProductAttributesPrices = new List<double?>();
+            MixedProductAttributesQuantityInStocks = new List<int?>();
             InformationNames = new List<string>();
             InformationValues = new List<string>();
         }
@@ -36,6 +41,14 @@ namespace Aroma_Shop.Application.ViewModels.Product
 
         [Required(ErrorMessage = "لطفا نوع محصول را انتخاب نمایید")]
         public bool IsSimpleProduct { get; set; } = true;
+        [RequiredStrings]
+        public IEnumerable<string> AttributesNames { get; set; }
+        [RequiredStrings]
+        public IEnumerable<string> AttributesValues { get; set; }
+        [RequiredStrings]
+        public IEnumerable<string> MixedProductAttributesNames { get; set; }
+        public IEnumerable<double?> MixedProductAttributesPrices { get; set; }
+        public IEnumerable<int?> MixedProductAttributesQuantityInStocks { get; set; }
 
         [MaxFilesCount(6)]
         [MaxFileSize(4194304)]

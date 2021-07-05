@@ -60,10 +60,10 @@
                     <div class="form-group">
                         <div class='row mb-2 product-attributes'>
                             <div class='col-4'>
-                                <input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت'>
+                                <input id="attribute-name-1" type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value="@Model.AttributesNames.FirstOrDefault()">
                             </div>
                             <div class='col-6'>
-                                <input id="attribute-1" name="AttributesValues" class="form-control attributes-values" placeholder="مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)">
+                                <input id="attribute-value-1" name="AttributesValues" class="form-control attributes-values" placeholder="مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)" value="@Model.AttributesValues.FirstOrDefault()">
                             </div>
                             <div class='col-2'>
 
@@ -127,9 +127,29 @@
 
     <script>
 
-        //Manage Product Attributes
+    //Manage Product Attributes
 
-        $(document).ready(function () {
+    $(document).ready(function () {
+        if ($('input:radio[name="IsSimpleProduct"]:checked').val() === "false") {
+            $('#without-attributes-section').css('display', 'none');
+            $('#with-attributes-section').css('display', 'unset');
+            var currentElementId, content, currentElementIdSelector;
+            @for(var i = 1;i<Model.AttributesNames.Count();i++)
+            {
+        <text>
+            currentElementId = "id" + GuidGenerator().toString();
+            content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value='@Model.AttributesNames.ElementAtOrDefault(i)'></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)' value='@Model.AttributesValues.ElementAtOrDefault(i)'></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+            $(content).insertBefore("#add-attribute-btn");
+            currentElementIdSelector = "#" + currentElementId;
+                var tags = new Tags(currentElementIdSelector);
+
+        </text>
+            }
+            @{
+                <text>AttributeValueChanged();</text>
+            }
+        }
+
             $('input:radio[name="IsSimpleProduct"]').change(
                 function () {
                     if (this.checked && this.value == 'true') {
@@ -144,7 +164,7 @@
         });
 
 
-        var tags = new Tags('#attribute-1');
+        var tags = new Tags('#attribute-value-1');
 
         $("#add-attribute-btn").click(function () {
             var currentElementId = "id" + GuidGenerator().toString();
@@ -176,31 +196,47 @@
                     productAttributesLengths[i] = currentAttributeValuesListLength;
                 }
             }
-            var firstAttributeLength = productAttributesLengths[0];
+            var firstAttributeLength;
+            if (productAttributesLengths[0] === undefined) {
+                firstAttributeLength = 1;
+            } else {
+                firstAttributeLength = productAttributesLengths[0];
+            }
+
             var maximumAttributes = firstAttributeLength;
             if (productAttributesLengths.length > 1) {
                 for (var v = 1; v < productAttributesLengths.length; v++) {
-                    maximumAttributes *= productAttributesLengths[v];
+                    maximumAttributes *= productAttributesLengths[v] !== undefined ? productAttributesLengths[v]:1;
                 }
             }
 
             var attributesVariationsCount = [];
             var lastVariationCount = maximumAttributes;
             for (var g = 0; g < productAttributesLengths.length; g++) {
-                attributesVariationsCount[g] = lastVariationCount / productAttributesLengths[g];
-                lastVariationCount = attributesVariationsCount[g];
+                if (productAttributesLengths[g] === undefined) {
+                    attributesVariationsCount[g] = 1;
+                } else {
+                    if (lastVariationCount !== 1) {
+                        attributesVariationsCount[g] = lastVariationCount / productAttributesLengths[g];
+                    } else {
+                        attributesVariationsCount[g] = lastVariationCount;
+                    }
+                    lastVariationCount = attributesVariationsCount[g];
+                }
             }
 
             mixedAttributesList = [];
             for (var u = 0; u < productAttributesValues.length; u++) {
-                scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
+                if (productAttributesValues[u] !== undefined && attributesVariationsCount[u] !== undefined) {
+                    scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
+                }
             }
 
             $('.variations-section').css('display', 'unset');
             $(".all-variations").remove();
 
             for (var q = 0; q < mixedAttributesList.length; q++) {
-                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" + mixedAttributesList[q] + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].replaceAll(/\s/g, '') + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' /></div></div>";
+                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" + mixedAttributesList[q] + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].replaceAll(/\s/g, '') + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /></div></div>";
                 $(".variations-section").append(variationContent);
             }
 
