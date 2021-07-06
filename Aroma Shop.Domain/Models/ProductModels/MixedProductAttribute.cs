@@ -18,5 +18,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 
         [Required]
         public ICollection<ProductAttributeValue> MixedProductAttributeValues { get; set; }
+        [Required]
+        public Product Product { get; set; }
     }
 }

@@ -48,11 +48,74 @@ namespace Aroma_Shop.Application.Services
                     ProductName = productViewModel.ProductName,
                     ProductDescription = productViewModel.ProductDescription,
                     ProductShortDescription = productViewModel.ProductShortDescription,
-                    ProductPrice = productViewModel.ProductPrice,
-                    ProductQuantityInStock = productViewModel.ProductQuantityInStock,
+                    IsSimpleProduct = productViewModel.IsSimpleProduct,
                     Categories = productCategories,
                     RegistrationTime = DateTime.Now
                 };
+
+                if (productViewModel.IsSimpleProduct)
+                {
+                    product.ProductPrice = productViewModel.ProductPrice;
+
+                    product.ProductQuantityInStock = productViewModel.ProductQuantityInStock;
+                }
+
+                else
+                {
+                    for (int i = 0; i < productViewModel.AttributesNames.Count(); i++)
+                    {
+                        var productAttributeName =
+                            productViewModel
+                            .AttributesNames.ElementAtOrDefault(i);
+
+                        var productAttributeValues =
+                            productViewModel
+                            .AttributesValues.ElementAtOrDefault(i)
+                            .Split(",")
+                            .Select(p => new ProductAttributeValue() { AttributeValue = p })
+                            .ToList();
+
+                        var productAttribute = new ProductAttribute()
+                        {
+                            ProductAttributeName = productAttributeName,
+                            ProductAttributeValues = productAttributeValues
+                        };
+
+                        product.ProductAttributes.Add(productAttribute);
+                    }
+
+                    for (int i = 0; i < productViewModel.MixedProductAttributesNames.Count(); i++)
+                    {
+                        var mixedProductAttributeValues =
+                            productViewModel
+                            .MixedProductAttributesNames
+                            .ElementAtOrDefault(i)
+                            .Split("-")
+                            .Select(p => new ProductAttributeValue() { AttributeValue = p })
+                            .ToList();
+
+                        var mixedProductAttributePrice =
+                            productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) >= 0 &&
+                            productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) != null
+                                ? Convert.ToDouble(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
+                                : 0;
+
+                        var mixedProductAttributeQuantityInStock =
+                            productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) >= 0 &&
+                            productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) != null
+                                ? Convert.ToInt32(productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i))
+                                : 0;
+
+                        var mixedProductAttribute = new MixedProductAttribute()
+                        {
+                            MixedProductAttributePrice = mixedProductAttributePrice,
+                            MixedProductAttributeQuantityInStock = mixedProductAttributeQuantityInStock,
+                            MixedProductAttributeValues = mixedProductAttributeValues
+                        };
+
+                        product.MixedProductAttributes.Add(mixedProductAttribute);
+                    }
+                }
 
                 if (productViewModel.ProductCategoriesId.Any())
                 {

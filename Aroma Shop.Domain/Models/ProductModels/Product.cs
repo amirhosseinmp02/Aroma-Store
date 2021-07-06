@@ -16,6 +16,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
             Informations = new List<ProductInformation>();
             Comments = new List<Comment>();
             Images = new List<Image>();
+            ProductAttributes = new List<ProductAttribute>();
+            MixedProductAttributes = new List<MixedProductAttribute>();
         }
 
         [Key]
@@ -43,6 +45,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Image> Images { get; set; }
         public ICollection<ProductAttribute> ProductAttributes { get; set; }
+        public ICollection<MixedProductAttribute> MixedProductAttributes { get; set; }
         public ICollection<CustomIdentityUser> InterestedUsers { get; set; }
     }
 }
