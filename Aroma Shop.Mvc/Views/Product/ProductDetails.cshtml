@@ -63,69 +63,180 @@
             </div>
             <div class="col-lg-5 offset-lg-1">
                 <div class="s_product_text">
-                    <h3>@Model.Product.ProductName</h3>
-                    <h2>@Model.Product.ProductPrice تومان</h2>
-                    <ul class="list">
-                        <li>
-                            <span>دسته :</span>
-                            @foreach (var category in Model.Product.Categories)
+                    @if (Model.Product.IsSimpleProduct)
+                    {
+                        <h3>@Model.Product.ProductName</h3>
+                        <h2>@(Model.Product.ProductPrice==0&&Model.Product.ProductQuantityInStock>0?"رایگان":$"{Model.Product.ProductPrice} تومان")</h2>
+                        <ul class="list">
+                            <li>
+                                <span>دسته :</span>
+                                @foreach (var category in Model.Product.Categories)
+                                {
+                                    <a>@category.CategoryName</a> <span> , </span>
+                                }
+                            </li>
+                            <li>
+                                وضعیت : @if (Model.Product.ProductQuantityInStock > 0)
+                                {
+                                    <span class='text-success font-weight-bold'>موجود</span>
+                                }
+                                else
+                                {
+                                    <span class='text-danger font-weight-bold'>ناموجود</span>
+                                }
+                            </li>
+                        </ul>
+                        <p class="mb-4">
+                            @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
+                        </p>
+                        if (Model.Product.ProductQuantityInStock > 0)
+                        {
+                            <div class="product_count">
+                                <label for="qty">تعداد :</label>
+                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                                        class="increase items-count" type="button">
+                                    <i class="ti-angle-up"></i>
+                                </button>
+                                <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                                        class="reduced items-count" type="button">
+                                    <i class="ti-angle-down"></i>
+                                </button>
+                                <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
+                            </div>
+                        }
+                        @if (isUserSignedIn)
+                        {
+                            var isProductInLoggedUserFavoriteProducts =
+                                await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
+
+                            @if (!isProductInLoggedUserFavoriteProducts)
                             {
-                                <a>@category.CategoryName</a> <span> , </span>
-                            }
-                        </li>
-                        <li>
-                            وضعیت : @if (Model.Product.ProductQuantityInStock > 0)
-                            {
-                                <span class='text-success'>موجود</span>
+                                <div class="card_area d-flex align-items-center">
+                                    <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                                </div>
+
                             }
                             else
                             {
-                                <span class='text-danger'>ناموجود</span>
+                                <div class="card_area d-flex align-items-center">
+                                    <a class="icon_btn" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="حذف از علاقه مندی ها"><i class="bi bi-heart-fill"></i></a>
+                                </div>
                             }
-                        </li>
-                    </ul>
-                    <p class="mb-4">
-                        @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
-                    </p>
-                    <div class="product_count">
-                        <label for="qty">تعداد :</label>
-                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                class="increase items-count" type="button">
-                            <i class="ti-angle-up"></i>
-                        </button>
-                        <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                class="reduced items-count" type="button">
-                            <i class="ti-angle-down"></i>
-                        </button>
-                        <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
-                    </div>
-                    @if (isUserSignedIn)
-                    {
-                        var isProductInLoggedUserFavoriteProducts =
-                            await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
-
-                        @if (!isProductInLoggedUserFavoriteProducts)
-                        {
-                            <div class="card_area d-flex align-items-center">
-                                <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
-                            </div>
-
                         }
                         else
                         {
+                            var returnUrl =
+                                Url.Action("ProductDetails", "Product", new { productId = Model.Product.ProductId });
                             <div class="card_area d-flex align-items-center">
-                                <a class="icon_btn" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="حذف از علاقه مندی ها"><i class="bi bi-heart-fill"></i></a>
+                                <a class="icon_btn" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@returnUrl" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
                             </div>
                         }
                     }
                     else
                     {
-                        var returnUrl =
-                            Url.Action("ProductDetails", "Product", new { productId = Model.Product.ProductId });
-                        <div class="card_area d-flex align-items-center">
-                            <a class="icon_btn" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@returnUrl" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                        <h3>@Model.Product.ProductName</h3>
+
+                        var minimumPrice =
+                            Model.Product
+                                .MixedProductAttributes
+                                .Min(p => p.MixedProductAttributePrice);
+
+                        var minimumPriceLabel = 
+                            minimumPrice == 0 ? "رایگان" : $"{minimumPrice} تومان";
+
+                        var maximumPrice =
+                            Model.Product
+                                .MixedProductAttributes
+                                .Max(p => p.MixedProductAttributePrice);
+
+                        var maximumPriceLabel = 
+                            $"{maximumPrice} تومان";
+
+                        var isMinimumAndMaximumPriceFree =
+                            minimumPrice == 0 && maximumPrice == 0 ? true : false;
+                        
+                        <h2>@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</h2>
+                        <ul class="list">
+                            <li>
+                                <span>دسته :</span>
+                                @foreach (var category in Model.Product.Categories)
+                                {
+                                    <a>@category.CategoryName</a> <span> , </span>
+                                }
+                            </li>
+                            <li>
+                                وضعیت : @if (Model.Product.MixedProductAttributes.Any(p => p.MixedProductAttributeQuantityInStock != 0))
+                                {
+                                    <span class='text-success font-weight-bold'>موجود</span>
+                                }
+                                else
+                                {
+                                    <span class='text-danger font-weight-bold'>ناموجود</span>
+                                }
+                            </li>
+                        </ul>
+                        <p class="mb-4">
+                            @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
+                        </p>
+                        <div class="border-dark">
+                            @foreach (var productAttribute in Model.Product.ProductAttributes)
+                            {
+                                <div class="row">
+                                    <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
+                                    <select class="form-control col-10">
+                                        @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
+                                        {
+                                            <option value="@productAttributeValue.AttributeValueId">@productAttributeValue.AttributeValue</option>
+                                        }
+                                    </select>
+                                </div>
+                                <br />
+                            }
                         </div>
+                        if (Model.Product.MixedProductAttributes.Any(p => p.MixedProductAttributeQuantityInStock != 0))
+                        {
+                            <div class="product_count">
+                                <label for="qty">تعداد :</label>
+                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                                        class="increase items-count" type="button">
+                                    <i class="ti-angle-up"></i>
+                                </button>
+                                <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                                        class="reduced items-count" type="button">
+                                    <i class="ti-angle-down"></i>
+                                </button>
+                                <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
+                            </div>
+                        }
+                        @if (isUserSignedIn)
+                        {
+                            var isProductInLoggedUserFavoriteProducts =
+                                await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
+
+                            @if (!isProductInLoggedUserFavoriteProducts)
+                            {
+                                <div class="card_area d-flex align-items-center">
+                                    <a class="icon_btn" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="card_area d-flex align-items-center">
+                                    <a class="icon_btn" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@Model.Product.ProductId" data-toggle="tooltip" data-placement="top" title="حذف از علاقه مندی ها"><i class="bi bi-heart-fill"></i></a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            var returnUrl =
+                                Url.Action("ProductDetails", "Product", new { productId = Model.Product.ProductId });
+                            <div class="card_area d-flex align-items-center">
+                                <a class="icon_btn" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@returnUrl" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a>
+                            </div>
+                        }
                     }
                 </div>
             </div>
