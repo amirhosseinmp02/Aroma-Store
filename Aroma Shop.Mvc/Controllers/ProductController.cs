@@ -28,6 +28,9 @@ namespace Aroma_Shop.Mvc.Controllers
             var product =
                 _productService.GetProduct(productId);
 
+            if (product == null)
+                return NotFound();
+
             product.Comments = product.Comments
                 .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
 

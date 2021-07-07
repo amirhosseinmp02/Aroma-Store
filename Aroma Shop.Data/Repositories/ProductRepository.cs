@@ -42,6 +42,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.Replies)
                 .ThenInclude(p => p.User)
+                .AsSplitQuery()
                 .SingleOrDefault(p => p.ProductId == productId);
 
             return product;
