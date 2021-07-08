@@ -43,6 +43,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [MaxStringsLength(200,ErrorMessage = "حداکثر 200 کارکتر برای نام صفت مجاز می باشد")]
         [RequiredStringsIf(nameof(IsSimpleProduct),false, ErrorMessage = "لطفا نام صفت را وارد نمایید")]
         public IEnumerable<string> AttributesNames { get; set; }
+        [NotIncludedInStrings("-",ErrorMessage = "مقادیر صفت نمی توانند شامل کارکتر - باشند")]
         [RequiredStringsIf(nameof(IsSimpleProduct), false, ErrorMessage = "لطفا مقادیر صفت را وارد نمایید")]
         public IEnumerable<string> AttributesValues { get; set; }
         [RequiredStringsIf(nameof(IsSimpleProduct), false,ErrorMessage = "لطفا نام تنوع را وارد نمایید")]

@@ -12,10 +12,10 @@ namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
         protected override ValidationResult IsValid(
             object value, ValidationContext validationContext)
         {
-            var strings = value as IEnumerable<string>;
+            var strings = (IEnumerable<string>)value;
             if (strings.Any())
             {
-                if (strings.Any(p=>string.IsNullOrEmpty(p)))
+                if (strings.Any(p => string.IsNullOrEmpty(p)))
                 {
                     return new ValidationResult(GetErrorMessage());
                 }
