@@ -25,9 +25,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا نام محصول را وارد نمایید")]
         public string ProductName { get; set; }
-        [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
-        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
+        [MaxLength(1000, ErrorMessage = "حداکثر 1000 کارکتر مجاز می باشد")]
         public string ProductShortDescription { get; set; }
         [Required]
         public bool IsSimpleProduct { get; set; }

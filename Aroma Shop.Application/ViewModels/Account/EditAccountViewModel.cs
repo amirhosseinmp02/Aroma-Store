@@ -11,9 +11,9 @@ namespace Aroma_Shop.Application.ViewModels.Account
 {
     public class EditAccountViewModel
     {
-        [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
+        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         public string FirstName { get; set; }
-        [MaxLength(150, ErrorMessage = "حداکثر 150 کارکتر مجاز می باشد")]
+        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "لطفا نام کاربری مورد نظر را وارد نمایید")]
@@ -22,7 +22,9 @@ namespace Aroma_Shop.Application.ViewModels.Account
         public string UserName { get; set; }
         public string Email { get; set; }
 
+        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         public string UserProvince { get; set; }
+        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         [RequiredIfNotNull(nameof(UserProvince), ErrorMessage = "در صورت انتخاب استان ، شهر خود را هم انتخاب نمایید")]
         public string UserCity { get; set; }
         public string UserAddress { get; set; }

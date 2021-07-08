@@ -36,7 +36,6 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.ProductAttributes)
                 .ThenInclude(p=>p.ProductAttributeValues)
                 .Include(p=>p.MixedProductAttributes)
-                .ThenInclude(p=>p.MixedProductAttributeValues)
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.User)
                 .Include(p => p.Comments)

@@ -9,13 +9,12 @@ namespace Aroma_Shop.Domain.Models.ProductModels
     {
         [Key]
         public int AttributeValueId { get; set; }
-        [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا مقدار صفت را وارد نمایید")]
         public string AttributeValue { get; set; }
 
         //Navigations Properties
 
-        public MixedProductAttribute MixedProductAttribute { get; set; }
+        [Required]
         public ProductAttribute ProductAttribute { get; set; }
     }
 }

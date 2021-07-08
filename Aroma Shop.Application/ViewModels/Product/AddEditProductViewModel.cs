@@ -34,13 +34,13 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [Required(ErrorMessage = "لطفا تعداد محصول را وارد نمایید")]
         [Range(0, 999999999, ErrorMessage = "حداقل مقدار 0 می باشد")]
         public int ProductQuantityInStock { get; set; }
-        [MaxLength(10000, ErrorMessage = "حداکثر 10000 کارکتر مجاز می باشد")]
         public string ProductDescription { get; set; }
-        [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
+        [MaxLength(1000, ErrorMessage = "حداکثر 1000 کارکتر مجاز می باشد")]
         public string ProductShortDescription { get; set; }
 
         [Required(ErrorMessage = "لطفا نوع محصول را انتخاب نمایید")]
         public bool IsSimpleProduct { get; set; } = true;
+        [MaxStringsLength(200,ErrorMessage = "حداکثر 200 کارکتر برای نام صفت مجاز می باشد")]
         [RequiredStringsIf(nameof(IsSimpleProduct),false, ErrorMessage = "لطفا نام صفت را وارد نمایید")]
         public IEnumerable<string> AttributesNames { get; set; }
         [RequiredStringsIf(nameof(IsSimpleProduct), false, ErrorMessage = "لطفا مقادیر صفت را وارد نمایید")]

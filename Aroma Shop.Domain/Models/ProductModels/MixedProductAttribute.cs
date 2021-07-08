@@ -9,6 +9,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
     {
         [Key]
         public int MixedProductAttributeId { get; set; }
+        [Required(ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
+        public string MixedProductAttributeValue { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات قیمت محصول را وارد نمایید")]
         public double MixedProductAttributePrice { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات موجودی محصول را وارد نمایید")]
@@ -16,8 +18,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 
         //Navigations Properties
 
-        [Required]
-        public ICollection<ProductAttributeValue> MixedProductAttributeValues { get; set; }
         [Required]
         public Product Product { get; set; }
     }
