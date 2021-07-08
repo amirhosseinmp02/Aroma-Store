@@ -3,7 +3,10 @@
     ViewData["Title"] = "افزودن محصول";
 }
 
-<link href="~/vendors/tags/tags.min.css" rel="stylesheet" />
+@section Styles
+{
+    <link href="~/vendors/tags/tags.min.css" rel="stylesheet" />
+}
 
 <div class="h2 mt-3">
     <h1 class="h2 d-inline">افزودن محصول</h1>
@@ -114,7 +117,7 @@
             </div>
             @if (ViewData["SuccessMessage"] != null)
             {
-            <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
             }
             <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
         </form>
@@ -123,11 +126,11 @@
 
 @section Scripts {
 
-<script src="~/vendors/tags/tags.min.js"></script>
-<script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
+    <script src="~/vendors/tags/tags.min.js"></script>
+    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
 
-<script>
+    <script>
 
     //Manage Product Attributes
 
@@ -382,5 +385,5 @@
                 return v.toString(16);
             });
         }
-</script>
+    </script>
 }
