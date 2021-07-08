@@ -3,14 +3,10 @@
 @using Aroma_Shop.Application.Interfaces
 @using Aroma_Shop.Application.Utilites
 @using Aroma_Shop.Domain.Models.FileModels
+@using Newtonsoft.Json
 
 @inject IAccountService AccountService
 @inject IProductService ProductService
-
-@section Styles
-{
-    <link href="~/vendors/ckeditor5/ckeditor-styles.css" rel="stylesheet" />
-}
 
 @{
     ViewData["Title"] = Model.Product.ProductName;
@@ -202,7 +198,7 @@
                             {
                                 <div class="row">
                                     <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
-                                    <select class="form-control col-lg-10 col-md-9 col-sm-8">
+                                    <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
                                         <option>لطفا انتخاب کنید</option>
                                         @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
                                         {
@@ -398,13 +394,54 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
-        $(document).ready(function () {
 
-            $(function () {
+        var mixedAttributeValues = [];
+
+        @foreach (var mixedAttribute in Model.Product.MixedProductAttributes)
+            {
+                var mixedAttributeValue =
+                    JsonConvert.SerializeObject(mixedAttribute.MixedProductAttributeValue);
+
+                var mixedAttributePrice =
+                    JsonConvert.SerializeObject(mixedAttribute.MixedProductAttributePrice);
+
+                var mixedAttributeQuantityInStock =
+                    JsonConvert.SerializeObject(mixedAttribute.MixedProductAttributeQuantityInStock);
+
+                <text>
+                    var mixedAttribute =
+                    {
+                        MixedAttributeValue:@Html.Raw(mixedAttributeValue),
+                        MixedAttributePrice:@Html.Raw(mixedAttributePrice),
+                        MixedAttributeQuantityInStock:@Html.Raw(mixedAttributeQuantityInStock)
+                    };
+                </text>
+
+                @:mixedAttributeValues.push(mixedAttribute);
+            }
+
+        $(document).ready(function() {
+            $(".product-attributes").change(function() {
+                var productAttributes = $(".product-attributes").find(":selected");
+                var productAttributesValues = [];
+                for (var i = 0; i < productAttributes.length; i++) {
+                    productAttributesValues[i] = productAttributes[i].innerHTML;
+                }
+                if (!productAttributesValues.includes("لطفا انتخاب کنید")) {
+                    var requiredMixedValues = productAttributesValues.toString().replaceAll(",", "-");
+                    for (var p = 0; p < mixedAttributeValues.length; p++) {
+                        if (mixedAttributeValues[p].MixedAttributeValue === requiredMixedValues) {
+                            alert(mixedAttributeValues[p].MixedAttributeValue + "  ---  " + mixedAttributeValues[p].MixedAttributePrice + "  ---  " + mixedAttributeValues[p].MixedAttributeQuantityInStock);
+                        }
+                    }
+                }
+            });
+
+            $(function() {
                 $('[data-toggle="tooltip"]').tooltip();
             });
 
-            $(".reply_btn").click(function () {
+            $(".reply_btn").click(function() {
 
                 $("#parentCommentId").val($(this).next().val());
 
@@ -415,10 +452,14 @@
                 $("textarea").attr("placeholder", "پاسخ خود را وارد نمایید...");
 
                 $("html, body").animate({
-                    scrollTop: coordinateTop
-                }, 1000);
+                        scrollTop: coordinateTop
+                    },
+                    1000);
             });
         });
+
     </script>
+
+    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
 }

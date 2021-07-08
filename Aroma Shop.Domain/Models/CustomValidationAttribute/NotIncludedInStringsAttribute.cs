@@ -22,7 +22,7 @@ namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
 
             if (strings.Any())
             {
-                if (strings.Any(p=>p.Contains(_string)))
+                if (strings.Any(p => !string.IsNullOrWhiteSpace(p) && p.Contains(_string)))
                 {
                     return new ValidationResult(ErrorMessage);
                 }
