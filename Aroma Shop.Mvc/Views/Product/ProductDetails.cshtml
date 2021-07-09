@@ -170,7 +170,7 @@
                         var isMinimumAndMaximumPriceFree =
                             minimumPrice == 0 && maximumPrice == 0 ? true : false;
 
-                        <h2>@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</h2>
+                        <h2 id="price-label">@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</h2>
                         <ul class="list">
                             <li>
                                 <span>دسته :</span>
@@ -182,11 +182,11 @@
                             <li>
                                 وضعیت : @if (Model.Product.MixedProductAttributes.Any(p => p.MixedProductAttributeQuantityInStock != 0))
                                 {
-                                    <span class='text-success font-weight-bold'>موجود</span>
+                                    <span class='text-success font-weight-bold quantity-in-stock-label'>موجود</span>
                                 }
                                 else
                                 {
-                                    <span class='text-danger font-weight-bold'>ناموجود</span>
+                                    <span class='text-danger font-weight-bold quantity-in-stock-label'>ناموجود</span>
                                 }
                             </li>
                         </ul>
@@ -194,20 +194,26 @@
                             @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
                         </p>
                         <div class="mb-4 border-bottom">
-                            @foreach (var productAttribute in Model.Product.ProductAttributes)
-                            {
-                                <div class="row">
-                                    <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
-                                    <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
-                                        <option>لطفا انتخاب کنید</option>
-                                        @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
-                                        {
-                                            <option value="@productAttributeValue.AttributeValueId">@productAttributeValue.AttributeValue</option>
-                                        }
-                                    </select>
-                                </div>
-                                <br />
-                            }
+                            <div class="attributes-section">
+                                @foreach (var productAttribute in Model.Product.ProductAttributes)
+                                {
+
+                                    <div class="row">
+                                        <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
+                                        <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
+                                            <option>لطفا انتخاب کنید</option>
+                                            @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
+                                            {
+                                                <option value="@productAttributeValue.AttributeValueId">@productAttributeValue.AttributeValue</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <br />
+                                }
+                            </div>
+                            <div class="d-block text-center mb-2">
+                                <span class="reset_variations text-dark">پاک کردن</span>
+                            </div>
                         </div>
                         if (Model.Product.MixedProductAttributes.Any(p => p.MixedProductAttributeQuantityInStock != 0))
                         {
@@ -222,7 +228,7 @@
                                         class="reduced items-count" type="button">
                                     <i class="ti-angle-down"></i>
                                 </button>
-                                <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
+                                <a id="btn-addtocart" class="button-disabled" href="#">افزودن به سبد خرید</a>
                             </div>
                         }
                         @if (isUserSignedIn)
@@ -356,7 +362,7 @@
                     <div class="col-lg-6 add-comment-section">
                         @if (!isUserSignedIn)
                         {
-                            <div class="alert alert-danger mt-1" role="alert">جهت ثبت نظر باید در سایت <a asp-controller="Account" asp-action="Register" class="alert-link">عضو</a> شوید و یا <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails",new {productId=Model.Product.ProductId})" class="alert-link">وارد</a> سایت شده باشید .</div>
+                            <div class="alert alert-danger" role="alert">جهت ثبت نظر باید در سایت <a asp-controller="Account" asp-action="Register" class="alert-link">عضو</a> شوید و یا <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails",new {productId=Model.Product.ProductId})" class="alert-link">وارد</a> سایت شده باشید .</div>
                         }
                         else
                         {
@@ -420,7 +426,14 @@
                 @:mixedAttributeValues.push(mixedAttribute);
             }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            var firstQuantityInStockLabel = $(".quantity-in-stock-label").text();
+            var firstQuantityInStockLabelClass = firstQuantityInStockLabel === "موجود" ? "text-success" : "text-danger";
+            var firstPriceLabel = $("#price-label").text();
+
+            $(".attributes-section").children().last().remove();
+
             $(".product-attributes").change(function() {
                 var productAttributes = $(".product-attributes").find(":selected");
                 var productAttributesValues = [];
@@ -428,14 +441,83 @@
                     productAttributesValues[i] = productAttributes[i].innerHTML;
                 }
                 if (!productAttributesValues.includes("لطفا انتخاب کنید")) {
-                    var requiredMixedValues = productAttributesValues.toString().replaceAll(",", "-");
+                    var requiredMixedValues = productAttributesValues.toString().replaceAll(",", "-").toEnglishNumbers();
                     for (var p = 0; p < mixedAttributeValues.length; p++) {
                         if (mixedAttributeValues[p].MixedAttributeValue === requiredMixedValues) {
-                            alert(mixedAttributeValues[p].MixedAttributeValue + "  ---  " + mixedAttributeValues[p].MixedAttributePrice + "  ---  " + mixedAttributeValues[p].MixedAttributeQuantityInStock);
+                            //var price = mixedAttributeValues[p].MixedAttributePrice !== 0 ? mixedAttributeValues[p].MixedAttributePrice + " تومان" : "رایگان";
+                            //$("#price-label").text(price);
+                            //ConvertNumberToPersion();
+                            //alert(mixedAttributeValues[p].MixedAttributeValue + "  ---  " + mixedAttributeValues[p].MixedAttributePrice + "  ---  " + mixedAttributeValues[p].MixedAttributeQuantityInStock);
+                            var price = mixedAttributeValues[p].MixedAttributePrice;
+                            var quantityInStock = mixedAttributeValues[p].MixedAttributeQuantityInStock;
+                            if (quantityInStock === 0) {
+                                $(".product_count").css("display", "none");
+                                $(".quantity-in-stock-label").removeClass("text-success");
+                                $(".quantity-in-stock-label").addClass("text-danger");
+                                $(".quantity-in-stock-label").text("ناموجود");
+                            } else {
+                                if (price !== 0) {
+
+                                    var priceLabel = price + " تومان";
+                                    $("#price-label").text(priceLabel);
+                                    setStylesForAvailableProductsAttributes();
+                                    ConvertNumberToPersion();
+
+                                } else {
+
+                                    $("#price-label").text("رایگان");
+                                    $(".product_count").css("display", "inline-block");
+                                    setStylesForAvailableProductsAttributes();
+
+                                }
+                            }
                         }
                     }
+                } else {
+
+                    restAttributeStylesForDefault();
                 }
             });
+
+            $(".reset_variations").click(function() {
+                restAttributesStyles();
+            });
+
+            function restAttributesStyles() {
+                restAttributeStylesForDefault();
+                var defaultText = "لطفا انتخاب کنید";
+                $(".product-attributes option:contains(" + defaultText + ")").prop("selected", true);
+
+            }
+
+            function restAttributeStylesForDefault() {
+                $("#price-label").text(firstPriceLabel);
+                $(".quantity-in-stock-label").text(firstQuantityInStockLabel);
+
+                if (firstQuantityInStockLabelClass === "text-success") {
+
+                    $(".quantity-in-stock-label").removeClass("text-danger");
+                    $(".quantity-in-stock-label").addClass("text-success");
+
+                } else {
+
+                    $(".quantity-in-stock-label").removeClass("text-success");
+                    $(".quantity-in-stock-label").addClass("text-danger");
+
+                }
+                $(".product_count").css("display", "inline-block");
+                $("#btn-addtocart").removeClass("button primary-btn");
+                $("#btn-addtocart").addClass("button-disabled");
+            }
+
+            function setStylesForAvailableProductsAttributes() {
+                $(".product_count").css("display", "inline-block");
+                $("#btn-addtocart").removeClass("button-disabled");
+                $("#btn-addtocart").addClass("button primary-btn");
+                $(".quantity-in-stock-label").removeClass("text-danger");
+                $(".quantity-in-stock-label").addClass("text-success");
+                $(".quantity-in-stock-label").text("موجود");
+            }
 
             $(function() {
                 $('[data-toggle="tooltip"]').tooltip();

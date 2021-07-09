@@ -241,7 +241,8 @@
             $(".all-variations").remove();
 
             for (var q = 0; q < mixedAttributesList.length; q++) {
-                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" + mixedAttributesList[q] + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].replaceAll(/\s/g, '') + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
+                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" +
+                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
                 $(".variations-section").append(variationContent);
             }
 
@@ -251,9 +252,13 @@
                 for (var i = 0, c = 0; c < maximumAttributes / count; i++, c++) {
                     for (var v = c * count; v < count * localCount; v++) {
                         if (mixedAttributesList[v] === undefined) {
-                            mixedAttributesList[v] = values[i];
+                            mixedAttributesList[v] = {
+                                text: values[i],
+                                value: values[i]
+                            };
                         } else {
-                            mixedAttributesList[v] += " - " + values[i];
+                            mixedAttributesList[v].text += " - " + values[i];
+                            mixedAttributesList[v].value += "-" + values[i];
                         }
                     }
                     ++localCount;

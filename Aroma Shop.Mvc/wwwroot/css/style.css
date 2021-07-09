@@ -940,15 +940,15 @@ a {
             .card-product__imgOverlay li button i,
             .card-product__imgOverlay li button span,
             .card-product__imgOverlay li a i,
-            .card-product__imgOverlay li a  span{
+            .card-product__imgOverlay li a span {
                 font-size: 15px;
                 color: #fff;
                 vertical-align: middle
             }
 
-        .card-product__imgOverlay li button:hover, .card-product__imgOverlay li a:hover {
-            background: #384aeb
-        }
+            .card-product__imgOverlay li button:hover, .card-product__imgOverlay li a:hover {
+                background: #384aeb
+            }
 
 .card-product__title a {
     color: #222
@@ -1220,6 +1220,22 @@ a {
     color: #fff;
     transition: all .4s ease
 }
+
+.button-disabled {
+    display: inline-block;
+    color: #fff;
+    background: #007bff;
+    border: 1px solid #007bff;
+    font-weight: 500;
+    padding: 12px 50px;
+    border-radius: 30px;
+    opacity: .65;
+    cursor: default
+}
+
+    .button-disabled:hover {
+        color: #fff;
+    }
 
 @media (max-width: 767px) {
     .button {
@@ -4257,7 +4273,12 @@ a {
 
 .s_product_text {
     margin-left: -15px;
-    margin-top: 65px
+}
+
+@media only screen and (max-width: 992px) {
+    .s_product_text {
+        margin-top: 65px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -4968,4 +4989,13 @@ input.input-validation-error {
     font-family: 'Samim', sans-serif;
     background: teal;
     margin: 5px;
+}
+
+.reset_variations {
+    font-size: 13px;
+    cursor: pointer
+}
+
+span.reset_variations:hover {
+    color: #007bff !important
 }

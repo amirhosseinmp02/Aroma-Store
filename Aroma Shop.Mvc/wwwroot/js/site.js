@@ -1,4 +1,16 @@
-﻿//Convert EnglishNumbers To Perisnaumber In Runtime
+﻿String.prototype.toEnglishNumbers = function() {
+    var find = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    var replace = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    var replaceString = this;
+    var regex;
+    for (var i = 0; i < find.length; i++) {
+        regex = new RegExp(find[i], "g");
+        replaceString = replaceString.replace(regex, replace[i]);
+    }
+    return replaceString;
+};
+
+//Convert English Numbers To Persian Numbers In Runtime
 $(document).ready(function () {
 
     ConvertNumberToPersion();
