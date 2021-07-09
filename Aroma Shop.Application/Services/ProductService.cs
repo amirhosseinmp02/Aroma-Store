@@ -188,6 +188,9 @@ namespace Aroma_Shop.Application.Services
                 if (product == null)
                     return false;
 
+                if (!product.IsSimpleProduct)
+                    DeleteProductAttributes(product);
+
                 if (product.Images.Any())
                     _fileService.DeleteProductImages(product.Images);
 
@@ -693,6 +696,32 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        private bool DeleteProductAttributes(Product product)
+        {
+            try
+            {
+                foreach (var mixedProductAttribute in product.MixedProductAttributes)
+                {
+                    _productRepository.DeleteMixedProductAttribute(mixedProductAttribute);
+                }
 
+                foreach (var productAttribute in product.ProductAttributes)
+                {
+                    foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
+                    {
+                        _productRepository.DeleteProductAttributeValue(productAttributeValue);
+                    }
+
+                    _productRepository.DeleteProductAttribute(productAttribute);
+                }
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
     }
 }
