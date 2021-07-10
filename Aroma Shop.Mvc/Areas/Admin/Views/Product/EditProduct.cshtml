@@ -4,6 +4,11 @@
     ViewData["Title"] = "ویرایش محصول";
 }
 
+@section Styles
+{
+    <link href="~/vendors/tags/tags.min.css" rel="stylesheet" />
+}
+
 <div class="h2 mt-3">
     <h1 class="h2 d-inline">ویرایش محصول</h1>
     <a class="btn btn-warning float-left" asp-controller="Product" asp-action="Index">بازگشت</a>
@@ -29,15 +34,62 @@
                 </textarea>
                 <span class="text-danger field-validation-valid"></span>
             </div>
-            <div class="form-group">
-                <label class="control-label" for="ProductPrice">قیمت</label>
-                <input class="form-control" asp-for="ProductPrice">
-                <span class="text-danger field-validation-valid"></span>
+            <div id="attributes-radio-buttons" class="form-group">
+                <label class="control-label">نوع محصول</label>
+                <br />
+                <div class="form-check form-check-inline ml-4">
+                    <input id="without-attributes-button" class="form-check-input" type="radio" asp-for="IsSimpleProduct" value="true">
+                    <label class="form-check-label pl-2">محصول ساده</label>
+                </div>
+                <div class="form-check form-check-inline ml-5">
+                    <input id="with-attributes-button" class="form-check-input" type="radio" asp-for="IsSimpleProduct" value="false">
+                    <label class="form-check-label pl-2">محصول چند صفتی</label>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="control-label" for="ProductQuantityInStock">تعداد</label>
-                <input class="form-control" asp-for="ProductQuantityInStock">
-                <span class="text-danger field-validation-valid"></span>
+            <div id="without-attributes-section">
+                <div class="form-group">
+                    <label class="control-label" for="ProductPrice">قیمت</label>
+                    <input class="form-control" asp-for="ProductPrice">
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ProductQuantityInStock">تعداد</label>
+                    <input class="form-control" asp-for="ProductQuantityInStock">
+                    <span class="text-danger field-validation-valid"></span>
+                </div>
+            </div>
+            <div id="with-attributes-section" style="display: none">
+                <h3 class="mb-4">صفت ها و تنوع ها</h3>
+                <div class="form-group border border-secondary p-2 border-dark">
+                    <div class="form-group">
+                        <div class='row mb-2 product-attributes'>
+                            <div class='col-4'>
+                                <input id="attribute-name-1" type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value="@Model.AttributesNames.FirstOrDefault()">
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class='col-6'>
+                                <input id="attribute-value-1" name="AttributesValues" class="form-control attributes-values" placeholder="مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)" value="@Model.AttributesValues.FirstOrDefault()">
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class='col-2'>
+                            </div>
+                        </div>
+                        <button id="add-attribute-btn" type="button" class="btn btn-success">افزودن</button>
+                    </div>
+                    <div class="form-group variations-section" style="display: none;">
+                        <div class="row">
+                            <div class="col">
+                                <p class="font-weight-bold">نام تنوع</p>
+                            </div>
+                            <div class="col">
+                                <p class="font-weight-bold">قیمت</p>
+                            </div>
+                            <div class="col">
+                                <p class="font-weight-bold">تعداد موجود</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label>دسته بندی ها</label>
@@ -94,11 +146,147 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+    <script src="~/vendors/tags/tags.min.js"></script>
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
     <script>
+
+        //Manage Product Attributes
+
+        $(document).ready(function () {
+            if ($('input:radio[name="IsSimpleProduct"]:checked').val() === "false") {
+                $('#without-attributes-section').css('display', 'none');
+                $('#with-attributes-section').css('display', 'unset');
+                var currentElementId, content, currentElementIdSelector;
+                @for(var i = 1;i<Model.AttributesNames.Count();i++)
+            {
+        <text>
+            currentElementId = "id" + GuidGenerator().toString();
+            content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value='@Model.AttributesNames.ElementAtOrDefault(i)'><span class='text-danger field-validation-valid'></span></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)' value='@Model.AttributesValues.ElementAtOrDefault(i)'><span class='text-danger field-validation-valid'></span></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+            $(content).insertBefore("#add-attribute-btn");
+            currentElementIdSelector = "#" + currentElementId;
+            var tags = new Tags(currentElementIdSelector);
+
+        </text>
+            }
+                @{
+                <text>AttributeValueChanged();</text>
+            }
+            }
+
+            $('input:radio[name="IsSimpleProduct"]').change(
+                function () {
+                    if (this.checked && this.value == 'true') {
+                        $('#with-attributes-section').css('display', 'none');
+                        $('#without-attributes-section').css('display', 'unset');
+                    }
+                    else if (this.checked && this.value == 'false') {
+                        $('#without-attributes-section').css('display', 'none');
+                        $('#with-attributes-section').css('display', 'unset');
+                    }
+                });
+        });
+
+        var tags = new Tags('#attribute-value-1');
+
+        $("#add-attribute-btn").click(function () {
+            var currentElementId = "id" + GuidGenerator().toString();
+            var content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت'><span class='text-danger field-validation-valid'></span></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)'><span class='text-danger field-validation-valid'></span></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
+            $(content).insertBefore("#add-attribute-btn");
+            var currentElementIdSelector = "#" + currentElementId;
+            var tags = new Tags(currentElementIdSelector);
+        });
+        $(document).on("click",
+            ".remove-attribute-btn",
+            function () {
+                $(this).parent().parent().remove();
+                AttributeValueChanged();
+            });
+
+        var mixedAttributesList = [];
+        var productAttributesLengths = [];
+        var productAttributesValues = [];
+        function AttributeValueChanged(currentElement = null) {
+            var productAttributes = $(".product-attributes");
+            var productAttributesLengths = [];
+            var productAttributesValues = [];
+            for (var i = 0; i < productAttributes.length; i++) {
+                var currentAttributeValue = productAttributes.eq(i).children().eq(1).children().eq(0).val();
+                if (currentAttributeValue) {
+                    var currentAttributeValuesList = currentAttributeValue.split(",");
+                    productAttributesValues[i] = currentAttributeValuesList;
+                    var currentAttributeValuesListLength = currentAttributeValuesList.length;
+                    productAttributesLengths[i] = currentAttributeValuesListLength;
+                }
+            }
+            var firstAttributeLength;
+            if (productAttributesLengths[0] === undefined) {
+                firstAttributeLength = 1;
+            } else {
+                firstAttributeLength = productAttributesLengths[0];
+            }
+
+            var maximumAttributes = firstAttributeLength;
+            if (productAttributesLengths.length > 1) {
+                for (var v = 1; v < productAttributesLengths.length; v++) {
+                    maximumAttributes *= productAttributesLengths[v] !== undefined ? productAttributesLengths[v] : 1;
+                }
+            }
+
+            var attributesVariationsCount = [];
+            var lastVariationCount = maximumAttributes;
+            for (var g = 0; g < productAttributesLengths.length; g++) {
+                if (productAttributesLengths[g] === undefined) {
+                    attributesVariationsCount[g] = 1;
+                } else {
+                    if (lastVariationCount !== 1) {
+                        attributesVariationsCount[g] = lastVariationCount / productAttributesLengths[g];
+                    } else {
+                        attributesVariationsCount[g] = lastVariationCount;
+                    }
+                    lastVariationCount = attributesVariationsCount[g];
+                }
+            }
+
+            mixedAttributesList = [];
+            for (var u = 0; u < productAttributesValues.length; u++) {
+                if (productAttributesValues[u] !== undefined && attributesVariationsCount[u] !== undefined) {
+                    scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
+                }
+            }
+
+            $('.variations-section').css('display', 'unset');
+            $(".all-variations").remove();
+
+            for (var q = 0; q < mixedAttributesList.length; q++) {
+                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" +
+                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" +
+                    [q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
+                $(".variations-section").append(variationContent);
+            }
+
+            function scrollingAttributes(values, count) {
+                var localCount = 1;
+                var i, c;
+                for (var i = 0, c = 0; c < maximumAttributes / count; i++, c++) {
+                    for (var v = c * count; v < count * localCount; v++) {
+                        if (mixedAttributesList[v] === undefined) {
+                            mixedAttributesList[v] = {
+                                text: values[i],
+                                value: values[i]
+                            };
+                        } else {
+                            mixedAttributesList[v].text += " - " + values[i];
+                            mixedAttributesList[v].value += "-" + values[i];
+                        }
+                    }
+                    ++localCount;
+                    if (i === values.length - 1)
+                        i = -1;
+                }
+            }
+        }
 
         @*Manage Current Product Images*@
 
@@ -147,64 +335,64 @@
         });
 
         ClassicEditor.create(document.querySelector('#editor'),
-            {
-                language: 'fa',
-                ckfinder: { uploadUrl: "/UploadEditorFile" },
-                heading: {
-                    options: [
-                        { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
-                        { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
-                        { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
-                        { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
-                    ]
-                },
-                toolbar: {
-                    items: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'alignment', 'indent', 'outdent', '|',
-                        'insertTable', 'htmlEmbed', 'codeBlock', '|',
-                        'imageInsert', 'mediaEmbed', '|',
-                        'removeFormat', 'redo', 'undo'
-                    ],
-                    shouldNotGroupWhenFull: true
-                },
-                image: {
-                    // Configure the available styles.
-                    styles: [
-                        'alignLeft', 'alignCenter', 'alignRight'
-                    ],
+                {
+                    language: 'fa',
+                    ckfinder: { uploadUrl: "/UploadEditorFile" },
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
+                        ]
+                    },
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                            'alignment', 'indent', 'outdent', '|',
+                            'insertTable', 'htmlEmbed', 'codeBlock', '|',
+                            'imageInsert', 'mediaEmbed', '|',
+                            'removeFormat', 'redo', 'undo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    image: {
+                        // Configure the available styles.
+                        styles: [
+                            'alignLeft', 'alignCenter', 'alignRight'
+                        ],
 
-                    // Configure the available image resize options.
-                    resizeOptions: [
-                        {
-                            name: 'resizeImage:original',
-                            label: 'Original',
-                            value: null
-                        },
-                        {
-                            name: 'resizeImage:50',
-                            label: '50%',
-                            value: '50'
-                        },
-                        {
-                            name: 'resizeImage:75',
-                            label: '75%',
-                            value: '75'
-                        }
-                    ],
+                        // Configure the available image resize options.
+                        resizeOptions: [
+                            {
+                                name: 'resizeImage:original',
+                                label: 'Original',
+                                value: null
+                            },
+                            {
+                                name: 'resizeImage:50',
+                                label: '50%',
+                                value: '50'
+                            },
+                            {
+                                name: 'resizeImage:75',
+                                label: '75%',
+                                value: '75'
+                            }
+                        ],
 
-                    // You need to configure the image toolbar, too, so it shows the new style
-                    // buttons as well as the resize buttons.
-                    toolbar: [
-                        'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
-                        '|',
-                        'resizeImage',
-                        '|',
-                        'imageTextAlternative'
-                    ]
-                }
-            })
+                        // You need to configure the image toolbar, too, so it shows the new style
+                        // buttons as well as the resize buttons.
+                        toolbar: [
+                            'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
+                            '|',
+                            'resizeImage',
+                            '|',
+                            'imageTextAlternative'
+                        ]
+                    }
+                })
             .catch(error => {
                 console.error(error);
             });
@@ -221,5 +409,13 @@
                 $(this).parent().parent().remove();
             });
 
+        //Js Guid Generator
+
+        function GuidGenerator() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
     </script>
 }

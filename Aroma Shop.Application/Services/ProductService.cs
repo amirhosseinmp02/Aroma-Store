@@ -104,9 +104,9 @@ namespace Aroma_Shop.Application.Services
 
                         var mixedProductAttribute = new MixedProductAttribute()
                         {
+                            MixedProductAttributeValue = mixedProductAttributeValue,
                             MixedProductAttributePrice = mixedProductAttributePrice,
-                            MixedProductAttributeQuantityInStock = mixedProductAttributeQuantityInStock,
-                            MixedProductAttributeValue = mixedProductAttributeValue
+                            MixedProductAttributeQuantityInStock = mixedProductAttributeQuantityInStock
                         };
 
                         product.MixedProductAttributes.Add(mixedProductAttribute);

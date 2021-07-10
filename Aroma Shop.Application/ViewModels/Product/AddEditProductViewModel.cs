@@ -45,7 +45,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public IEnumerable<string> AttributesNames { get; set; }
         [NotIncludedInStrings("-",ErrorMessage = "مقادیر صفت نمی توانند شامل کارکتر - باشند")]
         [RequiredStringsIf(nameof(IsSimpleProduct), false, ErrorMessage = "لطفا مقادیر صفت را وارد نمایید")]
-        public IEnumerable<string> AttributesValues { get; set; }
+        public ICollection<string> AttributesValues { get; set; }
         [RequiredStringsIf(nameof(IsSimpleProduct), false,ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
         public IEnumerable<string> MixedProductAttributesNames { get; set; }
         public IEnumerable<double?> MixedProductAttributesPrices { get; set; }

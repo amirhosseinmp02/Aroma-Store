@@ -158,6 +158,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ProductName = product.ProductName,
                 ProductShortDescription = product.ProductShortDescription,
                 ProductDescription = product.ProductDescription,
+                IsSimpleProduct = product.IsSimpleProduct,
                 ProductPrice = product.ProductPrice,
                 ProductQuantityInStock = product.ProductQuantityInStock,
                 ProductCategories = productCategories,
@@ -165,6 +166,44 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 InformationValues = product.Informations.Select(p => p.Value),
                 CurrentProductImages = product.Images
             };
+
+            if (!product.IsSimpleProduct)
+            {
+                model.AttributesNames =
+                    product.ProductAttributes
+                        .Select(p => p.ProductAttributeName);
+
+                for (int i = 0; i < product.ProductAttributes.Count; i++)
+                {
+                    var stringedProductAttributeValue = "";
+
+                    foreach (var productAttributeValue in product.ProductAttributes.ElementAtOrDefault(i).ProductAttributeValues)
+                    {
+                        if (!string.IsNullOrEmpty(stringedProductAttributeValue))
+                        {
+                            stringedProductAttributeValue += $",{productAttributeValue.AttributeValue}";
+                        }
+                        else
+                        {
+                            stringedProductAttributeValue = productAttributeValue.AttributeValue;
+                        }
+                    }
+
+                    model.AttributesValues.Add(stringedProductAttributeValue);
+                }
+
+                model.MixedProductAttributesNames =
+                    product.MixedProductAttributes
+                        .Select(p => p.MixedProductAttributeValue);
+
+                model.MixedProductAttributesPrices =
+                    product.MixedProductAttributes
+                        .Select(p => p?.MixedProductAttributePrice);
+
+                model.MixedProductAttributesQuantityInStocks =
+                    product.MixedProductAttributes
+                        .Select(p => p?.MixedProductAttributeQuantityInStock);
+            }
 
             TempData["productId"] = productId;
 
