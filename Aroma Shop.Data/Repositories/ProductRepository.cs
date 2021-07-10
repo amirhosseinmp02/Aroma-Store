@@ -85,6 +85,18 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Remove(product);
         }
+        public void AddMixedProductAttribute(MixedProductAttribute mixedProductAttribute)
+        {
+            _context.Add(mixedProductAttribute);
+        }
+        public void AddProductAttribute(ProductAttribute productAttribute)
+        {
+            _context.Add(productAttribute);
+        }
+        public void AddProductAttributeValue(ProductAttributeValue productAttributeValue)
+        {
+            _context.Add(productAttributeValue);
+        }
         public void DeleteMixedProductAttribute(MixedProductAttribute mixedProductAttribute)
         {
             _context.MixedProductAttributes.Remove(mixedProductAttribute);
