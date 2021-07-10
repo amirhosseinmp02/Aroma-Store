@@ -14,7 +14,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 
         //Navigations Properties
 
-        [Required]
         public ProductAttribute ProductAttribute { get; set; }
     }
 }

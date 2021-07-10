@@ -132,28 +132,39 @@
 
     <script>
 
-    //Manage Product Attributes
+        var ExistAttributesPricesAndQuantitiesInStocks = [];
 
-    $(document).ready(function () {
-        if ($('input:radio[name="IsSimpleProduct"]:checked').val() === "false") {
-            $('#without-attributes-section').css('display', 'none');
-            $('#with-attributes-section').css('display', 'unset');
-            var currentElementId, content, currentElementIdSelector;
-            @for(var i = 1;i<Model.AttributesNames.Count();i++)
+        //Manage Product Attributes
+
+        $(document).ready(function () {
+            if ($('input:radio[name="IsSimpleProduct"]:checked').val() === "false") {
+                $('#without-attributes-section').css('display', 'none');
+                $('#with-attributes-section').css('display', 'unset');
+                var currentElementId, content, currentElementIdSelector;
+                @for (int i = 0; i < Model.MixedProductAttributesPrices.Count(); i++)
+                {
+                    <text>
+                        ExistAttributesPricesAndQuantitiesInStocks[@i] = {
+                            price:@Model.MixedProductAttributesPrices.ElementAtOrDefault(i),
+                            quantityInStock:@Model.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i)
+                        }
+                        </text>
+                }
+                @for(var i = 1;i<Model.AttributesNames.Count();i++)
             {
         <text>
             currentElementId = "id" + GuidGenerator().toString();
             content = "<div class='row mb-2 product-attributes'><div class='col-4' ><input type='text' name='AttributesNames' class='form-control' placeholder='نام صفت' value='@Model.AttributesNames.ElementAtOrDefault(i)'><span class='text-danger field-validation-valid'></span></div><div class='col-6'><input id='" + currentElementId + "' type='text' name='AttributesValues' class='form-control attributes-values' placeholder='مقدار های صفت (با زدن اینتر ، مقدار ها را بیافزایید)' value='@Model.AttributesValues.ElementAtOrDefault(i)'><span class='text-danger field-validation-valid'></span></div><div class='col-2'><button type='button' class='btn btn-danger remove-attribute-btn'><i class='fa fa-trash' aria-hidden='true'></i></button></div></div>";
             $(content).insertBefore("#add-attribute-btn");
             currentElementIdSelector = "#" + currentElementId;
-                var tags = new Tags(currentElementIdSelector);
+            var tags = new Tags(currentElementIdSelector);
 
         </text>
             }
-            @{
-                <text>AttributeValueChanged();</text>
+                @{
+                <text>AttributeValueChangedForFirst();</text>
             }
-        }
+            }
 
             $('input:radio[name="IsSimpleProduct"]').change(
                 function () {
@@ -188,7 +199,8 @@
         var mixedAttributesList = [];
         var productAttributesLengths = [];
         var productAttributesValues = [];
-        function AttributeValueChanged(currentElement = null) {
+
+        function AttributeValueChangedForFirst(currentElement = null) {
             var productAttributes = $(".product-attributes");
             var productAttributesLengths = [];
             var productAttributesValues = [];
@@ -211,7 +223,7 @@
             var maximumAttributes = firstAttributeLength;
             if (productAttributesLengths.length > 1) {
                 for (var v = 1; v < productAttributesLengths.length; v++) {
-                    maximumAttributes *= productAttributesLengths[v] !== undefined ? productAttributesLengths[v]:1;
+                    maximumAttributes *= productAttributesLengths[v] !== undefined ? productAttributesLengths[v] : 1;
                 }
             }
 
@@ -242,9 +254,93 @@
 
             for (var q = 0; q < mixedAttributesList.length; q++) {
                 var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" +
-                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" + mixedAttributesList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
+                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" +
+                    mixedAttributesList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='" + ExistAttributesPricesAndQuantitiesInStocks[q].price + "' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='" + ExistAttributesPricesAndQuantitiesInStocks[q].quantityInStock + "' /><span class='text-danger field-validation-valid'></span></div></div>";
                 $(".variations-section").append(variationContent);
             }
+
+            function scrollingAttributes(values, count) {
+                var localCount = 1;
+                var i, c;
+                for (var i = 0, c = 0; c < maximumAttributes / count; i++, c++) {
+                    for (var v = c * count; v < count * localCount; v++) {
+                        if (mixedAttributesList[v] === undefined) {
+                            mixedAttributesList[v] = {
+                                text: values[i],
+                                value: values[i]
+                            };
+                        } else {
+                            mixedAttributesList[v].text += " - " + values[i];
+                            mixedAttributesList[v].value += "-" + values[i];
+                        }
+                    }
+                    ++localCount;
+                    if (i === values.length - 1)
+                        i = -1;
+                }
+            }
+        }
+
+        function AttributeValueChanged(currentElement = null) {
+            var productAttributes = $(".product-attributes");
+            var productAttributesLengths = [];
+            var productAttributesValues = [];
+            for (var i = 0; i < productAttributes.length; i++) {
+                var currentAttributeValue = productAttributes.eq(i).children().eq(1).children().eq(0).val();
+                if (currentAttributeValue) {
+                    var currentAttributeValuesList = currentAttributeValue.split(",");
+                    productAttributesValues[i] = currentAttributeValuesList;
+                    var currentAttributeValuesListLength = currentAttributeValuesList.length;
+                    productAttributesLengths[i] = currentAttributeValuesListLength;
+                }
+            }
+            var firstAttributeLength;
+            if (productAttributesLengths[0] === undefined) {
+                firstAttributeLength = 1;
+            } else {
+                firstAttributeLength = productAttributesLengths[0];
+            }
+
+            var maximumAttributes = firstAttributeLength;
+            if (productAttributesLengths.length > 1) {
+                for (var v = 1; v < productAttributesLengths.length; v++) {
+                    maximumAttributes *= productAttributesLengths[v] !== undefined ? productAttributesLengths[v] : 1;
+                }
+            }
+
+            var attributesVariationsCount = [];
+            var lastVariationCount = maximumAttributes;
+            for (var g = 0; g < productAttributesLengths.length; g++) {
+                if (productAttributesLengths[g] === undefined) {
+                    attributesVariationsCount[g] = 1;
+                } else {
+                    if (lastVariationCount !== 1) {
+                        attributesVariationsCount[g] = lastVariationCount / productAttributesLengths[g];
+                    } else {
+                        attributesVariationsCount[g] = lastVariationCount;
+                    }
+                    lastVariationCount = attributesVariationsCount[g];
+                }
+            }
+
+            mixedAttributesList = [];
+            for (var u = 0; u < productAttributesValues.length; u++) {
+                if (productAttributesValues[u] !== undefined && attributesVariationsCount[u] !== undefined) {
+                    scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
+                }
+            }
+
+            $('.variations-section').css('display', 'unset');
+            $(".all-variations").remove();
+
+
+            for (var q = 0; q < mixedAttributesList.length; q++) {
+                var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" +
+                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" +
+                    mixedAttributesList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
+                $(".variations-section").append(variationContent);
+            }
+
 
             function scrollingAttributes(values, count) {
                 var localCount = 1;
@@ -307,64 +403,64 @@
         });
 
         ClassicEditor.create(document.querySelector('#editor'),
-            {
-                language: 'fa',
-                ckfinder: { uploadUrl: "/UploadEditorFile" },
-                heading: {
-                    options: [
-                        { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
-                        { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
-                        { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
-                        { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
-                    ]
-                },
-                toolbar: {
-                    items: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'alignment', 'indent', 'outdent', '|',
-                        'insertTable', 'htmlEmbed', 'codeBlock', '|',
-                        'imageInsert', 'mediaEmbed', '|',
-                        'removeFormat', 'redo', 'undo'
-                    ],
-                    shouldNotGroupWhenFull: true
-                },
-                image: {
-                    // Configure the available styles.
-                    styles: [
-                        'alignLeft', 'alignCenter', 'alignRight'
-                    ],
+                {
+                    language: 'fa',
+                    ckfinder: { uploadUrl: "/UploadEditorFile" },
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'پاراگراف', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'هدر 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'هدر 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'هدر 3', class: 'ck-heading_heading3' }
+                        ]
+                    },
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', 'horizontalLine', 'underline', 'fontSize', 'fontColor', 'fontBackgroundColor', 'highlight', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                            'alignment', 'indent', 'outdent', '|',
+                            'insertTable', 'htmlEmbed', 'codeBlock', '|',
+                            'imageInsert', 'mediaEmbed', '|',
+                            'removeFormat', 'redo', 'undo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    image: {
+                        // Configure the available styles.
+                        styles: [
+                            'alignLeft', 'alignCenter', 'alignRight'
+                        ],
 
-                    // Configure the available image resize options.
-                    resizeOptions: [
-                        {
-                            name: 'resizeImage:original',
-                            label: 'Original',
-                            value: null
-                        },
-                        {
-                            name: 'resizeImage:50',
-                            label: '50%',
-                            value: '50'
-                        },
-                        {
-                            name: 'resizeImage:75',
-                            label: '75%',
-                            value: '75'
-                        }
-                    ],
+                        // Configure the available image resize options.
+                        resizeOptions: [
+                            {
+                                name: 'resizeImage:original',
+                                label: 'Original',
+                                value: null
+                            },
+                            {
+                                name: 'resizeImage:50',
+                                label: '50%',
+                                value: '50'
+                            },
+                            {
+                                name: 'resizeImage:75',
+                                label: '75%',
+                                value: '75'
+                            }
+                        ],
 
-                    // You need to configure the image toolbar, too, so it shows the new style
-                    // buttons as well as the resize buttons.
-                    toolbar: [
-                        'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
-                        '|',
-                        'resizeImage',
-                        '|',
-                        'imageTextAlternative'
-                    ]
-                }
-            })
+                        // You need to configure the image toolbar, too, so it shows the new style
+                        // buttons as well as the resize buttons.
+                        toolbar: [
+                            'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
+                            '|',
+                            'resizeImage',
+                            '|',
+                            'imageTextAlternative'
+                        ]
+                    }
+                })
             .catch(error => {
                 console.error(error);
             });
