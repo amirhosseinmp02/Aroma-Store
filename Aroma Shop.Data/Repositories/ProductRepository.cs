@@ -23,7 +23,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             var products = _context.Products
                 .Include(p => p.Categories)
-                .Include(p => p.Images);
+                .Include(p => p.Images)
+                .Include(p => p.ProductAttributes)
+                .ThenInclude(p => p.ProductAttributeValues)
+                .Include(p => p.MixedProductAttributes);
 
             return products;
         }
