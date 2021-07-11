@@ -51,7 +51,33 @@
                 <tr>
                     <th class="cart-item-cells"><img class="admin-products-img" src="@productImagePath"></th>
                     <td class="cart-item-cells align-middle">@product.ProductName</td>
-                    <td class="cart-item-cells align-middle">@product.ProductPrice</td>
+                    @if (product.IsSimpleProduct)
+                    {
+                        <td class="cart-item-cells align-middle">@(product.ProductPrice==0&& product.ProductQuantityInStock>0?"رایگان":$"{product.ProductPrice} تومان")</td>
+                    }
+                    else
+                    {
+                        var minimumPrice =
+                            product
+                                .MixedProductAttributes
+                                .Min(p => p.MixedProductAttributePrice);
+
+                        var minimumPriceLabel =
+                            minimumPrice == 0 ? "رایگان" : $"{minimumPrice} تومان";
+
+                        var maximumPrice =
+                            product
+                                .MixedProductAttributes
+                                .Max(p => p.MixedProductAttributePrice);
+
+                        var maximumPriceLabel =
+                            $"{maximumPrice} تومان";
+
+                        var isMinimumAndMaximumPriceFree =
+                            minimumPrice == 0 && maximumPrice == 0 ? true : false;
+
+                        <td class="cart-item-cells align-middle">@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</td>
+                    }
                     <td class="cart-item-cells align-middle">@(!string.IsNullOrEmpty(product.ProductShortDescription)? product.ProductShortDescription:"")</td>
                     <td class="cart-item-cells align-middle">@product.RegistrationTime.ToSolarWithTime()</td>
                     <td class="align-middle">

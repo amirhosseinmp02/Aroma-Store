@@ -26,7 +26,8 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Images)
                 .Include(p => p.ProductAttributes)
                 .ThenInclude(p => p.ProductAttributeValues)
-                .Include(p => p.MixedProductAttributes);
+                .Include(p => p.MixedProductAttributes)
+                .AsSplitQuery();
 
             return products;
         }
