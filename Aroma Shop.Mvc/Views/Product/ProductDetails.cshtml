@@ -80,7 +80,23 @@
                     @if (Model.Product.IsSimpleProduct)
                     {
                         <h3>@Model.Product.ProductName</h3>
-                        <h2>@(Model.Product.ProductPrice==0&&Model.Product.ProductQuantityInStock>0?"رایگان":$"{Model.Product.ProductPrice} تومان")</h2>
+
+                        string simpleProductPriceLabel;
+
+                        if (Model.Product.ProductPrice == 0)
+                        {
+                            simpleProductPriceLabel = "";
+                        }
+                        else if (Model.Product.ProductPrice == 0 && Model.Product.ProductQuantityInStock > 0)
+                        {
+                            simpleProductPriceLabel = "رایگان";
+                        }
+                        else
+                        {
+                            simpleProductPriceLabel = $"{Model.Product.ProductPrice} تومان";
+                        }
+
+                        <h2>@simpleProductPriceLabel</h2>
                         <ul class="list">
                             <li>
                                 <span>دسته :</span>
