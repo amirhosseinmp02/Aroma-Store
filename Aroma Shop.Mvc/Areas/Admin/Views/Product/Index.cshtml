@@ -53,30 +53,59 @@
                     <td class="cart-item-cells align-middle">@product.ProductName</td>
                     @if (product.IsSimpleProduct)
                     {
-                        <td class="cart-item-cells align-middle">@(product.ProductPrice==0&& product.ProductQuantityInStock>0?"رایگان":$"{product.ProductPrice} تومان")</td>
+                        var simpleProductPriceLabel = "ناموجود";
+
+                        if (product.ProductPrice != 0 && product.ProductQuantityInStock != 0)
+                        {
+                            simpleProductPriceLabel = $"{product.ProductPrice} تومان";
+
+                        }
+                        else if (product.ProductPrice == 0 && product.ProductQuantityInStock > 0)
+                        {
+                            simpleProductPriceLabel = "رایگان";
+                        }
+
+                        <td class="cart-item-cells align-middle">@simpleProductPriceLabel</td>
                     }
                     else
                     {
-                        var minimumPrice =
+                        var productAttributePriceLabel = "ناموجود";
+
+                        var doesProductHaveAFreeVariation =
                             product
                                 .MixedProductAttributes
-                                .Min(p => p.MixedProductAttributePrice);
+                                .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
 
-                        var minimumPriceLabel =
-                            minimumPrice == 0 ? "رایگان" : $"{minimumPrice} تومان";
-
-                        var maximumPrice =
+                        double? minimumPrice =
                             product
                                 .MixedProductAttributes
-                                .Max(p => p.MixedProductAttributePrice);
+                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                .Min(p => (double?)p.MixedProductAttributePrice);
 
-                        var maximumPriceLabel =
-                            $"{maximumPrice} تومان";
+                        double? maximumPrice =
+                            product
+                                .MixedProductAttributes
+                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                .Max(p => (double?)p.MixedProductAttributePrice);
 
-                        var isMinimumAndMaximumPriceFree =
-                            minimumPrice == 0 && maximumPrice == 0 ? true : false;
+                        if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"{minimumPrice} تومان - {maximumPrice} تومان";
+                        }
+                        else if ((minimumPrice != null && maximumPrice != null) && minimumPrice == maximumPrice && !doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"{minimumPrice} تومان";
+                        }
+                        else if (minimumPrice == null && doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"رایگان";
+                        }
+                        else if (maximumPrice != null && doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"رایگان - {maximumPrice} تومان";
+                        }
 
-                        <td class="cart-item-cells align-middle">@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</td>
+                        <td class="cart-item-cells align-middle">@productAttributePriceLabel</td>
                     }
                     <td class="cart-item-cells align-middle">@(!string.IsNullOrEmpty(product.ProductShortDescription)? product.ProductShortDescription:"")</td>
                     <td class="cart-item-cells align-middle">@product.RegistrationTime.ToSolarWithTime()</td>

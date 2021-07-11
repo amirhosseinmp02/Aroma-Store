@@ -81,11 +81,12 @@
                     {
                         <h3>@Model.Product.ProductName</h3>
 
-                        string simpleProductPriceLabel;
+                        var simpleProductPriceLabel = "";
 
-                        if (Model.Product.ProductPrice == 0)
+                        if (Model.Product.ProductPrice != 0 && Model.Product.ProductQuantityInStock != 0)
                         {
-                            simpleProductPriceLabel = "";
+                            simpleProductPriceLabel = $"{Model.Product.ProductPrice} تومان";
+
                         }
                         else if (Model.Product.ProductPrice == 0 && Model.Product.ProductQuantityInStock > 0)
                         {
@@ -93,7 +94,7 @@
                         }
                         else
                         {
-                            simpleProductPriceLabel = $"{Model.Product.ProductPrice} تومان";
+                            simpleProductPriceLabel = "";
                         }
 
                         <h2>@simpleProductPriceLabel</h2>
@@ -167,36 +168,61 @@
                     {
                         <h3>@Model.Product.ProductName</h3>
 
-                        var minimumPrice =
+                        var productAttributePriceLabel = "";
+
+                        var doesProductHaveAFreeVariation =
                             Model.Product
                                 .MixedProductAttributes
-                                .Min(p => p.MixedProductAttributePrice);
+                                .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
 
-                        var minimumPriceLabel =
-                            minimumPrice == 0 ? "رایگان" : $"{minimumPrice} تومان";
-
-                        var maximumPrice =
+                        double? minimumPrice =
                             Model.Product
                                 .MixedProductAttributes
-                                .Max(p => p.MixedProductAttributePrice);
+                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                .Min(p => (double?)p.MixedProductAttributePrice);
 
-                        var maximumPriceLabel =
-                            $"{maximumPrice} تومان";
+                        double? maximumPrice =
+                            Model.Product
+                                .MixedProductAttributes
+                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                .Max(p => (double?)p.MixedProductAttributePrice);
 
-                        var isMinimumAndMaximumPriceFree =
-                            minimumPrice == 0 && maximumPrice == 0 ? true : false;
+                        if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"{minimumPrice} تومان - {maximumPrice} تومان";
+                        }
+                        else if ((minimumPrice != null && maximumPrice != null) && minimumPrice == maximumPrice && !doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"{minimumPrice} تومان";
+                        }
+                        else if (minimumPrice == null && doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"رایگان";
+                        }
+                        else if (maximumPrice != null && doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"رایگان - {maximumPrice} تومان";
+                        }
 
-                        <h2 id="price-label">@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</h2>
+                        <h2 id="price-label">@productAttributePriceLabel</h2>
                         <ul class="list">
                             <li>
                                 <span>دسته :</span>
                                 @foreach (var category in Model.Product.Categories)
                                 {
-                                    <a>@category.CategoryName</a> <span> , </span>
+                                    <a>@category.CategoryName</a>
+                                    <span> , </span>
                                 }
                             </li>
                             <li>
-                                وضعیت : @if (Model.Product.MixedProductAttributes.Any(p => p.MixedProductAttributeQuantityInStock != 0))
+                                @{
+                                    var doesProductHaveAtLastOneAvailableVariation =
+                                                    Model.Product
+                                                        .MixedProductAttributes
+                                                        .Any(p => p.MixedProductAttributeQuantityInStock != 0);
+                                }
+                                وضعیت :
+                                @if (doesProductHaveAtLastOneAvailableVariation)
                                 {
                                     <span class='text-success font-weight-bold quantity-in-stock-label'>موجود</span>
                                 }
@@ -209,29 +235,33 @@
                         <p class="mb-1 border-top border-bottom-0">
                             @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
                         </p>
-                        <div class="mb-4 border-bottom">
-                            <div class="attributes-section">
-                                @foreach (var productAttribute in Model.Product.ProductAttributes)
-                                {
+                        if (doesProductHaveAtLastOneAvailableVariation)
+                        {
+                            <div class="mb-4 border-bottom">
+                                <div class="attributes-section">
+                                    @foreach (var productAttribute in Model.Product.ProductAttributes)
+                                    {
 
-                                    <div class="row">
-                                        <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
-                                        <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
-                                            <option>لطفا انتخاب کنید</option>
-                                            @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
-                                            {
-                                                <option value="@productAttributeValue.AttributeValueId">@productAttributeValue.AttributeValue</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <br />
-                                }
+                                        <div class="row">
+                                            <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
+                                            <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
+                                                <option>لطفا انتخاب کنید</option>
+                                                @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
+                                                {
+                                                    <option value="@productAttributeValue.AttributeValueId">@productAttributeValue.AttributeValue</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <br />
+                                    }
+                                </div>
+                                <div class="d-block text-center mb-2">
+                                    <span class="reset_variations text-dark">پاک کردن</span>
+                                </div>
                             </div>
-                            <div class="d-block text-center mb-2">
-                                <span class="reset_variations text-dark">پاک کردن</span>
-                            </div>
-                        </div>
-                        if (Model.Product.MixedProductAttributes.Any(p => p.MixedProductAttributeQuantityInStock != 0))
+                        }
+
+                        if (doesProductHaveAtLastOneAvailableVariation)
                         {
                             <div class="product_count">
                                 <label for="qty">تعداد :</label>

@@ -41,32 +41,66 @@
                 <div class="card-body">
                     <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
                     <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
+
                     @if (product.IsSimpleProduct)
                     {
-                        <p class="card-product__price">@(product.ProductPrice==0&& product.ProductQuantityInStock>0?"رایگان":$"{product.ProductPrice} تومان")</p>
+                        var simpleProductPriceLabel = "";
+
+                        if (product.ProductPrice != 0 && product.ProductQuantityInStock != 0)
+                        {
+                            simpleProductPriceLabel = $"{product.ProductPrice} تومان";
+
+                        }
+                        else if (product.ProductPrice == 0 && product.ProductQuantityInStock > 0)
+                        {
+                            simpleProductPriceLabel = "رایگان";
+                        }
+                        else
+                        {
+                            simpleProductPriceLabel = "";
+                        }
+
+                        <p class="card-product__price">@simpleProductPriceLabel</p>
                     }
                     else
                     {
-                        var minimumPrice =
+                        var productAttributePriceLabel = "";
+
+                        var doesProductHaveAFreeVariation =
                             product
                                 .MixedProductAttributes
-                                .Min(p => p.MixedProductAttributePrice);
+                                .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
 
-                        var minimumPriceLabel =
-                            minimumPrice == 0 ? "رایگان" : $"{minimumPrice} تومان";
-
-                        var maximumPrice =
+                        double? minimumPrice =
                             product
                                 .MixedProductAttributes
-                                .Max(p => p.MixedProductAttributePrice);
+                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                .Min(p => (double?)p.MixedProductAttributePrice);
 
-                        var maximumPriceLabel =
-                            $"{maximumPrice} تومان";
+                        double? maximumPrice =
+                            product
+                                .MixedProductAttributes
+                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                .Max(p => (double?)p.MixedProductAttributePrice);
 
-                        var isMinimumAndMaximumPriceFree =
-                            minimumPrice == 0 && maximumPrice == 0 ? true : false;
+                        if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"{minimumPrice} تومان - {maximumPrice} تومان";
+                        }
+                        else if ((minimumPrice != null && maximumPrice != null) && minimumPrice == maximumPrice && !doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"{minimumPrice} تومان";
+                        }
+                        else if (minimumPrice == null && doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"رایگان";
+                        }
+                        else if (maximumPrice != null && doesProductHaveAFreeVariation)
+                        {
+                            productAttributePriceLabel = $"رایگان - {maximumPrice} تومان";
+                        }
 
-                        <p class="card-product__price">@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</p>
+                        <p class="card-product__price">@productAttributePriceLabel</p>
                     }
                 </div>
             </div>

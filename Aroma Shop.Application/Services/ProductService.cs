@@ -105,8 +105,6 @@ namespace Aroma_Shop.Application.Services
                 product.ProductName = productViewModel.ProductName;
                 product.ProductShortDescription = productViewModel.ProductShortDescription;
                 product.ProductDescription = productViewModel.ProductDescription;
-                product.ProductPrice = productViewModel.ProductPrice;
-                product.ProductQuantityInStock = productViewModel.ProductQuantityInStock;
 
                 if (productViewModel.ProductCategoriesId.Any())
                     UpdateProductCategories
@@ -139,8 +137,6 @@ namespace Aroma_Shop.Application.Services
                             DeleteProductAttributes(product);
 
                         product.IsSimpleProduct = true;
-
-                        _productRepository.Save();
                     }
 
                     product.ProductPrice = productViewModel.ProductPrice;
@@ -159,7 +155,7 @@ namespace Aroma_Shop.Application.Services
                     _productRepository.Save();
 
                     var result =
-                        AddProductAttributes(product, productViewModel);
+                        AddProductAttributesForUpdate(product, productViewModel);
 
                     if (!result)
                         return false;
@@ -773,6 +769,83 @@ namespace Aroma_Shop.Application.Services
                     };
 
                     _productRepository.AddMixedProductAttribute(mixedProductAttribute);
+                    _productRepository.Save();
+                }
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        private bool AddProductAttributesForUpdate(Product product, AddEditProductViewModel productViewModel)
+        {
+            try
+            {
+                for (int i = 0; i < productViewModel.AttributesNames.Count(); i++)
+                {
+                    var productAttributeName =
+                        productViewModel
+                            .AttributesNames.ElementAtOrDefault(i);
+
+                    var productAttributeValues =
+                        productViewModel
+                            .AttributesValues.ElementAtOrDefault(i)
+                            .Split(",")
+                            .Select(p => new ProductAttributeValue() { AttributeValue = p })
+                            .ToList();
+
+                    foreach (var productAttributeValue in productAttributeValues)
+                    {
+                        _productRepository.AddProductAttributeValue(productAttributeValue);
+
+                        _productRepository.UpdateProduct(product);
+                        _productRepository.Save();
+                    }
+
+                    var productAttribute = new ProductAttribute()
+                    {
+                        ProductAttributeName = productAttributeName,
+                        ProductAttributeValues = productAttributeValues,
+                        Product = product
+                    };
+
+                    _productRepository.AddProductAttribute(productAttribute);
+
+                    _productRepository.UpdateProduct(product);
+                    _productRepository.Save();
+                }
+
+                for (int i = 0; i < productViewModel.MixedProductAttributesNames.Count(); i++)
+                {
+                    var mixedProductAttributeValue =
+                        productViewModel
+                            .MixedProductAttributesNames.ElementAtOrDefault(i);
+
+                    var mixedProductAttributePrice =
+                        productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) >= 0 &&
+                        productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) != null
+                            ? Convert.ToDouble(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
+                            : 0;
+
+                    var mixedProductAttributeQuantityInStock =
+                        productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) >= 0 &&
+                        productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) != null
+                            ? Convert.ToInt32(productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i))
+                            : 0;
+
+                    var mixedProductAttribute = new MixedProductAttribute()
+                    {
+                        MixedProductAttributeValue = mixedProductAttributeValue,
+                        MixedProductAttributePrice = mixedProductAttributePrice,
+                        MixedProductAttributeQuantityInStock = mixedProductAttributeQuantityInStock,
+                        Product = product
+                    };
+
+                    _productRepository.AddMixedProductAttribute(mixedProductAttribute);
+                    _productRepository.UpdateProduct(product);
                     _productRepository.Save();
                 }
 
