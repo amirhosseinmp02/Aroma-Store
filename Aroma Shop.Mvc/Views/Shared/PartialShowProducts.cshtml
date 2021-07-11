@@ -41,7 +41,33 @@
                 <div class="card-body">
                     <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
                     <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
-                    <p class="card-product__price">@product.ProductPrice تومان</p>
+                    @if (product.IsSimpleProduct)
+                    {
+                        <p class="card-product__price">@(product.ProductPrice==0&& product.ProductQuantityInStock>0?"رایگان":$"{product.ProductPrice} تومان")</p>
+                    }
+                    else
+                    {
+                        var minimumPrice =
+                            product
+                                .MixedProductAttributes
+                                .Min(p => p.MixedProductAttributePrice);
+
+                        var minimumPriceLabel =
+                            minimumPrice == 0 ? "رایگان" : $"{minimumPrice} تومان";
+
+                        var maximumPrice =
+                            product
+                                .MixedProductAttributes
+                                .Max(p => p.MixedProductAttributePrice);
+
+                        var maximumPriceLabel =
+                            $"{maximumPrice} تومان";
+
+                        var isMinimumAndMaximumPriceFree =
+                            minimumPrice == 0 && maximumPrice == 0 ? true : false;
+
+                        <p class="card-product__price">@(isMinimumAndMaximumPriceFree?"رایگان":$"{minimumPriceLabel} - {maximumPriceLabel}")</p>
+                    }
                 </div>
             </div>
         </div>
