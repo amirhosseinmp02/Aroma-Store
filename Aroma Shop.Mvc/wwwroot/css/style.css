@@ -2568,7 +2568,7 @@ a {
         border: 1px solid #eee;
         background: #fff;
         border-left: 0;
-        padding-right: 15px
+        padding: 3px 11px 1px 11px;
     }
 
         .filter-bar-search button i,

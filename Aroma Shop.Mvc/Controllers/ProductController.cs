@@ -20,6 +20,16 @@ namespace Aroma_Shop.Mvc.Controllers
             _mediaService = mediaService;
         }
 
+        #region ShowProducts
+
+        [HttpGet("/Products")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region ProductDetails
 
         [HttpGet("/Products/{productId}")]
