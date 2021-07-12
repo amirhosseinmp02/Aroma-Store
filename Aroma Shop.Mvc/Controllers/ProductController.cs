@@ -25,7 +25,19 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("/Products")]
         public IActionResult Index()
         {
-            return View();
+            var products = 
+                _productService.GetProducts();
+
+            var categories =
+                _productService.GetCategories();
+
+            var productsViewModel = new ProductsViewModel()
+            {
+                Products = products,
+                Categories = categories
+            };
+
+            return View(productsViewModel);
         }
 
         #endregion
