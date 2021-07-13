@@ -2608,7 +2608,6 @@ a {
 }
 
 .sidebar-categories .main-categories {
-    padding: 20px 28px;
     background: #f1f6f7
 }
 
@@ -2664,20 +2663,25 @@ a {
         text-transform: capitalize
     }
 
-    .sidebar-filter .common-filter {
-        background: #f1f6f7;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 25px
-    }
+.sidebar-filter {
+    background: #f1f6f7;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 25px;
+}
 
-        .sidebar-filter .common-filter .filter-list {
-            position: relative;
-            padding-left: 28px
-        }
+.common-filter {
+    padding: 20px 28px;
+}
 
-        .sidebar-filter .common-filter:last-child {
-            border-bottom: 0
-        }
+
+.sidebar-filter .common-filter .filter-list {
+    position: relative;
+    padding-left: 28px
+}
+
+.sidebar-filter .common-filter:last-child {
+    border-bottom: 0
+}
 
 .filter-list {
     line-height: 32px
@@ -4998,4 +5002,8 @@ input.input-validation-error {
 
 span.reset_variations:hover {
     color: #007bff !important
+}
+
+.main-categories .border-top {
+    padding: 15px 34px 50px 33px
 }

@@ -1,7 +1,59 @@
-﻿@model Aroma_Shop.Application.ViewModels.Product.ProductsViewModel
+﻿@using Aroma_Shop.Application.Interfaces
+@using Aroma_Shop.Domain.Models.FileModels
+
+@model Aroma_Shop.Application.ViewModels.Product.ProductsViewModel
 
 @{
     ViewData["Title"] = "محصولات";
+}
+
+@inject IAccountService AccountService
+@inject IProductService ProductService
+
+@section Styles
+{
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css">
+    <style>
+
+        span:focus {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .value {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            margin: 0 0 0 -20px;
+            width: 40px;
+            text-align: center;
+            display: block;
+            /* optional */
+            font-weight: normal;
+            font-family: Verdana,Arial,sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .price-range-both.value {
+            width: 100px;
+            margin: 0 0 0 -50px;
+            top: 26px;
+        }
+
+        .price-range-both {
+            display: none;
+        }
+
+        .value i {
+            font-style: normal;
+        }
+
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+            border-radius: 13px;
+            background: rgb(56, 74, 235) !important
+        }
+    </style>
 }
 
 <!-- ================ start banner area ================= -->
@@ -42,6 +94,10 @@
                                 </ul>
                             </form>
                         </li>
+                        <li class="border-top form-group mt-3">
+                            <label class="control-label mb-3">قیمت</label>
+                            <div id="slider" class="form-control"></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -64,8 +120,8 @@
                     </div>
                     <div>
                         <div class="input-group filter-bar-search">
-                            <input type="text" placeholder="جستجو...">
-                            <div class="input-group-append text-">
+                            <input type="text" placeholder="جستجو..." class="pl-2">
+                            <div class="input-group-append">
                                 <button type="button"><i class="ti-search"></i></button>
                             </div>
                         </div>
@@ -75,159 +131,105 @@
                 <!-- Start Best Seller -->
                 <section class="lattest-product-area pb-40 category-list">
                     <div class="row">
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product1.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Accessories</p>
-                                    <h4 class="card-product__title"><a href="#">Quartz Belt Watch</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product2.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Beauty</p>
-                                    <h4 class="card-product__title"><a href="#">Women Freshwash</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product3.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Decor</p>
-                                    <h4 class="card-product__title"><a href="#">Room Flash Light</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product4.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Decor</p>
-                                    <h4 class="card-product__title"><a href="#">Room Flash Light</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product5.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Accessories</p>
-                                    <h4 class="card-product__title"><a href="#">Man Office Bag</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product6.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Kids Toy</p>
-                                    <h4 class="card-product__title"><a href="#">Charging Car</a></h4>
-                                    <p class="card-product__price">$150.00</p>
+                        @foreach (var product in @Model.Products)
+                        {
+                            string productImagePath;
+                            if (product.Images.Any())
+                            {
+                                productImagePath = $"/img/{product.Images.FirstOrDefault().ImagePath}";
+                            }
+                            else
+                            {
+                                productImagePath = Image.DefaultImagePath;
+                            }
+                            <div class="col">
+                                <div class="card text-center card-product">
+                                    <div class="card-product__img">
+                                        <img class="card-img product-images-card" src="@productImagePath" alt="">
+                                        <ul class="card-product__imgOverlay">
+                                            <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-search"></i></a></li>
+                                            <li><button><i class="bi bi-bag"></i></button></li>
+                                            @if (AccountService.IsUserSignedIn())
+                                            {
+                                                if (!await ProductService.IsProductInLoggedUserFavoriteProducts(product.ProductId))
+                                                {
+                                                    <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="ti-heart"></i></a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a asp-controller="Product" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="bi bi-heart-fill"></i></a></li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
+                                        <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
+
+                                        @if (product.IsSimpleProduct)
+                                        {
+                                            var simpleProductPriceLabel = "";
+
+                                            if (product.ProductPrice != 0 && product.ProductQuantityInStock != 0)
+                                            {
+                                                simpleProductPriceLabel = $"{product.ProductPrice} تومان";
+
+                                            }
+                                            else if (product.ProductPrice == 0 && product.ProductQuantityInStock > 0)
+                                            {
+                                                simpleProductPriceLabel = "رایگان";
+                                            }
+                                            else
+                                            {
+                                                simpleProductPriceLabel = "";
+                                            }
+
+                                            <p class="card-product__price">@simpleProductPriceLabel</p>
+                                        }
+                                        else
+                                        {
+                                            var productAttributePriceLabel = "";
+
+                                            var doesProductHaveAFreeVariation =
+                                                product
+                                                    .MixedProductAttributes
+                                                    .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
+
+                                            double? minimumPrice =
+                                                product
+                                                    .MixedProductAttributes
+                                                    .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                                    .Min(p => (double?)p.MixedProductAttributePrice);
+
+                                            double? maximumPrice =
+                                                product
+                                                    .MixedProductAttributes
+                                                    .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
+                                                    .Max(p => (double?)p.MixedProductAttributePrice);
+
+                                            if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
+                                            {
+                                                productAttributePriceLabel = $"{minimumPrice} تومان - {maximumPrice} تومان";
+                                            }
+                                            else if ((minimumPrice != null && maximumPrice != null) && minimumPrice == maximumPrice && !doesProductHaveAFreeVariation)
+                                            {
+                                                productAttributePriceLabel = $"{minimumPrice} تومان";
+                                            }
+                                            else if (minimumPrice == null && doesProductHaveAFreeVariation)
+                                            {
+                                                productAttributePriceLabel = $"رایگان";
+                                            }
+                                            else if (maximumPrice != null && doesProductHaveAFreeVariation)
+                                            {
+                                                productAttributePriceLabel = $"رایگان - {maximumPrice} تومان";
+                                            }
+
+                                            <p class="card-product__price">@productAttributePriceLabel</p>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product7.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Accessories</p>
-                                    <h4 class="card-product__title"><a href="#">Blutooth Speaker</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product8.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Kids Toy</p>
-                                    <h4 class="card-product__title"><a href="#">Charging Car</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card text-center card-product">
-                                <div class="card-product__img">
-                                    <img class="card-img" src="img/product/product1.png" alt="">
-                                    <ul class="card-product__imgOverlay">
-                                        <li><button><i class="ti-search"></i></button></li>
-                                        <li><button><i class="ti-shopping-cart"></i></button></li>
-                                        <li><button><i class="ti-heart"></i></button></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <p>Accessories</p>
-                                    <h4 class="card-product__title"><a href="#">Quartz Belt Watch</a></h4>
-                                    <p class="card-product__price">$150.00</p>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </section>
                 <!-- End Best Seller -->
@@ -236,3 +238,61 @@
     </div>
 </section>
 <!-- ================ category section end ================= -->
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script>
+        function collision($div1, $div2) {
+            var x1 = $div1.offset().left;
+            var w1 = 40;
+            var r1 = x1 + w1;
+            var x2 = $div2.offset().left;
+            var w2 = 40;
+            var r2 = x2 + w2;
+
+            if (r1 < x2 || x1 > r2) return false;
+            return true;
+
+        }
+
+
+        $('#slider').slider({
+            range: true,
+            min: 0,
+            max: 500,
+            values: [75, 300],
+            slide: function (event, ui) {
+
+                $('.ui-slider-handle:eq(0) .price-range-min').html(ui.values[0] + 'تومان');
+                $('.ui-slider-handle:eq(1) .price-range-max').html(ui.values[1] + 'تومان');
+                $('.price-range-both').html('<i> تومان' + ui.values[0] + ' - </i> تومان' + ui.values[1]);
+                ConvertNumberToPersion();
+
+
+                if (ui.values[0] == ui.values[1]) {
+                    $('.price-range-both i').css('display', 'none');
+                } else {
+                    $('.price-range-both i').css('display', 'inline');
+                }
+
+
+
+                if (collision($('.price-range-min'), $('.price-range-max')) == true) {
+                    $('.price-range-min, .price-range-max').css('opacity', '0');
+                    $('.price-range-both').css('display', 'block');
+                } else {
+                    $('.price-range-min, .price-range-max').css('opacity', '1');
+                    $('.price-range-both').css('display', 'none');
+                }
+
+            }
+        });
+
+        $('.ui-slider-range').append('<span class="price-range-both value"><i> تومان' + $('#slider').slider('values', 0) + ' - </i>' + $('#slider').slider('values', 1) + '</span>');
+
+        $('.ui-slider-handle:eq(0)').append('<span class="price-range-min value"> تومان' + $('#slider').slider('values', 0) + '</span>');
+
+        $('.ui-slider-handle:eq(1)').append('<span class="price-range-max value"> تومان' + $('#slider').slider('values', 1) + '</span>');
+    </script>
+}
