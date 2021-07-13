@@ -18,6 +18,7 @@ namespace Aroma_Shop.Application.Interfaces
         bool UpdateProduct(AddEditProductViewModel productViewModel);
         bool DeleteProduct(Product product);
         bool DeleteProductById(int productId);
+        bool AddHitsToProduct(Product product);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
