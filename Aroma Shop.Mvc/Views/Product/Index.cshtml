@@ -30,7 +30,7 @@
             display: block;
             /* optional */
             font-weight: normal;
-            font-family: Verdana,Arial,sans-serif;
+            font-family: 'Samim', sans-serif;
             font-size: 14px;
             color: #333;
         }
@@ -104,18 +104,12 @@
             <div class="col-xl-9 col-lg-8 col-md-7">
                 <!-- Start Filter Bar -->
                 <div class="filter-bar d-flex flex-wrap align-items-center">
-                    <div class="mr-3 mt-3 mb-2">
-                        <select class="form-control">
-                            <option value="1">مرتب کردن اولی</option>
-                            <option value="1">مرتب کردن دومی</option>
-                            <option value="1">مرتب کردن سومی</option>
-                        </select>
-                    </div>
                     <div class="mr-auto mt-3 mb-2">
                         <select class="form-control">
-                            <option value="1">Show ۱۲</option>
-                            <option value="1">Show ۱۲</option>
-                            <option value="1">Show ۱۲</option>
+                            <option value="newest">مرتب سازی بر اساس جدیدترین</option>
+                            <option value="popularity">مرتب سازی بر اساس محبوبیت</option>
+                            <option value="priceCheapest">مرتب سازی بر اساس ارزانترین</option>
+                            <option value="priceMostExpensive">مرتب سازی بر اساس گرانترین</option>
                         </select>
                     </div>
                     <div>
@@ -260,13 +254,14 @@
         $('#slider').slider({
             range: true,
             min: 0,
-            max: 500,
-            values: [75, 300],
+            max: 27000,
+            values: [1000, 7000],
             slide: function (event, ui) {
 
                 $('.ui-slider-handle:eq(0) .price-range-min').html(ui.values[0] + 'تومان');
                 $('.ui-slider-handle:eq(1) .price-range-max').html(ui.values[1] + 'تومان');
-                $('.price-range-both').html('<i> تومان' + ui.values[0] + ' - </i> تومان' + ui.values[1]);
+                $('.price-range-both').html('<i>' + ui.values[0] + 'تومان - </i>' + ui.values[1] +'تومان');
+
                 ConvertNumberToPersion();
 
 
@@ -291,8 +286,8 @@
 
         $('.ui-slider-range').append('<span class="price-range-both value"><i> تومان' + $('#slider').slider('values', 0) + ' - </i>' + $('#slider').slider('values', 1) + '</span>');
 
-        $('.ui-slider-handle:eq(0)').append('<span class="price-range-min value"> تومان' + $('#slider').slider('values', 0) + '</span>');
+        $('.ui-slider-handle:eq(0)').append('<span class="price-range-min value">' + $('#slider').slider('values', 0) + 'تومان</span>');
 
-        $('.ui-slider-handle:eq(1)').append('<span class="price-range-max value"> تومان' + $('#slider').slider('values', 1) + '</span>');
+        $('.ui-slider-handle:eq(1)').append('<span class="price-range-max value">' + $('#slider').slider('values', 1) + 'تومان</span>');
     </script>
 }
