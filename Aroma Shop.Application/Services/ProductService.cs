@@ -223,6 +223,22 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool AddHitsToProduct(Product product)
+        {
+            try
+            {
+                ++product.ProductHits;
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public IEnumerable<Product> GetProducts()
         {
             var products =
