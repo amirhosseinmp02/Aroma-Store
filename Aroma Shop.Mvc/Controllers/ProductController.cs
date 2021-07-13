@@ -53,6 +53,9 @@ namespace Aroma_Shop.Mvc.Controllers
             if (product == null)
                 return NotFound();
 
+            _productService
+                .AddHitsToProduct(product);
+
             product.Comments = product.Comments
                 .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
 
