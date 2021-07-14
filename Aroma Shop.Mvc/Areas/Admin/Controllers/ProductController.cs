@@ -61,7 +61,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var categoriesPage =
+            var productsPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -70,7 +70,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             ViewBag.prevPage = page.PreviousPage;
             ViewBag.nextPage = page.NextPage;
 
-            return View(categoriesPage);
+            return View(productsPage);
         }
 
         #endregion

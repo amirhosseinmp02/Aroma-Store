@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Product;
+using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Controllers
@@ -22,19 +24,75 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #region ShowProducts
 
-        [HttpGet("/Products")]
-        public IActionResult Index()
+        [HttpGet("/Products/")]
+        public IActionResult Index(int pageNumber = 1, string sortby = null, string search = null, IEnumerable<int> categories = null)
         {
-            var products = 
-                _productService.GetProducts();
+            IEnumerable<Product> products;
 
-            var categories =
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = _productService.GetProducts()
+                    .Where(p => p.ProductName.Contains(search)
+                                || p.Categories
+                                    .Contains(new Category() { CategoryName = search }));
+
+                ViewBag.search = search;
+            }
+            else
+                products =
+                    _productService
+                        .GetProducts();
+
+            if (!products.Any())
+            {
+                ViewBag.isEmpty = true;
+
+                return View();
+            }
+
+            var page =
+                new Paging<Product>(products, 12, pageNumber);
+
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+
+            var productsPage =
+                page.QueryResult;
+
+            if (sortby == "newest" || string.IsNullOrEmpty(sortby))
+            {
+                productsPage =
+                    productsPage
+                        .OrderByDescending(p => p.RegistrationTime);
+            }
+            else if (sortby == "priceCheapest")
+            {
+
+            }
+            else if (sortby == "priceMostExpensive")
+            {
+
+            }
+            else if (sortby == "popularity")
+            {
+                productsPage =
+                    productsPage
+                        .OrderByDescending(p => p.ProductHits);
+            }
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+
+            var allCategories =
                 _productService.GetCategories();
 
             var productsViewModel = new ProductsViewModel()
             {
-                Products = products,
-                Categories = categories
+                Products = productsPage,
+                Categories = allCategories
             };
 
             return View(productsViewModel);

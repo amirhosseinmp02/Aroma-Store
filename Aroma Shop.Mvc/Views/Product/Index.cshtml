@@ -89,7 +89,7 @@
                                         var categoryProductsCount =
                                             category.Products.Count;
 
-                                        <li class="filter-list"><input class="pixel-radio" type="checkbox" id="@category.CategoryName" name="Categories" value="@category.CategoryId"><label class="ml-2" for="@category.CategoryName">@category.CategoryName<span> (@categoryProductsCount)</span></label></li>
+                                        <li class="filter-list"><input class="pixel-radio" type="checkbox" id="@category.CategoryName" name="categories" value="@category.CategoryId"><label class="ml-2" for="@category.CategoryName">@category.CategoryName<span> (@categoryProductsCount)</span></label></li>
                                     }
                                 </ul>
                             </li>
@@ -104,7 +104,7 @@
                     <!-- Start Filter Bar -->
                     <div class="filter-bar d-flex flex-wrap align-items-center">
                         <div class="mr-auto mt-3 mb-2">
-                            <select class="form-control" name="OrderBy">
+                            <select class="form-control" name="sortby">
                                 <option value="newest">مرتب سازی بر اساس جدیدترین</option>
                                 <option value="popularity">مرتب سازی بر اساس محبوبیت</option>
                                 <option value="priceCheapest">مرتب سازی بر اساس ارزانترین</option>
@@ -113,7 +113,7 @@
                         </div>
                         <div>
                             <div class="input-group filter-bar-search">
-                                <input type="text" placeholder="جستجو..." class="pl-2" name="Search">
+                                <input type="text" placeholder="جستجو..." class="pl-2" name="search" value="@ViewBag.search">
                                 <div class="input-group-append">
                                     <button type="submit"><i class="ti-search"></i></button>
                                 </div>
@@ -225,6 +225,7 @@
                             }
                         </div>
                     </section>
+                    @await Html.PartialAsync("PartialPaging", "Index");
                     <!-- End Best Seller -->
                 </div>
             </div>
