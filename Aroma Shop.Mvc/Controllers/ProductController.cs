@@ -25,29 +25,135 @@ namespace Aroma_Shop.Mvc.Controllers
         #region ShowProducts
 
         [HttpGet("/Products/")]
-        public IActionResult Index(int pageNumber = 1, string sortby = null, string search = null, IEnumerable<int> categories = null)
+        public IActionResult Index(int pageNumber = 1, string SortBy = null, string Search = null, IEnumerable<int> SelectedCategories = null, int minimumPrice = 0, int maximumPrice = 0)
         {
             IEnumerable<Product> products;
 
-            if (!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(Search))
             {
                 products = _productService.GetProducts()
-                    .Where(p => p.ProductName.Contains(search)
+                    .Where(p => p.ProductName.Contains(Search)
                                 || p.Categories
-                                    .Contains(new Category() { CategoryName = search }));
+                                    .Contains(new Category() { CategoryName = Search }));
 
-                ViewBag.search = search;
+                ViewBag.search = Search;
             }
             else
                 products =
                     _productService
                         .GetProducts();
 
+            if (SelectedCategories.Any())
+            {
+                products =
+                    products
+                        .Where(p => SelectedCategories.Any(t => p.Categories.Any(c => c.CategoryId == t)));
+            }
+
+            if (minimumPrice != 0 || maximumPrice != 0)
+            {
+                products =
+                    products
+                        .Where(p => p.IsSimpleProduct
+                            ? p.ProductPrice >= minimumPrice &&
+                              p.ProductPrice <= maximumPrice
+                            : p.MixedProductAttributes.Min(t => t.MixedProductAttributePrice) >= minimumPrice && p.MixedProductAttributes
+                                .Min(t => t.MixedProductAttributePrice) <= maximumPrice)
+                        .Where(p => p.IsSimpleProduct ? p.ProductQuantityInStock != 0 : p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0));
+
+                ViewBag.minimumPrice = minimumPrice;
+                ViewBag.maximumPrice = maximumPrice;
+            }
+
+            ProductsViewModel productsViewModel;
+
+            var allCategories =
+                _productService.GetCategories();
+
             if (!products.Any())
             {
                 ViewBag.isEmpty = true;
 
-                return View();
+                allCategories =
+                    _productService.GetCategories();
+
+                productsViewModel = new ProductsViewModel()
+                {
+                    Categories = allCategories,
+                    SelectedCategories = SelectedCategories,
+                    SortBy = SortBy
+                };
+
+                return View(productsViewModel);
+            }
+
+            if (SortBy == "Newest" || string.IsNullOrEmpty(SortBy))
+            {
+                products =
+                    products
+                        .OrderByDescending(p =>
+                            p.IsSimpleProduct
+                                ? Convert.ToBoolean(p.ProductQuantityInStock)
+                                : Convert.ToBoolean(
+                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                        .ThenByDescending(p => p.RegistrationTime);
+            }
+            else if (SortBy == "Price-Cheapest")
+            {
+                products =
+                    products
+                        .OrderBy(p =>
+                            p.IsSimpleProduct
+                                ? Convert.ToBoolean(p.ProductQuantityInStock)
+                                : Convert.ToBoolean(
+                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                        .ThenBy(p =>
+                            p.IsSimpleProduct
+                                ? p.ProductPrice
+                                : ((p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
+                                       ? p.MixedProductAttributes
+                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
+                                           .Min(t => t.MixedProductAttributePrice)
+                                       : p.MixedProductAttributes.Min(t => t.MixedProductAttributePrice)) +
+                                   (p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
+                                       ? p.MixedProductAttributes
+                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
+                                           .Max(t => t.MixedProductAttributePrice)
+                                       : p.MixedProductAttributes.Max(t => t.MixedProductAttributePrice)) / 2));
+            }
+            else if (SortBy == "Price-Most-Expensive")
+            {
+                products =
+                    products
+                        .OrderByDescending(p =>
+                            p.IsSimpleProduct
+                                ? Convert.ToBoolean(p.ProductQuantityInStock)
+                                : Convert.ToBoolean(
+                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                        .ThenByDescending(p =>
+                            p.IsSimpleProduct
+                                ? p.ProductPrice
+                                : ((p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
+                                       ? p.MixedProductAttributes
+                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
+                                           .Min(t => t.MixedProductAttributePrice)
+                                       : p.MixedProductAttributes.Min(t => t.MixedProductAttributePrice)) +
+                                   (p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
+                                       ? p.MixedProductAttributes
+                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
+                                           .Max(t => t.MixedProductAttributePrice)
+                                       : p.MixedProductAttributes.Max(t => t.MixedProductAttributePrice)) / 2));
+            }
+            else if (SortBy == "Popularity")
+            {
+                products =
+                    products
+                        .OrderByDescending(p =>
+                            p.IsSimpleProduct
+                                ? Convert.ToBoolean(p.ProductQuantityInStock)
+                                : Convert.ToBoolean(
+                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                        .ThenByDescending(p => p.ProductHits);
             }
 
             var page =
@@ -59,40 +165,18 @@ namespace Aroma_Shop.Mvc.Controllers
             var productsPage =
                 page.QueryResult;
 
-            if (sortby == "newest" || string.IsNullOrEmpty(sortby))
-            {
-                productsPage =
-                    productsPage
-                        .OrderByDescending(p => p.RegistrationTime);
-            }
-            else if (sortby == "priceCheapest")
-            {
-
-            }
-            else if (sortby == "priceMostExpensive")
-            {
-
-            }
-            else if (sortby == "popularity")
-            {
-                productsPage =
-                    productsPage
-                        .OrderByDescending(p => p.ProductHits);
-            }
-
             ViewBag.pageNumber = pageNumber;
             ViewBag.firstPage = page.FirstPage;
             ViewBag.lastPage = page.LastPage;
             ViewBag.prevPage = page.PreviousPage;
             ViewBag.nextPage = page.NextPage;
 
-            var allCategories =
-                _productService.GetCategories();
-
-            var productsViewModel = new ProductsViewModel()
+            productsViewModel = new ProductsViewModel()
             {
                 Products = productsPage,
-                Categories = allCategories
+                Categories = allCategories,
+                SelectedCategories = SelectedCategories,
+                SortBy = SortBy
             };
 
             return View(productsViewModel);
