@@ -19,7 +19,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
             AttributesNames = new List<string>();
             AttributesValues = new List<string>();
             MixedProductAttributesNames = new List<string>();
-            MixedProductAttributesPrices = new List<double?>();
+            MixedProductAttributesPrices = new List<int?>();
             MixedProductAttributesQuantityInStocks = new List<int?>();
             InformationNames = new List<string>();
             InformationValues = new List<string>();
@@ -30,7 +30,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public string ProductName { get; set; }
         [Required(ErrorMessage = "لطفا قیمت محصول را وارد نمایید")]
         [Range(0, 999999999, ErrorMessage = "حداقل مقدار 0 می باشد")]
-        public double ProductPrice { get; set; }
+        public int ProductPrice { get; set; }
         [Required(ErrorMessage = "لطفا تعداد محصول را وارد نمایید")]
         [Range(0, 999999999, ErrorMessage = "حداقل مقدار 0 می باشد")]
         public int ProductQuantityInStock { get; set; }
@@ -48,7 +48,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public ICollection<string> AttributesValues { get; set; }
         [RequiredStringsIf(nameof(IsSimpleProduct), false,ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
         public IEnumerable<string> MixedProductAttributesNames { get; set; }
-        public IEnumerable<double?> MixedProductAttributesPrices { get; set; }
+        public IEnumerable<int?> MixedProductAttributesPrices { get; set; }
         public IEnumerable<int?> MixedProductAttributesQuantityInStocks { get; set; }
 
         [MaxFilesCount(6)]

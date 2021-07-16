@@ -767,7 +767,7 @@ namespace Aroma_Shop.Application.Services
                     var mixedProductAttributePrice =
                         productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) >= 0 &&
                         productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) != null
-                            ? Convert.ToDouble(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
+                            ? Convert.ToInt32(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
                             : 0;
 
                     var mixedProductAttributeQuantityInStock =
@@ -843,7 +843,7 @@ namespace Aroma_Shop.Application.Services
                     var mixedProductAttributePrice =
                         productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) >= 0 &&
                         productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) != null
-                            ? Convert.ToDouble(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
+                            ? Convert.ToInt32(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
                             : 0;
 
                     var mixedProductAttributeQuantityInStock =

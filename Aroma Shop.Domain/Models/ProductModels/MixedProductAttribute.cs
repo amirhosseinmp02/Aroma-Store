@@ -12,7 +12,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [Required(ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
         public string MixedProductAttributeValue { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات قیمت محصول را وارد نمایید")]
-        public double MixedProductAttributePrice { get; set; }
+        public int MixedProductAttributePrice { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات موجودی محصول را وارد نمایید")]
         public int MixedProductAttributeQuantityInStock { get; set; }
 

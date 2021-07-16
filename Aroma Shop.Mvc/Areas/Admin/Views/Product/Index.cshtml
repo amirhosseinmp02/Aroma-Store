@@ -76,17 +76,17 @@
                                 .MixedProductAttributes
                                 .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
 
-                        double? minimumPrice =
+                        int? minimumPrice =
                             product
                                 .MixedProductAttributes
                                 .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
-                                .Min(p => (double?)p.MixedProductAttributePrice);
+                                .Min(p => (int?)p.MixedProductAttributePrice);
 
-                        double? maximumPrice =
+                        int? maximumPrice =
                             product
                                 .MixedProductAttributes
                                 .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
-                                .Max(p => (double?)p.MixedProductAttributePrice);
+                                .Max(p => (int?)p.MixedProductAttributePrice);
 
                         if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
                         {

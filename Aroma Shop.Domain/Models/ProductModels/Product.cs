@@ -31,7 +31,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [Required]
         public bool IsSimpleProduct { get; set; }
         [Required(ErrorMessage = "لطفا قیمت محصول را وارد نمایید")]
-        public double ProductPrice { get; set; }
+        public int ProductPrice { get; set; }
         [Required(ErrorMessage = "لطفا تعداد محصول را وارد نمایید")]
         public int ProductQuantityInStock { get; set; }
         public int ProductHits { get; set; }

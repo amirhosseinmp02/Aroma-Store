@@ -97,7 +97,7 @@
                             <li class="border-top form-group mt-2">
                                 <label class="control-label mb-3">قیمت</label>
                                 <div id="slider" class="form-control"></div>
-                                <p class="text-center mt-3">از <span class="min-price"></span> تومان تا <span class="max-price"></span> تومان</p>
+                                <p class="text-center mt-3">از <span class="min-price text-danger"></span> تومان تا <span class="max-price text-danger"></span> تومان</p>
                             </li>
                             <li class="p-2">
                                 <button id="price-range-button" class="btn btn-block btn-success rounded-0">اعمال محدوده قیمت</button>
@@ -191,17 +191,17 @@
                                                             .MixedProductAttributes
                                                             .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
 
-                                                    double? minimumPrice =
+                                                    int? minimumPrice =
                                                         product
                                                             .MixedProductAttributes
                                                             .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
-                                                            .Min(p => (double?)p.MixedProductAttributePrice);
+                                                            .Min(p => (int?)p.MixedProductAttributePrice);
 
-                                                    double? maximumPrice =
+                                                    int? maximumPrice =
                                                         product
                                                             .MixedProductAttributes
                                                             .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
-                                                            .Max(p => (double?)p.MixedProductAttributePrice);
+                                                            .Max(p => (int?)p.MixedProductAttributePrice);
 
                                                     if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
                                                     {
@@ -291,9 +291,10 @@
         }
 
         @{
-            double productsMinimumPrice = 0;
+            int productsMinimumPrice = 0;
 
-            double productsMaximumPrice = 0;
+            int productsMaximumPrice = 0;
+
             var allProducts =
                 ProductService.GetProducts();
 
