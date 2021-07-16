@@ -24,5 +24,6 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
         public UserDetails UserDetails { get; set; }
         public ICollection<Comment> UserComments { get; set; }
         public ICollection<Product> FavoriteProducts { get; set; }
+        public ICollection<Order> UserOrders { get; set; }      
     }
 }
