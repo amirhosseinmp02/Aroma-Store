@@ -81,7 +81,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult AddProduct()
         {
             var productCategories =
-                _productService.GetCategoriesTreeView();
+                _productService.GetCategoriesTreeView().Skip(1);
 
             var model = new AddEditProductViewModel()
             {
@@ -105,7 +105,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     ModelState.Clear();
 
                     var returnProductCategories =
-                        _productService.GetCategoriesTreeView();
+                        _productService.GetCategoriesTreeView().Skip(1);
 
                     model = new AddEditProductViewModel()
                     {
@@ -138,6 +138,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var product =
                 _productService.GetProduct(productId);
+
             if (product == null)
                 return NotFound();
 
@@ -192,17 +193,17 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     model.AttributesValues.Add(stringedProductAttributeValue);
                 }
 
-                model.MixedProductAttributesNames =
-                    product.MixedProductAttributes
-                        .Select(p => p.MixedProductAttributeValue);
+                model.ProductVariationsNames =
+                    product.ProductVariations
+                        .Select(p => p.ProductVariationValue);
 
-                model.MixedProductAttributesPrices =
-                    product.MixedProductAttributes
-                        .Select(p => p?.MixedProductAttributePrice);
+                model.ProductVariationsPrices =
+                    product.ProductVariations
+                        .Select(p => p?.ProductVariationPrice);
 
-                model.MixedProductAttributesQuantityInStocks =
-                    product.MixedProductAttributes
-                        .Select(p => p?.MixedProductAttributeQuantityInStock);
+                model.ProductVariationsQuantityInStocks =
+                    product.ProductVariations
+                        .Select(p => p?.ProductVariationQuantityInStock);
             }
 
             TempData["productId"] = productId;
@@ -379,12 +380,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (category == null)
                 return NotFound();
 
+            var parentCategoryId =
+                category.ParentCategory != null ? category.ParentCategory.CategoryId : -1;
+
             var model = new AddEditCategoryViewModel()
             {
                 CategoryName = category.CategoryName,
                 CategoryDescription = category.CategoryDescription,
                 AllCategories = _productService.GetCategoriesTreeViewForEdit(category),
-                ParentCategoryId = category.ParentCategory?.CategoryId
+                ParentCategoryId = parentCategoryId
             };
 
             TempData["categoryId"] = categoryId;
@@ -420,7 +424,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             model.AllCategories = categoryTreeView;
             model.ParentCategoryId =
-                category.ParentCategory?.CategoryId;
+                category.ParentCategory.CategoryId;
 
             TempData.Keep("categoryId");
 

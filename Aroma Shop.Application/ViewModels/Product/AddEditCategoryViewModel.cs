@@ -17,8 +17,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public string CategoryName { get; set; }
         public string CategoryDescription { get; set; }
 
-        [BindNever]
-        public int? ParentCategoryId { get; set; }
+        public int ParentCategoryId { get; set; }
         public IEnumerable<SelectListItem> AllCategories { get; set; }
     }
 }

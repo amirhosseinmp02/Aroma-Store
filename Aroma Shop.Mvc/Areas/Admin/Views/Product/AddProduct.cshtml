@@ -141,12 +141,12 @@
                 $('#without-attributes-section').css('display', 'none');
                 $('#with-attributes-section').css('display', 'unset');
                 var currentElementId, content, currentElementIdSelector;
-                @for (int i = 0; i < Model.MixedProductAttributesPrices.Count(); i++)
+                @for (int i = 0; i < Model.ProductVariationsPrices.Count(); i++)
                 {
                     <text>
                         ExistAttributesPricesAndQuantitiesInStocks[@i] = {
-                            price:@Model.MixedProductAttributesPrices.ElementAtOrDefault(i),
-                            quantityInStock:@Model.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i)
+                            price:@Model.ProductVariationsPrices.ElementAtOrDefault(i),
+                            quantityInStock:@Model.ProductVariationsQuantityInStocks.ElementAtOrDefault(i)
                         }
                         </text>
                 }
@@ -196,7 +196,7 @@
                 AttributeValueChanged();
             });
 
-        var mixedAttributesList = [];
+        var productVariationsList = [];
         var productAttributesLengths = [];
         var productAttributesValues = [];
 
@@ -242,7 +242,7 @@
                 }
             }
 
-            mixedAttributesList = [];
+            productVariationsList = [];
             for (var u = 0; u < productAttributesValues.length; u++) {
                 if (productAttributesValues[u] !== undefined && attributesVariationsCount[u] !== undefined) {
                     scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
@@ -252,10 +252,10 @@
             $('.variations-section').css('display', 'unset');
             $(".all-variations").remove();
 
-            for (var q = 0; q < mixedAttributesList.length; q++) {
+            for (var q = 0; q < productVariationsList.length; q++) {
                 var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" +
-                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" +
-                    mixedAttributesList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='" + ExistAttributesPricesAndQuantitiesInStocks[q].price + "' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='" + ExistAttributesPricesAndQuantitiesInStocks[q].quantityInStock + "' /><span class='text-danger field-validation-valid'></span></div></div>";
+                    productVariationsList[q].text + "</p><input type='hidden' name='ProductVariationsNames' value='" +
+                    productVariationsList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='ProductVariationsPrices' value='" + ExistAttributesPricesAndQuantitiesInStocks[q].price + "' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='ProductVariationsQuantityInStocks' value='" + ExistAttributesPricesAndQuantitiesInStocks[q].quantityInStock + "' /><span class='text-danger field-validation-valid'></span></div></div>";
                 $(".variations-section").append(variationContent);
             }
 
@@ -264,14 +264,14 @@
                 var i, c;
                 for (var i = 0, c = 0; c < maximumAttributes / count; i++, c++) {
                     for (var v = c * count; v < count * localCount; v++) {
-                        if (mixedAttributesList[v] === undefined) {
-                            mixedAttributesList[v] = {
+                        if (productVariationsList[v] === undefined) {
+                            productVariationsList[v] = {
                                 text: values[i],
                                 value: values[i]
                             };
                         } else {
-                            mixedAttributesList[v].text += " - " + values[i];
-                            mixedAttributesList[v].value += "-" + values[i];
+                            productVariationsList[v].text += " - " + values[i];
+                            productVariationsList[v].value += "-" + values[i];
                         }
                     }
                     ++localCount;
@@ -323,7 +323,7 @@
                 }
             }
 
-            mixedAttributesList = [];
+            productVariationsList = [];
             for (var u = 0; u < productAttributesValues.length; u++) {
                 if (productAttributesValues[u] !== undefined && attributesVariationsCount[u] !== undefined) {
                     scrollingAttributes(productAttributesValues[u], attributesVariationsCount[u]);
@@ -334,10 +334,10 @@
             $(".all-variations").remove();
 
 
-            for (var q = 0; q < mixedAttributesList.length; q++) {
+            for (var q = 0; q < productVariationsList.length; q++) {
                 var variationContent = "<div class='row all-variations'><div class='col'><p class='mt-2'>" +
-                    mixedAttributesList[q].text + "</p><input type='hidden' name='MixedProductAttributesNames' value='" +
-                    mixedAttributesList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='MixedProductAttributesQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
+                    productVariationsList[q].text + "</p><input type='hidden' name='ProductVariationsNames' value='" +
+                    productVariationsList[q].value + "' /></div><div class='col'><input class='form-control' type='number' name='ProductVariationsPrices' value='0' /><span class='text-danger field-validation-valid'></span></div><div class='col'><input class='form-control' type='number' name='ProductVariationsQuantityInStocks' value='0' /><span class='text-danger field-validation-valid'></span></div></div>";
                 $(".variations-section").append(variationContent);
             }
 
@@ -347,14 +347,14 @@
                 var i, c;
                 for (var i = 0, c = 0; c < maximumAttributes / count; i++, c++) {
                     for (var v = c * count; v < count * localCount; v++) {
-                        if (mixedAttributesList[v] === undefined) {
-                            mixedAttributesList[v] = {
+                        if (productVariationsList[v] === undefined) {
+                            productVariationsList[v] = {
                                 text: values[i],
                                 value: values[i]
                             };
                         } else {
-                            mixedAttributesList[v].text += " - " + values[i];
-                            mixedAttributesList[v].value += "-" + values[i];
+                            productVariationsList[v].text += " - " + values[i];
+                            productVariationsList[v].value += "-" + values[i];
                         }
                     }
                     ++localCount;

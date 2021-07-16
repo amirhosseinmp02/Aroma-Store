@@ -133,7 +133,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     if (!product.IsSimpleProduct)
                     {
-                        if (product.ProductAttributes.Any() || product.MixedProductAttributes.Any())
+                        if (product.ProductAttributes.Any() || product.ProductVariations.Any())
                             DeleteProductAttributes(product);
 
                         product.IsSimpleProduct = true;
@@ -270,11 +270,13 @@ namespace Aroma_Shop.Application.Services
                     CategoryDescription = categoryViewModel.CategoryDescription
                 };
 
-                if (categoryViewModel.ParentCategoryId != null)
+                if (categoryViewModel.ParentCategoryId != -1)
                 {
                     var parentCategory =
-                        GetCategory((int)categoryViewModel.ParentCategoryId);
-                    category.ParentCategory = parentCategory;
+                        GetCategory(categoryViewModel.ParentCategoryId);
+
+                    if (parentCategory != null)
+                        category.ParentCategory = parentCategory;
                 }
 
                 _productRepository.AddCategory(category);
@@ -293,23 +295,17 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                Category parentCategory = null;
-
-                if (categoryViewModel.ParentCategoryId != null)
-                {
-                    var parentCategoryId =
-                        Convert.ToInt32(categoryViewModel.ParentCategoryId);
-
-                    parentCategory =
-                        GetCategory(parentCategoryId);
-                }
-
                 var category = GetCategory(categoryViewModel.CategoryId);
 
                 category.CategoryName = categoryViewModel.CategoryName;
                 category.CategoryDescription = categoryViewModel.CategoryDescription;
-                if (parentCategory != null)
-                    category.ParentCategory = parentCategory;
+
+                var parentCategory =
+                    categoryViewModel.ParentCategoryId == -1
+                        ? null
+                        : GetCategory(categoryViewModel.ParentCategoryId);
+
+                category.ParentCategory = parentCategory;
 
                 _productRepository.UpdateCategory(category);
                 _productRepository.Save();
@@ -344,6 +340,10 @@ namespace Aroma_Shop.Application.Services
 
             List<SelectListItem> items =
                 new List<SelectListItem>();
+
+            var item = new SelectListItem("انتخاب کنید", "-1");
+
+            items.Add(item);
 
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
@@ -406,6 +406,10 @@ namespace Aroma_Shop.Application.Services
 
             List<SelectListItem> items =
                 new List<SelectListItem>();
+
+            var item = new SelectListItem("انتخاب کنید", "-1");
+
+            items.Add(item);
 
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
@@ -472,12 +476,6 @@ namespace Aroma_Shop.Application.Services
                     .Selected = true;
             }
 
-            else
-            {
-                var item = new SelectListItem("انتخاب کنید", null);
-
-                items.Insert(0, item);
-            }
             return items;
         }
         public async Task<bool> IsProductInLoggedUserFavoriteProducts(int favoriteProductId)
@@ -758,33 +756,33 @@ namespace Aroma_Shop.Application.Services
                     _productRepository.Save();
                 }
 
-                for (int i = 0; i < productViewModel.MixedProductAttributesNames.Count(); i++)
+                for (int i = 0; i < productViewModel.ProductVariationsNames.Count(); i++)
                 {
-                    var mixedProductAttributeValue =
+                    var productVariationValue =
                         productViewModel
-                            .MixedProductAttributesNames.ElementAtOrDefault(i);
+                            .ProductVariationsNames.ElementAtOrDefault(i);
 
-                    var mixedProductAttributePrice =
-                        productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) >= 0 &&
-                        productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) != null
-                            ? Convert.ToInt32(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
+                    var productVariationPrice =
+                        productViewModel.ProductVariationsPrices.ElementAtOrDefault(i) >= 0 &&
+                        productViewModel.ProductVariationsPrices.ElementAtOrDefault(i) != null
+                            ? Convert.ToInt32(productViewModel.ProductVariationsPrices.ElementAtOrDefault(i))
                             : 0;
 
-                    var mixedProductAttributeQuantityInStock =
-                        productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) >= 0 &&
-                        productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) != null
-                            ? Convert.ToInt32(productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i))
+                    var productVariationQuantityInStock =
+                        productViewModel.ProductVariationsQuantityInStocks.ElementAtOrDefault(i) >= 0 &&
+                        productViewModel.ProductVariationsQuantityInStocks.ElementAtOrDefault(i) != null
+                            ? Convert.ToInt32(productViewModel.ProductVariationsQuantityInStocks.ElementAtOrDefault(i))
                             : 0;
 
-                    var mixedProductAttribute = new MixedProductAttribute()
+                    var productVariation = new ProductVariation()
                     {
-                        MixedProductAttributeValue = mixedProductAttributeValue,
-                        MixedProductAttributePrice = mixedProductAttributePrice,
-                        MixedProductAttributeQuantityInStock = mixedProductAttributeQuantityInStock,
+                        ProductVariationValue = productVariationValue,
+                        ProductVariationPrice = productVariationPrice,
+                        ProductVariationQuantityInStock = productVariationQuantityInStock,
                         Product = product
                     };
 
-                    _productRepository.AddMixedProductAttribute(mixedProductAttribute);
+                    _productRepository.AddProductVariation(productVariation);
                     _productRepository.Save();
                 }
 
@@ -834,33 +832,33 @@ namespace Aroma_Shop.Application.Services
                     _productRepository.Save();
                 }
 
-                for (int i = 0; i < productViewModel.MixedProductAttributesNames.Count(); i++)
+                for (int i = 0; i < productViewModel.ProductVariationsNames.Count(); i++)
                 {
-                    var mixedProductAttributeValue =
+                    var productVariationValue =
                         productViewModel
-                            .MixedProductAttributesNames.ElementAtOrDefault(i);
+                            .ProductVariationsNames.ElementAtOrDefault(i);
 
-                    var mixedProductAttributePrice =
-                        productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) >= 0 &&
-                        productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i) != null
-                            ? Convert.ToInt32(productViewModel.MixedProductAttributesPrices.ElementAtOrDefault(i))
+                    var productVariationPrice =
+                        productViewModel.ProductVariationsPrices.ElementAtOrDefault(i) >= 0 &&
+                        productViewModel.ProductVariationsPrices.ElementAtOrDefault(i) != null
+                            ? Convert.ToInt32(productViewModel.ProductVariationsPrices.ElementAtOrDefault(i))
                             : 0;
 
-                    var mixedProductAttributeQuantityInStock =
-                        productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) >= 0 &&
-                        productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i) != null
-                            ? Convert.ToInt32(productViewModel.MixedProductAttributesQuantityInStocks.ElementAtOrDefault(i))
+                    var productVariationQuantityInStock =
+                        productViewModel.ProductVariationsQuantityInStocks.ElementAtOrDefault(i) >= 0 &&
+                        productViewModel.ProductVariationsQuantityInStocks.ElementAtOrDefault(i) != null
+                            ? Convert.ToInt32(productViewModel.ProductVariationsQuantityInStocks.ElementAtOrDefault(i))
                             : 0;
 
-                    var mixedProductAttribute = new MixedProductAttribute()
+                    var productVariation = new ProductVariation()
                     {
-                        MixedProductAttributeValue = mixedProductAttributeValue,
-                        MixedProductAttributePrice = mixedProductAttributePrice,
-                        MixedProductAttributeQuantityInStock = mixedProductAttributeQuantityInStock,
+                        ProductVariationValue = productVariationValue,
+                        ProductVariationPrice = productVariationPrice,
+                        ProductVariationQuantityInStock = productVariationQuantityInStock,
                         Product = product
                     };
 
-                    _productRepository.AddMixedProductAttribute(mixedProductAttribute);
+                    _productRepository.AddProductVariation(productVariation);
                     _productRepository.UpdateProduct(product);
                     _productRepository.Save();
                 }
@@ -877,9 +875,9 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                foreach (var mixedProductAttribute in product.MixedProductAttributes)
+                foreach (var productVariation in product.ProductVariations)
                 {
-                    _productRepository.DeleteMixedProductAttribute(mixedProductAttribute);
+                    _productRepository.DeleteProductVariation(productVariation);
                 }
 
                 foreach (var productAttribute in product.ProductAttributes)

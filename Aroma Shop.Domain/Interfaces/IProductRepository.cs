@@ -14,10 +14,10 @@ namespace Aroma_Shop.Domain.Interfaces
         void DeleteProductInformation(ProductInformation productInformation);
         void UpdateProduct(Product product);
         void DeleteProduct(Product product);
-        void AddMixedProductAttribute(MixedProductAttribute mixedProductAttribute);
+        void AddProductVariation(ProductVariation productVariation);
         void AddProductAttribute(ProductAttribute productAttribute);
         void AddProductAttributeValue(ProductAttributeValue productAttributeValue);
-        void DeleteMixedProductAttribute(MixedProductAttribute mixedProductAttribute);
+        void DeleteProductVariation(ProductVariation productVariation);
         void DeleteProductAttribute(ProductAttribute productAttribute);
         void DeleteProductAttributeValue(ProductAttributeValue productAttributeValue);
         IEnumerable<Category> GetCategories();

@@ -57,9 +57,9 @@ namespace Aroma_Shop.Mvc.Controllers
                         .Where(p => p.IsSimpleProduct
                             ? p.ProductPrice >= minimumPrice &&
                               p.ProductPrice <= maximumPrice
-                            : p.MixedProductAttributes.Min(t => t.MixedProductAttributePrice) >= minimumPrice && p.MixedProductAttributes
-                                .Min(t => t.MixedProductAttributePrice) <= maximumPrice)
-                        .Where(p => p.IsSimpleProduct ? p.ProductQuantityInStock != 0 : p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0));
+                            : p.ProductVariations.Min(t => t.ProductVariationPrice) >= minimumPrice && p.ProductVariations
+                                .Min(t => t.ProductVariationPrice) <= maximumPrice)
+                        .Where(p => p.IsSimpleProduct ? p.ProductQuantityInStock != 0 : p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0));
 
                 ViewBag.minimumPrice = minimumPrice;
                 ViewBag.maximumPrice = maximumPrice;
@@ -95,7 +95,7 @@ namespace Aroma_Shop.Mvc.Controllers
                             p.IsSimpleProduct
                                 ? Convert.ToBoolean(p.ProductQuantityInStock)
                                 : Convert.ToBoolean(
-                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                                    p.ProductVariations.Max(t => t.ProductVariationQuantityInStock)))
                         .ThenByDescending(p => p.RegistrationTime);
             }
             else if (SortBy == "Price-Cheapest")
@@ -106,20 +106,20 @@ namespace Aroma_Shop.Mvc.Controllers
                             p.IsSimpleProduct
                                 ? Convert.ToBoolean(p.ProductQuantityInStock)
                                 : Convert.ToBoolean(
-                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                                    p.ProductVariations.Max(t => t.ProductVariationQuantityInStock)))
                         .ThenBy(p =>
                             p.IsSimpleProduct
                                 ? p.ProductPrice
-                                : ((p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
-                                       ? p.MixedProductAttributes
-                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
-                                           .Min(t => t.MixedProductAttributePrice)
-                                       : p.MixedProductAttributes.Min(t => t.MixedProductAttributePrice)) +
-                                   (p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
-                                       ? p.MixedProductAttributes
-                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
-                                           .Max(t => t.MixedProductAttributePrice)
-                                       : p.MixedProductAttributes.Max(t => t.MixedProductAttributePrice)) / 2));
+                                : ((p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0)
+                                       ? p.ProductVariations
+                                           .Where(t => t.ProductVariationQuantityInStock != 0)
+                                           .Min(t => t.ProductVariationPrice)
+                                       : p.ProductVariations.Min(t => t.ProductVariationPrice)) +
+                                   (p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0)
+                                       ? p.ProductVariations
+                                           .Where(t => t.ProductVariationQuantityInStock != 0)
+                                           .Max(t => t.ProductVariationPrice)
+                                       : p.ProductVariations.Max(t => t.ProductVariationPrice)) / 2));
             }
             else if (SortBy == "Price-Most-Expensive")
             {
@@ -129,20 +129,20 @@ namespace Aroma_Shop.Mvc.Controllers
                             p.IsSimpleProduct
                                 ? Convert.ToBoolean(p.ProductQuantityInStock)
                                 : Convert.ToBoolean(
-                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                                    p.ProductVariations.Max(t => t.ProductVariationQuantityInStock)))
                         .ThenByDescending(p =>
                             p.IsSimpleProduct
                                 ? p.ProductPrice
-                                : ((p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
-                                       ? p.MixedProductAttributes
-                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
-                                           .Min(t => t.MixedProductAttributePrice)
-                                       : p.MixedProductAttributes.Min(t => t.MixedProductAttributePrice)) +
-                                   (p.MixedProductAttributes.Any(t => t.MixedProductAttributeQuantityInStock != 0)
-                                       ? p.MixedProductAttributes
-                                           .Where(t => t.MixedProductAttributeQuantityInStock != 0)
-                                           .Max(t => t.MixedProductAttributePrice)
-                                       : p.MixedProductAttributes.Max(t => t.MixedProductAttributePrice)) / 2));
+                                : ((p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0)
+                                       ? p.ProductVariations
+                                           .Where(t => t.ProductVariationQuantityInStock != 0)
+                                           .Min(t => t.ProductVariationPrice)
+                                       : p.ProductVariations.Min(t => t.ProductVariationPrice)) +
+                                   (p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0)
+                                       ? p.ProductVariations
+                                           .Where(t => t.ProductVariationQuantityInStock != 0)
+                                           .Max(t => t.ProductVariationPrice)
+                                       : p.ProductVariations.Max(t => t.ProductVariationPrice)) / 2));
             }
             else if (SortBy == "Popularity")
             {
@@ -152,7 +152,7 @@ namespace Aroma_Shop.Mvc.Controllers
                             p.IsSimpleProduct
                                 ? Convert.ToBoolean(p.ProductQuantityInStock)
                                 : Convert.ToBoolean(
-                                    p.MixedProductAttributes.Max(t => t.MixedProductAttributeQuantityInStock)))
+                                    p.ProductVariations.Max(t => t.ProductVariationQuantityInStock)))
                         .ThenByDescending(p => p.ProductHits);
             }
 

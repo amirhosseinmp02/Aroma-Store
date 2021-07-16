@@ -5,16 +5,16 @@ using System.Text;
 
 namespace Aroma_Shop.Domain.Models.ProductModels
 {
-    public class MixedProductAttribute
+    public class ProductVariation
     {
         [Key]
-        public int MixedProductAttributeId { get; set; }
+        public int ProductVariationId { get; set; }
         [Required(ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
-        public string MixedProductAttributeValue { get; set; }
+        public string ProductVariationValue { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات قیمت محصول را وارد نمایید")]
-        public int MixedProductAttributePrice { get; set; }
+        public int ProductVariationPrice { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات موجودی محصول را وارد نمایید")]
-        public int MixedProductAttributeQuantityInStock { get; set; }
+        public int ProductVariationQuantityInStock { get; set; }
 
         //Navigations Properties
 

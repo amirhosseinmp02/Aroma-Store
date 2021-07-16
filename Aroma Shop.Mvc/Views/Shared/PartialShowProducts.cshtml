@@ -68,20 +68,20 @@
 
                         var doesProductHaveAFreeVariation =
                             product
-                                .MixedProductAttributes
-                                .Any(p => p.MixedProductAttributePrice == 0 && p.MixedProductAttributeQuantityInStock > 0);
+                                .ProductVariations
+                                .Any(p => p.ProductVariationPrice == 0 && p.ProductVariationQuantityInStock > 0);
 
                         int? minimumPrice =
                             product
-                                .MixedProductAttributes
-                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
-                                .Min(p => (int?)p.MixedProductAttributePrice);
+                                .ProductVariations
+                                .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
+                                .Min(p => (int?)p.ProductVariationPrice);
 
                         int? maximumPrice =
                             product
-                                .MixedProductAttributes
-                                .Where(p => p.MixedProductAttributeQuantityInStock != 0 && p.MixedProductAttributePrice != 0)
-                                .Max(p => (int?)p.MixedProductAttributePrice);
+                                .ProductVariations
+                                .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
+                                .Max(p => (int?)p.ProductVariationPrice);
 
                         if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
                         {

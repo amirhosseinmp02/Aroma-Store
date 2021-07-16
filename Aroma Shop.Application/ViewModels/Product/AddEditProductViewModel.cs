@@ -18,9 +18,9 @@ namespace Aroma_Shop.Application.ViewModels.Product
             ProductImagesFiles = new List<IFormFile>();
             AttributesNames = new List<string>();
             AttributesValues = new List<string>();
-            MixedProductAttributesNames = new List<string>();
-            MixedProductAttributesPrices = new List<int?>();
-            MixedProductAttributesQuantityInStocks = new List<int?>();
+            ProductVariationsNames = new List<string>();
+            ProductVariationsPrices = new List<int?>();
+            ProductVariationsQuantityInStocks = new List<int?>();
             InformationNames = new List<string>();
             InformationValues = new List<string>();
         }
@@ -47,9 +47,9 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [RequiredStringsIf(nameof(IsSimpleProduct), false, ErrorMessage = "لطفا مقادیر صفت را وارد نمایید")]
         public ICollection<string> AttributesValues { get; set; }
         [RequiredStringsIf(nameof(IsSimpleProduct), false,ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
-        public IEnumerable<string> MixedProductAttributesNames { get; set; }
-        public IEnumerable<int?> MixedProductAttributesPrices { get; set; }
-        public IEnumerable<int?> MixedProductAttributesQuantityInStocks { get; set; }
+        public IEnumerable<string> ProductVariationsNames { get; set; }
+        public IEnumerable<int?> ProductVariationsPrices { get; set; }
+        public IEnumerable<int?> ProductVariationsQuantityInStocks { get; set; }
 
         [MaxFilesCount(6)]
         [MaxFileSize(4194304)]

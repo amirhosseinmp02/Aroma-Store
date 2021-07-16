@@ -24,7 +24,7 @@ namespace Aroma_Shop.Data.Repositories
             var products = _context.Products
                 .Include(p => p.Categories)
                 .Include(p => p.Images)
-                .Include(p => p.MixedProductAttributes);
+                .Include(p => p.ProductVariations);
 
             return products;
         }
@@ -36,7 +36,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Images)
                 .Include(p => p.ProductAttributes)
                 .ThenInclude(p=>p.ProductAttributeValues)
-                .Include(p=>p.MixedProductAttributes)
+                .Include(p=>p.ProductVariations)
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.User)
                 .Include(p => p.Comments)
@@ -85,10 +85,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Remove(product);
         }
-        public void AddMixedProductAttribute(MixedProductAttribute mixedProductAttribute)
+        public void AddProductVariation(ProductVariation productVariation)
         {
-            _context.Add(mixedProductAttribute);
-        }
+            _context.Add(productVariation);
+        }   
         public void AddProductAttribute(ProductAttribute productAttribute)
         {
             _context.Add(productAttribute);
@@ -97,9 +97,9 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(productAttributeValue);
         }
-        public void DeleteMixedProductAttribute(MixedProductAttribute mixedProductAttribute)
+        public void DeleteProductVariation(ProductVariation productVariation)
         {
-            _context.MixedProductAttributes.Remove(mixedProductAttribute);
+            _context.ProductVariations.Remove(productVariation);
         }
         public void DeleteProductAttribute(ProductAttribute productAttribute)
         {

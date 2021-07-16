@@ -31,7 +31,7 @@ namespace Aroma_Shop.Data.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
-        public DbSet<MixedProductAttribute> MixedProductAttributes { get; set; }
+        public DbSet<ProductVariation> ProductVariations { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductInformation> ProductsInformations { get; set; }
 
