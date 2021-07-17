@@ -133,7 +133,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     if (!product.IsSimpleProduct)
                     {
-                        if (product.ProductAttributes.Any() || product.ProductVariations.Any())
+                        if (product.ProductAttributesNames.Any())
                             DeleteProductAttributes(product);
 
                         product.IsSimpleProduct = true;
@@ -724,43 +724,23 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                for (int i = 0; i < productViewModel.AttributesNames.Count(); i++)
-                {
-                    var productAttributeName =
-                        productViewModel
-                            .AttributesNames.ElementAtOrDefault(i);
+                product.ProductAttributesNames =
+                    productViewModel
+                        .AttributesNames.ToList();
 
-                    var productAttributeValues =
-                        productViewModel
-                            .AttributesValues.ElementAtOrDefault(i)
-                            .Split(",")
-                            .Select(p => new ProductAttributeValue() { AttributeValue = p })
-                            .ToList();
+                product.ProductAttributesValues =
+                    productViewModel
+                        .AttributesValues.ToList();
 
-                    foreach (var productAttributeValue in productAttributeValues)
-                    {
-                        _productRepository.AddProductAttributeValue(productAttributeValue);
-
-                        _productRepository.Save();
-                    }
-
-                    var productAttribute = new ProductAttribute()
-                    {
-                        ProductAttributeName = productAttributeName,
-                        ProductAttributeValues = productAttributeValues,
-                        Product = product
-                    };
-
-                    _productRepository.AddProductAttribute(productAttribute);
-
-                    _productRepository.Save();
-                }
+                _productRepository.Save();
 
                 for (int i = 0; i < productViewModel.ProductVariationsNames.Count(); i++)
                 {
-                    var productVariationValue =
+                    var productVariationValues =
                         productViewModel
-                            .ProductVariationsNames.ElementAtOrDefault(i);
+                            .ProductVariationsNames
+                            .ElementAtOrDefault(i)
+                            .Split("-").ToList();
 
                     var productVariationPrice =
                         productViewModel.ProductVariationsPrices.ElementAtOrDefault(i) >= 0 &&
@@ -776,7 +756,7 @@ namespace Aroma_Shop.Application.Services
 
                     var productVariation = new ProductVariation()
                     {
-                        ProductVariationValue = productVariationValue,
+                        ProductVariationValues = productVariationValues,
                         ProductVariationPrice = productVariationPrice,
                         ProductVariationQuantityInStock = productVariationQuantityInStock,
                         Product = product
@@ -798,45 +778,24 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                for (int i = 0; i < productViewModel.AttributesNames.Count(); i++)
-                {
-                    var productAttributeName =
-                        productViewModel
-                            .AttributesNames.ElementAtOrDefault(i);
+                product.ProductAttributesNames =
+                    productViewModel
+                        .AttributesNames.ToList();
 
-                    var productAttributeValues =
-                        productViewModel
-                            .AttributesValues.ElementAtOrDefault(i)
-                            .Split(",")
-                            .Select(p => new ProductAttributeValue() { AttributeValue = p })
-                            .ToList();
+                product.ProductAttributesValues =
+                    productViewModel
+                        .AttributesValues.ToList();
 
-                    foreach (var productAttributeValue in productAttributeValues)
-                    {
-                        _productRepository.AddProductAttributeValue(productAttributeValue);
-
-                        _productRepository.UpdateProduct(product);
-                        _productRepository.Save();
-                    }
-
-                    var productAttribute = new ProductAttribute()
-                    {
-                        ProductAttributeName = productAttributeName,
-                        ProductAttributeValues = productAttributeValues,
-                        Product = product
-                    };
-
-                    _productRepository.AddProductAttribute(productAttribute);
-
-                    _productRepository.UpdateProduct(product);
-                    _productRepository.Save();
-                }
+                _productRepository.UpdateProduct(product);
+                _productRepository.Save();
 
                 for (int i = 0; i < productViewModel.ProductVariationsNames.Count(); i++)
                 {
-                    var productVariationValue =
+                    var productVariationValues =
                         productViewModel
-                            .ProductVariationsNames.ElementAtOrDefault(i);
+                            .ProductVariationsNames
+                            .ElementAtOrDefault(i)
+                            .Split("-").ToList();
 
                     var productVariationPrice =
                         productViewModel.ProductVariationsPrices.ElementAtOrDefault(i) >= 0 &&
@@ -852,7 +811,7 @@ namespace Aroma_Shop.Application.Services
 
                     var productVariation = new ProductVariation()
                     {
-                        ProductVariationValue = productVariationValue,
+                        ProductVariationValues = productVariationValues,
                         ProductVariationPrice = productVariationPrice,
                         ProductVariationQuantityInStock = productVariationQuantityInStock,
                         Product = product
@@ -875,19 +834,12 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
+                product.ProductAttributesNames = null;
+                product.ProductAttributesValues = null;
+
                 foreach (var productVariation in product.ProductVariations)
                 {
                     _productRepository.DeleteProductVariation(productVariation);
-                }
-
-                foreach (var productAttribute in product.ProductAttributes)
-                {
-                    foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
-                    {
-                        _productRepository.DeleteProductAttributeValue(productAttributeValue);
-                    }
-
-                    _productRepository.DeleteProductAttribute(productAttribute);
                 }
 
                 return true;

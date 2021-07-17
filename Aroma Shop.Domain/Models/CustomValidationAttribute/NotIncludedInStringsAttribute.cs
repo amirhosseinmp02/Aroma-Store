@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
 {
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotIncludedInStringsAttribute : ValidationAttribute
     {
         private string _string { get; set; }

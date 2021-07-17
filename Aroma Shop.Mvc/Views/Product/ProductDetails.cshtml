@@ -239,16 +239,18 @@
                         {
                             <div class="mb-4 border-bottom">
                                 <div class="attributes-section">
-                                    @foreach (var productAttribute in Model.Product.ProductAttributes)
+                                    @for (var i = 0; i < Model.Product.ProductAttributesNames.Count; i++)
                                     {
-
+                                        var attributeValues =
+                                            Model.Product.ProductAttributesValues
+                                                .ElementAtOrDefault(i).Split(",");
                                         <div class="row">
-                                            <label class="control-label pt-2 col-2">@productAttribute.ProductAttributeName</label>
+                                            <label class="control-label pt-2 col-2">@Model.Product.ProductAttributesNames.ElementAtOrDefault(i)</label>
                                             <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
                                                 <option>لطفا انتخاب کنید</option>
-                                                @foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
+                                                @foreach (var attributeValue in attributeValues)
                                                 {
-                                                    <option value="@productAttributeValue.AttributeValueId">@productAttributeValue.AttributeValue</option>
+                                                    <option>@attributeValue</option>
                                                 }
                                             </select>
                                         </div>
@@ -450,15 +452,15 @@
         var productVariationsValues = [];
 
         @foreach (var productVariation in Model.Product.ProductVariations)
-            {
-                var productVariationValue =
-                    JsonConvert.SerializeObject(productVariation.ProductVariationValue);
+        {
+            var productVariationValue =
+                JsonConvert.SerializeObject(string.Join('-', productVariation.ProductVariationValues));
 
-                var productVariationPrice =
-                    JsonConvert.SerializeObject(productVariation.ProductVariationPrice);
+            var productVariationPrice =
+                JsonConvert.SerializeObject(productVariation.ProductVariationPrice);
 
-                var productVariationQuantityInStock =
-                    JsonConvert.SerializeObject(productVariation.ProductVariationQuantityInStock);
+            var productVariationQuantityInStock =
+                JsonConvert.SerializeObject(productVariation.ProductVariationQuantityInStock);
 
                 <text>
                     var productVariation =

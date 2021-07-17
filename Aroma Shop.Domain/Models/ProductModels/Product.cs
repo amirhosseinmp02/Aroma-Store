@@ -16,7 +16,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
             Informations = new List<ProductInformation>();
             Comments = new List<Comment>();
             Images = new List<Image>();
-            ProductAttributes = new List<ProductAttribute>();
             ProductVariations = new List<ProductVariation>();
         }
 
@@ -36,7 +35,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public int ProductQuantityInStock { get; set; }
         public int ProductHits { get; set; }
 
-        public DateTime RegistrationTime { get; set; }  
+        public DateTime RegistrationTime { get; set; }
 
         //Navigations Properties
 
@@ -44,8 +43,15 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public ICollection<ProductInformation> Informations { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Image> Images { get; set; }
-        public ICollection<ProductAttribute> ProductAttributes { get; set; }
+
+        //Attribute Section
+
+        public ICollection<string> ProductAttributesNames { get; set; }
+        public ICollection<string> ProductAttributesValues { get; set; }
         public ICollection<ProductVariation> ProductVariations { get; set; }
+
+        //End Of Attribute Section
+
         public ICollection<OrderDetails> OrdersDetails { get; set; }    
         public ICollection<CustomIdentityUser> InterestedUsers { get; set; }
     }

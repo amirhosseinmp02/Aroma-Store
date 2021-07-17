@@ -171,31 +171,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (!product.IsSimpleProduct)
             {
                 model.AttributesNames =
-                    product.ProductAttributes
-                        .Select(p => p.ProductAttributeName);
+                    product.ProductAttributesNames;
 
-                for (int i = 0; i < product.ProductAttributes.Count; i++)
-                {
-                    var stringedProductAttributeValue = "";
-
-                    foreach (var productAttributeValue in product.ProductAttributes.ElementAtOrDefault(i).ProductAttributeValues)
-                    {
-                        if (!string.IsNullOrEmpty(stringedProductAttributeValue))
-                        {
-                            stringedProductAttributeValue += $",{productAttributeValue.AttributeValue}";
-                        }
-                        else
-                        {
-                            stringedProductAttributeValue = productAttributeValue.AttributeValue;
-                        }
-                    }
-
-                    model.AttributesValues.Add(stringedProductAttributeValue);
-                }
+                model.AttributesValues =
+                    product.ProductAttributesValues;
 
                 model.ProductVariationsNames =
                     product.ProductVariations
-                        .Select(p => p.ProductVariationValue);
+                        .Select(p => string.Join('-', p.ProductVariationValues));
 
                 model.ProductVariationsPrices =
                     product.ProductVariations

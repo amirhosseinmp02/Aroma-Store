@@ -1,4 +1,5 @@
-﻿using Aroma_Shop.Domain.Models;
+﻿using System;
+using Aroma_Shop.Domain.Models;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
@@ -29,8 +30,6 @@ namespace Aroma_Shop.Data.Context
         public DbSet<Page> Pages { get; set; }
 
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductAttribute> ProductAttributes { get; set; }
-        public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
         public DbSet<ProductVariation> ProductVariations { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductInformation> ProductsInformations { get; set; }
@@ -39,6 +38,23 @@ namespace Aroma_Shop.Data.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Product>()
+                .Property(p => p.ProductAttributesNames)
+                .HasConversion(
+                    p => string.Join(',', p),
+                    p => p.Split(",", StringSplitOptions.RemoveEmptyEntries));
+
+            builder.Entity<Product>()
+                .Property(p => p.ProductAttributesValues)
+                .HasConversion(
+                    p => string.Join(';', p),
+                    p => p.Split(";", StringSplitOptions.RemoveEmptyEntries));
+
+            builder.Entity<ProductVariation>()
+                .Property(p => p.ProductVariationValues)
+                .HasConversion(
+                    p => string.Join(',', p),
+                    p => p.Split(",", StringSplitOptions.RemoveEmptyEntries));
 
             base.OnModelCreating(builder);
         }

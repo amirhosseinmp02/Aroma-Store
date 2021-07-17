@@ -34,8 +34,6 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Categories)
                 .Include(p => p.Informations)
                 .Include(p => p.Images)
-                .Include(p => p.ProductAttributes)
-                .ThenInclude(p=>p.ProductAttributeValues)
                 .Include(p=>p.ProductVariations)
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.User)
@@ -88,26 +86,10 @@ namespace Aroma_Shop.Data.Repositories
         public void AddProductVariation(ProductVariation productVariation)
         {
             _context.Add(productVariation);
-        }   
-        public void AddProductAttribute(ProductAttribute productAttribute)
-        {
-            _context.Add(productAttribute);
-        }
-        public void AddProductAttributeValue(ProductAttributeValue productAttributeValue)
-        {
-            _context.Add(productAttributeValue);
         }
         public void DeleteProductVariation(ProductVariation productVariation)
         {
             _context.ProductVariations.Remove(productVariation);
-        }
-        public void DeleteProductAttribute(ProductAttribute productAttribute)
-        {
-            _context.ProductAttributes.Remove(productAttribute);
-        }
-        public void DeleteProductAttributeValue(ProductAttributeValue productAttributeValue)
-        {
-            _context.ProductAttributeValues.Remove(productAttributeValue);
         }
         public void AddCategory(Category category)
         {

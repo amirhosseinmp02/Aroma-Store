@@ -9,8 +9,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
     {
         [Key]
         public int ProductVariationId { get; set; }
-        [Required(ErrorMessage = "لطفا نام تنوع را وارد نمایید")]
-        public string ProductVariationValue { get; set; }
+        [Required]
+        public ICollection<string> ProductVariationValues { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات قیمت محصول را وارد نمایید")]
         public int ProductVariationPrice { get; set; }
         [Required(ErrorMessage = "لطفا تغییرات موجودی محصول را وارد نمایید")]
