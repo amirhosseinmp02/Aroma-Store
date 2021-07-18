@@ -19,7 +19,7 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteProduct(Product product);
         bool DeleteProductById(int productId);
         bool AddHitsToProduct(Product product);
-        Task<bool> AddProductToCart(int productId, int requestedQuantity, int productVariationId);
+        Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);

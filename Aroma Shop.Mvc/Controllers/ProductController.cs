@@ -218,7 +218,37 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         public async Task<IActionResult> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
         {
+            var product =
+                _productService.GetProduct(productId);
 
+            if (product == null)
+                return NotFound();
+
+            var result =
+                await _productService
+                    .AddProductToCart(product, requestedQuantity, productVariationId);
+
+            if (result == AddProductToCartResult.Successful)
+            {
+
+            }
+
+            if (result == AddProductToCartResult.OutOfStock)
+            {
+                ViewData["OutOfStockError"] = "موجودی فعلی کمتر از مقدار انتخابی شماست";
+
+                product.Comments = product.Comments
+                    .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
+
+                var model = new ProductViewModel()
+                {
+                    Product = product,
+                };
+
+                return View("ProductDetails", model);
+            }
+
+            return NotFound();
         }
 
         #endregion

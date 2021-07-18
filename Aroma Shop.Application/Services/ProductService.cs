@@ -239,98 +239,136 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
+        public async Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1)
         {
-            var product =
-                GetProduct(productId);
-
-            if (product == null)
-                return false;
-
-            ProductVariation requestedVariation = null;
-
-            if (productVariationId == -1)
+            try
             {
-                if (product.ProductQuantityInStock < requestedQuantity)
-                    return false;
-            }
-            else
-            {
-                requestedVariation =
-                    product.ProductVariations
-                        .SingleOrDefault(p => p.ProductVariationId == productVariationId);
+                ProductVariation requestedVariation = null;
 
-                if (requestedVariation == null 
-                    || requestedVariation.ProductVariationQuantityInStock < requestedQuantity)
-                    return false;
-            }
-
-            var loggedUser =
-                await _accountService
-                    .GetLoggedUserWithDetails();
-
-            var loggedUserOrder =
-                loggedUser.UserOrders
-                    .SingleOrDefault(p => !p.IsFinally);
-
-            if (requestedVariation == null)
-            {
-                var orderDetails =
-                    loggedUserOrder.OrdersDetails
-                        .SingleOrDefault(p => p.Product.ProductId == productId);
-
-                if (orderDetails != null)
+                if (productVariationId == -1)
                 {
-                    var finalOrderDetailsQuantity = 
-                        orderDetails.OrderDetailsQuantity + requestedQuantity;
-
-                    if (finalOrderDetailsQuantity > product.ProductQuantityInStock)
-                        return false;
-
-                    var orderDetailsTotalPrice =
-                        product.ProductPrice * finalOrderDetailsQuantity;
-
-                    orderDetails.OrderDetailsQuantity =
-                        finalOrderDetailsQuantity;
+                    if (product.ProductQuantityInStock < requestedQuantity)
+                        return AddProductToCartResult.Failed;
                 }
                 else
                 {
-                    var orderDetailsTotalPrice =
-                        product.ProductPrice * requestedQuantity;
+                    requestedVariation =
+                        product.ProductVariations
+                            .SingleOrDefault(p => p.ProductVariationId == productVariationId);
 
-                    orderDetails = new OrderDetails()
+                    if (requestedVariation == null
+                        || requestedVariation.ProductVariationQuantityInStock < requestedQuantity)
+                        return AddProductToCartResult.Failed;
+                }
+
+                var loggedUser =
+                    await _accountService
+                        .GetLoggedUserWithDetails();
+
+                var loggedUserOrder =
+                    loggedUser.UserOrders
+                        .SingleOrDefault(p => !p.IsFinally);
+
+                if (requestedVariation == null)
+                {
+                    if (loggedUserOrder != null)
                     {
-                        IsOrderDetailsProductSimple = true,
+                        var orderDetails =
+                            loggedUserOrder.OrdersDetails
+                                .SingleOrDefault(p => p.Product.ProductId == product.ProductId);
+
+                        if (orderDetails != null)
+                        {
+                            var finalOrderDetailsQuantity =
+                                orderDetails.OrderDetailsQuantity + requestedQuantity;
+
+                            if (finalOrderDetailsQuantity > product.ProductQuantityInStock)
+                                return AddProductToCartResult.OutOfStock;
+
+                            var orderDetailsTotalPrice =
+                                product.ProductPrice * finalOrderDetailsQuantity;
+
+                            orderDetails.OrderDetailsQuantity =
+                                finalOrderDetailsQuantity;
+
+                            _productRepository.UpdateOrderDetails(orderDetails);
+                        }
+                        else
+                        {
+                            var orderDetailsTotalPrice =
+                                product.ProductPrice * requestedQuantity;
+
+                            orderDetails = new OrderDetails()
+                            {
+                                IsOrderDetailsProductSimple = true,
+                                OrderDetailsTotalPrice = orderDetailsTotalPrice,
+                                OrderDetailsQuantity = requestedQuantity,
+                                Order = loggedUserOrder,
+                                Product = product
+                            };
+
+                            _productRepository.AddOrderDetails(orderDetails);
+                        }
+                    }
+                    else
+                    {
+                        loggedUserOrder = new Order()
+                        {
+                            IsFinally = false,
+                            CreateTime = DateTime.Now,
+                            OwnerUser = loggedUser
+                        };
+
+                        var orderDetailsTotalPrice =
+                            product.ProductPrice * requestedQuantity;
+
+                        var orderDetails = new OrderDetails()
+                        {
+                            IsOrderDetailsProductSimple = true,
+                            OrderDetailsTotalPrice = orderDetailsTotalPrice,
+                            OrderDetailsQuantity = requestedQuantity,
+                            Order = loggedUserOrder,
+                            Product = product
+                        };
+
+                        loggedUserOrder
+                            .OrdersDetails.Add(orderDetails);
+                    }
+                }
+                else
+                {
+                    loggedUserOrder = new Order()
+                    {
+                        IsFinally = false,
+                        CreateTime = DateTime.Now,
+                        OwnerUser = loggedUser
+                    };
+
+                    var orderDetailsTotalPrice =
+                        requestedVariation.ProductVariationPrice * requestedQuantity;
+
+                    var orderDetails = new OrderDetails()
+                    {
+                        IsOrderDetailsProductSimple = false,
                         OrderDetailsTotalPrice = orderDetailsTotalPrice,
                         OrderDetailsQuantity = requestedQuantity,
                         Order = loggedUserOrder,
-                        Product = product
+                        Product = product,
+                        ProductVariation = requestedVariation
                     };
 
-                    _productRepository.AddOrderDetails(orderDetails);
+                    loggedUserOrder
+                        .OrdersDetails.Add(orderDetails);
                 }
+
+                _productRepository.Save();
+
+                return AddProductToCartResult.Successful;
             }
-            else
+            catch (Exception error)
             {
-                loggedUserOrder = new Order()
-                {
-                    IsFinally = false,
-                    CreateTime = DateTime.Now,
-                    OwnerUser = loggedUser
-                };
-
-                var orderDetailsTotalPrice =
-                    requestedVariation.ProductVariationPrice * requestedQuantity;
-
-                var orderDetails = new OrderDetails()
-                {
-                    IsOrderDetailsProductSimple = false,
-                    OrderDetailsTotalPrice = orderDetailsTotalPrice,
-                    OrderDetailsQuantity = requestedQuantity,
-                    Order = loggedUserOrder,
-                    Product = product,
-                    ProductVariation = requestedVariation
-                };
+                Console.WriteLine(error.Message);
+                return AddProductToCartResult.Failed;
             }
         }
         public IEnumerable<Product> GetProducts()
