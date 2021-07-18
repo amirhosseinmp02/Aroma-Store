@@ -318,7 +318,7 @@
                 </div>
             </div>
             <input type="hidden" id="maximum-available-quantity" value="@Model.Product.ProductQuantityInStock" />
-            <form id="add-to-cart-form">
+            <form id="add-to-cart-form" method="get" asp-action="AddProductToCart">
                 <input type="hidden" value="@Model.Product.ProductId" />
                 <input type="hidden" id="required-quantity" value="1" />
                 <input type="hidden" id="product-variation-id" value="-1" />

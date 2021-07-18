@@ -213,9 +213,21 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region ShoppingCart
+
+        [Authorize]
+        [HttpGet("/ShoppingCart")]
+        public IActionResult ShoppingCart()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region AddProductToCart
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
         {
             var product =
