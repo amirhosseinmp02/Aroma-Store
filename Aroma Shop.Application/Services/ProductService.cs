@@ -239,6 +239,10 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool AddProductToCart(int productId, int requestedQuantity, int productVariationId)
+        {
+            throw new NotImplementedException();
+        }
         public IEnumerable<Product> GetProducts()
         {
             var products =
