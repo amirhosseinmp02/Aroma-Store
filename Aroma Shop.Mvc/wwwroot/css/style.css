@@ -3938,7 +3938,7 @@ a {
 }
 
     .cart_inner .table tbody tr td .media .d-flex {
-        padding-right: 30px
+        padding-left: 30px
     }
 
         .cart_inner .table tbody tr td .media .d-flex img {
@@ -3973,14 +3973,15 @@ a {
 
     .cart_inner .table tbody tr td .product_count input {
         width: 100px;
-        padding-left: 30px;
+        padding-right: 30px;
         height: 40px;
         outline: none;
         box-shadow: none
     }
 
     .cart_inner .table tbody tr td .product_count .increase {
-        top: -2px
+        top: -2px;
+        right: 0px;
     }
 
         .cart_inner .table tbody tr td .product_count .increase:before {
@@ -4004,7 +4005,8 @@ a {
         }
 
     .cart_inner .table tbody tr td .product_count .reduced {
-        bottom: -6px
+        bottom: -6px;
+        right: 0px;
     }
 
 .cart_inner .table tbody tr.bottom_button .button {
@@ -4022,22 +4024,22 @@ a {
 }
 
 .cart_inner .table tbody tr.bottom_button td:last-child {
-    width: 60px
+    
 }
 
 .cart_inner .table tbody tr.bottom_button td .cupon_text {
-    margin-left: -429px
+    margin-right: -429px
 }
 
 @media (min-width: 991px) {
     .cart_inner .table tbody tr.bottom_button td .cupon_text {
-        margin-left: -465px
+        margin-right: -465px
     }
 }
 
 @media (max-width: 600px) {
     .cart_inner .table tbody tr.bottom_button td .cupon_text {
-        margin-left: -380px
+        margin-right: -380px
     }
 }
 
@@ -4052,7 +4054,8 @@ a {
     font-weight: normal;
     margin-right: -3px;
     outline: none;
-    box-shadow: none
+    box-shadow: none;
+    text-align: right;
 }
 
     .cart_inner .table tbody tr.bottom_button td .cupon_text input.placeholder {
@@ -4244,9 +4247,13 @@ a {
     font-weight: 500
 }
 
-.product_image_area {
-    padding-top: 50px
+.gray_btn:hover {
+    color: black;
 }
+
+    .product_image_area {
+        padding-top: 50px
+    }
 
 @media (min-width: 1000px) {
     .product_image_area {
@@ -5006,4 +5013,12 @@ span.reset_variations:hover {
 
 .main-categories .border-top {
     padding: 15px 34px 0px 33px;
+}
+
+#cupon-section {
+    margin: 0
+}
+
+.update-cart-button {
+    margin-right: -118px
 }

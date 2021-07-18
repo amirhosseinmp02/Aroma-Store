@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewData["Title"] = "سبد خرید";
+}
+
+@section Styles
+{
+    <link href="~/vendors/linericon/style.css" rel="stylesheet" />
+}
+
+<section class="blog-banner-area" id="contact">
+    <div class="container h-100">
+        <div class="blog-banner">
+            <div class="text-center">
+                <h1>سبد خرید</h1>
+                <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="text-dark" asp-controller="Home" asp-action="Index">خانه</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">سبد خرید</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="cart_area">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">محصول</th>
+                            <th scope="col">قیمت</th>
+                            <th scope="col">تعداد</th>
+                            <th scope="col">جمع قیمت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="img/cart/cart1.png" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>Minimalistic shop for multipurpose use</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$۳۶۰.۰۰</h5>
+                            </td>
+                            <td>
+                                <div class="product_count">
+                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$۷۲۰.۰۰</h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="img/cart/cart2.png" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>Minimalistic shop for multipurpose use</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$۳۶۰.۰۰</h5>
+                            </td>
+                            <td>
+                                <div class="product_count">
+                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$۷۲۰.۰۰</h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="img/cart/cart3.png" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>Minimalistic shop for multipurpose use</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$۳۶۰.۰۰</h5>
+                            </td>
+                            <td>
+                                <div class="product_count">
+                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$۷۲۰.۰۰</h5>
+                            </td>
+                        </tr>
+                        <tr class="bottom_button">
+                            <td>
+                                <div id="cupon-section" class="cupon_text d-flex align-items-center">
+                                    <input type="text" placeholder="کد تخفیف" dir="ltr">
+                                    <a class="primary-btn" href="#">اعمال</a>
+
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+
+                                <a class="button update-cart-button" href="#">به روزرسانی سبد</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h5>قیمت کل : <span class="ml-5">۲۱۶۰۰۰ تومان</span></h5>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr class="out_button_area">
+                            <td class="d-none-l">
+                                <div class="checkout_btn_inner d-flex align-items-center">
+                                    <a class="gray_btn" href="#">ادامه خرید</a>
+                                    <a class="primary-btn ml-2" href="#">اقدام به پرداخت</a>
+                                </div>
+                            </td>
+                            <td class="">
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
