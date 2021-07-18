@@ -298,19 +298,39 @@ namespace Aroma_Shop.Application.Services
                     var orderDetailsTotalPrice =
                         product.ProductPrice * requestedQuantity;
 
-                    orderDetails =new OrderDetails()
+                    orderDetails = new OrderDetails()
                     {
                         IsOrderDetailsProductSimple = true,
                         OrderDetailsTotalPrice = orderDetailsTotalPrice,
                         OrderDetailsQuantity = requestedQuantity,
                         Order = loggedUserOrder,
                         Product = product
-                    }
+                    };
+
+                    _productRepository.AddOrderDetails(orderDetails);
                 }
             }
             else
             {
-                
+                loggedUserOrder = new Order()
+                {
+                    IsFinally = false,
+                    CreateTime = DateTime.Now,
+                    OwnerUser = loggedUser
+                };
+
+                var orderDetailsTotalPrice =
+                    requestedVariation.ProductVariationPrice * requestedQuantity;
+
+                var orderDetails = new OrderDetails()
+                {
+                    IsOrderDetailsProductSimple = false,
+                    OrderDetailsTotalPrice = orderDetailsTotalPrice,
+                    OrderDetailsQuantity = requestedQuantity,
+                    Order = loggedUserOrder,
+                    Product = product,
+                    ProductVariation = requestedVariation
+                };
             }
         }
         public IEnumerable<Product> GetProducts()
