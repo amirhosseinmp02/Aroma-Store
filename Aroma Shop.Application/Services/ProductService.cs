@@ -239,9 +239,79 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool AddProductToCart(int productId, int requestedQuantity, int productVariationId)
+        public async Task<bool> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
         {
-            throw new NotImplementedException();
+            var product =
+                GetProduct(productId);
+
+            if (product == null)
+                return false;
+
+            ProductVariation requestedVariation = null;
+
+            if (productVariationId == -1)
+            {
+                if (product.ProductQuantityInStock < requestedQuantity)
+                    return false;
+            }
+            else
+            {
+                requestedVariation =
+                    product.ProductVariations
+                        .SingleOrDefault(p => p.ProductVariationId == productVariationId);
+
+                if (requestedVariation == null 
+                    || requestedVariation.ProductVariationQuantityInStock < requestedQuantity)
+                    return false;
+            }
+
+            var loggedUser =
+                await _accountService
+                    .GetLoggedUserWithDetails();
+
+            var loggedUserOrder =
+                loggedUser.UserOrders
+                    .SingleOrDefault(p => !p.IsFinally);
+
+            if (requestedVariation == null)
+            {
+                var orderDetails =
+                    loggedUserOrder.OrdersDetails
+                        .SingleOrDefault(p => p.Product.ProductId == productId);
+
+                if (orderDetails != null)
+                {
+                    var finalOrderDetailsQuantity = 
+                        orderDetails.OrderDetailsQuantity + requestedQuantity;
+
+                    if (finalOrderDetailsQuantity > product.ProductQuantityInStock)
+                        return false;
+
+                    var orderDetailsTotalPrice =
+                        product.ProductPrice * finalOrderDetailsQuantity;
+
+                    orderDetails.OrderDetailsQuantity =
+                        finalOrderDetailsQuantity;
+                }
+                else
+                {
+                    var orderDetailsTotalPrice =
+                        product.ProductPrice * requestedQuantity;
+
+                    orderDetails =new OrderDetails()
+                    {
+                        IsOrderDetailsProductSimple = true,
+                        OrderDetailsTotalPrice = orderDetailsTotalPrice,
+                        OrderDetailsQuantity = requestedQuantity,
+                        Order = loggedUserOrder,
+                        Product = product
+                    }
+                }
+            }
+            else
+            {
+                
+            }
         }
         public IEnumerable<Product> GetProducts()
         {
