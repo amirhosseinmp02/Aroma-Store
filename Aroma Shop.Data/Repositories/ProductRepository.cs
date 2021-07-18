@@ -49,6 +49,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(orderDetails);
         }
+        public void UpdateOrderDetails(OrderDetails orderDetails)
+        {
+            _context.OrdersDetails.Update(orderDetails);
+        }
         public IEnumerable<Category> GetCategories()
         {
             var categories = _context.Categories
