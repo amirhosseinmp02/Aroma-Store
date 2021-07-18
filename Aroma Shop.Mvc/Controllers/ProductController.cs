@@ -15,11 +15,13 @@ namespace Aroma_Shop.Mvc.Controllers
     {
         private readonly IProductService _productService;
         private readonly IMediaService _mediaService;
+        private readonly IAccountService _accountService;
 
-        public ProductController(IProductService productService, IMediaService mediaService)
+        public ProductController(IProductService productService, IMediaService mediaService, IAccountService accountService)
         {
             _productService = productService;
             _mediaService = mediaService;
+            _accountService = accountService;
         }
 
         #region ShowProducts
@@ -207,6 +209,16 @@ namespace Aroma_Shop.Mvc.Controllers
             };
 
             return View(model);
+        }
+
+        #endregion
+
+        #region AddProductToCart
+
+        [Authorize]
+        public async Task<IActionResult> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
+        {
+
         }
 
         #endregion

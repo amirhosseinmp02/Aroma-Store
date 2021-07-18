@@ -122,19 +122,19 @@
                         </p>
                         if (Model.Product.ProductQuantityInStock > 0)
                         {
+
                             <div class="product_count">
                                 <label for="qty">تعداد :</label>
-                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                        class="increase items-count" type="button">
+                                <button id="increase-count" class="increase items-count" type="button">
                                     <i class="ti-angle-up"></i>
                                 </button>
-                                <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                        class="reduced items-count" type="button">
+                                <input type="text" value="1" class="input-text qty">
+                                <button id="decrease-count" class="reduced items-count" type="button">
                                     <i class="ti-angle-down"></i>
                                 </button>
                                 <a id="btn-addtocart" class="button primary-btn" href="#">افزودن به سبد خرید</a>
                             </div>
+
                         }
                         @if (isUserSignedIn)
                         {
@@ -217,9 +217,9 @@
                             <li>
                                 @{
                                     var doesProductHaveAtLastOneAvailableVariation =
-                                                    Model.Product
-                                                        .ProductVariations
-                                                        .Any(p => p.ProductVariationQuantityInStock != 0);
+                                        Model.Product
+                                            .ProductVariations
+                                            .Any(p => p.ProductVariationQuantityInStock != 0);
                                 }
                                 وضعیت :
                                 @if (doesProductHaveAtLastOneAvailableVariation)
@@ -265,17 +265,17 @@
 
                         if (doesProductHaveAtLastOneAvailableVariation)
                         {
-                            <div class="product_count">
-                                <label for="qty">تعداد :</label>
-                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                        class="increase items-count" type="button">
-                                    <i class="ti-angle-up"></i>
-                                </button>
-                                <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                        class="reduced items-count" type="button">
-                                    <i class="ti-angle-down"></i>
-                                </button>
+                            <div class="product_count d-flex">
+                                <div id="quantity-counter-section" style="visibility: hidden;">
+                                    <label for="qty">تعداد :</label>
+                                    <button id="increase-count" class="increase items-count" type="button">
+                                        <i class="ti-angle-up"></i>
+                                    </button>
+                                    <input type="text" value="1" class="input-text qty">
+                                    <button id="decrease-count" class="reduced items-count" type="button">
+                                        <i class="ti-angle-down"></i>
+                                    </button>
+                                </div>
                                 <a id="btn-addtocart" class="button-disabled" href="#">افزودن به سبد خرید</a>
                             </div>
                         }
@@ -309,6 +309,12 @@
                     }
                 </div>
             </div>
+            <input type="hidden" id="maximum-available-quantity" value="@Model.Product.ProductQuantityInStock" />
+            <form id="add-to-cart-form">
+                <input type="hidden" value="@Model.Product.ProductId" />
+                <input type="hidden" id="required-quantity" value="1" />
+                <input type="hidden" id="product-variation-id" value="-1" />
+            </form>
         </div>
     </div>
 </div>
@@ -453,6 +459,9 @@
 
         @foreach (var productVariation in Model.Product.ProductVariations)
         {
+            var productVariationId =
+                JsonConvert.SerializeObject(productVariation.ProductVariationId);
+
             var productVariationValue =
                 JsonConvert.SerializeObject(string.Join('-', productVariation.ProductVariationValues));
 
@@ -465,6 +474,7 @@
                 <text>
                     var productVariation =
                     {
+                        ProductVariationId: @Html.Raw(productVariationId),
                         ProductVariationValue:@Html.Raw(productVariationValue),
                         ProductVariationPrice:@Html.Raw(productVariationPrice),
                         ProductVariationQuantityInStock:@Html.Raw(productVariationQuantityInStock)
@@ -475,6 +485,41 @@
             }
 
         $(document).ready(function () {
+
+            $("#btn-addtocart").click(function () {
+                var btnClass = $(this).attr('class');
+                if (btnClass !== "button-disabled") {
+                    $("#add-to-cart-form").submit();
+                }
+            });
+
+            $("#increase-count").click(function() {
+                var currentCount = parseInt($(".qty").val());
+                var requiredCount = ++currentCount;
+                $(".qty").val(requiredCount);
+                $(".qty").trigger("change");
+            });
+
+            $("#decrease-count").click(function () {
+                var currentCount = parseInt($(".qty").val());
+                if (currentCount >= 1) {
+                    var requiredCount = --currentCount;
+                    $(".qty").val(requiredCount);
+                    $(".qty").trigger("change");
+                }
+            });
+
+            $(".qty").change(function () {
+                if (parseInt($(this).val()) >= 1 && !isNaN($(this).val()) && parseInt($(this).val())<=parseInt($("#maximum-available-quantity").val())) {
+                    $("#required-quantity").val($(this).val());
+                } else if (parseInt($(this).val()) > parseInt($("#maximum-available-quantity").val())) {
+                    $(this).val($("#maximum-available-quantity").val());
+                }
+                else {
+                    $(this).val(1);
+                    $("#required-quantity").val(1);
+                }
+            });
 
             var firstQuantityInStockLabel = $(".quantity-in-stock-label").text();
             var firstQuantityInStockLabelClass = firstQuantityInStockLabel === "موجود" ? "text-success" : "text-danger";
@@ -498,11 +543,14 @@
                             //alert(productVariationsValues[p].ProductVariationValue + "  ---  " + productVariationsValues[p].ProductVariationPrice + "  ---  " + productVariationsValues[p].ProductVariationQuantityInStock);
                             var price = productVariationsValues[p].ProductVariationPrice;
                             var quantityInStock = productVariationsValues[p].ProductVariationQuantityInStock;
+                            $("#maximum-available-quantity").val(quantityInStock);
                             if (quantityInStock === 0) {
+                                $("#product-variation-id").val(-1);
                                 $(".product_count").css("display", "none");
                                 $(".quantity-in-stock-label").removeClass("text-success");
                                 $(".quantity-in-stock-label").addClass("text-danger");
                                 $(".quantity-in-stock-label").text("ناموجود");
+                                $("#quantity-counter-section").css("visibility", "hidden");
                             } else {
                                 if (price !== 0) {
 
@@ -518,16 +566,21 @@
                                     setStylesForAvailableProductsAttributes();
 
                                 }
+                                $("#product-variation-id").val(productVariationsValues[p].ProductVariationId);
                             }
                         }
                     }
                 } else {
-
+                    $("#product-variation-id").val(-1);
                     restAttributeStylesForDefault();
                 }
+                $(".qty").val(1);
+                $("#required-quantity").val(1);
             });
 
-            $(".reset_variations").click(function() {
+            $(".reset_variations").click(function () {
+                $(".qty").val(1);
+                $("#required-quantity").val(1);
                 restAttributesStyles();
             });
 
@@ -554,12 +607,14 @@
 
                 }
                 $(".product_count").css("display", "inline-block");
+                $("#quantity-counter-section").css("visibility", "hidden");
                 $("#btn-addtocart").removeClass("button primary-btn");
                 $("#btn-addtocart").addClass("button-disabled");
             }
 
             function setStylesForAvailableProductsAttributes() {
                 $(".product_count").css("display", "inline-block");
+                $("#quantity-counter-section").css("visibility", "unset");
                 $("#btn-addtocart").removeClass("button-disabled");
                 $("#btn-addtocart").addClass("button primary-btn");
                 $(".quantity-in-stock-label").removeClass("text-danger");
