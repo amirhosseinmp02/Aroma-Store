@@ -45,6 +45,10 @@ namespace Aroma_Shop.Data.Repositories
 
             return product;
         }
+        public void AddOrderDetails(OrderDetails orderDetails)
+        {
+            _context.Add(orderDetails);
+        }
         public IEnumerable<Category> GetCategories()
         {
             var categories = _context.Categories
