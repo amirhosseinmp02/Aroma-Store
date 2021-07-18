@@ -288,6 +288,9 @@ namespace Aroma_Shop.Application.Services
                             var orderDetailsTotalPrice =
                                 product.ProductPrice * finalOrderDetailsQuantity;
 
+                            orderDetails.OrderDetailsTotalPrice =
+                                orderDetailsTotalPrice;
+
                             orderDetails.OrderDetailsQuantity =
                                 finalOrderDetailsQuantity;
 
@@ -319,6 +322,8 @@ namespace Aroma_Shop.Application.Services
                             OwnerUser = loggedUser
                         };
 
+                        _productRepository.AddOrder(loggedUserOrder);
+
                         var orderDetailsTotalPrice =
                             product.ProductPrice * requestedQuantity;
 
@@ -337,28 +342,76 @@ namespace Aroma_Shop.Application.Services
                 }
                 else
                 {
-                    loggedUserOrder = new Order()
+                    if (loggedUserOrder != null)
                     {
-                        IsFinally = false,
-                        CreateTime = DateTime.Now,
-                        OwnerUser = loggedUser
-                    };
+                        var orderDetails =
+                            loggedUserOrder.OrdersDetails
+                                .SingleOrDefault(p => p.ProductVariation?.ProductVariationId == productVariationId);
 
-                    var orderDetailsTotalPrice =
-                        requestedVariation.ProductVariationPrice * requestedQuantity;
+                        if (orderDetails != null)
+                        {
+                            var finalOrderDetailsQuantity =
+                                orderDetails.OrderDetailsQuantity + requestedQuantity;
 
-                    var orderDetails = new OrderDetails()
+                            if (finalOrderDetailsQuantity > product.ProductQuantityInStock)
+                                return AddProductToCartResult.OutOfStock;
+
+                            var orderDetailsTotalPrice =
+                                requestedVariation.ProductVariationPrice * finalOrderDetailsQuantity;
+
+                            orderDetails.OrderDetailsTotalPrice =
+                                orderDetailsTotalPrice;
+
+                            orderDetails.OrderDetailsQuantity =
+                                finalOrderDetailsQuantity;
+
+                            _productRepository.UpdateOrderDetails(orderDetails);
+                        }
+                        else
+                        {
+                            var orderDetailsTotalPrice =
+                                requestedVariation.ProductVariationPrice * requestedQuantity;
+
+                            orderDetails = new OrderDetails()
+                            {
+                                IsOrderDetailsProductSimple = false,
+                                OrderDetailsTotalPrice = orderDetailsTotalPrice,
+                                OrderDetailsQuantity = requestedQuantity,
+                                Order = loggedUserOrder,
+                                Product = product,
+                                ProductVariation = requestedVariation
+                            };
+
+                            _productRepository.AddOrderDetails(orderDetails);
+                        }
+                    }
+                    else
                     {
-                        IsOrderDetailsProductSimple = false,
-                        OrderDetailsTotalPrice = orderDetailsTotalPrice,
-                        OrderDetailsQuantity = requestedQuantity,
-                        Order = loggedUserOrder,
-                        Product = product,
-                        ProductVariation = requestedVariation
-                    };
+                        loggedUserOrder = new Order()
+                        {
+                            IsFinally = false,
+                            CreateTime = DateTime.Now,
+                            OwnerUser = loggedUser
+                        };
 
-                    loggedUserOrder
-                        .OrdersDetails.Add(orderDetails);
+                        _productRepository.AddOrder(loggedUserOrder);
+
+                        var orderDetailsTotalPrice =
+                            requestedVariation.ProductVariationPrice * requestedQuantity;
+
+                        var orderDetails = new OrderDetails()
+                        {
+                            IsOrderDetailsProductSimple = false,
+                            OrderDetailsTotalPrice = orderDetailsTotalPrice,
+                            OrderDetailsQuantity = requestedQuantity,
+                            Order = loggedUserOrder,
+                            Product = product,
+                            ProductVariation = requestedVariation
+                        };
+
+                        loggedUserOrder
+                            .OrdersDetails.Add(orderDetails);
+                    }
                 }
 
                 _productRepository.Save();

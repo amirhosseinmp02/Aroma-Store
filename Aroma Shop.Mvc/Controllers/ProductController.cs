@@ -235,7 +235,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
             if (result == AddProductToCartResult.OutOfStock)
             {
-                ViewData["OutOfStockError"] = "موجودی فعلی کمتر از مقدار انتخابی شماست";
+                ViewData["OutOfStockError"] = "موجودی کافی نیست";
 
                 product.Comments = product.Comments
                     .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();

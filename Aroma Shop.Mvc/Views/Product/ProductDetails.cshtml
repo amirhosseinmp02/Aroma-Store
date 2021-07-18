@@ -120,6 +120,10 @@
                         <p class="mb-4">
                             @(!string.IsNullOrEmpty(Model.Product.ProductShortDescription)? Model.Product.ProductShortDescription:"")
                         </p>
+                        if (ViewData["OutOfStockError"] != null)
+                        {
+                            <div class="alert mt-3 rounded-0 alert-danger text-left" role="alert">موجودی کافی نیست</div>
+                        }
                         if (Model.Product.ProductQuantityInStock > 0)
                         {
 
@@ -261,6 +265,10 @@
                                     <span class="reset_variations text-dark">پاک کردن</span>
                                 </div>
                             </div>
+                            if (ViewData["OutOfStockError"] != null)
+                            {
+                                <div class="alert mt-3 rounded-0 alert-danger text-left" role="alert">موجودی کافی نیست</div>
+                            }
                         }
 
                         if (doesProductHaveAtLastOneAvailableVariation)
