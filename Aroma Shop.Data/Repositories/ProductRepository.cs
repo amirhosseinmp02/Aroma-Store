@@ -45,6 +45,10 @@ namespace Aroma_Shop.Data.Repositories
 
             return product;
         }
+        public void AddOrder(Order order)
+        {
+            _context.Add(order);
+        }
         public void AddOrderDetails(OrderDetails orderDetails)
         {
             _context.Add(orderDetails);
