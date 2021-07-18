@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Application.ViewModels.User;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,8 @@ namespace Aroma_Shop.Application.Interfaces
         Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel);
         Task<CustomIdentityUser> GetLoggedUser();
         Task<CustomIdentityUser> GetLoggedUserWithDetails();
+        Task<CustomIdentityUser> GetLoggedUserWithOrders();
+        Task<Order> GetLoggedUserOpenOrder();
         Task<string> GetLoggedUserRole();
     }
 }

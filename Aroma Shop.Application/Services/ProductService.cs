@@ -263,7 +263,7 @@ namespace Aroma_Shop.Application.Services
 
                 var loggedUser =
                     await _accountService
-                        .GetLoggedUserWithDetails();
+                        .GetLoggedUserWithOrders();
 
                 var loggedUserOrder =
                     loggedUser.UserOrders

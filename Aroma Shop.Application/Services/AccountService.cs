@@ -11,6 +11,7 @@ using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Application.ViewModels.User;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
+using Aroma_Shop.Domain.Models.ProductModels;
 using Aroma_Shop.Domain.Models.UserModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -755,6 +756,32 @@ namespace Aroma_Shop.Application.Services
                     .SingleOrDefaultAsync(p => p.Id == loggedUserId);
 
             return loggedUser;
+        }
+        public async Task<CustomIdentityUser> GetLoggedUserWithOrders()
+        {
+            var loggedUserId =
+                _accessor.HttpContext
+                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loggedUser =
+                await _userManager.Users
+                    .Include(p => p.UserOrders)
+                    .ThenInclude(p=>p.OrdersDetails)
+                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
+
+            return loggedUser;
+        }
+        public async Task<Order> GetLoggedUserOpenOrder()
+        {
+            var loggedUser =
+                await GetLoggedUserWithOrders();
+
+            var loggedUserOpenOrder =
+                loggedUser
+                    .UserOrders
+                    .SingleOrDefault(p => !p.IsFinally);
+
+            return loggedUserOpenOrder;
         }
         public async Task<string> GetLoggedUserRole()
         {

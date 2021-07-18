@@ -217,8 +217,9 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpGet("/ShoppingCart")]
-        public IActionResult ShoppingCart()
+        public async Task<IActionResult> ShoppingCart()
         {
+
             return View();
         }
 
