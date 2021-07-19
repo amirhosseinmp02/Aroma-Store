@@ -18,6 +18,18 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             _productService = productService;
         }
 
+        #region ShowDiscounts
+
+        [HttpGet("/Admin/Orders/Discounts")]
+        public IActionResult Discounts()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region AddDiscount
+
         [HttpGet("/Admin/Orders/AddDiscount")]
         public IActionResult AddDiscount()
         {
@@ -29,9 +41,24 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = 
-                    _productService.AddDiscount()
+                var result =
+                    _productService.AddDiscount(model);
+
+                if (result)
+                {
+                    ModelState.Clear();
+
+                    ViewData["SuccessMessage"] = "کد تخفیف مورد نظر با موفقیت افزوده شد.";
+
+                    return View();
+                }
+
+                ModelState.AddModelError("", "مشکلی در زمان افزودن کد تخفیف رخ داد.");
             }
+
+            return View(model);
         }
+
+        #endregion
     }
 }
