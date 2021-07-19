@@ -35,6 +35,7 @@ namespace Aroma_Shop.Data.Context
         public DbSet<ProductInformation> ProductsInformations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetails> OrdersDetails { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

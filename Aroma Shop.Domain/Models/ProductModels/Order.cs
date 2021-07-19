@@ -25,5 +25,6 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public ICollection<OrderDetails> OrdersDetails { get; set; }
         [Required]
         public CustomIdentityUser OwnerUser { get; set; }
+        public ICollection<Discount> Discounts { get; set; }    
     }
 }
