@@ -23,8 +23,8 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Discount> GetDiscounts();
         Discount GetDiscount(int discountId);
         bool MoveDiscountToTrash(int discountId);
-        bool AddDiscount(Discount discount);
-        UpdateDiscountResult UpdateDiscount(Discount discount);
+        AddUpdateDiscountResult AddDiscount(Discount discount);
+        AddUpdateDiscountResult UpdateDiscount(Discount discount);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);

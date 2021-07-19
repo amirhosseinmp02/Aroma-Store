@@ -428,8 +428,7 @@ namespace Aroma_Shop.Application.Services
         {
             var discounts =
                 _productRepository
-                    .GetDiscounts()
-                    .Where(p=>!p.IsTrash);
+                    .GetDiscounts();
 
             return discounts;
         }
@@ -463,48 +462,66 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool AddDiscount(Discount discount)
-        {
-            try
-            {
-                _productRepository.AddDiscount(discount);
-
-                _productRepository.Save();
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error.Message);
-                return false;
-            }
-        }
-        public UpdateDiscountResult UpdateDiscount(Discount discount)
+        public AddUpdateDiscountResult AddDiscount(Discount discount)
         {
             try
             {
                 var discounts =
                     GetDiscounts();
 
-                var isDiscountCodeExistForEdit =
+                var isDiscountCodeExistForAdd =
                     discounts
-                        .Any(p => p.DiscountId != discount.DiscountId && p.DiscountCode == discount.DiscountCode);
+                        .Any(p => p.DiscountCode == discount.DiscountCode);
 
-                if (isDiscountCodeExistForEdit)
-                    return UpdateDiscountResult.DiscountCodeExist;
+                if (isDiscountCodeExistForAdd)
+                    return AddUpdateDiscountResult.DiscountCodeExist;
 
-                discount.IsTrash = false;
-
-                _productRepository.UpdateDiscount(discount);
+                _productRepository.AddDiscount(discount);
 
                 _productRepository.Save();
 
-                return UpdateDiscountResult.Successful;
+                return AddUpdateDiscountResult.Successful;
             }
             catch (Exception error)
             {
                 Console.WriteLine(error.Message);
-                return UpdateDiscountResult.Failed;
+                return AddUpdateDiscountResult.Failed;
+            }
+        }
+        public AddUpdateDiscountResult UpdateDiscount(Discount discount)
+        {
+            try
+            {
+                var currentDiscount =
+                    GetDiscount(discount.DiscountId);
+
+                if (currentDiscount.DiscountCode != discount.DiscountCode)
+                {
+                    var discounts =
+                        GetDiscounts();
+
+                    var isDiscountCodeExistForEdit =
+                        discounts
+                            .Any(p => p.DiscountCode == discount.DiscountCode);
+
+                    if (isDiscountCodeExistForEdit)
+                        return AddUpdateDiscountResult.DiscountCodeExist;
+
+                    currentDiscount.DiscountCode = discount.DiscountCode;
+                }
+
+                currentDiscount.DiscountPrice = discount.DiscountPrice;
+
+                _productRepository.UpdateDiscount(currentDiscount);
+
+                _productRepository.Save();
+
+                return AddUpdateDiscountResult.Successful;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return AddUpdateDiscountResult.Failed;
             }
         }
         public IEnumerable<Product> GetProducts()

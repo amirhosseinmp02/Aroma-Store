@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
@@ -31,13 +32,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 discounts =
                     _productService.GetDiscounts()
                         .Where(p =>
-                        p.DiscountCode.Contains(search));
+                        p.DiscountCode.Contains(search) && !p.IsTrash);
 
                 ViewBag.search = search;
             }
             else
                 discounts =
-                    _productService.GetDiscounts();
+                    _productService
+                        .GetDiscounts()
+                        .Where(p => !p.IsTrash);
 
             if (!discounts.Any())
             {
@@ -52,7 +55,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var discountsPage = 
+            var discountsPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -82,7 +85,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 var result =
                     _productService.AddDiscount(model);
 
-                if (result)
+                if (result == AddUpdateDiscountResult.Successful)
                 {
                     ModelState.Clear();
 
@@ -91,7 +94,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     return View();
                 }
 
-                ModelState.AddModelError("", "مشکلی در زمان افزودن کد تخفیف رخ داد.");
+                else if (result == AddUpdateDiscountResult.DiscountCodeExist)
+                    ModelState.AddModelError("", "این کد تخفیف در حال حاضر موجود است");
+
+                else
+                    ModelState.AddModelError("", "مشکلی در زمان افزودن کد تخفیف رخ داد.");
             }
 
             return View(model);
@@ -105,7 +112,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult EditDiscount(int discountId)
         {
             var discount =
-                _productService.GetDiscount(discountId);
+                _productService
+                    .GetDiscount(discountId);
 
             if (discount == null)
                 return NotFound();
@@ -123,7 +131,17 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                var result =
+                    _productService.UpdateDiscount(model);
 
+                if (result == AddUpdateDiscountResult.Successful)
+                    return RedirectToAction("Discounts");
+
+                else if (result == AddUpdateDiscountResult.DiscountCodeExist)
+                    ModelState.AddModelError("", "این کد تخفیف در حال حاضر موجود است");
+
+                else
+                    ModelState.AddModelError("", "مشکلی در زمان افزودن کد تخفیف رخ داد.");
             }
 
             TempData.Keep("discountId");

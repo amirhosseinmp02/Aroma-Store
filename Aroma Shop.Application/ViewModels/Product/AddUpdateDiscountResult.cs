@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Aroma_Shop.Application.ViewModels.Product
 {
-    public enum UpdateDiscountResult
+    public enum AddUpdateDiscountResult
     {
         Successful,
         DiscountCodeExist,  
