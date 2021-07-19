@@ -115,6 +115,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(discount);
         }
 
+        [HttpPost("/Admin/Orders/EditDiscount")]
+        public IActionResult EditDiscount(Discount model)
+        {
+            model.DiscountId =
+                Convert.ToInt32(TempData["discountId"]);
+
+            if (ModelState.IsValid)
+            {
+
+            }
+
+            TempData.Keep("discountId");
+
+            return View(model);
+        }
+
         #endregion
 
         #region MoveDiscountToTrash

@@ -38,7 +38,7 @@
                     <td class="cart-item-cells align-middle">@discount.DiscountPrice</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
-                            <a class="btn text-light btn-primary" asp-action="EditDiscount" asp-route-categoryId="@discount.DiscountId">ویرایش</a>
+                            <a class="btn text-light btn-primary" asp-action="EditDiscount" asp-route-discountId="@discount.DiscountId">ویرایش</a>
                             <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(discount.DiscountId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(discount.DiscountId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(discount.DiscountId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -59,7 +59,7 @@
                                             <p class="text-info">تمامی اطلاعات کد تخفیف حذف خواهند شد</p>
                                         </div>
                                         <div class="modal-footer justify-content-center">
-                                            <a type="button" class="btn btn-danger" asp-action="MoveDiscountToTrash" asp-route-categoryId="@discount.DiscountId">حذف</a>
+                                            <a type="button" class="btn btn-danger" asp-action="MoveDiscountToTrash" asp-route-discountId="@discount.DiscountId">حذف</a>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
                                         </div>
                                     </div>
