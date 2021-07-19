@@ -64,6 +64,14 @@ namespace Aroma_Shop.Data.Repositories
 
             return discounts;
         }
+        public Discount GetDiscount(int discountId)
+        {
+            var discount =
+                _context.Discounts
+                    .Find(discountId);
+
+            return discount;
+        }
         public void AddDiscount(Discount discount)
         {
             _context.Add(discount);
