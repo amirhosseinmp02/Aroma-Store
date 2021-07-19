@@ -424,6 +424,22 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
+        public bool AddDiscount(Discount discount)
+        {
+            try
+            {
+                _productRepository.AddDiscount(discount);
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public IEnumerable<Product> GetProducts()
         {
             var products =
