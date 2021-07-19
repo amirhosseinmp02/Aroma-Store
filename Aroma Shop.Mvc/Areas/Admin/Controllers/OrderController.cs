@@ -98,5 +98,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region DeleteDiscount
+
+        [HttpGet("/Admin/Orders/DeleteDiscount")]
+        public IActionResult MoveDiscountToTrash(int discountId)
+        {
+
+        }
+
+        #endregion
     }
 }
