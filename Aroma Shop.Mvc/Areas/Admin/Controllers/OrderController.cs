@@ -99,12 +99,37 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region EditDiscount
+
+        [HttpGet("/Admin/Orders/EditDiscount")]
+        public IActionResult EditDiscount(int discountId)
+        {
+            var discount =
+                _productService.GetDiscount(discountId);
+
+            if (discount == null)
+                return NotFound();
+
+            TempData["discountId"] = discountId;
+
+            return View(discount);
+        }
+
+        #endregion
+
         #region MoveDiscountToTrash
 
         [HttpGet("/Admin/Orders/DeleteDiscount")]
         public IActionResult MoveDiscountToTrash(int discountId)
         {
+            var result =
+                _productService
+                    .MoveDiscountToTrash(discountId);
 
+            if (result)
+                return RedirectToAction("Discounts");
+
+            return NotFound();
         }
 
         #endregion
