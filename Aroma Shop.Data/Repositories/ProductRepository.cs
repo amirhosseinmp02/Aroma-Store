@@ -76,6 +76,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(discount);
         }
+        public void UpdateDiscount(Discount discount)
+        {
+            _context.Update(discount);
+        }
         public IEnumerable<Category> GetCategories()
         {
             var categories = _context.Categories
