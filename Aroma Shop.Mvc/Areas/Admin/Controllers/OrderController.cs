@@ -99,7 +99,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
-        #region DeleteDiscount
+        #region MoveDiscountToTrash
 
         [HttpGet("/Admin/Orders/DeleteDiscount")]
         public IActionResult MoveDiscountToTrash(int discountId)
