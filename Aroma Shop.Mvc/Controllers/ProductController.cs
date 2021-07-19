@@ -219,8 +219,10 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("/ShoppingCart")]
         public async Task<IActionResult> ShoppingCart()
         {
+            var loggedUserOpenOrder =
+                await _accountService.GetLoggedUserOpenOrder();
 
-            return View();
+            return View(loggedUserOpenOrder);
         }
 
         #endregion
@@ -243,7 +245,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
             if (result == AddProductToCartResult.Successful)
             {
-
+                return RedirectToAction("ShoppingCart");
             }
 
             if (result == AddProductToCartResult.OutOfStock)

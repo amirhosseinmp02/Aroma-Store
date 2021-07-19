@@ -8,6 +8,11 @@ namespace Aroma_Shop.Domain.Models.ProductModels
 {
     public class Order
     {
+        public Order()
+        {
+            OrdersDetails = new List<OrderDetails>();
+        }
+
         [Key]
         public int OrderId { get; set; }
         [Required]

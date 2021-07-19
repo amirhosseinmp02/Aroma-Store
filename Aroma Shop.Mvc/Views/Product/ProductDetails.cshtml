@@ -39,15 +39,10 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             @{
-                                string productImagePath;
-                                if (Model.Product.Images.Any())
-                                {
-                                    productImagePath = $"/img/{Model.Product.Images.FirstOrDefault().ImagePath}";
-                                }
-                                else
-                                {
-                                    productImagePath = Image.DefaultImagePath;
-                                }
+                                var productImagePath = 
+                                    Model.Product.Images.Any() ? 
+                                        $"/img/{Model.Product.Images.FirstOrDefault().ImagePath}" : 
+                                        Image.DefaultImagePath;
                             }
                             <img class="product-image-detail" src="@productImagePath" alt="First slide">
                         </div>
@@ -319,9 +314,9 @@
             </div>
             <input type="hidden" id="maximum-available-quantity" value="@Model.Product.ProductQuantityInStock" />
             <form id="add-to-cart-form" method="get" asp-action="AddProductToCart">
-                <input type="hidden" value="@Model.Product.ProductId" />
-                <input type="hidden" id="required-quantity" value="1" />
-                <input type="hidden" id="product-variation-id" value="-1" />
+                <input type="hidden" value="@Model.Product.ProductId" name="productId" />
+                <input type="hidden" id="required-quantity" value="1" name="requestedQuantity" />
+                <input type="hidden" id="product-variation-id" value="-1" name="productVariationId" />
             </form>
         </div>
     </div>

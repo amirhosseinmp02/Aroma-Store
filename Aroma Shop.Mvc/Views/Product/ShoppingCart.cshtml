@@ -1,4 +1,6 @@
-﻿
+﻿@using Aroma_Shop.Domain.Models.FileModels
+@model Aroma_Shop.Domain.Models.ProductModels.Order
+
 @{
     ViewData["Title"] = "سبد خرید";
 }
@@ -37,81 +39,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/cart/cart1.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>Minimalistic shop for multipurpose use</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$۳۶۰.۰۰</h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$۷۲۰.۰۰</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/cart/cart2.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>Minimalistic shop for multipurpose use</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$۳۶۰.۰۰</h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$۷۲۰.۰۰</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/cart/cart3.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>Minimalistic shop for multipurpose use</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$۳۶۰.۰۰</h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$۷۲۰.۰۰</h5>
-                            </td>
-                        </tr>
+                        @if (Model != null)
+                        {
+                            @foreach (var orderDetails in Model.OrdersDetails)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="media">
+                                            <div class="d-flex">
+                                                @{
+                                                    var productImagePath = 
+                                                        orderDetails.Product.Images.Any() ? 
+                                                            $"/img/{orderDetails.Product.Images.FirstOrDefault().ImagePath}" :
+                                                            Image.DefaultImagePath;
+                                                }
+                                                <img class="shopping-cart-images" src="@productImagePath" alt="">
+                                            </div>
+                                            <div class="media-body">
+                                                <p>@orderDetails.Product.ProductName</p>
+                                                @if (!orderDetails.IsOrderDetailsProductSimple)
+                                                {
+                                                    <ul class="mt-3 shopping-cart-variations">
+                                                        @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                                        {
+                                                            <li>@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h5>@(orderDetails.IsOrderDetailsProductSimple?orderDetails.Product.ProductPrice:orderDetails.ProductVariation.ProductVariationPrice)</h5>
+                                    </td>
+                                    <td>
+                                        <div class="product_count">
+                                            <input type="text" name="qty" id="sst" maxlength="12" value="@orderDetails.OrderDetailsQuantity" title="Quantity:" class="input-text qty">
+                                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h5>@orderDetails.OrderDetailsTotalPrice</h5>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
                         <tr class="bottom_button">
                             <td>
                                 <div id="cupon-section" class="cupon_text d-flex align-items-center">

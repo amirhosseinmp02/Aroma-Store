@@ -5022,3 +5022,12 @@ span.reset_variations:hover {
 .update-cart-button {
     margin-right: -118px
 }
+
+.shopping-cart-images {
+    width: 150px;
+    height: 100px
+}
+
+.shopping-cart-variations {
+    font-size: 13px
+}

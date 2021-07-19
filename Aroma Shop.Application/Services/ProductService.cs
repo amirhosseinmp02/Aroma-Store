@@ -353,7 +353,7 @@ namespace Aroma_Shop.Application.Services
                             var finalOrderDetailsQuantity =
                                 orderDetails.OrderDetailsQuantity + requestedQuantity;
 
-                            if (finalOrderDetailsQuantity > product.ProductQuantityInStock)
+                            if (finalOrderDetailsQuantity > requestedVariation.ProductVariationQuantityInStock)
                                 return AddProductToCartResult.OutOfStock;
 
                             var orderDetailsTotalPrice =
