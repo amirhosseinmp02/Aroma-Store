@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
@@ -21,9 +22,46 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowDiscounts
 
         [HttpGet("/Admin/Orders/Discounts")]
-        public IActionResult Discounts()
+        public IActionResult Discounts(int pageNumber = 1, string search = null)
         {
-            return View();
+            IEnumerable<Discount> discounts;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                discounts =
+                    _productService.GetDiscounts()
+                        .Where(p =>
+                        p.DiscountCode.Contains(search));
+
+                ViewBag.search = search;
+            }
+            else
+                discounts =
+                    _productService.GetDiscounts();
+
+            if (!discounts.Any())
+            {
+                ViewBag.isEmpty = true;
+
+                return View();
+            }
+
+            var page =
+                new Paging<Discount>(discounts, 11, pageNumber);
+
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+
+            var discountsPage = 
+                page.QueryResult;
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+
+            return View(discountsPage);
         }
 
         #endregion
