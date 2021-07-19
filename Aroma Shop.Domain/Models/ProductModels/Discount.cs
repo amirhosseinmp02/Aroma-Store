@@ -15,6 +15,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public string DiscountCode { get; set; }
         [Required(ErrorMessage = "لطفا میزان تخفیف را وارد نمایید")]
         public int DiscountPrice { get; set; }
+        public bool IsTrash { get; set; }   
 
         //Navigations Properties
 
