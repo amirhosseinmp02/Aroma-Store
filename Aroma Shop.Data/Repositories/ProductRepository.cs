@@ -57,6 +57,13 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.OrdersDetails.Update(orderDetails);
         }
+        public IEnumerable<Discount> GetDiscounts()
+        {
+            var discounts =
+                _context.Discounts;
+
+            return discounts;
+        }
         public void AddDiscount(Discount discount)
         {
             _context.Add(discount);
