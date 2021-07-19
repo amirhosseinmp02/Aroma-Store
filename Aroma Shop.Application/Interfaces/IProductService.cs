@@ -21,6 +21,8 @@ namespace Aroma_Shop.Application.Interfaces
         bool AddHitsToProduct(Product product);
         Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1);
         IEnumerable<Discount> GetDiscounts();
+        Discount GetDiscount(int discountId);
+        bool MoveDiscountToTrash(int discountId);
         bool AddDiscount(Discount discount);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
