@@ -24,6 +24,7 @@ namespace Aroma_Shop.Application.Interfaces
         Discount GetDiscount(int discountId);
         bool MoveDiscountToTrash(int discountId);
         bool AddDiscount(Discount discount);
+        bool UpdateDiscount(Discount discount);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
