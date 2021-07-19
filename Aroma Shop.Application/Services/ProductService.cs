@@ -433,6 +433,36 @@ namespace Aroma_Shop.Application.Services
 
             return discounts;
         }
+        public Discount GetDiscount(int discountId)
+        {
+            var discount =
+                _productRepository
+                    .GetDiscount(discountId);
+
+            return discount;
+        }
+        public bool MoveDiscountToTrash(int discountId)
+        {
+            try
+            {
+                var discount =
+                    GetDiscount(discountId);
+
+                if (discount == null)
+                    return false;
+
+                discount.IsTrash = true;
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public bool AddDiscount(Discount discount)
         {
             try
