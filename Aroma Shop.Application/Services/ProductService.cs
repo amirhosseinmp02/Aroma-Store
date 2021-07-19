@@ -424,6 +424,15 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
+
+        public IEnumerable<Discount> GetDiscounts()
+        {
+            var discounts =
+                _productRepository.GetDiscounts();
+
+            return discounts;
+        }
+
         public bool AddDiscount(Discount discount)
         {
             try
