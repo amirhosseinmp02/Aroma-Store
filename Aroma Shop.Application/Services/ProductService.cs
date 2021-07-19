@@ -479,6 +479,34 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public UpdateDiscountResult UpdateDiscount(Discount discount)
+        {
+            try
+            {
+                var discounts =
+                    GetDiscounts();
+
+                var isDiscountCodeExistForEdit =
+                    discounts
+                        .Any(p => p.DiscountId != discount.DiscountId && p.DiscountCode == discount.DiscountCode);
+
+                if (isDiscountCodeExistForEdit)
+                    return UpdateDiscountResult.DiscountCodeExist;
+
+                discount.IsTrash = false;
+
+                _productRepository.UpdateDiscount(discount);
+
+                _productRepository.Save();
+
+                return UpdateDiscountResult.Successful;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return UpdateDiscountResult.Failed;
+            }
+        }
         public IEnumerable<Product> GetProducts()
         {
             var products =
