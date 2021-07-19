@@ -19,6 +19,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddOrder(Order order);
         void AddOrderDetails(OrderDetails orderDetails);
         void UpdateOrderDetails(OrderDetails orderDetails);
+        void AddDiscount(Discount discount);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         void AddCategory(Category category);
