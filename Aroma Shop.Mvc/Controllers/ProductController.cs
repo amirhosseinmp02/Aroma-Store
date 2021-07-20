@@ -268,6 +268,17 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region RemoveProductFormCart
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemoveProductFormCart(int orderDetailsId)
+        {
+
+        }
+
+        #endregion
+
         #region AddProductToUserFavoriteProducts
 
         [Authorize]
