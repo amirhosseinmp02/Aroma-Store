@@ -49,6 +49,15 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(order);
         }
+        public OrderDetails GetOrderDetails(int orderDetailsId)
+        {
+            var orderDetails =
+                _context
+                    .OrdersDetails
+                    .Find(orderDetailsId);
+
+            return orderDetails;
+        }
         public void AddOrderDetails(OrderDetails orderDetails)
         {
             _context.Add(orderDetails);
@@ -56,6 +65,10 @@ namespace Aroma_Shop.Data.Repositories
         public void UpdateOrderDetails(OrderDetails orderDetails)
         {
             _context.OrdersDetails.Update(orderDetails);
+        }
+        public void DeleteOrderDetails(OrderDetails orderDetails)
+        {
+            _context.Remove(orderDetails);
         }
         public IEnumerable<Discount> GetDiscounts()
         {
