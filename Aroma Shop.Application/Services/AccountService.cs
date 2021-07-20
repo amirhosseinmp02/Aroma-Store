@@ -788,6 +788,25 @@ namespace Aroma_Shop.Application.Services
 
             return loggedUserOpenOrder;
         }
+        public async Task<int> GetLoggedUserOpenOrderCount()
+        {
+            var loggedUserId =
+                _accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loggedUser =
+                await _userManager.Users
+                    .Include(p => p.UserOrders)
+                    .ThenInclude(p => p.OrdersDetails)
+                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
+
+            var loggedUserOpenOrderCount =
+                loggedUser
+                    .UserOrders
+                    .SingleOrDefault(p => !p.IsFinally)
+                    .OrdersDetails.Count;
+
+            return loggedUserOpenOrderCount;
+        }
         public async Task<string> GetLoggedUserRole()
         {
             var user =
