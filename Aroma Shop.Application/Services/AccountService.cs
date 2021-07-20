@@ -772,6 +772,8 @@ namespace Aroma_Shop.Application.Services
                     .Include(p => p.UserOrders)
                     .ThenInclude(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
+                    .Include(p => p.UserOrders)
+                    .ThenInclude(p=>p.Discounts)
                     .SingleOrDefaultAsync(p => p.Id == loggedUserId);
 
             return loggedUser;

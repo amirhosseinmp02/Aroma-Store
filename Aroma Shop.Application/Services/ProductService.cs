@@ -424,11 +424,24 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
-        public bool AddDiscountToCart(string discountCode)
+        public async Task<bool> AddDiscountToCart(string discountCode)
         {
             try
             {
-                
+                var discount =
+                    _productRepository
+                        .GetDiscountByCode(discountCode);
+
+                if (discount == null)
+                    return false;
+
+                var loggedUserOpenOrder =
+                    await _accountService
+                        .GetLoggedUserOpenOrder();
+
+                loggedUserOpenOrder
+                    .Discounts.Add(discount);
+
             }
             catch (Exception error)
             {

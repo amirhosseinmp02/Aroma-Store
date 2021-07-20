@@ -49,6 +49,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(order);
         }
+        public void UpdateOrder(Order order)
+        {
+            _context.Update(order);
+        }
         public OrderDetails GetOrderDetails(int orderDetailsId)
         {
             var orderDetails =
