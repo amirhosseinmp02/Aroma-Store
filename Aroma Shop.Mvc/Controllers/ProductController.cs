@@ -290,6 +290,18 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region ApplyDiscountOnCart
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ApplyDiscountOnCart()
+        {
+
+        }
+
+        #endregion
+
         #region AddProductToUserFavoriteProducts
 
         [Authorize]

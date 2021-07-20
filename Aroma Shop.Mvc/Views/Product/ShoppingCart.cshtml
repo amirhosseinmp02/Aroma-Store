@@ -71,7 +71,13 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <h5>@(orderDetails.IsOrderDetailsProductSimple?orderDetails.Product.ProductPrice:orderDetails.ProductVariation.ProductVariationPrice)</h5>
+                                        @{
+                                            var orderDetailsPrice =
+                                                orderDetails.IsOrderDetailsProductSimple ? 
+                                                    orderDetails.Product.ProductPrice :
+                                                    orderDetails.ProductVariation.ProductVariationPrice;
+                                        }
+                                        <h5>@(orderDetailsPrice != 0 ? orderDetailsPrice.ToString() : "رایگان")</h5>
                                     </td>
                                     <td>
                                         <div class="product_count">
@@ -81,7 +87,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <h5>@orderDetails.OrderDetailsTotalPrice</h5>
+                                        <h5>@(orderDetails.OrderDetailsTotalPrice != 0 ? orderDetails.OrderDetailsTotalPrice.ToString() : "رایگان")</h5>
                                     </td>
                                     <td class="text-center">
                                         <form asp-action="RemoveProductFormCart">
@@ -114,7 +120,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <h5>قیمت کل : <span class="ml-5">۲۱۶۰۰۰ تومان</span></h5>
+                            @{
+                                var totalOrderPrice =
+                                    @Model?.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice);
+                            }
+                            <h5>قیمت کل : <span class="ml-5">@totalOrderPrice تومان</span></h5>
                         </td>
                         <td>
                         </td>
