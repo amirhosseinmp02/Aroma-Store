@@ -22,7 +22,8 @@ namespace Aroma_Shop.Domain.Interfaces
         void UpdateOrderDetails(OrderDetails orderDetails);
         void DeleteOrderDetails(OrderDetails orderDetails);
         IEnumerable<Discount> GetDiscounts();
-        Discount GetDiscount(int discountId);   
+        Discount GetDiscount(int discountId);
+        Discount GetDiscountByCode(string discountCode);
         void AddDiscount(Discount discount);
         void UpdateDiscount(Discount discount);
         IEnumerable<Category> GetCategories();
