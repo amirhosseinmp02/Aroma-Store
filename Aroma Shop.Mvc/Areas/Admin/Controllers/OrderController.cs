@@ -80,6 +80,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         [HttpPost("/Admin/Orders/AddDiscount")]
+        [ValidateAntiForgeryToken]
         public IActionResult AddDiscount(Discount model)
         {
             if (ModelState.IsValid)
@@ -126,6 +127,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         [HttpPost("/Admin/Orders/EditDiscount")]
+        [ValidateAntiForgeryToken]
         public IActionResult EditDiscount(Discount model)
         {
             model.DiscountId =

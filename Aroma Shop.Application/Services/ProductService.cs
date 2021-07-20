@@ -424,6 +424,30 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
+        public bool DeleteOrderDetailsById(int orderDetailsId)
+        {
+            try
+            {
+                var orderDetails =
+                    _productRepository
+                        .GetOrderDetails(orderDetailsId);
+
+                if (orderDetails == null)
+                    return false;
+
+                _productRepository
+                    .DeleteOrderDetails(orderDetails);
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public IEnumerable<Discount> GetDiscounts()
         {
             var discounts =

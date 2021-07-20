@@ -29,6 +29,7 @@ namespace Aroma_Shop.Mvc.Controllers
         }
 
         [HttpPost("/Contact-Us")]
+        [ValidateAntiForgeryToken]
         public IActionResult ContactUs(Message model)
         {
             if (ModelState.IsValid)

@@ -154,6 +154,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpPost("/My-Account/Edit-Account")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAccount(EditAccountViewModel model)
         {
             if (ModelState.IsValid)
@@ -217,6 +218,7 @@ namespace Aroma_Shop.Mvc.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
