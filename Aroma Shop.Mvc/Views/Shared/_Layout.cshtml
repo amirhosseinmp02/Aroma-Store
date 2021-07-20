@@ -1,5 +1,11 @@
 ﻿@using Aroma_Shop.Application.Interfaces
+
 @inject IAccountService AccountService
+
+@{
+    var isUserSignedIn = AccountService.IsUserSignedIn();
+}
+
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -62,11 +68,19 @@
                             </li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Media" asp-action="ContactUs">تماس با ما</a></li>
                         </ul>
-
+                        <div id="searchOverlay" class="searchSectionOverlay">
+                            <span class="closebtn">×</span>
+                            <div class="searchOverlay-content">
+                                <form method="get" asp-controller="Product" asp-action="Index">
+                                    <input type="text" placeholder="جستجو..." name="Search">
+                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
+                        </div>
                         <ul class="nav-shop">
-                            <li class="nav-item"><button><i class="ti-search"></i></button></li>
-                            <li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button> </li>
-                            @if (AccountService.IsUserSignedIn())
+                            <li class="nav-item"><button class="openBtn"><i class="ti-search"></i></button></li>
+                            <li class="nav-item"><a asp-controller="Product" asp-action="ShoppingCart"><i class="ti-shopping-cart"></i><span class="nav-shop__circle">@(isUserSignedIn ? await AccountService.GetLoggedUserOpenOrderCount() : 0)</span></a> </li>
+                            @if (isUserSignedIn)
                             {
                                 <li class="nav-item"><a class="button button-header" asp-controller="Account" asp-action="ManageAccount">@User.Identity.Name</a></li>
 

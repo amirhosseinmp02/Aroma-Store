@@ -421,6 +421,13 @@ a {
         color: #222
     }
 
+    .nav-shop li a {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        position: relative
+    }
+
     .nav-shop li button {
         padding: 0;
         border: 0;
@@ -428,17 +435,17 @@ a {
         position: relative
     }
 
-        .nav-shop li button .nav-shop__circle {
-            font-size: 9px;
-            display: inline-block;
-            background: #384aeb;
-            color: #fff;
-            padding: 0px 5px;
-            border-radius: 50%;
-            position: absolute;
-            top: -8px;
-            right: -12px
-        }
+    .nav-shop li a .nav-shop__circle {
+        font-size: 10px;
+        display: inline-block;
+        background: #384aeb;
+        color: #fff;
+        padding: 0px 6px;
+        border-radius: 50%;
+        position: absolute;
+        top: -9px;
+        right: -12px
+    }
 
     .nav-shop li:last-child {
         margin-left: 40px
@@ -4024,7 +4031,6 @@ a {
 }
 
 .cart_inner .table tbody tr.bottom_button td:last-child {
-    
 }
 
 .cart_inner .table tbody tr.bottom_button td .cupon_text {
@@ -4247,13 +4253,13 @@ a {
     font-weight: 500
 }
 
-.gray_btn:hover {
-    color: black;
-}
-
-    .product_image_area {
-        padding-top: 50px
+    .gray_btn:hover {
+        color: black;
     }
+
+.product_image_area {
+    padding-top: 50px
+}
 
 @media (min-width: 1000px) {
     .product_image_area {
@@ -5030,4 +5036,73 @@ span.reset_variations:hover {
 
 .shopping-cart-variations {
     font-size: 13px
+}
+
+.openBtn {
+    background: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.searchSectionOverlay {
+    height: 100%;
+    width: 100%;
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.9);
+}
+
+.searchOverlay-content {
+    position: relative;
+    top: 46%;
+    width: 80%;
+    text-align: center;
+    margin-top: 30px;
+    margin: auto;
+}
+
+.searchSectionOverlay .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+    cursor: pointer;
+    color: white;
+}
+
+.searchSectionOverlay .closebtn:hover {
+    color: #ccc;
+}
+
+.searchSectionOverlay input[type=text] {
+    padding: 15px;
+    font-size: 17px;
+    border: none;
+    float: left;
+    width: 80%;
+    background: white;
+}
+
+.searchSectionOverlay input[type=text]:hover {
+    background: #f1f1f1;
+}
+
+.searchSectionOverlay button {
+    float: left;
+    width: 20%;
+    padding: 15px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.searchSectionOverlay button:hover {
+    background: #bbb;
 }

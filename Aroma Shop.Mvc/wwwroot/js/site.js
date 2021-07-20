@@ -1,4 +1,4 @@
-﻿String.prototype.toEnglishNumbers = function() {
+﻿String.prototype.toEnglishNumbers = function () {
     var find = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     var replace = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     var replaceString = this;
@@ -33,3 +33,10 @@ function ConvertNumberToPersion() {
     traverse(document.body);
 }
 
+$(".openBtn").click(function () {
+    $("#searchOverlay").css("display", "block");
+});
+
+$(".closebtn").click(function () {
+    $("#searchOverlay").css("display", "none");
+});

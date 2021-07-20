@@ -36,7 +36,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 products = _productService.GetProducts()
                     .Where(p => p.ProductName.Contains(Search)
                                 || p.Categories
-                                    .Contains(new Category() { CategoryName = Search }));
+                                    .Any(t=>t.CategoryName.Contains(Search)));
 
                 ViewBag.search = Search;
             }
@@ -216,7 +216,7 @@ namespace Aroma_Shop.Mvc.Controllers
         #region ShoppingCart
 
         [Authorize]
-        [HttpGet("/ShoppingCart")]
+        [HttpGet("/Shopping-Cart")]
         public async Task<IActionResult> ShoppingCart()
         {
             var loggedUserOpenOrder =
