@@ -85,6 +85,15 @@ namespace Aroma_Shop.Data.Repositories
 
             return discount;
         }
+        public Discount GetDiscountByCode(string discountCode)
+        {
+            var discount =
+                _context
+                    .Discounts
+                    .SingleOrDefault(p => p.DiscountCode == discountCode);
+
+            return discount;
+        }
         public void AddDiscount(Discount discount)
         {
             _context.Add(discount);
