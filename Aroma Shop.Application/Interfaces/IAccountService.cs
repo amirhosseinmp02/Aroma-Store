@@ -46,6 +46,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<CustomIdentityUser> GetLoggedUserWithDetails();
         Task<CustomIdentityUser> GetLoggedUserWithOrders();
         Task<Order> GetLoggedUserOpenOrder();
+        int GetLoggedUserOpenOrderCount();
         Task<string> GetLoggedUserRole();
     }
 }
