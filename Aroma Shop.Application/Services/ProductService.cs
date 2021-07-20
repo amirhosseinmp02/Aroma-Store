@@ -424,6 +424,18 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
+        public bool AddDiscountToCart(string discountCode)
+        {
+            try
+            {
+                
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public bool DeleteOrderDetailsById(int orderDetailsId)
         {
             try
