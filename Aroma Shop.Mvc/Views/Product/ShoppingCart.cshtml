@@ -83,7 +83,12 @@
                                     <td>
                                         <h5>@orderDetails.OrderDetailsTotalPrice</h5>
                                     </td>
-                                    <td class="text-center"><a class="h5 text-danger" href="#">×</a></td>
+                                    <td class="text-center">
+                                        <form asp-action="RemoveProductFormCart">
+                                            <input type="hidden" name="orderDetailsId" value="@orderDetails.OrderDetailsId" />
+                                            <input class="h5 text-danger remove-orderdetails-button" type="submit" value="×"/>
+                                        </form>
+                                    </td>
                                 </tr>
                             }
                         }

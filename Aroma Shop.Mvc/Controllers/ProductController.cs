@@ -272,9 +272,20 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RemoveProductFormCart(int orderDetailsId)
         {
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _productService
+                        .DeleteOrderDetailsById(orderDetailsId);
 
+                if (result)
+                    return RedirectToAction("ShoppingCart");
+            }
+
+            return NotFound();
         }
 
         #endregion

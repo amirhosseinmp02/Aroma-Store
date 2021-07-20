@@ -5106,3 +5106,8 @@ span.reset_variations:hover {
 .searchSectionOverlay button:hover {
     background: #bbb;
 }
+
+.remove-orderdetails-button {
+    background: transparent;
+    border: 0
+}
