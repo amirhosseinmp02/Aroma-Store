@@ -295,9 +295,12 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ApplyDiscountOnCart()
+        public IActionResult ApplyDiscountOnCart(string discountCode)
         {
+            if (ModelState.IsValid)
+            {
 
+            }
         }
 
         #endregion
