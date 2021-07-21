@@ -117,6 +117,11 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Update(discount);
         }
+        public void DeleteDiscount(Discount discount)
+        {
+            _context
+                .Remove(discount);
+        }
         public IEnumerable<Category> GetCategories()
         {
             var categories = _context.Categories
