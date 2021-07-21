@@ -86,7 +86,7 @@
                                     <td>
                                         <div class="product_count">
                                             <input type="hidden" value="@(orderDetails.IsOrderDetailsProductSimple?orderDetails.Product.ProductQuantityInStock:orderDetails.ProductVariation.ProductVariationQuantityInStock)" />
-                                            <input type="text" id="sst" value="@orderDetails.OrderDetailsQuantity" class="input-text qty">
+                                            <input type="text" id="sst" value="@orderDetails.OrderDetailsQuantity" class="input-text qty order-details-quantities">
                                             <button class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
                                             <button class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
                                         </div>
@@ -120,7 +120,11 @@
                             <td>
                             </td>
                             <td>
-                                <a class="button update-cart-button" href="#">به روزرسانی سبد</a>
+                                <form method="get" id="update-cart-form">
+                                    <select class="d-none" name="OrderDetailsQuantities">
+                                    </select>
+                                    <button type="button" class="button update-cart-button">به روزرسانی سبد</button>
+                                </form>
                             </td>
                         </tr>
                         <tr>
@@ -198,6 +202,16 @@
             else if (parseInt(thisValue) > maxQuantity) {
                 $(this).val(maxQuantity);
             }
+        });
+
+        $(".update-cart-button").click(function () {
+            var quantities = $(".order-details-quantities");
+
+            for (var i = 0; i < quantities.length; i++) {
+                $("select").append(new Option("", $(quantities[i]).val()));
+            }
+
+            $("#update-cart-form").submit();
         });
     </script>
 }

@@ -268,6 +268,18 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region UpdateCart
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateCart(IEnumerable<int> OrderDetailsQuantities)
+        {
+
+        }
+
+        #endregion
+
         #region RemoveProductFormCart
 
         [Authorize]
