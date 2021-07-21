@@ -796,9 +796,43 @@ namespace Aroma_Shop.Application.Services
 
             return loggedUserOpenOrder;
         }
-        public Task<CartCheckOutViewModel> GetLoggedUserCartCheckOut()
+        public async Task<CartCheckOutViewModel> GetLoggedUserCartCheckOut()
         {
-            throw new NotImplementedException();
+            var loggedUserId =
+                _accessor.HttpContext
+                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loggedUser =
+                await _userManager.Users
+                    .Include(p=>p.UserDetails)
+                    .Include(p => p.UserOrders)
+                    .ThenInclude(p => p.OrdersDetails)
+                    .ThenInclude(p => p.Product)
+                    .Include(p => p.UserOrders)
+                    .ThenInclude(p => p.OrdersDetails)
+                    .ThenInclude(p => p.ProductVariation)
+                    .Include(p => p.UserOrders)
+                    .ThenInclude(p => p.Discounts)
+                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
+
+            var loggedUserOpenOrder =
+                loggedUser
+                    .UserOrders
+                    .SingleOrDefault(p => !p.IsFinally);
+
+            var cartCheckOutViewModel = new CartCheckOutViewModel()
+            {
+                FirstName = loggedUser.UserDetails.FirstName,
+                LastName = loggedUser.UserDetails.LastName,
+                MobileNumber = loggedUser.MobileNumber,
+                UserProvince = loggedUser.UserDetails.UserProvince,
+                UserCity = loggedUser.UserDetails.UserCity,
+                UserAddress = loggedUser.UserDetails.UserAddress,
+                UserZipCode = loggedUser.UserDetails.UserZipCode,
+                Order = loggedUserOpenOrder
+            };
+
+            return cartCheckOutViewModel;
         }
         public async Task<int> GetLoggedUserOpenOrderCount()
         {
