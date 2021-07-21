@@ -273,16 +273,24 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCart(IEnumerable<int> orderDetailsQuantities)    
+        public async Task<IActionResult> UpdateCart(IEnumerable<int> orderDetailsQuantities)
         {
             if (ModelState.IsValid)
             {
+                var loggedUserOpenOrder =
+                    await _accountService
+                        .GetLoggedUserOpenOrder();
+
                 var result =
                     await _productService
-                        .UpdateCart(orderDetailsQuantities);
+                        .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
 
                 if (result)
-                    return RedirectToAction("ShoppingCart");
+                {
+                    ViewData["Message"] = "سبد خرید با موفقیت بروز شد";
+
+                    return View("ShoppingCart", loggedUserOpenOrder);
+                }
             }
 
             return NotFound();

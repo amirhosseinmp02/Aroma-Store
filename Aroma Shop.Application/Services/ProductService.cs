@@ -425,14 +425,10 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
-        public async Task<bool> UpdateCart(IEnumerable<int> orderDetailsQuantities)
+        public async Task<bool> UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities)
         {
             try
             {
-                var loggedUserOpenOrder =
-                    await _accountService
-                        .GetLoggedUserOpenOrder();
-
                 var isOrderDetailsQuantitiesContainsAnyUnder1Number =
                     orderDetailsQuantities.Any(p => p < 1);
 
