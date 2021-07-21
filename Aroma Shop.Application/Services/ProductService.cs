@@ -424,7 +424,7 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
-        public async Task<bool> AddDiscountToCart(string discountCode)
+        public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {
             try
             {
@@ -432,16 +432,17 @@ namespace Aroma_Shop.Application.Services
                     _productRepository
                         .GetDiscountByCode(discountCode);
 
-                if (discount == null)
+                if (discount == null || discount.IsTrash)
                     return false;
-
-                var loggedUserOpenOrder =
-                    await _accountService
-                        .GetLoggedUserOpenOrder();
 
                 loggedUserOpenOrder
                     .Discounts.Add(discount);
 
+                _productRepository.UpdateOrder(loggedUserOpenOrder);
+
+                _productRepository.Save();
+
+                return true;
             }
             catch (Exception error)
             {

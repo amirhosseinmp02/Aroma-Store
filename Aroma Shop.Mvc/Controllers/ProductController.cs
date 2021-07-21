@@ -36,7 +36,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 products = _productService.GetProducts()
                     .Where(p => p.ProductName.Contains(Search)
                                 || p.Categories
-                                    .Any(t=>t.CategoryName.Contains(Search)));
+                                    .Any(t => t.CategoryName.Contains(Search)));
 
                 ViewBag.search = Search;
             }
@@ -295,12 +295,26 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ApplyDiscountOnCart(string discountCode)
+        public async Task<IActionResult> ApplyDiscountOnCart(string discountCode)
         {
+            var loggedUserOpenOrder =
+                await _accountService
+                    .GetLoggedUserOpenOrder();
+
             if (ModelState.IsValid)
             {
+                var result =
+                    await _productService
+                        .AddDiscountToCart(loggedUserOpenOrder, discountCode);
 
+                if (result)
+                    ViewData["Message"] = "تخفیف با موفقیت اعمال شد";
+
+                else
+                    ViewData["Message"] = "کد تخفیف معتبر نیست";
             }
+
+            return View("ShoppingCart", loggedUserOpenOrder);
         }
 
         #endregion

@@ -27,6 +27,10 @@
 </section>
 <section class="cart_area">
     <div class="container">
+        @if (ViewData["Message"] != null)
+        {
+            <div class="alert rounded-0 alert-info text-left" role="alert">@ViewData["Message"]</div>
+        }
         <div class="cart_inner">
             <div class="table-responsive">
                 <table class="table">
@@ -49,8 +53,8 @@
                                         <div class="media">
                                             <div class="d-flex">
                                                 @{
-                                                    var productImagePath = 
-                                                        orderDetails.Product.Images.Any() ? 
+                                                    var productImagePath =
+                                                        orderDetails.Product.Images.Any() ?
                                                             $"/img/{orderDetails.Product.Images.FirstOrDefault().ImagePath}" :
                                                             Image.DefaultImagePath;
                                                 }
@@ -73,7 +77,7 @@
                                     <td>
                                         @{
                                             var orderDetailsPrice =
-                                                orderDetails.IsOrderDetailsProductSimple ? 
+                                                orderDetails.IsOrderDetailsProductSimple ?
                                                     orderDetails.Product.ProductPrice :
                                                     orderDetails.ProductVariation.ProductVariationPrice;
                                         }
@@ -81,9 +85,10 @@
                                     </td>
                                     <td>
                                         <div class="product_count">
-                                            <input type="text" name="qty" id="sst" maxlength="12" value="@orderDetails.OrderDetailsQuantity" title="Quantity:" class="input-text qty">
-                                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                            <input type="hidden" value="@(orderDetails.IsOrderDetailsProductSimple?orderDetails.Product.ProductQuantityInStock:orderDetails.ProductVariation.ProductVariationQuantityInStock)" />
+                                            <input type="text" id="sst" value="@orderDetails.OrderDetailsQuantity" class="input-text qty">
+                                            <button class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                            <button class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
                                         </div>
                                     </td>
                                     <td>
@@ -92,68 +97,107 @@
                                     <td class="text-center">
                                         <form asp-action="RemoveProductFormCart">
                                             <input type="hidden" name="orderDetailsId" value="@orderDetails.OrderDetailsId" />
-                                            <input class="h5 text-danger remove-orderdetails-button" type="submit" value="×"/>
+                                            <input class="h5 text-danger remove-orderdetails-button" type="submit" value="×" />
                                         </form>
                                     </td>
                                 </tr>
                             }
                         }
 
-                    <tr class="bottom_button">
-                        <td>
-                            <div id="cupon-section" class="cupon_text d-flex align-items-center">
-                                <input type="text" placeholder="کد تخفیف" dir="ltr">
-                                <a class="primary-btn" href="#">اعمال</a>
-
-                            </div>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-
-                            <a class="button update-cart-button" href="#">به روزرسانی سبد</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @{
-                                var totalOrderPrice =
-                                    @Model?.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice);
-                            }
-                            <h5>قیمت کل : <span class="ml-5">@totalOrderPrice تومان</span></h5>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr class="out_button_area">
-                        <td class="d-none-l">
-                            <div class="checkout_btn_inner d-flex align-items-center">
-                                <a class="gray_btn" href="#">ادامه خرید</a>
-                                <a class="primary-btn ml-2" href="#">اقدام به پرداخت</a>
-                            </div>
-                        </td>
-                        <td class="">
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
+                        <tr class="bottom_button">
+                            <td>
+                                <div id="cupon-section" class="cupon_text d-flex align-items-center">
+                                    <form asp-action="ApplyDiscountOnCart">
+                                        <input type="text" placeholder="کد تخفیف" dir="ltr" name="discountCode">
+                                        <button class="primary-btn border-0">اعمال</button>
+                                    </form>
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <a class="button update-cart-button" href="#">به روزرسانی سبد</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @if (Model?.Discounts != null)
+                                {
+                                    <table>
+                                        @foreach (var discount in Model.Discounts)
+                                        {
+                                            <tr><td class="border-0 pt-1 pb-1 pr-2">کد تخفیف @discount.DiscountCode :</td><td class="border-0 pt-1 pb-1 pl-2">-@discount.DiscountPrice تومان</td></tr>
+                                        }
+                                    </table>
+                                }
+                                @{
+                                    var totalOrderPrice =
+                                        @Model?.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                        @Model?.Discounts.Sum(p => p.DiscountPrice);
+                                }
+                                <h4 class="mt-4">قیمت کل : <span class="ml-5">@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</span></h4>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr class="out_button_area">
+                            <td class="d-none-l">
+                                <div class="checkout_btn_inner d-flex align-items-center">
+                                    <a class="gray_btn" asp-controller="Home" asp-action="Index">ادامه خرید</a>
+                                    <a class="primary-btn ml-2" href="#">اقدام به پرداخت</a>
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </section>
+
+@section Scripts
+{
+    <script>
+        $(".increase").click(function () {
+            if (parseInt($(this).prev().val()) < parseInt($(this).prev().prev().val())) {
+                $(this).prev().val(parseInt($(this).prev().val()) + 1);
+            }
+        });
+
+        $(".reduced").click(function () {
+            if (parseInt($(this).prev().prev().val()) > 1) {
+                $(this).prev().prev().val(parseInt($(this).prev().prev().val()) - 1);
+            }
+        });
+
+        $(".qty").change(function () {
+            var thisValue = $(this).val();
+            var maxQuantity = parseInt($(this).prev().val());
+
+            if (parseInt(thisValue) < 1 || isNaN(thisValue)) {
+                $(this).val(1);
+            }
+            else if (parseInt(thisValue) > maxQuantity) {
+                $(this).val(maxQuantity);
+            }
+        });
+    </script>
+}
