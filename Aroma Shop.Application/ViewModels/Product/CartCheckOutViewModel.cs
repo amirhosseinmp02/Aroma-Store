@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Aroma_Shop.Domain.Models.CustomValidationAttribute;
+using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Application.ViewModels.Product
 {
@@ -26,6 +27,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [StringLength(10, MinimumLength = 10, ErrorMessage = "کد پستی شامل 10 رقم می باشد")]
         [RegularExpression("([0-9]+)", ErrorMessage = "کد پستی تنها میتواند شامل عدد باشد")]
         public string UserZipCode { get; set; }
-        public string OrderNote { get; set; }   
+        public string OrderNote { get; set; }
+
+        public Order Order { get; set; }    
     }
 }

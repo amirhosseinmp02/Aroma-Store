@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Account;
+using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Application.ViewModels.User;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.ProductModels;
@@ -46,6 +47,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<CustomIdentityUser> GetLoggedUserWithDetails();
         Task<CustomIdentityUser> GetLoggedUserWithOrders();
         Task<Order> GetLoggedUserOpenOrder();
+        Task<CartCheckOutViewModel> GetLoggedUserCartCheckOut();
         Task<int> GetLoggedUserOpenOrderCount();
         Task<string> GetLoggedUserRole();
     }
