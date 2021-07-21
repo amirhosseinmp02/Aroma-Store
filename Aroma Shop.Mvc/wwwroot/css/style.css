@@ -3473,9 +3473,10 @@ a {
     }
 
         .order_box .creat_account label {
-            padding-left: 10px;
-            font-size: 12px;
-            color: #222
+            padding-right: 10px;
+            font-size: 13px;
+            color: #222;
+            vertical-align: middle;
         }
 
         .order_box .creat_account a {
@@ -3603,8 +3604,9 @@ a {
 
     .radion_btn img {
         position: absolute;
-        right: 40px;
-        top: 0px
+        left: 27px;
+        top: 2px;
+        width: 75px
     }
 
     .radion_btn label {
@@ -3632,7 +3634,7 @@ a {
         height: 14px;
         width: 14px;
         top: 5px;
-        left: 0px;
+        right: 0px;
         background: #fff;
         z-index: 5;
         transition: border .25s linear;

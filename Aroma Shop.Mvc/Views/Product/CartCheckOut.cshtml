@@ -25,7 +25,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h3>جزئیات صورتحساب</h3>
-                    <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                    <form class="row contact_form">
                         <div class="col-md-6 form-group p_star">
                             <label class="control-label">نام</label>
                             <input class="form-control" id="first" placeholder="نام خود را وارد نمایید" asp-for="FirstName">
@@ -108,7 +108,7 @@
                     <div class="order_box">
                         <h2 class="border-secondary">سفارش شما</h2>
                         <ul class="list">
-                            <li><a href="#"><h4>محصول <span>قیمت کل</span></h4></a></li>
+                            <li><a><h4>محصول <span>قیمت کل</span></h4></a></li>
                             @foreach (var orderDetails in Model.Order.OrdersDetails)
                             {
                                 var orderDetailsPrice =
@@ -137,8 +137,8 @@
                             }
                         </ul>
                         <ul class="list list_2 mt-3">
-                            <li class="d-none"><a href="#">Subtotal <span>$2160.00</span></a></li>
-                            <li><a href="#">حمل و نقل <span class="text-dark">پس کرایه</span></a></li>
+                            <li class="d-none"><a>Subtotal <span>$2160.00</span></a></li>
+                            <li><a>حمل و نقل <span class="text-dark">پس کرایه</span></a></li>
                             @{
                                 var totalOrderPrice =
                                     @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
@@ -149,33 +149,30 @@
                         <div class="payment_item">
                             <div class="radion_btn">
                                 <input type="radio" id="f-option5" name="selector">
-                                <label for="f-option5">Check payments</label>
+                                <label for="f-option5">پرداخت حضوری</label>
                                 <div class="check"></div>
                             </div>
                             <p>
-                                Please send a check to Store Name, Store Street, Store Town, Store State / County,
-                                Store Postcode.
+                                پرداخت حضوری در محل تحویل سفارش.
                             </p>
                         </div>
                         <div class="payment_item active">
                             <div class="radion_btn">
                                 <input type="radio" id="f-option6" name="selector">
-                                <label for="f-option6">Paypal </label>
-                                <img src="img/product/card.jpg" alt="">
+                                <label for="f-option6">درگاه پرداخت IDPay</label>
+                                <img src="https://static.idpay.ir/logo/logo.svg" alt="">
                                 <div class="check"></div>
                             </div>
                             <p>
-                                Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
-                                account.
+                                پرداخت امن به وسیله کلیه کارت های عضو شتاب.
                             </p>
                         </div>
                         <div class="creat_account">
                             <input type="checkbox" id="f-option4" name="selector">
-                            <label for="f-option4">I’ve read and accept the </label>
-                            <a href="#">terms &amp; conditions*</a>
+                            <label for="f-option4">من قوانین و مقررات را خواندم و آن ها را می پذیرم.</label>
                         </div>
                         <div class="text-center">
-                            <a class="button button-paypal" href="#">Proceed to Paypal</a>
+                            <a class="button button-paypal">ثبت سفارش</a>
                         </div>
                     </div>
                 </div>
