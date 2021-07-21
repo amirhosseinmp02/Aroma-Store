@@ -45,6 +45,15 @@ namespace Aroma_Shop.Data.Repositories
 
             return product;
         }
+        public IEnumerable<Order> GetOrders()
+        {
+            var orders =
+                _context
+                    .Orders
+                    .Include(p => p.Discounts);
+
+            return orders;
+        }
         public void AddOrder(Order order)
         {
             _context.Add(order);
