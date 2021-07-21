@@ -230,7 +230,8 @@ namespace Aroma_Shop.Mvc.Controllers
         #region AddProductToCart
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
         {
             var product =
