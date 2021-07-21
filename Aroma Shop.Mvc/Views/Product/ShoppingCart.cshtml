@@ -154,7 +154,9 @@
                                 <td class="d-none-l">
                                     <div class="checkout_btn_inner d-flex align-items-center">
                                         <a class="gray_btn" asp-controller="Home" asp-action="Index">ادامه خرید</a>
-                                        <a class="primary-btn ml-2" href="#">اقدام به پرداخت</a>
+                                        <form id="proceed-to-checkout-form" asp-action="ProceedToCheckout">
+                                            <button type="button" class="primary-btn ml-2 border-0 proceed-to-checkout-button">اقدام به پرداخت</button>
+                                        </form>
                                     </div>
                                 </td>
                                 <td>
@@ -212,9 +214,17 @@
                 $("<input type='hidden' name='orderDetailsQuantities' value='" + $(quantities[i]).val() + "' />").insertBefore(this);
             }
 
-
-
             $("#update-cart-form").submit();
+        });
+
+        $(".proceed-to-checkout-button").click(function () {
+            var quantities = $(".order-details-quantities");
+
+            for (var i = 0; i < quantities.length; i++) {
+                $("<input type='hidden' name='orderDetailsQuantities' value='" + $(quantities[i]).val() + "' />").insertBefore(this);
+            }
+
+            $("#proceed-to-checkout-form").submit();
         });
     </script>
 }

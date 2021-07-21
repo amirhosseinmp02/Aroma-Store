@@ -385,6 +385,9 @@ namespace Aroma_Shop.Mvc.Controllers
                 await _accountService
                     .GetLoggedUserCartCheckOut();
 
+            if (cartCheckOutViewModel.Order == null)
+                return NotFound();
+
             return View(cartCheckOutViewModel);
         }
 
