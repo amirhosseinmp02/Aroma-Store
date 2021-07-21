@@ -349,6 +349,21 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region CartCheckOut
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> CartCheckOut()
+        {
+            var cartCheckOutViewModel =
+                await _accountService
+                    .GetLoggedUserCartCheckOut();
+
+            return View(cartCheckOutViewModel);
+        }
+
+        #endregion
+
         #region AddProductToUserFavoriteProducts
 
         [Authorize]
