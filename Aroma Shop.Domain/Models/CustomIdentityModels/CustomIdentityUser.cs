@@ -18,7 +18,7 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
 
         [DataType(DataType.PhoneNumber, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
         [StringLength(11, MinimumLength = 11, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
-        public string? MobileNumber { get; set; }
+        public string MobileNumber { get; set; }
         [Required]
         public DateTime RegisterTime { get; set; }
 

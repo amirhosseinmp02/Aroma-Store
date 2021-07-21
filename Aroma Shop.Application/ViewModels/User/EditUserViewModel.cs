@@ -20,7 +20,7 @@ namespace Aroma_Shop.Application.ViewModels.User
         public string Email { get; set; }
         [DataType(DataType.PhoneNumber, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
         [StringLength(11, MinimumLength = 11, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
-        public string? MobileNumber { get; set; }
+        public string MobileNumber { get; set; }
         [DataType(DataType.Password)]
         [MaxLength(16, ErrorMessage = "حداکثر 16 کارکتر مجاز می باشد")]
         [MinLength(8, ErrorMessage = "حداقل 8 کارکتر مجاز می باشد")]

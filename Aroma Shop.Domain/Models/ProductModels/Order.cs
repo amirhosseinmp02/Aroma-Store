@@ -17,6 +17,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public int OrderId { get; set; }
         [Required]
         public bool IsFinally { get; set; }
+        public string OrderNote { get; set; }
         [Required]
         public DateTime CreateTime { get; set; }
 
