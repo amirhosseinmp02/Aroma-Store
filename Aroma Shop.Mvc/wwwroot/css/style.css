@@ -3372,7 +3372,7 @@ a {
 
     .order_box .list li a {
         font-size: 14px;
-        color: #777;
+        color: black;
         font-weight: normal;
         border-bottom: 1px solid #eeeeee;
         display: block;
@@ -3391,9 +3391,9 @@ a {
         .order_box .list li a .middle {
             float: none;
             width: 50px;
-            text-align: right;
+            text-align: center;
             display: inline-block;
-            margin-left: 30px;
+            margin-right: 30px;
             color: #222
         }
 
@@ -4854,7 +4854,7 @@ a {
     margin: auto
 }
 
-.list li:first-child span:nth-last-child(1) {
+.categories-list li:first-child span:nth-last-child(1) {
     display: none
 }
 
@@ -5036,6 +5036,11 @@ span.reset_variations:hover {
 
 .shopping-cart-variations {
     font-size: 13px
+}
+
+.cart-checkout-variations {
+    font-size: 13px;
+    margin-top: -7px;
 }
 
 .openBtn {

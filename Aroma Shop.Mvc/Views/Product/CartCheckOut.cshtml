@@ -21,13 +21,6 @@
 </section>
 <section class="checkout_area section-margin--small">
     <div class="container">
-        <div class="cupon_area">
-            <div class="check_title">
-                <h2>آیا کد تخفیف دارید ؟</h2>
-            </div>
-            <input type="text" placeholder="کد تخفیف را وارد نمایید">
-            <a class="button button-coupon" href="#">اعمال</a>
-        </div>
         <div class="billing_details">
             <div class="row">
                 <div class="col-lg-8">
@@ -113,17 +106,45 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="order_box">
-                        <h2>سفارش شما</h2>
+                        <h2 class="border-secondary">سفارش شما</h2>
                         <ul class="list">
                             <li><a href="#"><h4>محصول <span>قیمت کل</span></h4></a></li>
-                            <li><a href="#">Fresh Blackberry <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                            <li><a href="#">Fresh Tomatoes <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                            <li><a href="#">Fresh Brocoli <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
+                            @foreach (var orderDetails in Model.Order.OrdersDetails)
+                            {
+                                var orderDetailsPrice =
+                                    orderDetails.IsOrderDetailsProductSimple ?
+                                        orderDetails.Product.ProductPrice :
+                                        orderDetails.ProductVariation.ProductVariationPrice;
+                                <li>
+                                    <a>@orderDetails.Product.ProductName <span class="middle">x <span class="middle-number">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></span> <span class="last">@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</span></a>
+                                    @if (!orderDetails.IsOrderDetailsProductSimple)
+                                    {
+                                        <ul class="cart-checkout-variations">
+                                            @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                            {
+                                                <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                        <hr />
+                            @foreach (var discount in Model.Order.Discounts)
+                            {
+                                <li>
+                                    <a>کد تخفیف <span class="middle">@discount.DiscountCode</span> <span class="last">-@discount.DiscountPrice تومان</span></a>
+                                </li>
+                            }
                         </ul>
-                        <ul class="list list_2">
-                            <li><a href="#">Subtotal <span>$2160.00</span></a></li>
-                            <li><a href="#">Shipping <span>Flat rate: $50.00</span></a></li>
-                            <li><a href="#">Total <span>$2210.00</span></a></li>
+                        <ul class="list list_2 mt-3">
+                            <li class="d-none"><a href="#">Subtotal <span>$2160.00</span></a></li>
+                            <li><a href="#">حمل و نقل <span class="text-dark">پس کرایه</span></a></li>
+                            @{
+                                var totalOrderPrice =
+                                    @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                    @Model.Order.Discounts.Sum(p => p.DiscountPrice);
+                            }
+                            <li><a>قیمت کل <span>@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</span></a></li>
                         </ul>
                         <div class="payment_item">
                             <div class="radion_btn">
@@ -166,6 +187,13 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+
+        $(document).ready(function () {
+            var numbersElements = $(".middle-number");
+            for (var i = 0; i < numbersElements.length; i++) {
+                $(numbersElements[i]).text($(numbersElements[i]).text().toEnglishNumbers());
+            }
+        });
 
         //Provinces And Cities
 
