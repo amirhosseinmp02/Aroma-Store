@@ -93,8 +93,10 @@ namespace Aroma_Shop.Data.Repositories
         public Discount GetDiscount(int discountId)
         {
             var discount =
-                _context.Discounts
-                    .Find(discountId);
+                _context
+                    .Discounts
+                    .Include(p => p.Orders)
+                    .SingleOrDefault(p => p.DiscountId == discountId);
 
             return discount;
         }

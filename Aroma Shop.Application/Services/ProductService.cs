@@ -572,7 +572,19 @@ namespace Aroma_Shop.Application.Services
                 if (discount == null)
                     return false;
 
+                var orders =
+                    _productRepository
+                        .GetOrders();
+
+                discount
+                    .Orders
+                    .Where(p => !p.IsFinally)
+                    .Select(p => discount.Orders.Remove(p));
+
                 discount.IsTrash = true;
+
+                _productRepository
+                    .UpdateDiscount(discount);
 
                 _productRepository.Save();
 
