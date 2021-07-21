@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Account;
+using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Application.ViewModels.User;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
@@ -794,6 +795,10 @@ namespace Aroma_Shop.Application.Services
                     .SingleOrDefault(p => !p.IsFinally);
 
             return loggedUserOpenOrder;
+        }
+        public Task<CartCheckOutViewModel> GetLoggedUserCartCheckOut()
+        {
+            throw new NotImplementedException();
         }
         public async Task<int> GetLoggedUserOpenOrderCount()
         {
