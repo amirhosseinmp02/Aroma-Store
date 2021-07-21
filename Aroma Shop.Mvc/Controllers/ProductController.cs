@@ -273,7 +273,7 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCart(IEnumerable<int> OrderDetailsQuantities)
+        public async Task<IActionResult> UpdateCart(IEnumerable<int> orderDetailsQuantities)    
         {
 
         }
