@@ -275,7 +275,17 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCart(IEnumerable<int> orderDetailsQuantities)    
         {
+            if (ModelState.IsValid)
+            {
+                var result =
+                    await _productService
+                        .UpdateCart(orderDetailsQuantities);
 
+                if (result)
+                    return RedirectToAction("ShoppingCart");
+            }
+
+            return NotFound();
         }
 
         #endregion

@@ -247,7 +247,7 @@ namespace Aroma_Shop.Application.Services
 
                 if (productVariationId == -1)
                 {
-                    if (product.ProductQuantityInStock < requestedQuantity)
+                    if (product.ProductQuantityInStock < requestedQuantity || 1 > requestedQuantity)
                         return AddProductToCartResult.Failed;
                 }
                 else
@@ -257,7 +257,8 @@ namespace Aroma_Shop.Application.Services
                             .SingleOrDefault(p => p.ProductVariationId == productVariationId);
 
                     if (requestedVariation == null
-                        || requestedVariation.ProductVariationQuantityInStock < requestedQuantity)
+                        || requestedVariation.ProductVariationQuantityInStock < requestedQuantity
+                        || 1 > requestedQuantity)
                         return AddProductToCartResult.Failed;
                 }
 
@@ -424,9 +425,76 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
-        public Task<bool> UpdateCart(IEnumerable<int> orderDetailsQuantities)
+        public async Task<bool> UpdateCart(IEnumerable<int> orderDetailsQuantities)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUserOpenOrder =
+                    await _accountService
+                        .GetLoggedUserOpenOrder();
+
+                var isOrderDetailsQuantitiesContainsAnyUnder1Number =
+                    orderDetailsQuantities.Any(p => p < 1);
+
+                if (isOrderDetailsQuantitiesContainsAnyUnder1Number)
+                    return false;
+
+                for (var i=0;i<loggedUserOpenOrder.OrdersDetails.Count;i++)
+                {
+                    var currentOrderDetails =
+                        loggedUserOpenOrder
+                            .OrdersDetails
+                            .ElementAtOrDefault(i);
+
+                    var orderDetailsQuantity =
+                        currentOrderDetails
+                            .IsOrderDetailsProductSimple ? 
+                            currentOrderDetails
+                                .Product
+                                .ProductQuantityInStock : 
+                            currentOrderDetails
+                                .ProductVariation
+                                .ProductVariationQuantityInStock;
+
+                    if (orderDetailsQuantity < orderDetailsQuantities.ElementAtOrDefault(i))
+                        return false;
+
+                    currentOrderDetails
+                            .OrderDetailsQuantity =
+                        orderDetailsQuantities
+                            .ElementAtOrDefault(i);
+
+                    var totalCurrentOrderDetailsPrice =
+                        currentOrderDetails
+                            .IsOrderDetailsProductSimple
+                            ? currentOrderDetails
+                                  .OrderDetailsQuantity *
+                              currentOrderDetails
+                                  .Product
+                                  .ProductPrice
+                            : currentOrderDetails
+                                  .OrderDetailsQuantity *
+                              currentOrderDetails
+                                  .ProductVariation
+                                  .ProductVariationPrice;
+
+                    currentOrderDetails
+                        .OrderDetailsTotalPrice = 
+                        totalCurrentOrderDetailsPrice;
+
+                    _productRepository
+                        .UpdateOrderDetails(currentOrderDetails);
+                }
+
+                _productRepository.Save();
+
+                return true;
+            }
+            catch (Exception error) 
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
         public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {

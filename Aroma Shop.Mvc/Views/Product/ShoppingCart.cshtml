@@ -27,25 +27,25 @@
 </section>
 <section class="cart_area">
     <div class="container">
-        @if (ViewData["Message"] != null)
+        @if (Model.OrdersDetails.Any())
         {
-            <div class="alert rounded-0 alert-info text-left" role="alert">@ViewData["Message"]</div>
-        }
-        <div class="cart_inner">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">محصول</th>
-                            <th scope="col">قیمت</th>
-                            <th scope="col">تعداد</th>
-                            <th scope="col">جمع قیمت</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model != null)
-                        {
+            if (ViewData["Message"] != null)
+            {
+                <div class="alert rounded-0 alert-info text-left" role="alert">@ViewData["Message"]</div>
+            }
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">محصول</th>
+                                <th scope="col">قیمت</th>
+                                <th scope="col">تعداد</th>
+                                <th scope="col">جمع قیمت</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             @foreach (var orderDetails in Model.OrdersDetails)
                             {
                                 <tr>
@@ -102,78 +102,79 @@
                                     </td>
                                 </tr>
                             }
-                        }
-
-                        <tr class="bottom_button">
-                            <td>
-                                <div id="cupon-section" class="cupon_text d-flex align-items-center">
-                                    <form asp-action="ApplyDiscountOnCart">
-                                        <input type="text" placeholder="کد تخفیف" dir="ltr" name="discountCode">
-                                        <button class="primary-btn border-0">اعمال</button>
+                            <tr class="bottom_button">
+                                <td>
+                                    <div id="cupon-section" class="cupon_text d-flex align-items-center">
+                                        <form asp-action="ApplyDiscountOnCart">
+                                            <input type="text" placeholder="کد تخفیف" dir="ltr" name="discountCode">
+                                            <button class="primary-btn border-0">اعمال</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <form id="update-cart-form" asp-action="UpdateCart">
+                                        <button type="button" class="button update-cart-button">به روزرسانی سبد</button>
                                     </form>
-                                </div>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                <form method="get" id="update-cart-form">
-                                    <select class="d-none" name="orderDetailsQuantities">
-                                    </select>
-                                    <button type="button" class="button update-cart-button">به روزرسانی سبد</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @if (Model?.Discounts != null)
-                                {
-                                    <table>
-                                        @foreach (var discount in Model.Discounts)
-                                        {
-                                            <tr><td class="border-0 pt-1 pb-1 pr-2">کد تخفیف @discount.DiscountCode :</td><td class="border-0 pt-1 pb-1 pl-2">-@discount.DiscountPrice تومان</td></tr>
-                                        }
-                                    </table>
-                                }
-                                @{
-                                    var totalOrderPrice =
-                                        @Model?.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                                        @Model?.Discounts.Sum(p => p.DiscountPrice);
-                                }
-                                <h4 class="mt-4">قیمت کل : <span class="ml-5">@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</span></h4>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr class="out_button_area">
-                            <td class="d-none-l">
-                                <div class="checkout_btn_inner d-flex align-items-center">
-                                    <a class="gray_btn" asp-controller="Home" asp-action="Index">ادامه خرید</a>
-                                    <a class="primary-btn ml-2" href="#">اقدام به پرداخت</a>
-                                </div>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @if (Model?.Discounts != null)
+                                    {
+                                        <table>
+                                            @foreach (var discount in Model.Discounts)
+                                            {
+                                                <tr><td class="border-0 pt-1 pb-1 pr-2">کد تخفیف @discount.DiscountCode :</td><td class="border-0 pt-1 pb-1 pl-2">-@discount.DiscountPrice تومان</td></tr>
+                                            }
+                                        </table>
+                                    }
+                                    @{
+                                        var totalOrderPrice =
+                                            @Model?.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                            @Model?.Discounts.Sum(p => p.DiscountPrice);
+                                    }
+                                    <h4 class="mt-4">قیمت کل : <span class="ml-5">@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</span></h4>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr class="out_button_area">
+                                <td class="d-none-l">
+                                    <div class="checkout_btn_inner d-flex align-items-center">
+                                        <a class="gray_btn" asp-controller="Home" asp-action="Index">ادامه خرید</a>
+                                        <a class="primary-btn ml-2" href="#">اقدام به پرداخت</a>
+                                    </div>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="alert rounded-0 alert-danger text-left" role="alert">سبد خرید شما خالیست</div>
+        }
     </div>
 </section>
 
@@ -208,8 +209,10 @@
             var quantities = $(".order-details-quantities");
 
             for (var i = 0; i < quantities.length; i++) {
-                $("select").append(new Option("", $(quantities[i]).val()));
+                $("<input type='hidden' name='orderDetailsQuantities' value='" + $(quantities[i]).val() + "' />").insertBefore(this);
             }
+
+
 
             $("#update-cart-form").submit();
         });
