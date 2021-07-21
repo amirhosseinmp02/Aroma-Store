@@ -349,6 +349,32 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region ProceedToCheckout
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProceedToCheckout(IEnumerable<int> orderDetailsQuantities)
+        {
+            if (ModelState.IsValid)
+            {
+                var loggedUserOpenOrder =
+                    await _accountService
+                        .GetLoggedUserOpenOrder();
+
+                var result =
+                    await _productService
+                        .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
+
+                if (result)
+                    return RedirectToAction("CartCheckOut");
+            }
+
+            return NotFound();
+        }
+
+        #endregion
+
         #region CartCheckOut
 
         [Authorize]
