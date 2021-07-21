@@ -424,6 +424,10 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
+        public Task<bool> UpdateCart(IEnumerable<int> orderDetailsQuantities)
+        {
+            throw new NotImplementedException();
+        }
         public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {
             try
