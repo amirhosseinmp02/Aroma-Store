@@ -439,7 +439,7 @@ namespace Aroma_Shop.Application.Services
                 if (isOrderDetailsQuantitiesContainsAnyUnder1Number)
                     return false;
 
-                for (var i=0;i<loggedUserOpenOrder.OrdersDetails.Count;i++)
+                for (var i = 0; i < loggedUserOpenOrder.OrdersDetails.Count; i++)
                 {
                     var currentOrderDetails =
                         loggedUserOpenOrder
@@ -448,10 +448,10 @@ namespace Aroma_Shop.Application.Services
 
                     var orderDetailsQuantity =
                         currentOrderDetails
-                            .IsOrderDetailsProductSimple ? 
+                            .IsOrderDetailsProductSimple ?
                             currentOrderDetails
                                 .Product
-                                .ProductQuantityInStock : 
+                                .ProductQuantityInStock :
                             currentOrderDetails
                                 .ProductVariation
                                 .ProductVariationQuantityInStock;
@@ -479,7 +479,7 @@ namespace Aroma_Shop.Application.Services
                                   .ProductVariationPrice;
 
                     currentOrderDetails
-                        .OrderDetailsTotalPrice = 
+                        .OrderDetailsTotalPrice =
                         totalCurrentOrderDetailsPrice;
 
                     _productRepository
@@ -490,7 +490,7 @@ namespace Aroma_Shop.Application.Services
 
                 return true;
             }
-            catch (Exception error) 
+            catch (Exception error)
             {
                 Console.WriteLine(error.Message);
                 return false;
@@ -572,19 +572,33 @@ namespace Aroma_Shop.Application.Services
                 if (discount == null)
                     return false;
 
-                var orders =
+                var doesDiscountHasAnyFinishedOrder =
+                    discount
+                        .Orders
+                        .Any(p => p.IsFinally);
+
+                if (!doesDiscountHasAnyFinishedOrder)
+                {
                     _productRepository
-                        .GetOrders();
+                        .DeleteDiscount(discount);
+                }
+                else
+                {
+                    var unfinishedDiscountOrders =
+                        discount.Orders.Where(p => !p.IsFinally);
 
-                discount
-                    .Orders
-                    .Where(p => !p.IsFinally)
-                    .Select(p => discount.Orders.Remove(p));
+                    for (int i = unfinishedDiscountOrders.Count() - 1; i >= 0; i--)
+                    {
+                        discount
+                            .Orders
+                            .Remove(unfinishedDiscountOrders.ElementAtOrDefault(i));
+                    }
 
-                discount.IsTrash = true;
+                    discount.IsTrash = true;
 
-                _productRepository
-                    .UpdateDiscount(discount);
+                    _productRepository
+                        .UpdateDiscount(discount);
+                }
 
                 _productRepository.Save();
 
