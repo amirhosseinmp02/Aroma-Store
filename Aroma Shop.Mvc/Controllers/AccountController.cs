@@ -143,6 +143,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 LastName = loggedUser.UserDetails.LastName,
                 UserName = loggedUser.UserName,
                 Email = loggedUser.Email,
+                MobileNumber = loggedUser.MobileNumber,
                 UserProvince = loggedUser.UserDetails.UserProvince,
                 UserCity = loggedUser.UserDetails.UserCity,
                 UserAddress = loggedUser.UserDetails.UserAddress,

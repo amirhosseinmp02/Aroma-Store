@@ -5,7 +5,7 @@
     ViewData["Title"] = $"کاربر {Model.User.UserName}";
 }
 <div class="h2 mt-3">
-    <h1 class="h2 d-inline">کاربر</h1>
+    <h1 class="h2 d-inline">کاربر @Model.User.UserName</h1>
     <a class="btn btn-warning float-left" asp-controller="User" asp-action="Index">بازگشت</a>
 </div>
 <hr>
@@ -18,6 +18,11 @@
         <div class="form-group">
             <label class="control-label">ایمیل</label>
             <input class="form-control" asp-for="User.Email" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label">شماره موبایل</label>
+            <input class="form-control" asp-for="User.MobileNumber" readonly>
+            <span class="text-danger field-validation-valid"></span>
         </div>
         <div class="form-group">
             <label class="control-label">مقام</label>

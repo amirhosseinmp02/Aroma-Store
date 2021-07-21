@@ -441,6 +441,7 @@ namespace Aroma_Shop.Application.Services
             }
 
             loggedUser.UserName = editAccountViewModel.UserName;
+            loggedUser.MobileNumber = editAccountViewModel.MobileNumber;
             loggedUser.UserDetails.FirstName = editAccountViewModel.FirstName;
             loggedUser.UserDetails.LastName = editAccountViewModel.LastName;
             loggedUser.UserDetails.UserProvince = editAccountViewModel.UserProvince;
@@ -549,6 +550,7 @@ namespace Aroma_Shop.Application.Services
                     UserId = requestedUser.Id,
                     UserName = requestedUser.UserName,
                     Email = requestedUser.Email,
+                    MobileNumber = requestedUser.MobileNumber,
                     Roles = roles,
                     UserRoleName = GetUserRole(requestedUser),
                     FirstName = requestedUser.UserDetails.FirstName,
@@ -642,6 +644,7 @@ namespace Aroma_Shop.Application.Services
             {
                 UserName = userViewModel.UserName,
                 Email = userViewModel.Email,
+                MobileNumber = userViewModel.MobileNumber,
                 EmailConfirmed = true,
                 RegisterTime = DateTime.Now,
                 UserDetails = userDetail
@@ -682,6 +685,8 @@ namespace Aroma_Shop.Application.Services
 
             user.UserName = userViewModel.UserName;
             user.Email = userViewModel.Email;
+            user.MobileNumber = userViewModel.MobileNumber;
+
             user.UserDetails.FirstName = userViewModel.FirstName;
             user.UserDetails.LastName = userViewModel.LastName;
             user.UserDetails.UserProvince = userViewModel.UserProvince;

@@ -21,6 +21,9 @@ namespace Aroma_Shop.Application.ViewModels.Account
         [MaxLength(75, ErrorMessage = "حداکثر 75 کارکتر مجاز می باشد")]
         public string UserName { get; set; }
         public string Email { get; set; }
+        [DataType(DataType.PhoneNumber, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
+        public string? MobileNumber { get; set; }
 
         [MaxLength(250, ErrorMessage = "حداکثر 250 کارکتر مجاز می باشد")]
         public string UserProvince { get; set; }

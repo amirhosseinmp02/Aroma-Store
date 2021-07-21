@@ -16,14 +16,17 @@ namespace Aroma_Shop.Domain.Models.CustomIdentityModels
             FavoriteProducts = new List<Product>();
         }
 
+        [DataType(DataType.PhoneNumber, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "شماره موبایل وارد شده معتبر نیست")]
+        public string? MobileNumber { get; set; }
         [Required]
-        public DateTime RegisterTime { get; set; }  
+        public DateTime RegisterTime { get; set; }
 
         //Navigations Properties
 
         public UserDetails UserDetails { get; set; }
         public ICollection<Comment> UserComments { get; set; }
         public ICollection<Product> FavoriteProducts { get; set; }
-        public ICollection<Order> UserOrders { get; set; }      
+        public ICollection<Order> UserOrders { get; set; }
     }
 }
