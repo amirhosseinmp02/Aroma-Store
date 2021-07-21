@@ -3133,7 +3133,7 @@ a {
     font-weight: normal;
     background: #f1f6f7;
     line-height: 40px !important;
-    padding-left: 30px;
+    padding-right: 30px;
     margin-bottom: 0px
 }
 
@@ -3312,7 +3312,7 @@ a {
         }
 
     .billing_details .contact_form .form-group label {
-        color: #999999
+        color: black
     }
 
     .billing_details .contact_form .form-group textarea {
@@ -3385,7 +3385,7 @@ a {
         }
 
         .order_box .list li a span {
-            float: right
+            float: left
         }
 
         .order_box .list li a .middle {

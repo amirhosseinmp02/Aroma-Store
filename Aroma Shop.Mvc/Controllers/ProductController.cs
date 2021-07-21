@@ -378,7 +378,7 @@ namespace Aroma_Shop.Mvc.Controllers
         #region CartCheckOut
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("/Cart-CheckOut")]
         public async Task<IActionResult> CartCheckOut()
         {
             var cartCheckOutViewModel =
