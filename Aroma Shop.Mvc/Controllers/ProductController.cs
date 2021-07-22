@@ -402,7 +402,7 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 var result =
                     await _productService
-                        .PaymentProcess();
+                        .PaymentProcess(model);
 
                 if (!string.IsNullOrEmpty(result))
                     return Redirect(result);

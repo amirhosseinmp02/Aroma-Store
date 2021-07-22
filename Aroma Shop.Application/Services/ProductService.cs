@@ -498,13 +498,18 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<string> PaymentProcess()
+        public async Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel)
         {
             try
             {
-                var loggedUserOpenOrder =
+                var loggedUser =
                     await _accountService
-                        .GetLoggedUserOpenOrder();
+                        .GetLoggedUserWithOrders();
+
+                var loggedUserOpenOrder =
+                    loggedUser
+                        .UserOrders
+                        .SingleOrDefault(p => !p.IsFinally);
 
                 if (loggedUserOpenOrder == null)
                     return null;
@@ -527,8 +532,57 @@ namespace Aroma_Shop.Application.Services
                 if (result.Status != 100)
                     return null;
 
+                loggedUser
+                        .UserDetails
+                        .FirstName =
+                    cartCheckOutViewModel
+                        .FirstName;
+
+                loggedUser
+                        .UserDetails
+                        .LastName =
+                    cartCheckOutViewModel
+                        .LastName;
+
+                loggedUser
+                        .MobileNumber =
+                    cartCheckOutViewModel
+                        .MobileNumber;
+
+                loggedUser
+                        .UserDetails
+                        .UserProvince =
+                    cartCheckOutViewModel
+                        .UserProvince;
+
+                loggedUser
+                        .UserDetails
+                        .UserCity =
+                    cartCheckOutViewModel
+                        .UserCity;
+
+                loggedUser
+                        .UserDetails
+                        .UserAddress =
+                    cartCheckOutViewModel
+                        .UserAddress;
+
+                loggedUser
+                        .UserDetails
+                        .UserZipCode =
+                    cartCheckOutViewModel
+                        .UserZipCode;
+
+                _accountService
+                        .ed
+
+                loggedUserOpenOrder
+                        .OrderNote =
+                    cartCheckOutViewModel
+                        .OrderNote;
+
                 var redirectUrl =
-                    $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}";
+                $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}";
 
                 return redirectUrl;
             }
@@ -538,9 +592,48 @@ namespace Aroma_Shop.Application.Services
                 return null;
             }
         }
-        public Task<bool> OrderConfirmation()
+        public async Task<bool> OrderConfirmation()
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_accessor.HttpContext.Request.Query["Status"] != "" &&
+                    _accessor.HttpContext.Request.Query["Status"].ToString().ToLower() == "ok" &&
+                    _accessor.HttpContext.Request.Query["Authority"] != "")
+                {
+                    var loggedUserOpenOrder =
+                        await _accountService
+                            .GetLoggedUserOpenOrder();
+
+                    if (loggedUserOpenOrder == null)
+                        return false;
+
+                    var totalOrderPrice =
+                        loggedUserOpenOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                        loggedUserOpenOrder.Discounts.Sum(p => p.DiscountPrice);
+
+                    string authority =
+                        _accessor.HttpContext.Request.Query["Authority"].ToString();
+
+                    var payment = new Payment(totalOrderPrice);
+
+                    var result =
+                        await payment.Verification(authority);
+
+                    if (result.Status == 100)
+                    {
+
+
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
         public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {
