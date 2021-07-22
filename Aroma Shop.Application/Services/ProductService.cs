@@ -492,6 +492,10 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public Task<bool> PaymentProcess()
+        {
+            throw new NotImplementedException();
+        }
         public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {
             try
