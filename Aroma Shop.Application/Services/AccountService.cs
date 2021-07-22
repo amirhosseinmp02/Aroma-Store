@@ -737,6 +737,21 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
+        public async Task<bool> UpdateLoggedUserForCheckOut(CustomIdentityUser loggedUser)
+        {
+            try
+            {
+                await _userManager
+                    .UpdateAsync(loggedUser);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public async Task<CustomIdentityUser> GetLoggedUser()
         {
             var loggedUserId =
