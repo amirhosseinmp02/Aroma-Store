@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
@@ -399,7 +400,7 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                throw new Exception();
+
             }
 
             var cartCheckOutViewModel =
