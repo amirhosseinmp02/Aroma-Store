@@ -400,7 +400,14 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                var result =
+                    await _productService
+                        .PaymentProcess();
 
+                if (!string.IsNullOrEmpty(result))
+                    return Redirect(result);
+
+                return NotFound();
             }
 
             var cartCheckOutViewModel =

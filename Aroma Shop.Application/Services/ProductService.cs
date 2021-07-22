@@ -13,6 +13,8 @@ using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
+using ZarinpalSandbox;
 
 namespace Aroma_Shop.Application.Services
 {
@@ -22,13 +24,17 @@ namespace Aroma_Shop.Application.Services
         private readonly IFileService _fileService;
         private readonly IMediaService _mediaService;
         private readonly IAccountService _accountService;
+        private readonly LinkGenerator _linkGenerator;
+        private readonly IHttpContextAccessor _accessor;
 
-        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService, IAccountService accountService)
+        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService, IAccountService accountService, LinkGenerator linkGenerator, IHttpContextAccessor accessor)
         {
             _productRepository = productRepository;
             _fileService = fileService;
             _mediaService = mediaService;
             _accountService = accountService;
+            _linkGenerator = linkGenerator;
+            _accessor = accessor;
         }
         public Product GetProduct(int productId)
         {
@@ -492,9 +498,45 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public Task<bool> PaymentProcess()
+        public async Task<string> PaymentProcess()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUserOpenOrder =
+                    await _accountService
+                        .GetLoggedUserOpenOrder();
+
+                if (loggedUserOpenOrder == null)
+                    return null;
+
+                var totalOrderPrice =
+                    loggedUserOpenOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                    loggedUserOpenOrder.Discounts.Sum(p => p.DiscountPrice);
+
+                var payment = new Payment(totalOrderPrice);
+
+                var callBackUrl =
+                    _linkGenerator
+                        .GetUriByAction(_accessor.HttpContext
+                            , "OrderConfirmation",
+                            "Product");
+
+                var result =
+                    await payment.PaymentRequest("پرداخت صورتحساب", callBackUrl);
+
+                if (result.Status != 100)
+                    return null;
+
+                var redirectUrl =
+                    $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}";
+
+                return redirectUrl;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return null;
+            }
         }
         public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {
