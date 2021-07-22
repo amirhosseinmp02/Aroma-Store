@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
@@ -326,6 +327,7 @@ namespace Aroma_Shop.Application.Services
                         {
                             IsFinally = false,
                             CreateTime = DateTime.Now,
+                            OrderStatus = OrderStatus.AwaitingPayment.GetDescription(),
                             OwnerUser = loggedUser
                         };
 
@@ -398,6 +400,7 @@ namespace Aroma_Shop.Application.Services
                         {
                             IsFinally = false,
                             CreateTime = DateTime.Now,
+                            OrderStatus = OrderStatus.AwaitingPayment.GetDescription(),
                             OwnerUser = loggedUser
                         };
 
@@ -735,6 +738,12 @@ namespace Aroma_Shop.Application.Services
                         loggedUserOpenOrder
                             .OrderRegistrationDate=
                             DateTime.Now;
+
+                        loggedUserOpenOrder
+                                .OrderStatus =
+                            OrderStatus
+                                .AwaitingReview
+                                .GetDescription();
 
                         loggedUserOpenOrder
                             .IsFinally = true;
