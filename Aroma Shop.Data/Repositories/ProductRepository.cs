@@ -62,6 +62,16 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Update(order);
         }
+        public IEnumerable<OrderDetails> GetUnFinishedOrdersDetails()
+        {
+            var unFinishedOrdersDetails =
+                _context
+                    .OrdersDetails
+                    .Include(p => p.Order)
+                    .Where(p => !p.Order.IsFinally);
+
+            return unFinishedOrdersDetails;
+        }
         public OrderDetails GetOrderDetails(int orderDetailsId)
         {
             var orderDetails =
