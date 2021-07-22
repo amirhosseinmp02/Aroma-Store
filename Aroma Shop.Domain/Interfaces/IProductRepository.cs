@@ -15,6 +15,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void UpdateProduct(Product product);
         void DeleteProduct(Product product);
         void AddProductVariation(ProductVariation productVariation);
+        void UpdateProductVariation(ProductVariation productVariation);
         void DeleteProductVariation(ProductVariation productVariation);
         IEnumerable<Order> GetOrders();
         void AddOrder(Order order);

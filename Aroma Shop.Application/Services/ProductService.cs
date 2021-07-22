@@ -529,62 +529,69 @@ namespace Aroma_Shop.Application.Services
                 var result =
                     await payment.PaymentRequest("پرداخت صورتحساب", callBackUrl);
 
-                if (result.Status != 100)
-                    return null;
+                if (result.Status == 100)
+                {
+                    loggedUser
+                            .UserDetails
+                            .FirstName =
+                        cartCheckOutViewModel
+                            .FirstName;
 
-                loggedUser
-                        .UserDetails
-                        .FirstName =
-                    cartCheckOutViewModel
-                        .FirstName;
+                    loggedUser
+                            .UserDetails
+                            .LastName =
+                        cartCheckOutViewModel
+                            .LastName;
 
-                loggedUser
-                        .UserDetails
-                        .LastName =
-                    cartCheckOutViewModel
-                        .LastName;
+                    loggedUser
+                            .MobileNumber =
+                        cartCheckOutViewModel
+                            .MobileNumber;
 
-                loggedUser
-                        .MobileNumber =
-                    cartCheckOutViewModel
-                        .MobileNumber;
+                    loggedUser
+                            .UserDetails
+                            .UserProvince =
+                        cartCheckOutViewModel
+                            .UserProvince;
 
-                loggedUser
-                        .UserDetails
-                        .UserProvince =
-                    cartCheckOutViewModel
-                        .UserProvince;
+                    loggedUser
+                            .UserDetails
+                            .UserCity =
+                        cartCheckOutViewModel
+                            .UserCity;
 
-                loggedUser
-                        .UserDetails
-                        .UserCity =
-                    cartCheckOutViewModel
-                        .UserCity;
+                    loggedUser
+                            .UserDetails
+                            .UserAddress =
+                        cartCheckOutViewModel
+                            .UserAddress;
 
-                loggedUser
-                        .UserDetails
-                        .UserAddress =
-                    cartCheckOutViewModel
-                        .UserAddress;
+                    loggedUser
+                            .UserDetails
+                            .UserZipCode =
+                        cartCheckOutViewModel
+                            .UserZipCode;
 
-                loggedUser
-                        .UserDetails
-                        .UserZipCode =
-                    cartCheckOutViewModel
-                        .UserZipCode;
+                    await _accountService
+                        .UpdateLoggedUserForCheckOut(loggedUser);
 
-                _accountService
-                        .ed
+                    loggedUserOpenOrder
+                            .OrderNote =
+                        cartCheckOutViewModel
+                            .OrderNote;
 
-                loggedUserOpenOrder
-                        .OrderNote =
-                    cartCheckOutViewModel
-                        .OrderNote;
+                    _productRepository
+                        .UpdateOrder(loggedUserOpenOrder);
 
-                var redirectUrl =
-                $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}";
+                    _productRepository.Save();
 
-                return redirectUrl;
+                    var redirectUrl =
+                        $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}";
+
+                    return redirectUrl;
+                }
+
+                return null;
             }
             catch (Exception error)
             {
@@ -621,7 +628,42 @@ namespace Aroma_Shop.Application.Services
 
                     if (result.Status == 100)
                     {
+                        foreach (var ordersDetail in loggedUserOpenOrder.OrdersDetails)
+                        {
+                            if (ordersDetail.IsOrderDetailsProductSimple)
+                            {
+                                var finalProductQuantity =
+                                    ordersDetail
+                                        .Product
+                                        .ProductQuantityInStock -
+                                    ordersDetail.OrderDetailsQuantity;
 
+                                finalProductQuantity =
+                                    finalProductQuantity > 0 ? finalProductQuantity : 0;
+
+                                ordersDetail
+                                    .Product
+                                    .ProductQuantityInStock = finalProductQuantity;
+
+                                _productRepository
+                                    .UpdateProduct(ordersDetail.Product);
+                            }
+                            else
+                            {
+                                var finalProductQuantity =
+                                    ordersDetail
+                                        .ProductVariation
+                                        .ProductVariationQuantityInStock -
+                                    ordersDetail.OrderDetailsQuantity;
+
+                                finalProductQuantity =
+                                    finalProductQuantity > 0 ? finalProductQuantity : 0;
+
+                                ordersDetail
+                                    .ProductVariation
+                                    .ProductVariationQuantityInStock = finalProductQuantity;
+                            }
+                        }
 
                         return true;
                     }
