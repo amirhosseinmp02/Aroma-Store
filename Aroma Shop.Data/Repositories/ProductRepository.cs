@@ -67,8 +67,9 @@ namespace Aroma_Shop.Data.Repositories
             var unFinishedOrdersDetails =
                 _context
                     .OrdersDetails
-                    .Include(p => p.Order)
-                    .Where(p => !p.Order.IsFinally);
+                    .Where(p => !p.Order.IsFinally)
+                    .Include(p=>p.Product)
+                    .Include(p=>p.ProductVariation);
 
             return unFinishedOrdersDetails;
         }

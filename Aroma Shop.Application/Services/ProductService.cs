@@ -628,6 +628,10 @@ namespace Aroma_Shop.Application.Services
 
                     if (result.Status == 100)
                     {
+                        var unFinishedOrdersDetails =
+                            _productRepository
+                                .GetUnFinishedOrdersDetails();
+
                         foreach (var ordersDetail in loggedUserOpenOrder.OrdersDetails)
                         {
                             if (ordersDetail.IsOrderDetailsProductSimple)
@@ -643,10 +647,32 @@ namespace Aroma_Shop.Application.Services
 
                                 ordersDetail
                                     .Product
-                                    .ProductQuantityInStock = finalProductQuantity;
+                                    .ProductQuantityInStock = 
+                                    finalProductQuantity;
 
                                 _productRepository
                                     .UpdateProduct(ordersDetail.Product);
+
+                                var simpleUnFinishedOrdersDetails =
+                                    unFinishedOrdersDetails
+                                        .Where(p => p.IsOrderDetailsProductSimple);
+
+                                foreach (var unFinishedOrdersDetail in simpleUnFinishedOrdersDetails)
+                                {
+                                    if (unFinishedOrdersDetail
+                                            .Product.ProductId ==
+                                        ordersDetail.Product.ProductId &&
+                                        unFinishedOrdersDetail.OrderDetailsQuantity >
+                                        finalProductQuantity)
+                                    {
+                                        unFinishedOrdersDetail
+                                                .OrderDetailsQuantity
+                                            = finalProductQuantity;
+
+                                        _productRepository
+                                            .UpdateOrderDetails(unFinishedOrdersDetail);
+                                    }
+                                }
                             }
                             else
                             {
@@ -661,9 +687,39 @@ namespace Aroma_Shop.Application.Services
 
                                 ordersDetail
                                     .ProductVariation
-                                    .ProductVariationQuantityInStock = finalProductQuantity;
+                                    .ProductVariationQuantityInStock = 
+                                    finalProductQuantity;
+
+                                _productRepository
+                                    .UpdateProductVariation(ordersDetail.ProductVariation);
+
+                                var diverseUnFinishedOrdersDetails =
+                                    unFinishedOrdersDetails
+                                        .Where(p => !p.IsOrderDetailsProductSimple);
+
+                                foreach (var unFinishedOrdersDetail in diverseUnFinishedOrdersDetails)
+                                {
+                                    if (unFinishedOrdersDetail
+                                            .ProductVariation.ProductVariationId ==
+                                        ordersDetail.ProductVariation.ProductVariationId &&
+                                        unFinishedOrdersDetail.OrderDetailsQuantity >
+                                        finalProductQuantity)
+                                    {
+                                        unFinishedOrdersDetail
+                                                .OrderDetailsQuantity
+                                            = finalProductQuantity;
+
+                                        _productRepository
+                                            .UpdateOrderDetails(unFinishedOrdersDetail);
+                                    }
+                                }
                             }
                         }
+
+                        
+
+                        _productRepository
+                            .Save();
 
                         return true;
                     }

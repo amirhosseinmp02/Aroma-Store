@@ -423,9 +423,16 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [HttpGet("/Order-Confirmation")]
         [Authorize]
-        public IActionResult OrderConfirmation()
+        public async Task<IActionResult> OrderConfirmation()
         {
-            return View();
+            var result =
+                await _productService
+                    .OrderConfirmation();
+
+            if (result)
+                return Content("okeye");
+
+            return NotFound();
         }
 
         #endregion
