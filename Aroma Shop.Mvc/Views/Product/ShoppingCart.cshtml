@@ -27,7 +27,7 @@
 </section>
 <section class="cart_area">
     <div class="container">
-        @if (Model.OrdersDetails.Any())
+        @if (Model != null && Model.OrdersDetails.Any())
         {
             if (ViewData["Message"] != null)
             {

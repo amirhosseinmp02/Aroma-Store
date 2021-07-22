@@ -32,6 +32,8 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [Required(ErrorMessage = "کد پستی خود را وارد نمایید")]
         public string UserZipCode { get; set; }
         public string OrderNote { get; set; }
+        public string PaymentMethod { get; set; }
+        public bool AcceptTheRules { get; set; }    
 
         public Order Order { get; set; }    
     }

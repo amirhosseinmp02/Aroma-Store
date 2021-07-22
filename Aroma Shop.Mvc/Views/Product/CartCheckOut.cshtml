@@ -22,161 +22,163 @@
 <section class="checkout_area section-margin--small">
     <div class="container">
         <div class="billing_details">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h3>جزئیات صورتحساب</h3>
-                    <form class="row contact_form">
-                        <div class="col-md-6 form-group p_star">
-                            <label class="control-label">نام</label>
-                            <input class="form-control" id="first" placeholder="نام خود را وارد نمایید" asp-for="FirstName">
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-6 form-group p_star">
-                            <label class="control-label">نام خانوادگی</label>
-                            <input class="form-control" id="last" placeholder="نام خانوادگی خود را وارد نمایید" asp-for="LastName">
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label class="control-label">شماره موبایل</label>
-                            <input class="form-control" id="company" placeholder="شماره موبایل خود را وارد نمایید" asp-for="MobileNumber">
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <label class="control-label">استان</label>
-                            <input type="hidden" id="province" asp-for="UserProvince">
-                            <select id="provinces" class="form-control" onchange="AddCitiesByProvince(this.value)">
-                                <option value="">انتخاب کنید</option>
-                                <option value="  ,آذرشهر ,اسکو ,اهر ,بستان‌آباد ,بناب ,تبریز ,جلفا ,چاراویماق ,سراب ,شبستر ,عجب‌شیر ,کلیبر ,مراغه ,مرند ,ملکان ,میانه ,ورزقان ,هریس ,هشترود">آذربایجان شرقی</option>
-                                <option value="  ,ارومیه ,اشنویه ,بوکان ,پیرانشهر ,تکاب ,چالدران ,خوی ,سردشت ,سلماس ,شاهین‌دژ ,ماکو ,مهاباد ,میاندوآب ,نقده">آذربایجان غربی</option>
-                                <option value="  ,اردبیل ,بیله‌سوار ,پارس‌آباد ,خلخال ,کوثر ,گِرمی ,مِشگین‌شهر ,نَمین ,نیر">اردبیل</option>
-                                <option value="  ,آران و بیدگل ,اردستان ,اصفهان ,برخوار و میمه ,تیران و کرون ,چادگان ,خمینی‌شهر ,خوانسار ,سمیرم ,شهرضا ,سمیرم سفلی ,فریدن ,فریدون‌شهر ,فلاورجان ,کاشان ,گلپایگان ,لنجان ,مبارکه ,نائین ,نجف‌آباد ,نطنز">اصفهان</option>
-                                <option value="  ,آبدانان ,ایلام ,ایوان ,دره‌شهر ,دهلران ,شیروان و چرداول ,مهران">ایلام</option>
-                                <option value="  ,بوشهر ,تنگستان ,جم ,دشتستان ,دشتی,دیر ,دیلم ,کنگان ,گناوه">بوشهر</option>
-                                <option value="  ,اسلام‌شهر ,پاکدشت ,تهران ,دماوند ,رباط‌کریم ,ری ,ساوجبلاغ ,شمیرانات ,شهریار ,فیروزکوه ,کرج ,نظرآباد ,ورامین">تهران</option>
-                                <option value="  ,اردل ,بروجن ,شهرکرد ,فارسان ,کوهرنگ ,لردگان">چهارمحال و بختیاری</option>
-                                <option value="  ,بیرجند ,درمیان ,سرایان ,سربیشه ,فردوس ,قائنات,نهبندان">خراسان جنوبی</option>
-                                <option value="  ,بردسکن ,تایباد ,تربت جام ,تربت حیدریه ,چناران ,خلیل‌آباد ,خواف ,درگز ,رشتخوار ,سبزوار ,سرخس ,فریمان ,قوچان ,کاشمر ,کلات ,گناباد ,مشهد ,مه ولات ,نیشابور">خراسان رضوی</option>
-                                <option value="  ,اسفراین ,بجنورد ,جاجرم ,شیروان ,فاروج ,مانه و سملقان">خراسان شمالی</option>
-                                <option value="  ,آبادان ,امیدیه ,اندیمشک ,اهواز ,ایذه ,باغ‌ملک ,بندر ماهشهر ,بهبهان ,خرمشهر ,دزفول ,دشت آزادگان ,رامشیر ,رامهرمز ,شادگان ,شوش ,شوشتر ,گتوند ,لالی ,مسجد سلیمان,هندیجان ">خوزستان</option>
-                                <option value="  ,ابهر ,ایجرود ,خدابنده ,خرمدره ,زنجان ,طارم ,ماه‌نشان">زنجان</option>
-                                <option value="  ,دامغان ,سمنان ,شاهرود ,گرمسار ,مهدی‌شهر">سمنان</option>
-                                <option value="  ,ایرانشهر ,چابهار ,خاش ,دلگان ,زابل ,زاهدان ,زهک ,سراوان ,سرباز ,کنارک ,نیک‌شهر">سیستان و بلوچستان</option>
-                                <option value="  ,آباده ,ارسنجان ,استهبان ,اقلید ,بوانات ,پاسارگاد ,جهرم ,خرم‌بید ,خنج ,داراب ,زرین‌دشت ,سپیدان ,شیراز ,فراشبند ,فسا ,فیروزآباد ,قیر و کارزین ,کازرون ,لارستان ,لامِرد ,مرودشت ,ممسنی ,مهر ,نی‌ریز">فارس</option>
-                                <option value="  ,آبیک ,البرز ,بوئین‌زهرا ,تاکستان ,قزوین">قزوین</option>
-                                <option value="  ,قم">قم</option>
-                                <option value="  ,بانه ,بیجار ,دیواندره ,سروآباد ,سقز ,سنندج ,قروه ,کامیاران ,مریوان">کردستان</option>
-                                <option value="  ,بافت ,بردسیر ,بم ,جیرفت ,راور ,رفسنجان ,رودبار جنوب ,زرند ,سیرجان ,شهر بابک ,عنبرآباد ,قلعه گنج ,کرمان ,کوهبنان ,کهنوج ,منوجان">کرمان</option>
-                                <option value="  ,اسلام‌آباد غرب ,پاوه ,ثلاث باباجانی ,جوانرود ,دالاهو ,روانسر ,سرپل ذهاب ,سنقر ,صحنه ,قصر شیرین ,کرمانشاه ,کنگاور ,گیلان غرب ,هرسین">کرمانشاه</option>
-                                <option value="  ,بویراحمد ,بهمئی ,دنا ,کهگیلویه ,گچساران">کهگیلویه و بویراحمد</option>
-                                <option value="  ,آزادشهر ,آق‌قلا ,بندر گز ,ترکمن ,رامیان ,علی‌آباد ,کردکوی ,کلاله ,گرگان ,گنبد کاووس ,مراوه‌تپه ,مینودشت">گلستان</option>
-                                <option value="  ,آستارا ,آستانه اشرفیه ,اَملَش ,بندر انزلی ,رشت ,رضوانشهر ,رودبار ,رودسر ,سیاهکل ,شَفت ,صومعه‌سرا ,طوالش ,فومَن ,لاهیجان ,لنگرود ,ماسال">گیلان</option>
-                                <option value="  ,ازنا ,الیگودرز ,بروجرد ,پل‌دختر ,خرم‌آباد ,دورود ,دلفان ,سلسله ,کوهدشت">لرستان</option>
-                                <option value="  ,آمل ,بابل ,بابلسر ,بهشهر ,تنکابن ,جویبار ,چالوس ,رامسر ,ساری ,سوادکوه ,قائم‌شهر ,گلوگاه ,محمودآباد ,نکا ,نور ,نوشهر">مازندران</option>
-                                <option value="  ,آشتیان ,اراک ,تفرش ,خمین ,دلیجان ,زرندیه ,ساوه ,شازند ,کمیجان ,محلات">مرکزی</option>
-                                <option value="  ,ابوموسی ,بستک ,بندر عباس ,بندر لنگه ,جاسک ,حاجی‌آباد ,شهرستان خمیر ,رودان  ,قشم ,گاوبندی ,میناب">هرمزگان</option>
-                                <option value="  ,اسدآباد ,بهار ,تویسرکان ,رزن ,کبودرآهنگ ,ملایر ,نهاوند ,همدان">همدان</option>
-                                <option value="  ,ابرکوه ,اردکان ,بافق ,تفت ,خاتم ,صدوق ,طبس ,مهریز ,مِیبُد ,یزد">یزد</option>
-                            </select>
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <label class="control-label">شهر</label>
-                            <input type="hidden" id="city" asp-for="UserCity">
-                            <select id="cities" class="form-control">
-                                <option>لطفا استان خود را انتخاب کنید</option>
-                            </select>
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label class="control-label">کد پستی</label>
-                            <input type="number" class="form-control" id="zip" placeholder="کد پستی خود را وارد نمایید" asp-for="UserZipCode">
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label class="control-label">آدرس</label>
-                            <textarea class="form-control" rows="5" placeholder="آدرس خود را وارد نمایید" asp-for="UserAddress"></textarea>
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label class="control-label">یادداشت سفارش</label>
-                            <textarea class="form-control" rows="5" placeholder="یادداشت های مربوط به سفارش شما ، به عنوان مثال یادداشت های ویژه در مورد نوع تحویل" asp-for="OrderNote"></textarea>
-                            <span class="text-danger field-validation-valid"></span>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <div class="order_box">
-                        <h2 class="border-secondary">سفارش شما</h2>
-                        <ul class="list">
-                            <li><a><h4>محصول <span>قیمت کل</span></h4></a></li>
-                            @foreach (var orderDetails in Model.Order.OrdersDetails)
-                            {
-                                var orderDetailsPrice =
-                                    orderDetails.IsOrderDetailsProductSimple ?
-                                        orderDetails.Product.ProductPrice :
-                                        orderDetails.ProductVariation.ProductVariationPrice;
-                                <li>
-                                    <a>@orderDetails.Product.ProductName <span class="middle">x <span class="middle-number">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></span> <span class="last">@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</span></a>
-                                    @if (!orderDetails.IsOrderDetailsProductSimple)
-                                    {
-                                        <ul class="cart-checkout-variations">
-                                            @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
-                                            {
-                                                <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
-                                            }
-                                        </ul>
-                                    }
-                                </li>
-                            }
-                        <hr />
-                            @foreach (var discount in Model.Order.Discounts)
-                            {
-                                <li>
-                                    <a>کد تخفیف <span class="middle">@discount.DiscountCode</span> <span class="last">-@discount.DiscountPrice تومان</span></a>
-                                </li>
-                            }
-                        </ul>
-                        <ul class="list list_2 mt-3">
-                            <li class="d-none"><a>Subtotal <span>$2160.00</span></a></li>
-                            <li><a>حمل و نقل <span class="text-dark">پس کرایه</span></a></li>
-                            @{
-                                var totalOrderPrice =
-                                    @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                                    @Model.Order.Discounts.Sum(p => p.DiscountPrice);
-                            }
-                            <li><a>قیمت کل <span>@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</span></a></li>
-                        </ul>
-                        <div class="payment_item">
-                            <div class="radion_btn">
-                                <input type="radio" id="f-option5" name="selector">
-                                <label for="f-option5">پرداخت حضوری</label>
-                                <div class="check"></div>
+            <form asp-action="CartCheckOut">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h3>جزئیات صورتحساب</h3>
+                        <div class="row contact_form">
+                            <div class="col-md-6 form-group p_star">
+                                <label class="control-label">نام</label>
+                                <input class="form-control" id="first" placeholder="نام خود را وارد نمایید" asp-for="FirstName">
+                                <span class="text-danger field-validation-valid"></span>
                             </div>
-                            <p>
-                                پرداخت حضوری در محل تحویل سفارش.
-                            </p>
-                        </div>
-                        <div class="payment_item active">
-                            <div class="radion_btn">
-                                <input type="radio" id="f-option6" name="selector">
-                                <label for="f-option6">درگاه پرداخت IDPay</label>
-                                <img src="https://static.idpay.ir/logo/logo.svg" alt="">
-                                <div class="check"></div>
+                            <div class="col-md-6 form-group p_star">
+                                <label class="control-label">نام خانوادگی</label>
+                                <input class="form-control" id="last" placeholder="نام خانوادگی خود را وارد نمایید" asp-for="LastName">
+                                <span class="text-danger field-validation-valid"></span>
                             </div>
-                            <p>
-                                پرداخت امن به وسیله کلیه کارت های عضو شتاب.
-                            </p>
+                            <div class="col-md-12 form-group">
+                                <label class="control-label">شماره موبایل</label>
+                                <input class="form-control" id="company" placeholder="شماره موبایل خود را وارد نمایید" asp-for="MobileNumber">
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <label class="control-label">استان</label>
+                                <input type="hidden" id="province" asp-for="UserProvince">
+                                <select id="provinces" class="form-control" onchange="AddCitiesByProvince(this.value)">
+                                    <option value="">انتخاب کنید</option>
+                                    <option value="  ,آذرشهر ,اسکو ,اهر ,بستان‌آباد ,بناب ,تبریز ,جلفا ,چاراویماق ,سراب ,شبستر ,عجب‌شیر ,کلیبر ,مراغه ,مرند ,ملکان ,میانه ,ورزقان ,هریس ,هشترود">آذربایجان شرقی</option>
+                                    <option value="  ,ارومیه ,اشنویه ,بوکان ,پیرانشهر ,تکاب ,چالدران ,خوی ,سردشت ,سلماس ,شاهین‌دژ ,ماکو ,مهاباد ,میاندوآب ,نقده">آذربایجان غربی</option>
+                                    <option value="  ,اردبیل ,بیله‌سوار ,پارس‌آباد ,خلخال ,کوثر ,گِرمی ,مِشگین‌شهر ,نَمین ,نیر">اردبیل</option>
+                                    <option value="  ,آران و بیدگل ,اردستان ,اصفهان ,برخوار و میمه ,تیران و کرون ,چادگان ,خمینی‌شهر ,خوانسار ,سمیرم ,شهرضا ,سمیرم سفلی ,فریدن ,فریدون‌شهر ,فلاورجان ,کاشان ,گلپایگان ,لنجان ,مبارکه ,نائین ,نجف‌آباد ,نطنز">اصفهان</option>
+                                    <option value="  ,آبدانان ,ایلام ,ایوان ,دره‌شهر ,دهلران ,شیروان و چرداول ,مهران">ایلام</option>
+                                    <option value="  ,بوشهر ,تنگستان ,جم ,دشتستان ,دشتی,دیر ,دیلم ,کنگان ,گناوه">بوشهر</option>
+                                    <option value="  ,اسلام‌شهر ,پاکدشت ,تهران ,دماوند ,رباط‌کریم ,ری ,ساوجبلاغ ,شمیرانات ,شهریار ,فیروزکوه ,کرج ,نظرآباد ,ورامین">تهران</option>
+                                    <option value="  ,اردل ,بروجن ,شهرکرد ,فارسان ,کوهرنگ ,لردگان">چهارمحال و بختیاری</option>
+                                    <option value="  ,بیرجند ,درمیان ,سرایان ,سربیشه ,فردوس ,قائنات,نهبندان">خراسان جنوبی</option>
+                                    <option value="  ,بردسکن ,تایباد ,تربت جام ,تربت حیدریه ,چناران ,خلیل‌آباد ,خواف ,درگز ,رشتخوار ,سبزوار ,سرخس ,فریمان ,قوچان ,کاشمر ,کلات ,گناباد ,مشهد ,مه ولات ,نیشابور">خراسان رضوی</option>
+                                    <option value="  ,اسفراین ,بجنورد ,جاجرم ,شیروان ,فاروج ,مانه و سملقان">خراسان شمالی</option>
+                                    <option value="  ,آبادان ,امیدیه ,اندیمشک ,اهواز ,ایذه ,باغ‌ملک ,بندر ماهشهر ,بهبهان ,خرمشهر ,دزفول ,دشت آزادگان ,رامشیر ,رامهرمز ,شادگان ,شوش ,شوشتر ,گتوند ,لالی ,مسجد سلیمان,هندیجان ">خوزستان</option>
+                                    <option value="  ,ابهر ,ایجرود ,خدابنده ,خرمدره ,زنجان ,طارم ,ماه‌نشان">زنجان</option>
+                                    <option value="  ,دامغان ,سمنان ,شاهرود ,گرمسار ,مهدی‌شهر">سمنان</option>
+                                    <option value="  ,ایرانشهر ,چابهار ,خاش ,دلگان ,زابل ,زاهدان ,زهک ,سراوان ,سرباز ,کنارک ,نیک‌شهر">سیستان و بلوچستان</option>
+                                    <option value="  ,آباده ,ارسنجان ,استهبان ,اقلید ,بوانات ,پاسارگاد ,جهرم ,خرم‌بید ,خنج ,داراب ,زرین‌دشت ,سپیدان ,شیراز ,فراشبند ,فسا ,فیروزآباد ,قیر و کارزین ,کازرون ,لارستان ,لامِرد ,مرودشت ,ممسنی ,مهر ,نی‌ریز">فارس</option>
+                                    <option value="  ,آبیک ,البرز ,بوئین‌زهرا ,تاکستان ,قزوین">قزوین</option>
+                                    <option value="  ,قم">قم</option>
+                                    <option value="  ,بانه ,بیجار ,دیواندره ,سروآباد ,سقز ,سنندج ,قروه ,کامیاران ,مریوان">کردستان</option>
+                                    <option value="  ,بافت ,بردسیر ,بم ,جیرفت ,راور ,رفسنجان ,رودبار جنوب ,زرند ,سیرجان ,شهر بابک ,عنبرآباد ,قلعه گنج ,کرمان ,کوهبنان ,کهنوج ,منوجان">کرمان</option>
+                                    <option value="  ,اسلام‌آباد غرب ,پاوه ,ثلاث باباجانی ,جوانرود ,دالاهو ,روانسر ,سرپل ذهاب ,سنقر ,صحنه ,قصر شیرین ,کرمانشاه ,کنگاور ,گیلان غرب ,هرسین">کرمانشاه</option>
+                                    <option value="  ,بویراحمد ,بهمئی ,دنا ,کهگیلویه ,گچساران">کهگیلویه و بویراحمد</option>
+                                    <option value="  ,آزادشهر ,آق‌قلا ,بندر گز ,ترکمن ,رامیان ,علی‌آباد ,کردکوی ,کلاله ,گرگان ,گنبد کاووس ,مراوه‌تپه ,مینودشت">گلستان</option>
+                                    <option value="  ,آستارا ,آستانه اشرفیه ,اَملَش ,بندر انزلی ,رشت ,رضوانشهر ,رودبار ,رودسر ,سیاهکل ,شَفت ,صومعه‌سرا ,طوالش ,فومَن ,لاهیجان ,لنگرود ,ماسال">گیلان</option>
+                                    <option value="  ,ازنا ,الیگودرز ,بروجرد ,پل‌دختر ,خرم‌آباد ,دورود ,دلفان ,سلسله ,کوهدشت">لرستان</option>
+                                    <option value="  ,آمل ,بابل ,بابلسر ,بهشهر ,تنکابن ,جویبار ,چالوس ,رامسر ,ساری ,سوادکوه ,قائم‌شهر ,گلوگاه ,محمودآباد ,نکا ,نور ,نوشهر">مازندران</option>
+                                    <option value="  ,آشتیان ,اراک ,تفرش ,خمین ,دلیجان ,زرندیه ,ساوه ,شازند ,کمیجان ,محلات">مرکزی</option>
+                                    <option value="  ,ابوموسی ,بستک ,بندر عباس ,بندر لنگه ,جاسک ,حاجی‌آباد ,شهرستان خمیر ,رودان  ,قشم ,گاوبندی ,میناب">هرمزگان</option>
+                                    <option value="  ,اسدآباد ,بهار ,تویسرکان ,رزن ,کبودرآهنگ ,ملایر ,نهاوند ,همدان">همدان</option>
+                                    <option value="  ,ابرکوه ,اردکان ,بافق ,تفت ,خاتم ,صدوق ,طبس ,مهریز ,مِیبُد ,یزد">یزد</option>
+                                </select>
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <label class="control-label">شهر</label>
+                                <input type="hidden" id="city" asp-for="UserCity">
+                                <select id="cities" class="form-control">
+                                    <option>لطفا استان خود را انتخاب کنید</option>
+                                </select>
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label class="control-label">کد پستی</label>
+                                <input type="number" class="form-control" id="zip" placeholder="کد پستی خود را وارد نمایید" asp-for="UserZipCode">
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label class="control-label">آدرس</label>
+                                <textarea class="form-control" rows="5" placeholder="آدرس خود را وارد نمایید" asp-for="UserAddress"></textarea>
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label class="control-label">یادداشت سفارش</label>
+                                <textarea class="form-control" rows="5" placeholder="یادداشت های مربوط به سفارش شما ، به عنوان مثال یادداشت های ویژه در مورد نوع تحویل" asp-for="OrderNote"></textarea>
+                                <span class="text-danger field-validation-valid"></span>
+                            </div>
                         </div>
-                        <div class="creat_account">
-                            <input type="checkbox" id="f-option4" name="selector">
-                            <label for="f-option4">من قوانین و مقررات را خواندم و آن ها را می پذیرم.</label>
-                        </div>
-                        <div class="text-center">
-                            <a href="#" class="button button-paypal">ثبت سفارش</a>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="order_box">
+                            <h2 class="border-secondary">سفارش شما</h2>
+                            <ul class="list">
+                                <li><a><h4>محصول <span>قیمت کل</span></h4></a></li>
+                                @foreach (var orderDetails in Model.Order.OrdersDetails)
+                                {
+                                    var orderDetailsPrice =
+                                        orderDetails.IsOrderDetailsProductSimple ?
+                                            orderDetails.Product.ProductPrice :
+                                            orderDetails.ProductVariation.ProductVariationPrice;
+                                    <li>
+                                        <a>@orderDetails.Product.ProductName <span class="middle">x <span class="middle-number">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></span> <span class="last">@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</span></a>
+                                        @if (!orderDetails.IsOrderDetailsProductSimple)
+                                        {
+                                            <ul class="cart-checkout-variations">
+                                                @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                                {
+                                                    <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </li>
+                                }
+                                <hr />
+                                @foreach (var discount in Model.Order.Discounts)
+                                {
+                                    <li>
+                                        <a>کد تخفیف <span class="middle">@discount.DiscountCode</span> <span class="last">-@discount.DiscountPrice تومان</span></a>
+                                    </li>
+                                }
+                            </ul>
+                            <ul class="list list_2 mt-3">
+                                <li class="d-none"><a>Subtotal <span>$2160.00</span></a></li>
+                                <li><a>حمل و نقل <span class="text-dark">پس کرایه</span></a></li>
+                                @{
+                                    var totalOrderPrice =
+                                        @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                        @Model.Order.Discounts.Sum(p => p.DiscountPrice);
+                                }
+                                <li><a>قیمت کل <span>@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</span></a></li>
+                            </ul>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option5" asp-for="PaymentMethod" value="InPersonPayment">
+                                    <label for="f-option5">پرداخت حضوری</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>
+                                    پرداخت حضوری در محل تحویل سفارش.
+                                </p>
+                            </div>
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option6" asp-for="PaymentMethod" value="OnlinePayment">
+                                    <label for="f-option6">درگاه پرداخت IDPay</label>
+                                    <img src="https://static.idpay.ir/logo/logo.svg" alt="">
+                                    <div class="check"></div>
+                                </div>
+                                <p>
+                                    پرداخت امن به وسیله کلیه کارت های عضو شتاب.
+                                </p>
+                            </div>
+                            <div class="creat_account">
+                                <input type="checkbox" id="f-option4" asp-for="AcceptTheRules">
+                                <label for="f-option4">من قوانین و مقررات را خواندم و آن ها را می پذیرم.</label>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="button button-paypal">ثبت سفارش</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </section>

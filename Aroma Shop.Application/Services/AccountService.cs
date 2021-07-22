@@ -845,11 +845,13 @@ namespace Aroma_Shop.Application.Services
                     .ThenInclude(p => p.OrdersDetails)
                     .SingleOrDefaultAsync(p => p.Id == loggedUserId);
 
-            var loggedUserOpenOrderCount =
+            var loggedUserOpenOrder =
                 loggedUser
                     .UserOrders
-                    .SingleOrDefault(p => !p.IsFinally)
-                    .OrdersDetails.Count;
+                    .SingleOrDefault(p => !p.IsFinally);
+
+            var loggedUserOpenOrderCount =
+                loggedUserOpenOrder?.OrdersDetails.Count ?? 0;
 
             return loggedUserOpenOrderCount;
         }

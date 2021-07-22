@@ -5118,3 +5118,11 @@ span.reset_variations:hover {
     background: transparent;
     border: 0
 }
+
+.button-paypal {
+    color: white;
+}
+
+.button-paypal:hover {
+    color: black;
+}
