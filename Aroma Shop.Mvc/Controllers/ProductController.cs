@@ -412,6 +412,17 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region OrderConfirmation
+
+        [HttpGet("/Order-Confirmation")]
+        [Authorize]
+        public IActionResult OrderConfirmation()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region AddProductToUserFavoriteProducts
 
         [Authorize]
