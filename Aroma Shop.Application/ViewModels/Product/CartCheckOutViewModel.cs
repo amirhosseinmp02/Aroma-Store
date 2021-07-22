@@ -32,9 +32,14 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [Required(ErrorMessage = "کد پستی خود را وارد نمایید")]
         public string UserZipCode { get; set; }
         public string OrderNote { get; set; }
-        public string PaymentMethod { get; set; }
-        public bool AcceptTheRules { get; set; }    
 
-        public Order Order { get; set; }    
+        [Required(ErrorMessage = "لطفا روش پرداخت را انتخاب نمایید")]
+        public string PaymentMethod { get; set; }
+        [Compare(nameof(HiddenAcceptTheRules), ErrorMessage = "برای خرید ، باید قوانین و مقررات را بپذیرید")]
+        public bool AcceptTheRules { get; set; }
+
+        public bool HiddenAcceptTheRules { get; set; } = true;
+
+        public Order Order { get; set; }
     }
 }

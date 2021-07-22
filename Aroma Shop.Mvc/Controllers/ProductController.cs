@@ -392,6 +392,23 @@ namespace Aroma_Shop.Mvc.Controllers
             return View(cartCheckOutViewModel);
         }
 
+        [Authorize]
+        [HttpPost("/Cart-CheckOut")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CartCheckOut(CartCheckOutViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                throw new Exception();
+            }
+
+            var cartCheckOutViewModel =
+                await _accountService
+                    .GetLoggedUserCartCheckOut();
+
+            return View(cartCheckOutViewModel);
+        }
+
         #endregion
 
         #region AddProductToUserFavoriteProducts

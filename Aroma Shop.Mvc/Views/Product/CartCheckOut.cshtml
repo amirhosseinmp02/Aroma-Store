@@ -169,7 +169,7 @@
                                 </p>
                             </div>
                             <div class="creat_account">
-                                <input type="checkbox" id="f-option4" asp-for="AcceptTheRules">
+                                <input class="accept-rules-checkbox" type="checkbox" id="f-option4" asp-for="AcceptTheRules">
                                 <label for="f-option4">من قوانین و مقررات را خواندم و آن ها را می پذیرم.</label>
                             </div>
                             <div class="text-center">
@@ -178,6 +178,8 @@
                         </div>
                     </div>
                 </div>
+                <input type="checkbox" asp-for="HiddenAcceptTheRules" class="d-none" />
+                <div class="alert alert-danger text-left current-password-label mt-3" role="alert" asp-validation-summary="All"></div>
             </form>
         </div>
     </div>
