@@ -665,12 +665,20 @@ namespace Aroma_Shop.Application.Services
                                         unFinishedOrdersDetail.OrderDetailsQuantity >
                                         finalProductQuantity)
                                     {
-                                        unFinishedOrdersDetail
-                                                .OrderDetailsQuantity
-                                            = finalProductQuantity;
+                                        if (finalProductQuantity > 0)
+                                        {
+                                            unFinishedOrdersDetail
+                                                    .OrderDetailsQuantity
+                                                = finalProductQuantity;
 
-                                        _productRepository
-                                            .UpdateOrderDetails(unFinishedOrdersDetail);
+                                            _productRepository
+                                                .UpdateOrderDetails(unFinishedOrdersDetail);
+                                        }
+                                        else
+                                        {
+                                            _productRepository
+                                                .DeleteOrderDetails(unFinishedOrdersDetail);
+                                        }
                                     }
                                 }
                             }
@@ -705,18 +713,34 @@ namespace Aroma_Shop.Application.Services
                                         unFinishedOrdersDetail.OrderDetailsQuantity >
                                         finalProductQuantity)
                                     {
-                                        unFinishedOrdersDetail
-                                                .OrderDetailsQuantity
-                                            = finalProductQuantity;
+                                        if (finalProductQuantity > 0)
+                                        {
+                                            unFinishedOrdersDetail
+                                                    .OrderDetailsQuantity
+                                                = finalProductQuantity;
 
-                                        _productRepository
-                                            .UpdateOrderDetails(unFinishedOrdersDetail);
+                                            _productRepository
+                                                .UpdateOrderDetails(unFinishedOrdersDetail);
+                                        }
+                                        else
+                                        {
+                                            _productRepository
+                                                .DeleteOrderDetails(unFinishedOrdersDetail);
+                                        }
                                     }
                                 }
                             }
                         }
 
-                        
+                        loggedUserOpenOrder
+                            .OrderRegistrationDate=
+                            DateTime.Now;
+
+                        loggedUserOpenOrder
+                            .IsFinally = true;
+
+                        _productRepository
+                            .UpdateOrder(loggedUserOpenOrder);
 
                         _productRepository
                             .Save();
