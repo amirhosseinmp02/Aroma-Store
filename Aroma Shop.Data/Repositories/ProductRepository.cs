@@ -164,6 +164,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(productVariation);
         }
+        public void UpdateProductVariation(ProductVariation productVariation)
+        {
+            _context.Update(productVariation);
+        }
         public void DeleteProductVariation(ProductVariation productVariation)
         {
             _context.ProductVariations.Remove(productVariation);
