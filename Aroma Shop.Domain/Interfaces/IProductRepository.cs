@@ -20,6 +20,7 @@ namespace Aroma_Shop.Domain.Interfaces
         IEnumerable<Order> GetOrders();
         void AddOrder(Order order);
         void UpdateOrder(Order order);
+        IEnumerable<OrderDetails> GetUnFinishedOrdersDetails(); 
         OrderDetails GetOrderDetails(int orderDetailsId);
         void AddOrderDetails(OrderDetails orderDetails);
         void UpdateOrderDetails(OrderDetails orderDetails);
