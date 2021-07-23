@@ -52,6 +52,14 @@ namespace Aroma_Shop.Application.Services
 
             return orders;
         }
+        public Order GetOrderForAdmin(int orderId)
+        {
+            var order =
+                _productRepository
+                    .GetOrderForAdmin(orderId);
+
+            return order;
+        }
         public bool DeleteOrderById(int orderId)
         {
             try
