@@ -21,7 +21,7 @@
 </form>
 @if (!Convert.ToBoolean(ViewBag.isEmpty))
 {
-    <table class="table table-responsive-lg table-responsive-sm table-striped table-bordered text-center table-light">
+    <table class="table table-responsive-sm table-striped table-bordered text-center table-light">
         <thead>
             <tr>
                 <th class="cart-item-cells">عنوان صفحه‌</th>
@@ -38,9 +38,9 @@
                     <td class="cart-item-cells align-middle">@aPage.PagePathAddress</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
-                            <a class="btn text-light btn-primary" href="/@aPage.PagePathAddress" target="_blank">مشاهده</a>
-                            <a class="btn text-light btn-primary" asp-action="EditPage" asp-route-pageId="@aPage.PageId">ویرایش</a>
-                            <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(aPage.PageId)">حذف</button>
+                            <a class="btn text-light btn-primary m-1" href="/@aPage.PagePathAddress" target="_blank">مشاهده</a>
+                            <a class="btn text-light btn-primary m-1" asp-action="EditPage" asp-route-pageId="@aPage.PageId">ویرایش</a>
+                            <button class="btn text-light btn-primary m-1" data-toggle="modal" data-target="#deletemodal@(aPage.PageId)">حذف</button>
                             <div class="modal fade" id="deletemodal@(aPage.PageId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(aPage.PageId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">

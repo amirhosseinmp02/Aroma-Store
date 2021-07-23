@@ -57,11 +57,11 @@
                 <td class="cart-item-cells align-middle text-success">
                     <b>@order.OrderStatus</b>
                 </td>
-                <td class="cart-item-cells align-middle">@totalOrderPrice</td>
+                <td class="cart-item-cells align-middle">@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
                 <td class="align-middle">
                     <div class="admin-products-actions">
-                        <a class="btn text-light btn-primary" asp-action="EditOrder" asp-route-orderId="@order.OrderId">مشاهده</a>
-                        <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(order.OrderId)">حذف</button>
+                        <a class="btn text-light btn-primary m-1" asp-action="EditOrder" asp-route-orderId="@order.OrderId">مشاهده</a>
+                        <button class="btn text-light btn-primary m-1" data-toggle="modal" data-target="#deletemodal@(order.OrderId)">حذف</button>
                         <div class="modal fade" id="deletemodal@(order.OrderId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(order.OrderId)" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">

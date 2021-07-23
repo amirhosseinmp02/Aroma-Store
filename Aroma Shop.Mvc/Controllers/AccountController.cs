@@ -201,9 +201,13 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpGet("/My-Account/Orders")]
-        public IActionResult AccountOrders()
+        public async Task<IActionResult> AccountOrders()
         {
-            return View();
+            var loggedUser =
+                await _accountService
+                    .GetLoggedUserWithOrders();
+            
+            return View(loggedUser.UserOrders);
         }
 
         #endregion

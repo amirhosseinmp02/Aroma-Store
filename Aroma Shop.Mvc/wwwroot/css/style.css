@@ -5135,3 +5135,8 @@ span.reset_variations:hover {
 .bi-printer {
     cursor: pointer
 }
+
+.cart-item-cells {
+    text-align: center !important;
+    font-size: 15px
+}
