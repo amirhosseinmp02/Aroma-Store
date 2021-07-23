@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Application.ViewModels.Product
 {
@@ -12,5 +13,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         [EmailAddress(ErrorMessage = "فیلد وارد شده ایمیل نمی باشد")]
         [Required(ErrorMessage = "لطفا ایمیل خود را وارد نمایید")]
         public string Email { get; set; }
+
+        public Order Order { get; set; }
     }
 }

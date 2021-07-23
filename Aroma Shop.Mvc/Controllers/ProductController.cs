@@ -475,6 +475,34 @@ namespace Aroma_Shop.Mvc.Controllers
             return View();
         }
 
+        [HttpPost("/Order-Tracking")]
+        [ValidateAntiForgeryToken]
+        public IActionResult OrderTracking(OrderTrackingViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var order =
+                    _productService
+                        .GetOrderForAdmin(model.OrderId);
+
+                if (order != null && order.OwnerUser.Email == model.Email)
+                {
+                    ModelState.Clear();
+
+                    model = new OrderTrackingViewModel()
+                    {
+                        Order = order
+                    };
+
+                    return View(model);
+                }
+
+                ModelState.AddModelError("", "با عرض پوزش، سفارش پیدا نشد. اگر شما دچار مشکل پیدا کردن جزئیات سفارش خود شده اید، لطفا با ما تماس بگیرید.");
+            }
+
+            return View(model);
+        }
+
         #endregion
 
         #region AddProductToUserFavoriteProducts
