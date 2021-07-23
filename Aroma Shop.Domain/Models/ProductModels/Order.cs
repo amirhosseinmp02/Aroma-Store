@@ -19,7 +19,8 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public bool IsFinally { get; set; }
         [MaxLength(150)]
         [Required]
-        public string OrderStatus { get; set; } 
+        public string OrderStatus { get; set; }
+        public bool IsSeen { get; set; }    
         public string OrderNote { get; set; }
         [Required]
         public DateTime CreateTime { get; set; }

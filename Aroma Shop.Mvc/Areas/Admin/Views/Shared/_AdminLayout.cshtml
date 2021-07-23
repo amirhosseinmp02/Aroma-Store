@@ -1,6 +1,9 @@
 ﻿@using Aroma_Shop.Application.Interfaces
+
 @inject IAccountService AccountService
 @inject IMediaService MediaService
+@inject IProductService ProductService
+
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -47,11 +50,25 @@
                             </a>
                         </li>
                         <li class="nav-item ">
+                            @{
+                                var unSeenOrdersCount =
+                                    ProductService.GetUnSeenOrdersCount();
+
+                                var isThereAnyUnSeenOrder =
+                                    unSeenOrdersCount != 0;
+                            }
                             <a class="nav-link dropdown-btn products-dashbord-menu">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                                 سفارشات
+                                @if (isThereAnyUnSeenOrder)
+                                {<span class="badge badge-danger">@unSeenOrdersCount</span>}
                             </a>
                             <div class="dropdown-container">
+                                <a class="dropdown-item" asp-controller="Order" asp-action="Index">
+                                    سفارشات
+                                    @if (isThereAnyUnSeenOrder)
+                                    {<span class="badge badge-danger">@unSeenOrdersCount</span>}
+                                </a>
                                 <a class="dropdown-item" asp-controller="Order" asp-action="Discounts">تخفیف ها</a>
                             </div>
                         </li>

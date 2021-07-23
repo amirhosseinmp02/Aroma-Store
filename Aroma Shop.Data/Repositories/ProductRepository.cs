@@ -57,6 +57,15 @@ namespace Aroma_Shop.Data.Repositories
 
             return orders;
         }
+        public int GetUnSeenOrdersCount()
+        {
+            var unSeenOrdersCount =
+                _context
+                    .Orders
+                    .Count(p => !p.IsSeen);
+
+            return unSeenOrdersCount;
+        }
         public Order GetOrder(int orderId)
         {
             var order =

@@ -86,6 +86,9 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (order == null)
                 return NotFound();
 
+            _productService
+                .SetOrderAsSeen(order);
+
             return View(order);
         }
 

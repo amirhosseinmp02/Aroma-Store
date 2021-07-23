@@ -90,6 +90,37 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool SetOrderAsSeen(Order order)
+        {
+            try
+            {
+                if (order.IsSeen)
+                    return true;
+
+                order.IsSeen = true;
+
+                _productRepository
+                    .UpdateOrder(order);
+
+                _productRepository
+                    .Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        public int GetUnSeenOrdersCount()
+        {
+            var unSeenOrdersCount =
+                _productRepository
+                    .GetUnSeenOrdersCount();
+
+            return unSeenOrdersCount;
+        }
         public bool DeleteOrderById(int orderId)
         {
             try

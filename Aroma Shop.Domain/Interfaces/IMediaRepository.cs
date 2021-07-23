@@ -14,6 +14,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void DeleteComment(Comment comment);
         void DeleteCommentById(int commentId);
         void AddMessage(Message message);
+        void UpdateMessage(Message message);
         void DeleteMessage(Message message);
         Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();

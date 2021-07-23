@@ -172,7 +172,13 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
+                if (comment.IsRead)
+                    return true;
+
                 comment.IsRead = true;
+
+                _mediaRepository
+                    .UpdateComment(comment);
 
                 _mediaRepository.Save();
 
@@ -384,7 +390,13 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
+                if (message.IsRead)
+                    return true;
+
                 message.IsRead = true;
+
+                _mediaRepository
+                    .UpdateMessage(message);
 
                 _mediaRepository.Save();
 

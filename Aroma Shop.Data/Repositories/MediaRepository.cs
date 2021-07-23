@@ -68,6 +68,11 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Add(message);
         }
+        public void UpdateMessage(Message message)
+        {
+            _context
+                .Update(message);
+        }
         public void DeleteMessage(Message message)
         {
             _context.Remove(message);
