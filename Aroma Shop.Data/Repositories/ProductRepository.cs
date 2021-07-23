@@ -50,7 +50,8 @@ namespace Aroma_Shop.Data.Repositories
             var orders =
                 _context
                     .Orders
-                    .Include(p => p.Discounts);
+                    .Include(p => p.OwnerUser)
+                    .Include(p => p.OrdersDetails);
 
             return orders;
         }

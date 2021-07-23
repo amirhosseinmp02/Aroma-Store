@@ -22,6 +22,51 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             _productService = productService;
         }
 
+        #region ShowOrders
+
+        [HttpGet("/Admin/Orders")]
+        public IActionResult Index(int pageNumber = 1, string search = null)
+        {
+            IEnumerable<Order> orders;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                orders = _productService.get()
+                    .Where(p => p.ProductName.Contains(search)
+                                || p.Categories
+                                    .Any(t => t.CategoryName.Contains(search)));
+
+                ViewBag.search = search;
+            }
+            else
+                products = _productService.GetProducts();
+
+            if (!products.Any())
+            {
+                ViewBag.isEmpty = true;
+
+                return View();
+            }
+            var page =
+                new Paging<Product>(products, 11, pageNumber);
+
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+
+            var productsPage =
+                page.QueryResult;
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+
+            return View(productsPage);
+        }
+
+        #endregion
+
         #region ShowDiscounts
 
         [HttpGet("/Admin/Orders/Discounts")]
