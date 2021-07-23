@@ -31,29 +31,34 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                orders = _productService.get()
-                    .Where(p => p.ProductName.Contains(search)
-                                || p.Categories
-                                    .Any(t => t.CategoryName.Contains(search)));
+                orders = _productService.GetOrders()
+                    .Where(p => p.OrderId.ToString() == search
+                                || p.OwnerUser
+                                    .UserDetails.FirstName
+                                    .Contains(search) ||
+                                p.OwnerUser.UserDetails
+                                    .LastName.Contains(search));
 
                 ViewBag.search = search;
             }
             else
-                products = _productService.GetProducts();
+                orders = _productService
+                    .GetOrders();
 
-            if (!products.Any())
+            if (!orders.Any())
             {
                 ViewBag.isEmpty = true;
 
                 return View();
             }
+
             var page =
-                new Paging<Product>(products, 11, pageNumber);
+                new Paging<Order>(orders, 11, pageNumber);
 
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var productsPage =
+            var ordersPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -62,7 +67,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             ViewBag.prevPage = page.PreviousPage;
             ViewBag.nextPage = page.NextPage;
 
-            return View(productsPage);
+            return View(ordersPage);
         }
 
         #endregion

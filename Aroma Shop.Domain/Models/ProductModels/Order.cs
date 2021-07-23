@@ -23,7 +23,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         public string OrderNote { get; set; }
         [Required]
         public DateTime CreateTime { get; set; }
-        public DateTime OrderRegistrationDate { get; set; }
+        public DateTime? OrderRegistrationDate { get; set; }
 
         //Navigations Properties
 
