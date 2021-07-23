@@ -602,7 +602,7 @@ namespace Aroma_Shop.Application.Services
                 return null;
             }
         }
-        public async Task<bool> OrderConfirmation()
+        public async Task<bool> OrderConfirmation(Order loggedUserOpenOrder)
         {
             try
             {
@@ -610,13 +610,6 @@ namespace Aroma_Shop.Application.Services
                     _accessor.HttpContext.Request.Query["Status"].ToString().ToLower() == "ok" &&
                     _accessor.HttpContext.Request.Query["Authority"] != "")
                 {
-                    var loggedUserOpenOrder =
-                        await _accountService
-                            .GetLoggedUserOpenOrder();
-
-                    if (loggedUserOpenOrder == null)
-                        return false;
-
                     var totalOrderPrice =
                         loggedUserOpenOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
                         loggedUserOpenOrder.Discounts.Sum(p => p.DiscountPrice);

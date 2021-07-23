@@ -22,7 +22,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1);
         Task<bool> UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities);
         Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel);
-        Task<bool> OrderConfirmation();
+        Task<bool> OrderConfirmation(Order loggedUserOpenOrder);
         Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode);
         bool DeleteOrderDetailsById(int orderDetailsId);
         IEnumerable<Discount> GetDiscounts();

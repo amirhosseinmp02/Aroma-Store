@@ -425,12 +425,19 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         public async Task<IActionResult> OrderConfirmation()
         {
+            var loggedUserOpenOrder =
+                await _accountService
+                    .GetLoggedUserOpenOrder();
+
+            if (loggedUserOpenOrder == null)
+                return NotFound();
+
             var result =
                 await _productService
-                    .OrderConfirmation();
+                    .OrderConfirmation(loggedUserOpenOrder);
 
             if (result)
-                return Content("okeye");
+                return View();
 
             return NotFound();
         }
