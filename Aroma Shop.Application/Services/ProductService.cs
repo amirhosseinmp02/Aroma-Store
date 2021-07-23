@@ -52,6 +52,10 @@ namespace Aroma_Shop.Application.Services
 
             return orders;
         }
+        public bool DeleteOrder()
+        {
+            throw new NotImplementedException();
+        }
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {
             try
