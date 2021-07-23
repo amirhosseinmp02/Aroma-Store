@@ -1,7 +1,183 @@
-﻿
+﻿@using Aroma_Shop.Application.Utilites
+@using Aroma_Shop.Application.Interfaces
+@using Aroma_Shop.Application.ViewModels.Product
+@model Aroma_Shop.Domain.Models.ProductModels.Order
+
+@inject IAccountService AccountService
+
 @{
-    ViewData["Title"] = "EditOrder";
+    ViewData["Title"] = "ویرایش سفارش";
 }
+<div class="h2 mt-3">
+    <h1 class="h2 d-inline">ویرایش سفارش</h1>
+    <a class="btn btn-warning float-left" asp-controller="Order" asp-action="Index">بازگشت</a>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 mr-auto">
+        <div class="p-4">
+            @{
+                var orderName =
+                    $"#{Model.OrderId} {Model.OwnerUser.UserDetails.FirstName} {Model.OwnerUser.UserDetails.LastName}";
+            }
 
-<h1>EditOrder</h1>
+            <h4>جزئیات سفارش @orderName</h4>
+            <div class="row">
+                <div class="col p-4 mx-4 mt-4 rounded-lg bg-info text-light edit-order-content-section">
+                    <h5 class="mb-3">اطلاعات سفارش</h5>
+                    <ul class="edit-order-menu">
+                        <li>شناسه سفارش : @Model.OrderId</li>
+                        <li>تاریخ ثبت سفارش : @Model.CreateTime.ToSolarWithTime()</li>
+                        <li>تاریخ پرداخت : @(Model.OrderRegistrationDate!=default?Model.OrderRegistrationDate.ToSolarWithTime():"-")</li>
+                        <li>روش پرداخت : زرین پال</li>
+                        <li>
+                            وضعیت :
+                            <select class="form-control ml-2 w-75 d-inline mt-1" asp-for="OrderStatus">
+                                <option value="@OrderStatus.Canceled.GetDescription()">@OrderStatus.Canceled.GetDescription()</option>
+                                <option value="@OrderStatus.AwaitingPayment.GetDescription()">@OrderStatus.AwaitingPayment.GetDescription()</option>
+                                <option value="@OrderStatus.Doing.GetDescription()">@OrderStatus.Doing.GetDescription()</option>
+                                <option value="@OrderStatus.AwaitingReview.GetDescription()">@OrderStatus.AwaitingReview.GetDescription()</option>
+                                <option value="@OrderStatus.Completed.GetDescription()">@OrderStatus.Completed.GetDescription()</option>
+                                <option value="@OrderStatus.Returned.GetDescription()">@OrderStatus.Returned.GetDescription()</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col p-4 mx-4 mt-4 rounded-lg bg-info text-light edit-order-content-section">
+                    <h5 class="mb-3">اطلاعات گیرنده</h5>
+                    <ul class="edit-order-menu">
+                        @{
+                            var loggedUserRole =
+                                await AccountService.GetLoggedUserRole();
 
+                            var isLoggedUserRoleAdmin =
+                                loggedUserRole == "Founder" ||
+                                loggedUserRole == "Manager" ? true : false;
+                        }
+                        @if (isLoggedUserRoleAdmin)
+                        {
+                            <li>کاربر : <a class="text-dark" asp-area="Admin" asp-controller="User" asp-action="UserDetails" asp-route-userId="@Model.OwnerUser.Id">@Model.OwnerUser.UserName</a></li>
+                        }
+                        else
+                        {
+                            <li>کاربر : @Model.OwnerUser.UserName</li>
+                        }
+                        <li>نام : @Model.OwnerUser.UserDetails.FirstName</li>
+                        <li>نام خانوادگی : @Model.OwnerUser.UserDetails.LastName</li>
+                        <li>شماره موبایل : @Model.OwnerUser.MobileNumber</li>
+                        <li>ایمیل : @Model.OwnerUser.Email</li>
+                    </ul>
+                </div>
+                <div class="col p-4 mx-4 mt-4 rounded-lg bg-info text-light edit-order-content-section">
+                    <h5 class="mb-3">آدرس حمل و نقل</h5>
+                    <ul class="edit-order-menu">
+                        <li>استان : @Model.OwnerUser.UserDetails.UserProvince</li>
+                        <li>شهر : @Model.OwnerUser.UserDetails.UserCity</li>
+                        <li>کد پستی : @Model.OwnerUser.UserDetails.UserZipCode</li>
+                        <li>آدرس : @Model.OwnerUser.UserDetails.UserAddress</li>
+                        @if (!string.IsNullOrEmpty(Model.OrderNote))
+                        {
+                            <li>یادداشت : <u>@Model.OrderNote</u></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 mr-auto px-5">
+        <table class="table table-responsive-lg table-responsive-sm text-center table-light edit-order-table">
+            <thead>
+                <tr>
+                    <th class="cart-item-cells pl-5 text-left">محصول</th>
+                    <th class="cart-item-cells">قیمت</th>
+                    <th class="cart-item-cells">تعداد</th>
+                    <th class="cart-item-cells">جمع قیمت</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var orderDetails in Model.OrdersDetails)
+                {
+                    var orderDetailsPrice =
+                        orderDetails.IsOrderDetailsProductSimple ?
+                            orderDetails.Product.ProductPrice :
+                            orderDetails.ProductVariation.ProductVariationPrice;
+                    <tr>
+                        <td class="cart-item-cells align-middle pl-5 text-left py-2">
+                            @orderDetails.Product.ProductName
+                            @if (!orderDetails.IsOrderDetailsProductSimple)
+                            {
+                                <ul class="edit-order-variations mt-1">
+                                    @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                    {
+                                        <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                        <td class="cart-item-cells align-middle py-2">@orderDetailsPrice</td>
+                        <td class="cart-item-cells align-middle py-2">@orderDetails.OrderDetailsQuantity</td>
+                        <td class="cart-item-cells align-middle py-2">@orderDetails.OrderDetailsTotalPrice</td>
+                    </tr>
+                }
+                <tr>
+                    <td class="pb-4"></td>
+                    <td class="pb-4"></td>
+                    <td class="pb-4"></td>
+                    <td class="pb-4"></td>
+                </tr>
+                @foreach (var discount in Model.Discounts)
+                {
+                    <tr>
+                        <td class="pl-5 text-left py-2">کد تخفیف</td>
+                        <td>@discount.DiscountCode</td>
+                        <td></td>
+                        <td>-@discount.DiscountPrice</td>
+                    </tr>
+                    <tr>
+                        <td class="pl-5 text-left py-2">کد تخفیف</td>
+                        <td>@discount.DiscountCode</td>
+                        <td></td>
+                        <td>-@discount.DiscountPrice</td>
+                    </tr>
+                }
+                <tr>
+                    <td class="cart-item-cells align-middle pl-5 text-left pt-5">
+                        <p>حمل و نقل</p>
+                    </td>
+                    <td class="pt-5">
+                        <p>پس کرایه</p>
+                    </td>
+                    <td class="pt-5">
+                        <p></p>
+                    </td>
+                    <td class="pt-5">
+                        <p></p>
+                    </td>
+                </tr>
+                <tr class="edit-order-table-totalPrice-tr">
+                    <td class="cart-item-cells align-middle pl-5 text-left">
+                        <p class="h5">جمع کل</p>
+                    </td>
+                    <td class="align-middle">
+                        @{
+                            var totalOrderPrice =
+                                @Model.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                @Model.Discounts.Sum(p => p.DiscountPrice);
+                        }
+                        <p class="h5">@(totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان")</p>
+                    </td>
+                    <td>
+                        <p></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

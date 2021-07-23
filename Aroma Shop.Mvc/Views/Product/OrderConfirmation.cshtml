@@ -144,23 +144,27 @@
                                     </td>
                                 </tr>
                             }
-                            <tr></tr>
+                        <tr>
+                            <td class="pb-4"></td>
+                            <td class="pb-4"></td>
+                            <td class="pb-4"></td>
+                        </tr>
                             @foreach (var discount in Model.Order.Discounts)
                             {
                                 <tr>
-                                    <td class="pb-5 pt-4">کد تخفیف</td>
-                                    <td class="pb-5 pt-4">@discount.DiscountCode</td>
-                                    <td class="pb-5 pt-4">-@discount.DiscountPrice</td>
+                                    <td>کد تخفیف</td>
+                                    <td>@discount.DiscountCode</td>
+                                    <td>-@discount.DiscountPrice</td>
                                 </tr>
                             }
                             <tr>
-                                <td>
+                                <td class="pt-5">
                                     <h4>حمل و نقل</h4>
                                 </td>
-                                <td>
+                                <td class="pt-5">
                                     <h5></h5>
                                 </td>
-                                <td>
+                                <td class="pt-5">
                                     <p>پس کرایه</p>
                                 </td>
                             </tr>

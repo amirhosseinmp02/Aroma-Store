@@ -177,6 +177,7 @@ input.input-validation-error {
     top: -40px;
     right: 12px
 }
+
 .delete-currentProductImage {
     position: relative;
     top: -40px;
@@ -223,9 +224,9 @@ i.jstree-icon.jstree-themeicon {
     border-bottom: 2px solid darkgrey
 }
 
-.commentsTrBottomBorders:nth-last-child(1) {
-    border-bottom: unset !important
-}
+    .commentsTrBottomBorders:nth-last-child(1) {
+        border-bottom: unset !important
+    }
 
 .parentCommentUserName {
     font-size: 12px
@@ -237,4 +238,28 @@ i.jstree-icon.jstree-themeicon {
 
 .ltr {
     direction: ltr
+}
+
+.edit-order-menu {
+    font-size: 16px
+}
+
+.edit-order-menu li {
+    margin: 10px 0px
+}
+
+.edit-order-content-section {
+    min-width: 320px
+}
+
+.edit-order-variations {
+    font-size: 13px
+}
+
+.edit-order-table {
+    font-size: 15px
+}
+
+.edit-order-table-totalPrice-tr {
+    border-top: 1.1px solid black
 }

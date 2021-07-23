@@ -28,62 +28,68 @@
                 <th class="cart-item-cells">تاریخ</th>
                 <th class="cart-item-cells">وضعیت</th>
                 <th class="cart-item-cells">مجموع</th>
+                <th class="cart-item-cells">عملیات</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var order in Model)
             {
-                var orderName = $"#{order.OrderId} {order.OwnerUser.UserDetails.FirstName} {order.OwnerUser.UserDetails.LastName}";
-                <tr>
-                    <td class="cart-item-cells align-middle">@orderName</td>
-                    @{
-                        var orderDate = "";
+                var orderName = 
+                    $"#{order.OrderId} {order.OwnerUser.UserDetails.FirstName} {order.OwnerUser.UserDetails.LastName}";
 
-                        if (order.OrderRegistrationDate == default)
-                        {
-                            orderDate = order.CreateTime.ToSolarWithTime();
-                        }
-                        else
-                        {
-                            orderDate = order.OrderRegistrationDate.ToSolarWithTime();
-                        }
-                    }
-                    <td class="cart-item-cells align-middle">@(orderDate)</td>
-                    <td class="cart-item-cells align-middle text-success">
-                        <b>@order.OrderStatus</b>
-                    </td>
-                    <td class="align-middle">
-                        <div class="admin-products-actions">
-                            <a class="btn text-light btn-primary" asp-action="EditOrder" asp-route-orderId="@order.OrderId">مشاهده</a>
-                            <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(order.OrderId)">حذف</button>
-                            <div class="modal fade" id="deletemodal@(order.OrderId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(order.OrderId)" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header justify-content-center">
-                                            <h5 class="modal-title text-center" id="deletemodalLabel">حذف سفارش</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h1 class="text-info">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                                    <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                </svg>
-                                            </h1>
-                                            <p class="lead">آیا از حذف سفارش <span class="text-warning">@orderName</span> مطمئن هستید ؟</p>
-                                            <p class="text-info">تمامی اطلاعات سفارش حذف خواهند شد</p>
-                                        </div>
-                                        <div class="modal-footer justify-content-center">
-                                            <a type="button" class="btn btn-danger" asp-action="DeleteOrder" asp-route-orderId="@order.OrderId">حذف</a>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
-                                        </div>
+                var orderDate = "";
+
+                if (order.OrderRegistrationDate == default)
+                {
+                    orderDate = order.CreateTime.ToSolarWithTime();
+                }
+                else
+                {
+                    orderDate = order.OrderRegistrationDate.ToSolarWithTime();
+                }
+
+                var totalOrderPrice =
+                    order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                    order.Discounts.Sum(p => p.DiscountPrice);
+            <tr>
+                <td class="cart-item-cells align-middle">@orderName</td>
+                <td class="cart-item-cells align-middle">@orderDate</td>
+                <td class="cart-item-cells align-middle text-success">
+                    <b>@order.OrderStatus</b>
+                </td>
+                <td class="cart-item-cells align-middle">@totalOrderPrice</td>
+                <td class="align-middle">
+                    <div class="admin-products-actions">
+                        <a class="btn text-light btn-primary" asp-action="EditOrder" asp-route-orderId="@order.OrderId">مشاهده</a>
+                        <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(order.OrderId)">حذف</button>
+                        <div class="modal fade" id="deletemodal@(order.OrderId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(order.OrderId)" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header justify-content-center">
+                                        <h5 class="modal-title text-center" id="deletemodalLabel">حذف سفارش</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h1 class="text-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="35%" height="auto" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                            </svg>
+                                        </h1>
+                                        <p class="lead">آیا از حذف سفارش <span class="text-warning">@orderName</span> مطمئن هستید ؟</p>
+                                        <p class="text-info">تمامی اطلاعات سفارش حذف خواهند شد</p>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <a type="button" class="btn btn-danger" asp-action="DeleteOrder" asp-route-orderId="@order.OrderId">حذف</a>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
