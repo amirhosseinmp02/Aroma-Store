@@ -27,7 +27,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities);
         Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel);
         Task<bool> OrderConfirmation(Order loggedUserOpenOrder);
-        Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode);
+        Task<AddDiscountToCartResult> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode);
         bool DeleteOrderDetailsById(int orderDetailsId);
         IEnumerable<Discount> GetDiscounts();
         Discount GetDiscount(int discountId);

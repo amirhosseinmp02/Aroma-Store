@@ -77,7 +77,7 @@ namespace Aroma_Shop.Application.Services
                         .OrderStatus;
 
                 _productRepository
-                    .UpdateOrder(order);
+                    .UpdateOrder(currentOrder);
 
                 _productRepository
                     .Save();
@@ -830,7 +830,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
+        public async Task<AddDiscountToCartResult> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
         {
             try
             {
@@ -839,7 +839,15 @@ namespace Aroma_Shop.Application.Services
                         .GetDiscountByCode(discountCode);
 
                 if (discount == null || discount.IsTrash)
-                    return false;
+                    return AddDiscountToCartResult.Failed;
+
+                var doesLoggedUserOpenOrderHasThisDiscount =
+                    loggedUserOpenOrder
+                        .Discounts
+                        .Contains(discount);
+
+                if (doesLoggedUserOpenOrderHasThisDiscount)
+                    return AddDiscountToCartResult.AlreadyApplied;
 
                 loggedUserOpenOrder
                     .Discounts.Add(discount);
@@ -848,12 +856,12 @@ namespace Aroma_Shop.Application.Services
 
                 _productRepository.Save();
 
-                return true;
+                return AddDiscountToCartResult.Successful;
             }
             catch (Exception error)
             {
                 Console.WriteLine(error.Message);
-                return false;
+                return AddDiscountToCartResult.Failed;
             }
         }
         public bool DeleteOrderDetailsById(int orderDetailsId)

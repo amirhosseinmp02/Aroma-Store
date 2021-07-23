@@ -339,8 +339,11 @@ namespace Aroma_Shop.Mvc.Controllers
                     await _productService
                         .AddDiscountToCart(loggedUserOpenOrder, discountCode);
 
-                if (result)
+                if (result == AddDiscountToCartResult.Successful)
                     ViewData["Message"] = "تخفیف با موفقیت اعمال شد";
+
+                else if(result == AddDiscountToCartResult.AlreadyApplied)
+                    ViewData["Message"] = "کد تخفیف قبلا اعمال شده است";
 
                 else
                     ViewData["Message"] = "کد تخفیف معتبر نیست";

@@ -29,11 +29,11 @@
                         <li>شناسه سفارش : @Model.OrderId</li>
                         <li>تاریخ ثبت سفارش : @Model.CreateTime.ToSolarWithTime()</li>
                         <li>تاریخ پرداخت : @(Model.OrderRegistrationDate!=default?Model.OrderRegistrationDate.ToSolarWithTime():"-")</li>
-                        <li>روش پرداخت : زرین پال</li>
+                        <li>روش پرداخت : @(Model.IsFinally?"زرین پال":"-")</li>
                         <li>
                             وضعیت :
-                            <form asp-action="EditOrder">
-                                <select class="form-control ml-2 w-75 d-inline mt-1" asp-for="OrderStatus">
+                            <form id="edit-order-form" class="d-inline" asp-action="EditOrder">
+                                <select id="order-status-select-input" class="form-control ml-2 w-75 d-inline mt-1" asp-for="OrderStatus">
                                     <option value="@OrderStatus.Canceled.GetDescription()">@OrderStatus.Canceled.GetDescription()</option>
                                     <option value="@OrderStatus.AwaitingPayment.GetDescription()">@OrderStatus.AwaitingPayment.GetDescription()</option>
                                     <option value="@OrderStatus.Doing.GetDescription()">@OrderStatus.Doing.GetDescription()</option>
@@ -41,7 +41,7 @@
                                     <option value="@OrderStatus.Completed.GetDescription()">@OrderStatus.Completed.GetDescription()</option>
                                     <option value="@OrderStatus.Returned.GetDescription()">@OrderStatus.Returned.GetDescription()</option>
                                 </select>
-                                <input type="hidden" asp-for="OrderId" />    
+                                <input type="hidden" asp-for="OrderId" />
                             </form>
                         </li>
                     </ul>
@@ -139,12 +139,6 @@
                         <td></td>
                         <td>-@discount.DiscountPrice</td>
                     </tr>
-                    <tr>
-                        <td class="pl-5 text-left py-2">کد تخفیف</td>
-                        <td>@discount.DiscountCode</td>
-                        <td></td>
-                        <td>-@discount.DiscountPrice</td>
-                    </tr>
                 }
                 <tr>
                     <td class="cart-item-cells align-middle pl-5 text-left pt-5">
@@ -183,4 +177,12 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $("#order-status-select-input").change(function () {
+                $("#edit-order-form").submit();
+            });
+        });
+    </script>
 }

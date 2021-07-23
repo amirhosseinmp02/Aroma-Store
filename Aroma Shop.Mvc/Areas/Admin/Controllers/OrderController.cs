@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Product;
+using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
@@ -91,7 +93,19 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditOrder(Order model)
         {
+            ModelState.Remove("OwnerUser");
 
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _productService
+                        .UpdateOrder(model);
+
+                if (result)
+                    return RedirectToAction("Index");
+            }
+
+            return NotFound();
         }
 
         #endregion
