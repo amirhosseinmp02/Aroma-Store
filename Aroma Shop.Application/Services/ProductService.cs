@@ -44,6 +44,14 @@ namespace Aroma_Shop.Application.Services
 
             return product;
         }
+        public IEnumerable<Order> GetOrders()
+        {
+            var orders =
+                _productRepository
+                    .GetOrders();
+
+            return orders;
+        }
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {
             try
