@@ -1,4 +1,6 @@
-﻿
+﻿@using Aroma_Shop.Application.Utilites
+@model Aroma_Shop.Application.ViewModels.Product.CartCheckOutViewModel
+
 @{
     ViewData["Title"] = "تایید سفارش";
 }
@@ -20,165 +22,198 @@
 </section>
 <section class="order_details section-margin--small">
     <div class="container">
-        <p class="text-center billing-alert">Thank you. Your order has been received.</p>
-        <div class="row mb-5">
-            <div class="col-md-6 col-xl-4 mb-4 mb-xl-0">
-                <div class="confirmation-card">
-                    <h3 class="billing-title">Order Info</h3>
-                    <table class="order-rable">
+        <p class="text-center billing-alert">با تشکر ، سفارش شما دریافت شد.</p>
+        <div class="print-section">
+            <div class="row mb-5">
+                <div class="col-md-6 col-xl-4 mb-4 mb-xl-0">
+                    <div class="confirmation-card">
+                        <h3 class="billing-title">اطلاعات سفارش</h3>
+                        <table class="order-rable">
+                            <tbody>
+                                <tr>
+                                    <td>شناسه سفارش</td>
+                                    <td>: @Model.Order.OrderId</td>
+                                </tr>
+                                <tr>
+                                    <td>تاریخ پرداخت</td>
+                                    <td>: @Model.Order.OrderRegistrationDate.ToSolarWithTime()</td>
+                                </tr>
+                                <tr>
+                                    <td>جمع کل</td>
+                                    @{
+                                        var totalOrderPrice =
+                                            @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                            @Model.Order.Discounts.Sum(p => p.DiscountPrice);
+                                    }
+                                    <td>: @(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
+                                </tr>
+                                <tr>
+                                    <td>روش پرداخت</td>
+                                    <td>: زرین پال</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4 mb-xl-0">
+                    <div class="confirmation-card">
+                        <h3 class="billing-title">اطلاعات گیرنده</h3>
+                        <table class="order-rable">
+                            <tbody>
+                                <tr>
+                                    <td>نام</td>
+                                    <td>: @Model.FirstName</td>
+                                </tr>
+                                <tr>
+                                    <td>نام خانوادگی</td>
+                                    <td>: @Model.LastName</td>
+                                </tr>
+                                <tr>
+                                    <td>شماره موبایل</td>
+                                    <td>: @Model.MobileNumber</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4 mb-xl-0">
+                    <div class="confirmation-card">
+                        <h3 class="billing-title">آدرس حمل و نقل</h3>
+                        <table class="order-rable">
+                            <tbody>
+                                <tr>
+                                    <td>استان</td>
+                                    <td>: @Model.UserProvince</td>
+                                </tr>
+                                <tr>
+                                    <td>شهر</td>
+                                    <td>: @Model.UserCity</td>
+                                </tr>
+                                <tr>
+                                    <td>کد پستی</td>
+                                    <td>: @Model.UserZipCode</td>
+                                </tr>
+                                <tr>
+                                    <td>آدرس</td>
+                                    <td>: @Model.UserAddress</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="order_details_table">
+                <div class="d-flex justify-content-between">
+                    <h2>جزئیات سفارش</h2>
+                    <i class="bi bi-printer h5"></i>
+                </div>
+                <div class="table table-responsive-lg table-responsive-sm">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">محصول</th>
+                                <th scope="col">تعداد</th>
+                                <th scope="col">جمع قیمت</th>
+                            </tr>
+                        </thead>
                         <tbody>
+                            @foreach (var orderDetails in Model.Order.OrdersDetails)
+                            {
+                                var orderDetailsPrice =
+                                    orderDetails.IsOrderDetailsProductSimple ?
+                                        orderDetails.Product.ProductPrice :
+                                        orderDetails.ProductVariation.ProductVariationPrice;
+                                <tr>
+                                    <td class="py-2">
+                                        <p>@orderDetails.Product.ProductName</p>
+                                        @if (!orderDetails.IsOrderDetailsProductSimple)
+                                        {
+                                            <ul class="orderconfirmation-variations">
+                                                @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                                {
+                                                    <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </td>
+                                    <td class="align-middle py-2">
+                                        <h5>x <span class="middle-number d-inline-block">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></h5>
+                                    </td>
+                                    <td class="align-middle py-2">
+                                        <p>@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</p>
+                                    </td>
+                                </tr>
+                            }
+                            <tr></tr>
+                            @foreach (var discount in Model.Order.Discounts)
+                            {
+                                <tr>
+                                    <td class="pb-5 pt-4">کد تخفیف</td>
+                                    <td class="pb-5 pt-4">@discount.DiscountCode</td>
+                                    <td class="pb-5 pt-4">-@discount.DiscountPrice</td>
+                                </tr>
+                            }
                             <tr>
-                                <td>Order number</td>
-                                <td>: 60235</td>
+                                <td>
+                                    <h4>حمل و نقل</h4>
+                                </td>
+                                <td>
+                                    <h5></h5>
+                                </td>
+                                <td>
+                                    <p>پس کرایه</p>
+                                </td>
                             </tr>
                             <tr>
-                                <td>Date</td>
-                                <td>: Oct 03, 2017</td>
-                            </tr>
-                            <tr>
-                                <td>Total</td>
-                                <td>: USD 2210</td>
-                            </tr>
-                            <tr>
-                                <td>Payment method</td>
-                                <td>: Check payments</td>
+                                <td>
+                                    <h4>جمع کل</h4>
+                                </td>
+                                <td>
+                                    <h5></h5>
+                                </td>
+                                <td>
+                                    <h4>@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</h4>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="col-md-6 col-xl-4 mb-4 mb-xl-0">
-                <div class="confirmation-card">
-                    <h3 class="billing-title">Billing Address</h3>
-                    <table class="order-rable">
-                        <tbody>
-                            <tr>
-                                <td>Street</td>
-                                <td>: 56/8 panthapath</td>
-                            </tr>
-                            <tr>
-                                <td>City</td>
-                                <td>: Dhaka</td>
-                            </tr>
-                            <tr>
-                                <td>Country</td>
-                                <td>: Bangladesh</td>
-                            </tr>
-                            <tr>
-                                <td>Postcode</td>
-                                <td>: 1205</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-4 mb-4 mb-xl-0">
-                <div class="confirmation-card">
-                    <h3 class="billing-title">Shipping Address</h3>
-                    <table class="order-rable">
-                        <tbody>
-                            <tr>
-                                <td>Street</td>
-                                <td>: 56/8 panthapath</td>
-                            </tr>
-                            <tr>
-                                <td>City</td>
-                                <td>: Dhaka</td>
-                            </tr>
-                            <tr>
-                                <td>Country</td>
-                                <td>: Bangladesh</td>
-                            </tr>
-                            <tr>
-                                <td>Postcode</td>
-                                <td>: 1205</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="order_details_table">
-            <h2>Order Details</h2>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <p>Pixelstore fresh Blackberry</p>
-                            </td>
-                            <td>
-                                <h5>x 02</h5>
-                            </td>
-                            <td>
-                                <p>$720.00</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>Pixelstore fresh Blackberry</p>
-                            </td>
-                            <td>
-                                <h5>x 02</h5>
-                            </td>
-                            <td>
-                                <p>$720.00</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>Pixelstore fresh Blackberry</p>
-                            </td>
-                            <td>
-                                <h5>x 02</h5>
-                            </td>
-                            <td>
-                                <p>$720.00</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h4>Subtotal</h4>
-                            </td>
-                            <td>
-                                <h5></h5>
-                            </td>
-                            <td>
-                                <p>$2160.00</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h4>Shipping</h4>
-                            </td>
-                            <td>
-                                <h5></h5>
-                            </td>
-                            <td>
-                                <p>Flat rate: $50.00</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h4>Total</h4>
-                            </td>
-                            <td>
-                                <h5></h5>
-                            </td>
-                            <td>
-                                <h4>$2210.00</h4>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 </section>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            $(document).ready(function () {
+                var numbersElements = $(".middle-number");
+                for (var i = 0; i < numbersElements.length; i++) {
+                    $(numbersElements[i]).text($(numbersElements[i]).text().toEnglishNumbers());
+                }
+            });
+
+            $(".bi-printer").click(function() {
+                var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+                mywindow.document.write('<html><head><title>' + "فاکتور فروشگاه آروما" + '</title>');
+                mywindow.document.write('<link rel="stylesheet" href="/vendors/bootstrap/bootstrap-rtl.min.css">');
+                mywindow.document.write('<link rel="stylesheet" href="/vendors/fontawesome/css/all.min.css">');
+                mywindow.document.write('<link rel="stylesheet" href="/vendors/themify-icons/themify-icons.css">');
+                mywindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">');
+                mywindow.document.write('<link rel="stylesheet" href="<link rel="stylesheet" href="/css/style.css">">');
+                mywindow.document.write('</head><body >');
+                mywindow.document.write('<h1>' + "فاکتور فروشگاه آروما"  + '</h1>');
+                mywindow.document.write($(".print-section").html());
+                mywindow.document.write('</body></html>');
+
+                mywindow.document.close(); // necessary for IE >= 10
+                mywindow.focus(); // necessary for IE >= 10*/
+
+                mywindow.print();
+                mywindow.close();
+            });
+        });
+    </script>
+}

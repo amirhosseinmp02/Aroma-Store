@@ -2997,7 +2997,7 @@ a {
 
     .confirmation-card tr td:last-child {
         color: #222;
-        padding-left: 25px
+        padding-right: 25px
     }
 
 .order_details_table {
@@ -3037,7 +3037,7 @@ a {
 
 .order_details_table .table tbody tr td {
     border: 0;
-    color: #777777
+    color: black
 }
 
     .order_details_table .table tbody tr td p {
@@ -5083,9 +5083,9 @@ span.reset_variations:hover {
     color: white;
 }
 
-.searchSectionOverlay .closebtn:hover {
-    color: #ccc;
-}
+    .searchSectionOverlay .closebtn:hover {
+        color: #ccc;
+    }
 
 .searchSectionOverlay input[type=text] {
     padding: 15px;
@@ -5096,9 +5096,9 @@ span.reset_variations:hover {
     background: white;
 }
 
-.searchSectionOverlay input[type=text]:hover {
-    background: #f1f1f1;
-}
+    .searchSectionOverlay input[type=text]:hover {
+        background: #f1f1f1;
+    }
 
 .searchSectionOverlay button {
     float: left;
@@ -5110,9 +5110,9 @@ span.reset_variations:hover {
     cursor: pointer;
 }
 
-.searchSectionOverlay button:hover {
-    background: #bbb;
-}
+    .searchSectionOverlay button:hover {
+        background: #bbb;
+    }
 
 .remove-orderdetails-button {
     background: transparent;
@@ -5125,4 +5125,13 @@ span.reset_variations:hover {
 
 .button-paypal:hover {
     color: black;
+}
+
+.orderconfirmation-variations {
+    font-size: 13px;
+    margin-top: 0px;
+}
+
+.bi-printer {
+    cursor: pointer
 }

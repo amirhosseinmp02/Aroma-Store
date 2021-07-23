@@ -425,9 +425,14 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         public async Task<IActionResult> OrderConfirmation()
         {
-            var loggedUserOpenOrder =
+            var loggedUser =
                 await _accountService
-                    .GetLoggedUserOpenOrder();
+                    .GetLoggedUserWithOrders();
+
+            var loggedUserOpenOrder =
+                loggedUser
+                    .UserOrders
+                    .SingleOrDefault(p => !p.IsFinally);
 
             if (loggedUserOpenOrder == null)
                 return NotFound();
@@ -437,7 +442,22 @@ namespace Aroma_Shop.Mvc.Controllers
                     .OrderConfirmation(loggedUserOpenOrder);
 
             if (result)
-                return View();
+            {
+                var model = new CartCheckOutViewModel()
+                {
+                    FirstName = loggedUser.UserDetails.FirstName,
+                    LastName = loggedUser.UserDetails.LastName,
+                    MobileNumber = loggedUser.MobileNumber,
+                    UserProvince = loggedUser.UserDetails.UserProvince,
+                    UserCity = loggedUser.UserDetails.UserCity,
+                    UserAddress = loggedUser.UserDetails.UserAddress,
+                    UserZipCode = loggedUser.UserDetails.UserZipCode,
+                    OrderNote = loggedUserOpenOrder.OrderNote,
+                    Order = loggedUserOpenOrder
+                };
+
+                return View(model);
+            }
 
             return NotFound();
         }
