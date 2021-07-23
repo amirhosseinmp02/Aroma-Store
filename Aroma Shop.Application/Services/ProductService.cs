@@ -60,6 +60,36 @@ namespace Aroma_Shop.Application.Services
 
             return order;
         }
+        public bool UpdateOrder(Order order)
+        {
+            try
+            {
+                var currentOrder =
+                    _productRepository
+                        .GetOrder(order.OrderId);
+
+                if (currentOrder == null)
+                    return false;
+
+                currentOrder
+                        .OrderStatus =
+                    order
+                        .OrderStatus;
+
+                _productRepository
+                    .UpdateOrder(order);
+
+                _productRepository
+                    .Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public bool DeleteOrderById(int orderId)
         {
             try
