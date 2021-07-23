@@ -16,6 +16,7 @@ namespace Aroma_Shop.Application.Interfaces
         Product GetProduct(int productId);
         IEnumerable<Order> GetOrders();
         Order GetOrderForAdmin(int orderId);
+        bool UpdateOrder(Order order);
         bool DeleteOrderById(int orderId);
         bool AddProduct(AddEditProductViewModel productViewModel);
         bool UpdateProduct(AddEditProductViewModel productViewModel);
