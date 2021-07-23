@@ -56,6 +56,20 @@ namespace Aroma_Shop.Data.Repositories
 
             return orders;
         }
+        public Order GetOrder(int orderId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Find(orderId);
+
+            return order;
+        }
+        public void DeleteOrder(Order order)
+        {
+            _context
+                .Remove(order);
+        }
         public void AddOrder(Order order)
         {
             _context.Add(order);
