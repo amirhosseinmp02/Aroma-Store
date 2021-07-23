@@ -72,6 +72,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region EditOrder
+
+        [HttpGet("/Admin/Orders/EditOrder")]
+        public IActionResult EditOrder(int orderId)
+        {
+
+        }
+
+        #endregion
+
         #region DeleteOrder
 
         [HttpGet("/Admin/Orders/DeleteOrder")]
