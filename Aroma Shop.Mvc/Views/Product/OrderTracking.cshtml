@@ -44,7 +44,93 @@
         }
         else
         {
-            <p class="text-left h6">سفارش #@Model.OrderId در @Model.Order.CreateTime.ToSolarWithTime() ثبت شده است و در حال حاضر در وضعیت @Model.Order.OrderStatus می باشد.</p>
+            <p class="text-center text-success h5">سفارش #@Model.OrderId در تاریخ @Model.Order.CreateTime.ToSolarWithTime() ثبت شده است و در حال حاضر در وضعیت @Model.Order.OrderStatus می باشد.</p>
+            <div class="order_details_table">
+                <div class="d-flex justify-content-between">
+                    <h2>جزئیات سفارش</h2>
+                    <i class="bi bi-printer h5"></i>
+                </div>
+                <div class="table table-responsive-lg table-responsive-sm">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">محصول</th>
+                                <th scope="col">تعداد</th>
+                                <th scope="col">جمع قیمت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var orderDetails in Model.Order.OrdersDetails)
+                            {
+                                var orderDetailsPrice =
+                                    orderDetails.IsOrderDetailsProductSimple ?
+                                        orderDetails.Product.ProductPrice :
+                                        orderDetails.ProductVariation.ProductVariationPrice;
+                                <tr>
+                                    <td class="py-2">
+                                        <p>@orderDetails.Product.ProductName</p>
+                                        @if (!orderDetails.IsOrderDetailsProductSimple)
+                                        {
+                                            <ul class="orderconfirmation-variations">
+                                                @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                                {
+                                                    <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </td>
+                                    <td class="align-middle py-2">
+                                        <h5>x <span class="middle-number d-inline-block">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></h5>
+                                    </td>
+                                    <td class="align-middle py-2">
+                                        <p>@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</p>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="pb-4"></td>
+                                <td class="pb-4"></td>
+                                <td class="pb-4"></td>
+                            </tr>
+                            @foreach (var discount in Model.Order.Discounts)
+                            {
+                                <tr>
+                                    <td>کد تخفیف</td>
+                                    <td>@discount.DiscountCode</td>
+                                    <td>-@discount.DiscountPrice</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="pt-5">
+                                    <h4>حمل و نقل</h4>
+                                </td>
+                                <td class="pt-5">
+                                    <h5></h5>
+                                </td>
+                                <td class="pt-5">
+                                    <p>پس کرایه</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>جمع کل</h4>
+                                </td>
+                                <td>
+                                    <h5></h5>
+                                </td>
+                                <td>
+                                    @{
+                                        var totalOrderPrice =
+                                            @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                            @Model.Order.Discounts.Sum(p => p.DiscountPrice);
+                                    }
+                                    <h4>@(totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان")</h4>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         }
     </div>
 </section>
