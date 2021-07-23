@@ -16,6 +16,7 @@ namespace Aroma_Shop.Application.Interfaces
         Product GetProduct(int productId);
         IEnumerable<Order> GetOrders();
         Order GetOrderForAdmin(int orderId);
+        CartCheckOutViewModel GetOrderInvoice(int orderId);
         bool UpdateOrder(Order order);
         bool SetOrderAsSeen(Order order);
         int GetUnSeenOrdersCount();

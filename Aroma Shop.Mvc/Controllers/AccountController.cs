@@ -212,6 +212,17 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region ShowOrder
+
+        [Authorize]
+        [HttpGet("/My-Account/Order/{orderId}")]
+        public IActionResult AccountOrder(int orderId)
+        {
+
+        }
+
+        #endregion
+
         #region LogOut
 
         [HttpPost]
