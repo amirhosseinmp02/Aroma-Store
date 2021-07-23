@@ -467,6 +467,16 @@ namespace Aroma_Shop.Mvc.Controllers
 
         #endregion
 
+        #region OrderTracking
+
+        [HttpGet("/Order-Tracking")]
+        public IActionResult OrderTracking()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region AddProductToUserFavoriteProducts
 
         [Authorize]
