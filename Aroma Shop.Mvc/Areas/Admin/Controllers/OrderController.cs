@@ -77,7 +77,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Orders/EditOrder")]
         public IActionResult EditOrder(int orderId)
         {
+            var order =
+                _productService
+                    .GetOrderForAdmin(orderId);
 
+            if (order == null)
+                return NotFound();
+
+            return View(order);
         }
 
         #endregion
