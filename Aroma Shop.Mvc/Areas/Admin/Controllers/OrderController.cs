@@ -77,7 +77,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Orders/DeleteOrder")]
         public IActionResult DeleteOrder(int orderId)
         {
-            return View();
+            var result =
+                _productService
+                    .DeleteOrderById(orderId);
+
+            if (result)
+                return RedirectToAction("Index");
+
+            return NotFound();
         }
 
         #endregion

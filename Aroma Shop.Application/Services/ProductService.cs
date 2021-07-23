@@ -52,9 +52,30 @@ namespace Aroma_Shop.Application.Services
 
             return orders;
         }
-        public bool DeleteOrder()
+        public bool DeleteOrderById(int orderId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var order =
+                    _productRepository
+                        .GetOrder(orderId);
+
+                if (order == null)
+                    return false;
+
+                _productRepository
+                    .DeleteOrder(order);
+
+                _productRepository
+                    .Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {

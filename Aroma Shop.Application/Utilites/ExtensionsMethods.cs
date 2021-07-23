@@ -36,34 +36,6 @@ namespace Aroma_Shop.Application.Utilites
             return solarCalendar;
         }
 
-        public static string ToSolar(this DateTime? dateTime)
-        {
-            if (dateTime == null)
-                return null;
-
-            PersianCalendar persianCalendar = new PersianCalendar();
-
-            var solarCalendar =
-                $"{persianCalendar.GetYear((DateTime)dateTime)}/{persianCalendar.GetMonth((DateTime)dateTime)}" +
-                $"/{persianCalendar.GetDayOfMonth((DateTime)dateTime)}";
-
-            return solarCalendar;
-        }
-
-        public static string ToSolarWithTime(this DateTime? dateTime)
-        {
-            if (dateTime == null)
-                return null;
-
-            PersianCalendar persianCalendar = new PersianCalendar();
-
-            var solarCalendar =
-                $"{persianCalendar.GetHour((DateTime)dateTime)}:{persianCalendar.GetMinute((DateTime)dateTime)}" +
-                $" - {persianCalendar.GetYear((DateTime)dateTime)}/{persianCalendar.GetMonth((DateTime)dateTime)}" +
-                $"/{persianCalendar.GetDayOfMonth((DateTime)dateTime)}";
-
-            return solarCalendar;
-        }
         #endregion
 
         #region IsLocal
