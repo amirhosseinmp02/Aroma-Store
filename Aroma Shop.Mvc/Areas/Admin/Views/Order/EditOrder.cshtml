@@ -32,14 +32,17 @@
                         <li>روش پرداخت : زرین پال</li>
                         <li>
                             وضعیت :
-                            <select class="form-control ml-2 w-75 d-inline mt-1" asp-for="OrderStatus">
-                                <option value="@OrderStatus.Canceled.GetDescription()">@OrderStatus.Canceled.GetDescription()</option>
-                                <option value="@OrderStatus.AwaitingPayment.GetDescription()">@OrderStatus.AwaitingPayment.GetDescription()</option>
-                                <option value="@OrderStatus.Doing.GetDescription()">@OrderStatus.Doing.GetDescription()</option>
-                                <option value="@OrderStatus.AwaitingReview.GetDescription()">@OrderStatus.AwaitingReview.GetDescription()</option>
-                                <option value="@OrderStatus.Completed.GetDescription()">@OrderStatus.Completed.GetDescription()</option>
-                                <option value="@OrderStatus.Returned.GetDescription()">@OrderStatus.Returned.GetDescription()</option>
-                            </select>
+                            <form asp-action="EditOrder">
+                                <select class="form-control ml-2 w-75 d-inline mt-1" asp-for="OrderStatus">
+                                    <option value="@OrderStatus.Canceled.GetDescription()">@OrderStatus.Canceled.GetDescription()</option>
+                                    <option value="@OrderStatus.AwaitingPayment.GetDescription()">@OrderStatus.AwaitingPayment.GetDescription()</option>
+                                    <option value="@OrderStatus.Doing.GetDescription()">@OrderStatus.Doing.GetDescription()</option>
+                                    <option value="@OrderStatus.AwaitingReview.GetDescription()">@OrderStatus.AwaitingReview.GetDescription()</option>
+                                    <option value="@OrderStatus.Completed.GetDescription()">@OrderStatus.Completed.GetDescription()</option>
+                                    <option value="@OrderStatus.Returned.GetDescription()">@OrderStatus.Returned.GetDescription()</option>
+                                </select>
+                                <input type="hidden" asp-for="OrderId" />    
+                            </form>
                         </li>
                     </ul>
                 </div>

@@ -87,6 +87,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(order);
         }
 
+        [HttpPost("/Admin/Orders/EditOrder")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditOrder(Order model)
+        {
+
+        }
+
         #endregion
 
         #region DeleteOrder
