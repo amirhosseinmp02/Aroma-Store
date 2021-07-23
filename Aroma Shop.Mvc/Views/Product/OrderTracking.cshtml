@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Aroma_Shop.Application.ViewModels.Product.OrderTrackingViewModel
+
+@{
     ViewData["Title"] = "رهگیری سفارش";
 }
 
@@ -17,3 +19,25 @@
         </div>
     </div>
 </section>
+<section class="tracking_box_area section-margin--small">
+    <div class="container">
+        <div class="tracking_box_inner">
+            <p>لطفا ایمیل و شناسه سفارش مورد نظر را در زیر وارد کنید.</p>
+            <form class="row tracking_form" asp-action="OrderTracking">
+                <div class="col-md-12 form-group">
+                    <input type="text" class="form-control" id="order" asp-for="OrderId" placeholder="شناسه سفارش مورد نظر" onfocus="this.placeholder = ''" onblur="this.placeholder = 'شناسه سفارش مورد نظر'">
+                </div>
+                <div class="col-md-12 form-group">
+                    <input type="email" class="form-control" id="email" asp-for="Email" placeholder="ایمیل شما" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل شما'">
+                </div>
+                <div class="col-md-12 form-group">
+                    <button type="submit" value="submit" class="button button-tracking">پیگیری سفارش</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
