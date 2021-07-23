@@ -34,7 +34,7 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Categories)
                 .Include(p => p.Informations)
                 .Include(p => p.Images)
-                .Include(p=>p.ProductVariations)
+                .Include(p => p.ProductVariations)
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.User)
                 .Include(p => p.Comments)
@@ -52,7 +52,7 @@ namespace Aroma_Shop.Data.Repositories
                     .Orders
                     .Include(p => p.OrdersDetails)
                     .Include(p => p.OwnerUser)
-                    .ThenInclude(p=>p.UserDetails);
+                    .ThenInclude(p => p.UserDetails);
 
             return orders;
         }
@@ -62,6 +62,22 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .Orders
                     .Find(orderId);
+
+            return order;
+        }
+        public Order GetOrderForAdmin(int orderId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Include(p => p.Discounts)
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.Product)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.ProductVariation)
+                    .SingleOrDefault(p => p.OrderId == orderId);
 
             return order;
         }
@@ -84,8 +100,8 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .OrdersDetails
                     .Where(p => !p.Order.IsFinally)
-                    .Include(p=>p.Product)
-                    .Include(p=>p.ProductVariation);
+                    .Include(p => p.Product)
+                    .Include(p => p.ProductVariation);
 
             return unFinishedOrdersDetails;
         }
@@ -154,7 +170,7 @@ namespace Aroma_Shop.Data.Repositories
             var categories = _context.Categories
                 .Include(p => p.ParentCategory)
                 .Include(p => p.ChildrenCategories)
-                .Include(p=>p.Products);
+                .Include(p => p.Products);
 
             return categories;
         }
