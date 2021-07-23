@@ -91,6 +91,22 @@ namespace Aroma_Shop.Data.Repositories
 
             return order;
         }
+        public Order GetOrderInvoice(string userId, int orderId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Include(p=>p.Discounts)
+                    .Include(p=>p.OwnerUser)
+                    .ThenInclude(p=>p.UserDetails)
+                    .Include(p=>p.OrdersDetails)
+                    .ThenInclude(p=>p.Product)
+                    .Include(p=>p.OrdersDetails)
+                    .ThenInclude(p=>p.ProductVariation)
+                    .SingleOrDefault(p => p.OrderId == orderId && p.OwnerUser.Id == userId);
+
+            return order;
+        }
         public void DeleteOrder(Order order)
         {
             _context
