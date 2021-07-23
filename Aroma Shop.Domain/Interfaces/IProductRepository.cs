@@ -21,10 +21,11 @@ namespace Aroma_Shop.Domain.Interfaces
         int GetUnSeenOrdersCount();
         Order GetOrder(int orderId);
         Order GetOrderForAdmin(int orderId);
+        Order GetOrderInvoice(string userId, int orderId);
         void DeleteOrder(Order order);
         void AddOrder(Order order);
         void UpdateOrder(Order order);
-        IEnumerable<OrderDetails> GetUnFinishedOrdersDetails(); 
+        IEnumerable<OrderDetails> GetUnFinishedOrdersDetails();
         OrderDetails GetOrderDetails(int orderDetailsId);
         void AddOrderDetails(OrderDetails orderDetails);
         void UpdateOrderDetails(OrderDetails orderDetails);
