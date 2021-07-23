@@ -62,7 +62,30 @@ namespace Aroma_Shop.Application.Services
         }
         public CartCheckOutViewModel GetOrderInvoice(int orderId)
         {
-            
+            var loggedUserId =
+                _accessor.HttpContext
+                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var order =
+                _productRepository
+                    .GetOrderInvoice(loggedUserId, orderId);
+
+            if (order == null)
+                return null;
+
+            var cartCheckOutViewModel = new CartCheckOutViewModel()
+            {
+                FirstName = order.OwnerUser.UserDetails.FirstName,
+                LastName = order.OwnerUser.UserDetails.LastName,
+                MobileNumber = order.OwnerUser.MobileNumber,
+                UserProvince = order.OwnerUser.UserDetails.UserProvince,
+                UserCity = order.OwnerUser.UserDetails.UserCity,
+                UserAddress = order.OwnerUser.UserDetails.UserAddress,
+                UserZipCode = order.OwnerUser.UserDetails.UserZipCode,
+                Order = order
+            };
+
+            return cartCheckOutViewModel;
         }
         public bool UpdateOrder(Order order)
         {

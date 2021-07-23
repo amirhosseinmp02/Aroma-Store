@@ -75,9 +75,12 @@
                                 @if (order.OrderStatus == OrderStatus.AwaitingPayment.GetDescription())
                                 {
                                     <a class="btn btn-warning m-1" asp-controller="Product" asp-action="CartCheckOut">پرداخت</a>
+                                    <a class="btn btn-warning m-1" asp-action="AccountOrder" asp-route-orderId="@order.OrderId">پیش فاکتور</a>
                                 }
-                                <a class="btn btn-warning m-1">نمایش</a>
-                                <a class="btn btn-warning m-1">فاکتور</a>
+                                else
+                                {
+                                    <a class="btn btn-warning m-1" asp-action="AccountOrder" asp-route-orderId="@order.OrderId">فاکتور</a>
+                                }
                             </td>
                         </tr>
                     }

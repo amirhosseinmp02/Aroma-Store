@@ -446,6 +446,10 @@ namespace Aroma_Shop.Mvc.Controllers
 
             if (result)
             {
+                ViewData["HeaderTitle"] = "تایید سفارش";
+
+                ViewData["Message"] = "با تشکر ، سفارش شما دریافت شد.";
+
                 var model = new CartCheckOutViewModel()
                 {
                     FirstName = loggedUser.UserDetails.FirstName,
