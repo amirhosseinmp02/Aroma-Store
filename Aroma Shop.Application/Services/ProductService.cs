@@ -60,6 +60,10 @@ namespace Aroma_Shop.Application.Services
 
             return order;
         }
+        public CartCheckOutViewModel GetOrderInvoice(int orderId)
+        {
+            
+        }
         public bool UpdateOrder(Order order)
         {
             try
