@@ -37,6 +37,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void UpdateOrder(Order order);
         void DeleteOrder(Order order);
         IEnumerable<OrderDetails> GetUnFinishedOrdersDetails();
+        IEnumerable<OrderDetails> GetOrderDetailsByProductId(int productId);
         OrderDetails GetOrderDetails(int orderDetailsId);
         int GetUserOpenOrderDetailsCount(string userId);
         void AddOrderDetails(OrderDetails orderDetails);
