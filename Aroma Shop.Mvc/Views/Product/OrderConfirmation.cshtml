@@ -1,8 +1,9 @@
 ﻿@using Aroma_Shop.Application.Utilites
-@model Aroma_Shop.Application.ViewModels.Product.CartCheckOutViewModel
+
+@model Aroma_Shop.Domain.Models.ProductModels.Order
 
 @{
-    ViewData["Title"] = "تایید سفارش";
+    ViewData["Title"] = @ViewData["HeaderTitle"];
 }
 
 <section class="blog-banner-area" id="contact">
@@ -13,7 +14,7 @@
                 <nav aria-label="breadcrumb" class="banner-breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a class="text-dark" href="/">خانه</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">تایید سفارش</li>
+                        <li class="breadcrumb-item active" aria-current="page">@ViewData["HeaderTitle"]</li>
                     </ol>
                 </nav>
             </div>
@@ -32,24 +33,24 @@
                             <tbody>
                                 <tr>
                                     <td>شناسه سفارش</td>
-                                    <td>: @Model.Order.OrderId</td>
+                                    <td>: @Model.OrderId</td>
                                 </tr>
                                 <tr>
                                     <td>تاریخ پرداخت</td>
-                                    <td>: @(Model.Order.IsFinally? Model.Order.OrderRegistrationDate.ToSolarWithTime():"-")</td>
+                                    <td>: @(Model.IsFinally? Model.OrderRegistrationDate.ToSolarWithTime():"-")</td>
                                 </tr>
                                 <tr>
                                     <td>جمع کل</td>
                                     @{
                                         var totalOrderPrice =
-                                            @Model.Order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                                            @Model.Order.Discounts.Sum(p => p.DiscountPrice);
+                                            @Model.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                            @Model.Discounts.Sum(p => p.DiscountPrice);
                                     }
                                     <td>: @(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
                                 </tr>
                                 <tr>
                                     <td>روش پرداخت</td>
-                                    <td>: @(Model.Order.IsFinally? "زرین پال":"-")</td>
+                                    <td>: @(Model.IsFinally? "زرین پال":"-")</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -62,19 +63,19 @@
                             <tbody>
                                 <tr>
                                     <td>نام</td>
-                                    <td>: @Model.FirstName</td>
+                                    <td>: @Model.OwnerUser.UserDetails.FirstName</td>
                                 </tr>
                                 <tr>
                                     <td>نام خانوادگی</td>
-                                    <td>: @Model.LastName</td>
+                                    <td>: @Model.OwnerUser.UserDetails.LastName</td>
                                 </tr>
                                 <tr>
                                     <td>شماره موبایل</td>
-                                    <td>: @Model.MobileNumber</td>
+                                    <td>: @Model.OwnerUser.MobileNumber</td>
                                 </tr>
                                 <tr>
                                     <td>وضعیت سفارش</td>
-                                    <td>: @Model.Order.OrderStatus</td>
+                                    <td>: @Model.OrderStatus</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -87,19 +88,19 @@
                             <tbody>
                                 <tr>
                                     <td>استان</td>
-                                    <td>: @Model.UserProvince</td>
+                                    <td>: @Model.OwnerUser.UserDetails.UserProvince</td>
                                 </tr>
                                 <tr>
                                     <td>شهر</td>
-                                    <td>: @Model.UserCity</td>
+                                    <td>: @Model.OwnerUser.UserDetails.UserCity</td>
                                 </tr>
                                 <tr>
                                     <td>کد پستی</td>
-                                    <td>: @Model.UserZipCode</td>
+                                    <td>: @Model.OwnerUser.UserDetails.UserZipCode</td>
                                 </tr>
                                 <tr>
                                     <td>آدرس</td>
-                                    <td>: @Model.UserAddress</td>
+                                    <td>: @Model.OwnerUser.UserDetails.UserAddress</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -121,7 +122,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var orderDetails in Model.Order.OrdersDetails)
+                            @foreach (var orderDetails in Model.OrdersDetails)
                             {
                                 var orderDetailsPrice =
                                     orderDetails.IsOrderDetailsProductSimple ?
@@ -153,7 +154,7 @@
                                 <td class="pb-4"></td>
                                 <td class="pb-4"></td>
                             </tr>
-                            @foreach (var discount in Model.Order.Discounts)
+                            @foreach (var discount in Model.Discounts)
                             {
                                 <tr>
                                     <td>کد تخفیف</td>

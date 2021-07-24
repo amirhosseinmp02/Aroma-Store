@@ -218,10 +218,11 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpGet("/Shopping-Cart")]
-        public async Task<IActionResult> ShoppingCart()
+        public IActionResult ShoppingCart()
         {
             var loggedUserOpenOrder =
-                await _accountService.GetLoggedUserOpenOrder();
+                _productService
+                    .GetLoggedUserOpenOrder();
 
             return View(loggedUserOpenOrder);
         }
@@ -275,16 +276,16 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCart(IEnumerable<int> orderDetailsQuantities)
+        public IActionResult UpdateCart(IEnumerable<int> orderDetailsQuantities)
         {
             if (ModelState.IsValid)
             {
-                var loggedUserOpenOrder =
-                    await _accountService
+                var loggedUserOpenOrder = 
+                    _productService
                         .GetLoggedUserOpenOrder();
 
                 var result =
-                    await _productService
+                    _productService
                         .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
 
                 if (result)
@@ -330,7 +331,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> ApplyDiscountOnCart(string discountCode)
         {
             var loggedUserOpenOrder =
-                await _accountService
+                _productService
                     .GetLoggedUserOpenOrder();
 
             if (ModelState.IsValid)
@@ -364,11 +365,11 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var loggedUserOpenOrder =
-                    await _accountService
+                    _productService
                         .GetLoggedUserOpenOrder();
 
-                var result =
-                    await _productService
+                    var result = 
+                    _productService
                         .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
 
                 if (result)
@@ -387,7 +388,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> CartCheckOut()
         {
             var cartCheckOutViewModel =
-                await _accountService
+                _productService
                     .GetLoggedUserCartCheckOut();
 
             if (cartCheckOutViewModel.Order == null)
@@ -413,9 +414,9 @@ namespace Aroma_Shop.Mvc.Controllers
                 return NotFound();
             }
 
-            var cartCheckOutViewModel =
-                await _accountService
-                    .GetLoggedUserCartCheckOut();
+            var cartCheckOutViewModel = 
+                    _productService
+                        .GetLoggedUserCartCheckOut();
 
             return View(cartCheckOutViewModel);
         }
@@ -428,14 +429,9 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         public async Task<IActionResult> OrderConfirmation()
         {
-            var loggedUser =
-                await _accountService
-                    .GetLoggedUserWithOrders();
-
             var loggedUserOpenOrder =
-                loggedUser
-                    .UserOrders
-                    .SingleOrDefault(p => !p.IsFinally);
+                _productService
+                    .GetLoggedUserOpenOrder();
 
             if (loggedUserOpenOrder == null)
                 return NotFound();
@@ -450,20 +446,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
                 ViewData["Message"] = "با تشکر ، سفارش شما دریافت شد.";
 
-                var model = new CartCheckOutViewModel()
-                {
-                    FirstName = loggedUser.UserDetails.FirstName,
-                    LastName = loggedUser.UserDetails.LastName,
-                    MobileNumber = loggedUser.MobileNumber,
-                    UserProvince = loggedUser.UserDetails.UserProvince,
-                    UserCity = loggedUser.UserDetails.UserCity,
-                    UserAddress = loggedUser.UserDetails.UserAddress,
-                    UserZipCode = loggedUser.UserDetails.UserZipCode,
-                    OrderNote = loggedUserOpenOrder.OrderNote,
-                    Order = loggedUserOpenOrder
-                };
-
-                return View(model);
+                return View(loggedUserOpenOrder);
             }
 
             return NotFound();
@@ -487,7 +470,7 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 var order =
                     _productService
-                        .GetOrderForAdmin(model.OrderId);
+                        .GetOrderWithDetails(model.OrderId);
 
                 if (order != null && order.OwnerUser.Email == model.Email)
                 {

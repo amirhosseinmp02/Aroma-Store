@@ -1,6 +1,7 @@
 ﻿@using Aroma_Shop.Application.Interfaces
 
 @inject IAccountService AccountService
+@inject IProductService ProductService
 
 @{
     var isUserSignedIn = AccountService.IsUserSignedIn();
@@ -79,7 +80,7 @@
                         </div>
                         <ul class="nav-shop">
                             <li class="nav-item"><button class="openBtn"><i class="ti-search"></i></button></li>
-                            <li class="nav-item"><a asp-controller="Product" asp-action="ShoppingCart"><i class="ti-shopping-cart"></i><span class="nav-shop__circle">@(isUserSignedIn ? await AccountService.GetLoggedUserOpenOrderCount() : 0)</span></a> </li>
+                            <li class="nav-item"><a asp-controller="Product" asp-action="ShoppingCart"><i class="ti-shopping-cart"></i><span class="nav-shop__circle">@(isUserSignedIn ? ProductService.GetLoggedUserOpenOrderDetailsCount() : 0)</span></a> </li>
                             @if (isUserSignedIn)
                             {
                                 <li class="nav-item"><a class="button button-header" asp-controller="Account" asp-action="ManageAccount">@User.Identity.Name</a></li>

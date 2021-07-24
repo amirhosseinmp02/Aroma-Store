@@ -34,58 +34,68 @@
             </form>
         </div>
         <div class="col-lg-9 col-md-8 col-sm-11">
-            <table class="table table-responsive-lg table-responsive-sm table-striped table-bordered text-center table-light">
-                <thead>
-                    <tr>
-                        <th class="cart-item-cells px-4">سفارش</th>
-                        <th class="cart-item-cells">تاریخ</th>
-                        <th class="cart-item-cells">وضعیت</th>
-                        <th class="cart-item-cells px-5">مجموع</th>
-                        <th class="cart-item-cells">عملیات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        var orders =
-                            Model
-                                .Where(p => p.OrdersDetails.Any());
-                    }
-                    @foreach (var order in orders)
-                    {
-                        var orderDate = "";
-
-                        if (order.OrderRegistrationDate == default)
-                        {
-                            orderDate = order.CreateTime.ToSolarWithTime();
-                        }
-                        else
-                        {
-                            orderDate = order.OrderRegistrationDate.ToSolarWithTime();
-                        }
-
-                        var totalOrderPrice =
-                            order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                            order.Discounts.Sum(p => p.DiscountPrice);
+            @{
+                var orders =
+                    Model
+                        .Where(p => p.OrdersDetails.Any());
+            }
+            @if (orders.Any())
+            {
+                <table class="table table-responsive-lg table-responsive-sm table-striped table-bordered text-center table-light">
+                    <thead>
                         <tr>
-                            <td class="cart-item-cells align-middle">#@order.OrderId</td>
-                            <td class="cart-item-cells align-middle">@orderDate</td>
-                            <td class="cart-item-cells align-middle text-success">@order.OrderStatus</td>
-                            <td class="cart-item-cells align-middle">@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
-                            <td class="cart-item-cells align-middle">
-                                @if (order.OrderStatus == OrderStatus.AwaitingPayment.GetDescription())
-                                {
-                                    <a class="btn btn-warning m-1" asp-controller="Product" asp-action="CartCheckOut">پرداخت</a>
-                                    <a class="btn btn-warning m-1" asp-action="AccountOrder" asp-route-orderId="@order.OrderId">پیش فاکتور</a>
-                                }
-                                else
-                                {
-                                    <a class="btn btn-warning m-1" asp-action="AccountOrder" asp-route-orderId="@order.OrderId">فاکتور</a>
-                                }
-                            </td>
+                            <th class="cart-item-cells px-4">سفارش</th>
+                            <th class="cart-item-cells">تاریخ</th>
+                            <th class="cart-item-cells">وضعیت</th>
+                            <th class="cart-item-cells px-5">مجموع</th>
+                            <th class="cart-item-cells">عملیات</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+
+
+                        @foreach (var order in orders)
+                        {
+                            var orderDate = "";
+
+                            if (order.OrderRegistrationDate == default)
+                            {
+                                orderDate = order.CreateTime.ToSolarWithTime();
+                            }
+                            else
+                            {
+                                orderDate = order.OrderRegistrationDate.ToSolarWithTime();
+                            }
+
+                            var totalOrderPrice =
+                                order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                order.Discounts.Sum(p => p.DiscountPrice);
+                            <tr>
+                                <td class="cart-item-cells align-middle">#@order.OrderId</td>
+                                <td class="cart-item-cells align-middle">@orderDate</td>
+                                <td class="cart-item-cells align-middle text-success">@order.OrderStatus</td>
+                                <td class="cart-item-cells align-middle">@(totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
+                                <td class="cart-item-cells align-middle">
+                                    @if (order.OrderStatus == OrderStatus.AwaitingPayment.GetDescription())
+                                    {
+                                        <a class="btn btn-warning m-1" asp-controller="Product" asp-action="CartCheckOut">پرداخت</a>
+                                        <a class="btn btn-warning m-1" asp-action="AccountOrder" asp-route-orderId="@order.OrderId">پیش فاکتور</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-warning m-1" asp-action="AccountOrder" asp-route-orderId="@order.OrderId">فاکتور</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-danger rounded-0 w-100 text-left" role="alert">لیست سفارشات شما خالیست !</div>
+            }
         </div>
     </div>
 </div>

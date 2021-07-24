@@ -737,7 +737,7 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
-        public async Task<bool> UpdateLoggedUserForCheckOut(CustomIdentityUser loggedUser)
+        public async Task<bool> UpdateUser(CustomIdentityUser loggedUser)
         {
             try
             {
@@ -777,99 +777,6 @@ namespace Aroma_Shop.Application.Services
                     .SingleOrDefaultAsync(p => p.Id == loggedUserId);
 
             return loggedUser;
-        }
-        public async Task<CustomIdentityUser> GetLoggedUserWithOrders()
-        {
-            var loggedUserId =
-                _accessor.HttpContext
-                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var loggedUser =
-                await _userManager.Users
-                    .Include(p=>p.UserDetails)
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p => p.OrdersDetails)
-                    .ThenInclude(p => p.Product)
-                    .ThenInclude(p => p.Images)
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p => p.OrdersDetails)
-                    .ThenInclude(p => p.ProductVariation)
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p=>p.Discounts)
-                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
-
-            return loggedUser;
-        }
-        public async Task<Order> GetLoggedUserOpenOrder()
-        {
-            var loggedUser =
-                await GetLoggedUserWithOrders();
-
-            var loggedUserOpenOrder =
-                loggedUser
-                    .UserOrders
-                    .SingleOrDefault(p => !p.IsFinally);
-
-            return loggedUserOpenOrder;
-        }
-        public async Task<CartCheckOutViewModel> GetLoggedUserCartCheckOut()
-        {
-            var loggedUserId =
-                _accessor.HttpContext
-                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var loggedUser =
-                await _userManager.Users
-                    .Include(p=>p.UserDetails)
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p => p.OrdersDetails)
-                    .ThenInclude(p => p.Product)
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p => p.OrdersDetails)
-                    .ThenInclude(p => p.ProductVariation)
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p => p.Discounts)
-                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
-
-            var loggedUserOpenOrder =
-                loggedUser
-                    .UserOrders
-                    .SingleOrDefault(p => !p.IsFinally);
-
-            var cartCheckOutViewModel = new CartCheckOutViewModel()
-            {
-                FirstName = loggedUser.UserDetails.FirstName,
-                LastName = loggedUser.UserDetails.LastName,
-                MobileNumber = loggedUser.MobileNumber,
-                UserProvince = loggedUser.UserDetails.UserProvince,
-                UserCity = loggedUser.UserDetails.UserCity,
-                UserAddress = loggedUser.UserDetails.UserAddress,
-                UserZipCode = loggedUser.UserDetails.UserZipCode,
-                Order = loggedUserOpenOrder
-            };
-
-            return cartCheckOutViewModel;
-        }
-        public async Task<int> GetLoggedUserOpenOrderCount()
-        {
-            var loggedUserId =
-                _accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var loggedUser =
-                await _userManager.Users
-                    .Include(p => p.UserOrders)
-                    .ThenInclude(p => p.OrdersDetails)
-                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
-
-            var loggedUserOpenOrder =
-                loggedUser
-                    .UserOrders
-                    .SingleOrDefault(p => !p.IsFinally);
-
-            var loggedUserOpenOrderCount =
-                loggedUserOpenOrder?.OrdersDetails.Count ?? 0;
-
-            return loggedUserOpenOrderCount;
         }
         public async Task<string> GetLoggedUserRole()
         {

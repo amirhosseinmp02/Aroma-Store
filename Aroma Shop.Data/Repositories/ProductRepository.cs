@@ -45,152 +45,6 @@ namespace Aroma_Shop.Data.Repositories
 
             return product;
         }
-        public IEnumerable<Order> GetOrders()
-        {
-            var orders =
-                _context
-                    .Orders
-                    .Include(p => p.OrdersDetails)
-                    .Include(p=>p.Discounts)
-                    .Include(p => p.OwnerUser)
-                    .ThenInclude(p => p.UserDetails);
-
-            return orders;
-        }
-        public int GetUnSeenOrdersCount()
-        {
-            var unSeenOrdersCount =
-                _context
-                    .Orders
-                    .Count(p => !p.IsSeen);
-
-            return unSeenOrdersCount;
-        }
-        public Order GetOrder(int orderId)
-        {
-            var order =
-                _context
-                    .Orders
-                    .Find(orderId);
-
-            return order;
-        }
-        public Order GetOrderForAdmin(int orderId)
-        {
-            var order =
-                _context
-                    .Orders
-                    .Include(p => p.Discounts)
-                    .Include(p => p.OwnerUser)
-                    .ThenInclude(p => p.UserDetails)
-                    .Include(p => p.OrdersDetails)
-                    .ThenInclude(p => p.Product)
-                    .Include(p => p.OrdersDetails)
-                    .ThenInclude(p => p.ProductVariation)
-                    .SingleOrDefault(p => p.OrderId == orderId);
-
-            return order;
-        }
-        public Order GetOrderInvoice(string userId, int orderId)
-        {
-            var order =
-                _context
-                    .Orders
-                    .Include(p=>p.Discounts)
-                    .Include(p=>p.OwnerUser)
-                    .ThenInclude(p=>p.UserDetails)
-                    .Include(p=>p.OrdersDetails)
-                    .ThenInclude(p=>p.Product)
-                    .Include(p=>p.OrdersDetails)
-                    .ThenInclude(p=>p.ProductVariation)
-                    .SingleOrDefault(p => p.OrderId == orderId && p.OwnerUser.Id == userId);
-
-            return order;
-        }
-        public void DeleteOrder(Order order)
-        {
-            _context
-                .Remove(order);
-        }
-        public void AddOrder(Order order)
-        {
-            _context.Add(order);
-        }
-        public void UpdateOrder(Order order)
-        {
-            _context.Update(order);
-        }
-        public IEnumerable<OrderDetails> GetUnFinishedOrdersDetails()
-        {
-            var unFinishedOrdersDetails =
-                _context
-                    .OrdersDetails
-                    .Where(p => !p.Order.IsFinally)
-                    .Include(p => p.Product)
-                    .Include(p => p.ProductVariation);
-
-            return unFinishedOrdersDetails;
-        }
-        public OrderDetails GetOrderDetails(int orderDetailsId)
-        {
-            var orderDetails =
-                _context
-                    .OrdersDetails
-                    .Find(orderDetailsId);
-
-            return orderDetails;
-        }
-        public void AddOrderDetails(OrderDetails orderDetails)
-        {
-            _context.Add(orderDetails);
-        }
-        public void UpdateOrderDetails(OrderDetails orderDetails)
-        {
-            _context.OrdersDetails.Update(orderDetails);
-        }
-        public void DeleteOrderDetails(OrderDetails orderDetails)
-        {
-            _context.Remove(orderDetails);
-        }
-        public IEnumerable<Discount> GetDiscounts()
-        {
-            var discounts =
-                _context.Discounts;
-
-            return discounts;
-        }
-        public Discount GetDiscount(int discountId)
-        {
-            var discount =
-                _context
-                    .Discounts
-                    .Include(p => p.Orders)
-                    .SingleOrDefault(p => p.DiscountId == discountId);
-
-            return discount;
-        }
-        public Discount GetDiscountByCode(string discountCode)
-        {
-            var discount =
-                _context
-                    .Discounts
-                    .SingleOrDefault(p => p.DiscountCode == discountCode);
-
-            return discount;
-        }
-        public void AddDiscount(Discount discount)
-        {
-            _context.Add(discount);
-        }
-        public void UpdateDiscount(Discount discount)
-        {
-            _context.Update(discount);
-        }
-        public void DeleteDiscount(Discount discount)
-        {
-            _context
-                .Remove(discount);
-        }
         public IEnumerable<Category> GetCategories()
         {
             var categories = _context.Categories
@@ -260,6 +114,194 @@ namespace Aroma_Shop.Data.Repositories
 
             _context.Remove(category);
         }
+
+        //Start Order Section 
+
+        public IEnumerable<Order> GetOrders()
+        {
+            var orders =
+                _context
+                    .Orders
+                    .Include(p => p.OrdersDetails)
+                    .Include(p => p.Discounts)
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails);
+
+            return orders;
+        }
+        public IEnumerable<Order> GetUserOrders(string userId)
+        {
+            var orders =
+                _context
+                    .Orders
+                    .Where(p => p.OwnerUser.Id == userId)
+                    .Include(p => p.OrdersDetails)
+                    .Include(p=>p.Discounts);
+
+            return orders;
+        }
+        public Order GetOrder(int orderId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Find(orderId);
+
+            return order;
+        }
+        public Order GetOrderWithDetails(int orderId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Include(p => p.Discounts)
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.Product)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.ProductVariation)
+                    .SingleOrDefault(p => p.OrderId == orderId);
+
+            return order;
+        }
+        public Order GetUserOpenOrder(string userId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Include(p => p.Discounts)
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.Product)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.ProductVariation)
+                    .SingleOrDefault(p => p.OwnerUser.Id == userId && !p.IsFinally);
+
+            return order;
+        }
+        public Order GetUserOrder(string userId, int orderId)
+        {
+            var order =
+                _context
+                    .Orders
+                    .Include(p => p.Discounts)
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.Product)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.ProductVariation)
+                    .SingleOrDefault(p => p.OrderId == orderId && p.OwnerUser.Id == userId);
+
+            return order;
+        }
+        public int GetUnSeenOrdersCount()
+        {
+            var unSeenOrdersCount =
+                _context
+                    .Orders
+                    .Count(p => !p.IsSeen);
+
+            return unSeenOrdersCount;
+        }
+        public void AddOrder(Order order)
+        {
+            _context.Add(order);
+        }
+        public void UpdateOrder(Order order)
+        {
+            _context.Update(order);
+        }
+        public void DeleteOrder(Order order)
+        {
+            _context
+                .Remove(order);
+        }
+        public IEnumerable<OrderDetails> GetUnFinishedOrdersDetails()
+        {
+            var unFinishedOrdersDetails =
+                _context
+                    .OrdersDetails
+                    .Where(p => !p.Order.IsFinally)
+                    .Include(p => p.Product)
+                    .Include(p => p.ProductVariation);
+
+            return unFinishedOrdersDetails;
+        }
+        public OrderDetails GetOrderDetails(int orderDetailsId)
+        {
+            var orderDetails =
+                _context
+                    .OrdersDetails
+                    .Find(orderDetailsId);
+
+            return orderDetails;
+        }
+        public int GetUserOpenOrderDetailsCount(string userId)
+        {
+            var userOpenOrderDetailsCount =
+                _context
+                    .OrdersDetails
+                    .Count(p => p.Order.OwnerUser.Id == userId && !p.Order.IsFinally);
+
+            return userOpenOrderDetailsCount;
+        }
+        public void AddOrderDetails(OrderDetails orderDetails)
+        {
+            _context.Add(orderDetails);
+        }
+        public void UpdateOrderDetails(OrderDetails orderDetails)
+        {
+            _context.OrdersDetails.Update(orderDetails);
+        }
+        public void DeleteOrderDetails(OrderDetails orderDetails)
+        {
+            _context.Remove(orderDetails);
+        }
+        public IEnumerable<Discount> GetDiscounts()
+        {
+            var discounts =
+                _context.Discounts;
+
+            return discounts;
+        }
+        public Discount GetDiscount(int discountId)
+        {
+            var discount =
+                _context
+                    .Discounts
+                    .Include(p => p.Orders)
+                    .SingleOrDefault(p => p.DiscountId == discountId);
+
+            return discount;
+        }
+        public Discount GetDiscountByCode(string discountCode)
+        {
+            var discount =
+                _context
+                    .Discounts
+                    .SingleOrDefault(p => p.DiscountCode == discountCode);
+
+            return discount;
+        }
+        public void AddDiscount(Discount discount)
+        {
+            _context.Add(discount);
+        }
+        public void UpdateDiscount(Discount discount)
+        {
+            _context.Update(discount);
+        }
+        public void DeleteDiscount(Discount discount)
+        {
+            _context
+                .Remove(discount);
+        }
+
+        //End Order Section
+
         public void Save()
         {
             _context.SaveChanges();

@@ -81,7 +81,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var order =
                 _productService
-                    .GetOrderForAdmin(orderId);
+                    .GetOrderWithDetails(orderId);
 
             if (order == null)
                 return NotFound();

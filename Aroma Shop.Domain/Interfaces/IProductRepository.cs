@@ -17,16 +17,28 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddProductVariation(ProductVariation productVariation);
         void UpdateProductVariation(ProductVariation productVariation);
         void DeleteProductVariation(ProductVariation productVariation);
+        IEnumerable<Category> GetCategories();
+        Category GetCategory(int categoryId);
+        void AddCategory(Category category);
+        void DeleteCategory(Category category);
+        void DeleteCategoryById(int categoryId);
+        void UpdateCategory(Category category);
+
+        //Start Order Section
+
         IEnumerable<Order> GetOrders();
-        int GetUnSeenOrdersCount();
+        IEnumerable<Order> GetUserOrders(string userId);
         Order GetOrder(int orderId);
-        Order GetOrderForAdmin(int orderId);
-        Order GetOrderInvoice(string userId, int orderId);
-        void DeleteOrder(Order order);
+        Order GetOrderWithDetails(int orderId);
+        Order GetUserOpenOrder(string userId);
+        Order GetUserOrder(string userId, int orderId);
+        int GetUnSeenOrdersCount();
         void AddOrder(Order order);
         void UpdateOrder(Order order);
+        void DeleteOrder(Order order);
         IEnumerable<OrderDetails> GetUnFinishedOrdersDetails();
         OrderDetails GetOrderDetails(int orderDetailsId);
+        int GetUserOpenOrderDetailsCount(string userId);
         void AddOrderDetails(OrderDetails orderDetails);
         void UpdateOrderDetails(OrderDetails orderDetails);
         void DeleteOrderDetails(OrderDetails orderDetails);
@@ -36,11 +48,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddDiscount(Discount discount);
         void UpdateDiscount(Discount discount);
         void DeleteDiscount(Discount discount);
-        IEnumerable<Category> GetCategories();
-        Category GetCategory(int categoryId);
-        void AddCategory(Category category);
-        void DeleteCategory(Category category);
-        void DeleteCategoryById(int categoryId);
-        void UpdateCategory(Category category);
+
+        //End Order Section
     }
 }

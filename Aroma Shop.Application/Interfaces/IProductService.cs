@@ -14,29 +14,11 @@ namespace Aroma_Shop.Application.Interfaces
     {
         IEnumerable<Product> GetProducts();
         Product GetProduct(int productId);
-        IEnumerable<Order> GetOrders();
-        Order GetOrderForAdmin(int orderId);
-        CartCheckOutViewModel GetOrderInvoice(int orderId);
-        bool UpdateOrder(Order order);
-        bool SetOrderAsSeen(Order order);
-        int GetUnSeenOrdersCount();
-        bool DeleteOrderById(int orderId);
         bool AddProduct(AddEditProductViewModel productViewModel);
         bool UpdateProduct(AddEditProductViewModel productViewModel);
         bool DeleteProduct(Product product);
         bool DeleteProductById(int productId);
         bool AddHitsToProduct(Product product);
-        Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1);
-        Task<bool> UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities);
-        Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel);
-        Task<bool> OrderConfirmation(Order loggedUserOpenOrder);
-        Task<AddDiscountToCartResult> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode);
-        bool DeleteOrderDetailsById(int orderDetailsId);
-        IEnumerable<Discount> GetDiscounts();
-        Discount GetDiscount(int discountId);
-        bool MoveDiscountToTrash(int discountId);
-        AddUpdateDiscountResult AddDiscount(Discount discount);
-        AddUpdateDiscountResult UpdateDiscount(Discount discount);
         IEnumerable<Category> GetCategories();
         Category GetCategory(int categoryId);
         bool AddCategory(AddEditCategoryViewModel categoryViewModel);
@@ -48,5 +30,32 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId);
         Task<bool> RemoveProductByIdFromLoggedUserFavoriteProducts(int favoriteProductId);
         Task<IEnumerable<Product>> GetLoggedUserFavoriteProducts();
+
+        //Start Order Section
+
+        IEnumerable<Order> GetOrders();
+        IEnumerable<Order> GetLoggedUserOrders();
+        Order GetOrderWithDetails(int orderId);
+        Order GetLoggedUserOpenOrder();
+        Order GetOrderInvoice(int orderId);
+        int GetUnSeenOrdersCount();
+        bool UpdateOrder(Order order);
+        bool SetOrderAsSeen(Order order);
+        bool DeleteOrderById(int orderId);
+        int GetLoggedUserOpenOrderDetailsCount();
+        bool DeleteOrderDetailsById(int orderDetailsId);
+        Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1);
+        bool UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities);
+        CartCheckOutViewModel GetLoggedUserCartCheckOut();
+        Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel);
+        Task<bool> OrderConfirmation(Order loggedUserOpenOrder);
+        Task<AddDiscountToCartResult> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode);
+        IEnumerable<Discount> GetDiscounts();
+        Discount GetDiscount(int discountId);
+        bool MoveDiscountToTrash(int discountId);
+        AddUpdateDiscountResult AddDiscount(Discount discount);
+        AddUpdateDiscountResult UpdateDiscount(Discount discount);
+
+        //End Order Section
     }
 }

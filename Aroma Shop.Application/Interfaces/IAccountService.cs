@@ -43,13 +43,9 @@ namespace Aroma_Shop.Application.Interfaces
         Task<IEnumerable<SelectListItem>> GetRoles();
         Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel);
         Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel);
-        Task<bool> UpdateLoggedUserForCheckOut(CustomIdentityUser loggedUser);
+        Task<bool> UpdateUser(CustomIdentityUser loggedUser);
         Task<CustomIdentityUser> GetLoggedUser();
         Task<CustomIdentityUser> GetLoggedUserWithDetails();
-        Task<CustomIdentityUser> GetLoggedUserWithOrders();
-        Task<Order> GetLoggedUserOpenOrder();
-        Task<CartCheckOutViewModel> GetLoggedUserCartCheckOut();
-        Task<int> GetLoggedUserOpenOrderCount();
         Task<string> GetLoggedUserRole();
     }
 }
