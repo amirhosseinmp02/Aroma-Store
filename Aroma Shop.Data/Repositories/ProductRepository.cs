@@ -230,6 +230,15 @@ namespace Aroma_Shop.Data.Repositories
 
             return unFinishedOrdersDetails;
         }
+        public IEnumerable<OrderDetails> GetOrderDetailsByProductId(int productId)
+        {
+            var orderDetails =
+                _context
+                    .OrdersDetails
+                    .Where(p => p.Product.ProductId == productId);
+
+            return orderDetails;
+        }
         public OrderDetails GetOrderDetails(int orderDetailsId)
         {
             var orderDetails =
