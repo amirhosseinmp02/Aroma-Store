@@ -447,5 +447,9 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool DeleteBannerById(int bannerId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
