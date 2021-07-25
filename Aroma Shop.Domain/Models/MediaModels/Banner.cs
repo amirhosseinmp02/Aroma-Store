@@ -10,6 +10,8 @@ namespace Aroma_Shop.Domain.Models.MediaModels
     {
         [Key]
         public int BannerId { get; set; }
+        [MaxLength(200)]
+        public string BannerTitle { get; set; } 
         public string BannerDescription { get; set; }
 
         //Navigations Proterties

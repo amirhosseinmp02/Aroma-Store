@@ -1,4 +1,4 @@
-@import url('../../Fonts/Samim.css');
+﻿@import url('../../Fonts/Samim.css');
 
 body {
     font-family: 'Samim', sans-serif;
@@ -262,4 +262,8 @@ i.jstree-icon.jstree-themeicon {
 
 .edit-order-table-totalPrice-tr {
     border-top: 1.1px solid black
+}
+
+.custom-file-input ~ .custom-file-label::after {
+    content: "انتخاب";
 }

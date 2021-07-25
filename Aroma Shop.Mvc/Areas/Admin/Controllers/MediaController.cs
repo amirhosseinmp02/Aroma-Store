@@ -7,9 +7,11 @@ using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Message;
 using Aroma_Shop.Domain.Models.MediaModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
+    [Authorize(Policy = "Writer")]
     [Area("Admin")]
     public class MediaController : Controller
     {
