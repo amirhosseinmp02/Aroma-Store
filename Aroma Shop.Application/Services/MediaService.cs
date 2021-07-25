@@ -419,6 +419,27 @@ namespace Aroma_Shop.Application.Services
 
             return banners;
         }
+
+        public AddEditBannerViewModel GetBannerForEdit(int bannerId)
+        {
+            var banner =
+                _mediaRepository
+                    .GetBanner(bannerId);
+
+            if (banner == null)
+                return null;
+
+            var bannerViewModel = new AddEditBannerViewModel()
+            {
+                BannerId = bannerId,
+                BannerCurrentImagePath = banner.BannerImage.ImagePath,
+                BannerTitle = banner.BannerTitle,
+                BannerDescription = banner.BannerDescription
+            };
+
+            return bannerViewModel;
+        }
+
         public bool AddBanner(AddEditBannerViewModel bannerViewModel)
         {
             try
