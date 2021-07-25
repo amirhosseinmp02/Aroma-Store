@@ -22,13 +22,15 @@ namespace Aroma_Shop.Application.Services
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IFileService _fileService;
 
-        public MediaService(IMediaRepository mediaRepository, IAccountService accountService,IEmailService emailService, IHttpContextAccessor accessor)
+        public MediaService(IMediaRepository mediaRepository, IAccountService accountService,IEmailService emailService, IHttpContextAccessor accessor, IFileService fileService)
         {
             _mediaRepository = mediaRepository;
             _accountService = accountService;
             _emailService = emailService;
             _accessor = accessor;
+            _fileService = fileService;
         }
 
         public IEnumerable<Comment> GetComments()
@@ -411,7 +413,35 @@ namespace Aroma_Shop.Application.Services
         }
         public bool AddBanner(AddEditBannerViewModel bannerViewModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var bannerImage =
+                    _fileService
+                        .AddBannerImage(bannerViewModel);
+
+                if (bannerImage == null)
+                    return false;
+
+                var banner = new Banner()
+                {
+                    BannerTitle = bannerViewModel.BannerTitle,
+                    BannerDescription = bannerViewModel.BannerDescription,
+                    BannerImage = bannerImage
+                };
+
+                _mediaRepository
+                    .AddBanner(banner);
+
+                _mediaRepository
+                    .Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
     }
 }

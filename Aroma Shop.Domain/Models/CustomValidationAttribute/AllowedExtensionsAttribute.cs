@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -20,25 +19,17 @@ namespace Aroma_Shop.Domain.Models.CustomValidationAttribute
         protected override ValidationResult IsValid(
             object value, ValidationContext validationContext)
         {
-            var files = value as IEnumerable<IFormFile>;
-            if (files != null)
+            var file = value as IFormFile;
+            if (file != null)
             {
-                var filesExtensions = files.Select(p => Path.GetExtension(p.FileName).ToLower());
-                foreach (var fileExtension in filesExtensions)
+                var extension = Path.GetExtension(file.FileName);
+                if (!_extensions.Contains(extension.ToLower()))
                 {
-                    if (!_extensions.Contains(fileExtension))
-                    {
-                        return new ValidationResult(GetErrorMessage());
-                    }
+                    return new ValidationResult(ErrorMessage);
                 }
             }
 
             return ValidationResult.Success;
-        }
-
-        public string GetErrorMessage()
-        {
-            return $"این نوع پسوند برای فایل مورد نظر پشتیبانی نمی شود";
         }
     }
 }

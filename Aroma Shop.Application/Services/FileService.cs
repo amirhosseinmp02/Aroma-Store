@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.File;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
@@ -177,6 +178,47 @@ namespace Aroma_Shop.Application.Services
             {
                 Console.WriteLine(error.Message);
                 return false;
+            }
+        }
+        public Image AddBannerImage(AddEditBannerViewModel bannerViewModel)
+        {
+            try
+            {
+                var bannerImagePath =
+                    Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot", "img","Banners");
+
+                var isBannerImagePathDirExists =
+                    Directory.Exists(bannerImagePath);
+
+                if (!isBannerImagePathDirExists)
+                {
+                    Directory.CreateDirectory(bannerImagePath);
+                }
+
+                var bannerImageFileName =
+                    $"{Guid.NewGuid().ToString()} - {bannerViewModel.BannerImage.FileName.ToLower()}";
+                var fullBannerImagePath
+                    = Path.Combine(bannerImagePath, bannerImageFileName);
+
+                using (var stream = new FileStream(fullBannerImagePath, FileMode.Create))
+                {
+                    bannerViewModel.BannerImage.CopyTo(stream);
+                }
+                
+                var bannerImage = new Image()
+                {
+                    ImagePath = $"Banners/{bannerImageFileName}"
+                };
+
+                _fileRepository.AddImage(bannerImage);
+
+                return bannerImage;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return null;
             }
         }
     }

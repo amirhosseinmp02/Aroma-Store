@@ -343,11 +343,23 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpGet("/Admin/Banners/AddBanner")]
+        [HttpPost("/Admin/Banners/AddBanner")]
         [ValidateAntiForgeryToken]
         public IActionResult AddBanner(AddEditBannerViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _mediaService
+                        .AddBanner(model);
+
+                if (result)
+                    return RedirectToAction("");
+
+                ModelState.AddModelError("","مشکلی در زمان افزودن بنر رخ داد");
+            }
+
+            return View(model);
         }
 
         #endregion
