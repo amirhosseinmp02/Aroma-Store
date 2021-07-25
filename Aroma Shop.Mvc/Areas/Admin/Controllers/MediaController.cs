@@ -412,6 +412,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region EditBanner
+
+        [HttpGet("/Admin/Banners/EditBanner")]
+        public IActionResult EditBanner(int bannerId)
+        {
+
+        }
+
+        #endregion
+
         #region DeleteBanner
 
         [HttpGet("/Admin/Banners/DeleteBanner")]

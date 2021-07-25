@@ -6,6 +6,7 @@ namespace Aroma_Shop.Application.ViewModels.Banner
 {
     public class AddEditBannerViewModel
     {
+        public int BannerId { get; set; }   
         [MaxLength(200,ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")] public string BannerTitle { get; set; }
         public string BannerDescription { get; set; }
 
