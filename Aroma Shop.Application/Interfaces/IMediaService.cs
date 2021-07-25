@@ -31,5 +31,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool SetMessageAsRead(Message message);
         IEnumerable<Banner> GetBanners();
         bool AddBanner(AddEditBannerViewModel bannerViewModel);
+        bool DeleteBannerById(int bannerId);
     }
 }
