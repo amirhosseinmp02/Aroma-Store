@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.MediaModels;
 
@@ -28,5 +29,6 @@ namespace Aroma_Shop.Application.Interfaces
         int GetUnreadMessagesCount();
         Task<bool> ReplyToMessage(string messageReplyDescription, int messageId);
         bool SetMessageAsRead(Message message);
+        bool AddBanner(AddEditBannerViewModel bannerViewModel);
     }
 }
