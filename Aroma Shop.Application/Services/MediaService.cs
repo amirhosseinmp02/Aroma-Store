@@ -449,7 +449,7 @@ namespace Aroma_Shop.Application.Services
         }
         public bool DeleteBannerById(int bannerId)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

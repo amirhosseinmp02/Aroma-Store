@@ -19,5 +19,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteProductImages(IEnumerable<Image> productImages);
 
         bool AddBannerImage(Banner banner, AddEditBannerViewModel bannerViewModel);
+        bool DeleteBannerImage(Image bannerImage);
     }
 }
