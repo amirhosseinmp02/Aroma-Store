@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\img\Banners\" />
     <Folder Include="wwwroot\img\Products\" />
   </ItemGroup>
 
