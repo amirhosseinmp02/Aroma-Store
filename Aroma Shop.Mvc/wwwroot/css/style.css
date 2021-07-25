@@ -5140,3 +5140,7 @@ span.reset_variations:hover {
     text-align: center !important;
     font-size: 15px
 }
+
+.banner-slider-img {
+    height: 90vh
+}
