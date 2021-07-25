@@ -19,5 +19,6 @@ namespace Aroma_Shop.Domain.Interfaces
         Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
         int GetUnreadMessagesCount();
+        void AddBanner(Banner banner);
     }
 }
