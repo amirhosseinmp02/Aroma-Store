@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 
 namespace Aroma_Shop.Domain.Models.FileModels
