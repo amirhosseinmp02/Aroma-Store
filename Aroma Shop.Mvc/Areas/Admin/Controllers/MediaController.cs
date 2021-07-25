@@ -197,7 +197,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #region CommentDetails
 
-        [HttpGet("Admin/Comments/{commentId}")]
+        [HttpGet("/Admin/Comments/{commentId}")]
         public IActionResult CommentDetails(int commentId)
         {
             var comment =
@@ -215,7 +215,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #region ReplyToCommentByAdmin
 
-        [HttpPost("Admin/Comments/ReplyToCommentByAdmin")]
+        [HttpPost("/Admin/Comments/ReplyToCommentByAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddReplyToCommentByAdmin(string NewCommentReplyDescription)
         {
@@ -242,7 +242,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #region EditComment
 
-        [HttpPost("Admin/Comments/EditComment")]
+        [HttpPost("/Admin/Comments/EditComment")]
         [ValidateAntiForgeryToken]
         public IActionResult EditComment(string NewCommentDescription)
         {
@@ -271,7 +271,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #region ConfirmComment
 
-        [HttpGet("Admin/Comments/ConfirmComment")]
+        [HttpGet("/Admin/Comments/ConfirmComment")]
         public IActionResult ConfirmComment(int commentId, string returnUrl)
         {
             var result =
@@ -292,7 +292,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #region RejectComment
 
-        [HttpGet("Admin/Comments/RejectComment")]
+        [HttpGet("/Admin/Comments/RejectComment")]
         public IActionResult RejectComment(int commentId, string returnUrl)
         {
             var result =
@@ -313,7 +313,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #region DeleteComment
 
-        [HttpGet("Admin/Comments/DeleteComment")]
+        [HttpGet("/Admin/Comments/DeleteComment")]
         public IActionResult DeleteComment(int commentId, string returnUrl = null)
         {
             var result =
@@ -328,6 +328,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             return NotFound();
+        }
+
+        #endregion
+
+        #region AddBaner
+
+        [HttpGet("/Admin/Banners/AddBanner")]
+        public IActionResult AddBanner()
+        {
+            return View();
         }
 
         #endregion
