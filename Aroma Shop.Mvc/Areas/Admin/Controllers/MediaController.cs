@@ -335,6 +335,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region ShowBanners
+
+        [HttpGet("/Admin/Banners")]
+        public IActionResult Banners()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region AddBaner
 
         [HttpGet("/Admin/Banners/AddBanner")]
