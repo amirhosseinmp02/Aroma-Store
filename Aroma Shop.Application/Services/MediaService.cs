@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.Message;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
@@ -407,6 +408,10 @@ namespace Aroma_Shop.Application.Services
                 Console.WriteLine(error.Message);
                 return false;
             }
+        }
+        public bool AddBanner(AddEditBannerViewModel bannerViewModel)
+        {
+            throw new NotImplementedException();
         }
     }
 }
