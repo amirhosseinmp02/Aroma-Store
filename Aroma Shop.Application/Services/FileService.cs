@@ -225,5 +225,26 @@ namespace Aroma_Shop.Application.Services
                 return true;
             }
         }
+
+        public bool DeleteBannerImage(Image bannerImage)
+        {
+            try
+            {
+                var imagePath =
+                    Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot", "img", bannerImage.ImagePath);
+
+                File.Delete(imagePath);
+
+                _fileRepository.DeleteImage(bannerImage);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
     }
 }

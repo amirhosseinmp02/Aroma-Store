@@ -449,7 +449,16 @@ namespace Aroma_Shop.Application.Services
         }
         public bool DeleteBannerById(int bannerId)
         {
+            try
+            {
+                var deleteImageResult = 
 
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
         }
     }
 }

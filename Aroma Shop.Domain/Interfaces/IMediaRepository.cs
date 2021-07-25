@@ -20,6 +20,7 @@ namespace Aroma_Shop.Domain.Interfaces
         IEnumerable<Message> GetMessages();
         int GetUnreadMessagesCount();
         IEnumerable<Banner> GetBanners();
+        Banner GetBanner(int bannerId);
         void AddBanner(Banner banner);
         void UpdateBanner(Banner banner);
         void DeleteBanner(Banner banner);
