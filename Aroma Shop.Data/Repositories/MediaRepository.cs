@@ -100,11 +100,31 @@ namespace Aroma_Shop.Data.Repositories
 
             return unreadMessagesCount;
         }
+        public IEnumerable<Banner> GetBanners()
+        {
+            var banners =
+                _context
+                    .Banners
+                    .Include(p => p.BannerImage);
+
+            return banners;
+        }
         public void AddBanner(Banner banner)
         {
             _context
                 .Add(banner);
         }
+        public void UpdateBanner(Banner banner)
+        {
+            _context
+                .Update(banner);
+        }
+        public void DeleteBanner(Banner banner)
+        {
+            _context
+                .Remove(banner);
+        }
+
         public void Save()
         {
             _context.SaveChanges();
