@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Domain.Models.FileModels;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,6 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteProductImagesByIds(IEnumerable<int> productImagesIds);
         bool DeleteProductImages(IEnumerable<Image> productImages);
 
-        Image AddBannerImage(AddEditBannerViewModel bannerViewModel);
+        bool AddBannerImage(Banner banner, AddEditBannerViewModel bannerViewModel);
     }
 }

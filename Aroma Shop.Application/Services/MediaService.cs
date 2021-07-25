@@ -423,19 +423,15 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var bannerImage =
-                    _fileService
-                        .AddBannerImage(bannerViewModel);
-
-                if (bannerImage == null)
-                    return false;
-
                 var banner = new Banner()
                 {
                     BannerTitle = bannerViewModel.BannerTitle,
-                    BannerDescription = bannerViewModel.BannerDescription,
-                    BannerImage = bannerImage
+                    BannerDescription = bannerViewModel.BannerDescription
                 };
+
+                var bannerImage =
+                    _fileService
+                        .AddBannerImage(banner,bannerViewModel);
 
                 _mediaRepository
                     .AddBanner(banner);

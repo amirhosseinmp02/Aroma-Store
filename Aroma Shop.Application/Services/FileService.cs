@@ -8,6 +8,7 @@ using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.File;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
+using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +35,9 @@ namespace Aroma_Shop.Application.Services
                     Guid.NewGuid() + Path.GetExtension(file.FileName).ToLower();
 
                 var filePath =
-                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","img", "Editor", fileName);
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "Editor", fileName);
 
-                using (var stream = new FileStream(filePath,FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
@@ -50,7 +51,7 @@ namespace Aroma_Shop.Application.Services
                     Url = url
                 };
 
-                var successfulJsonResult = 
+                var successfulJsonResult =
                     new JsonResult(successfulResult);
 
                 return successfulJsonResult;
@@ -180,13 +181,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public Image AddBannerImage(AddEditBannerViewModel bannerViewModel)
+        public bool AddBannerImage(Banner banner, AddEditBannerViewModel bannerViewModel)
         {
             try
             {
                 var bannerImagePath =
                     Path.Combine(Directory.GetCurrentDirectory(),
-                        "wwwroot", "img","Banners");
+                        "wwwroot", "img", "Banners");
 
                 var isBannerImagePathDirExists =
                     Directory.Exists(bannerImagePath);
@@ -205,7 +206,7 @@ namespace Aroma_Shop.Application.Services
                 {
                     bannerViewModel.BannerImage.CopyTo(stream);
                 }
-                
+
                 var bannerImage = new Image()
                 {
                     ImagePath = $"Banners/{bannerImageFileName}"
@@ -213,12 +214,15 @@ namespace Aroma_Shop.Application.Services
 
                 _fileRepository.AddImage(bannerImage);
 
-                return bannerImage;
+                banner
+                    .BannerImage = bannerImage;
+
+                return true;
             }
             catch (Exception error)
             {
                 Console.WriteLine(error.Message);
-                return null;
+                return true;
             }
         }
     }
