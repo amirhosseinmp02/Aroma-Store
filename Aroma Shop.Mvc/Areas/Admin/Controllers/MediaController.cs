@@ -338,9 +338,47 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowBanners
 
         [HttpGet("/Admin/Banners")]
-        public IActionResult Banners()
+        public IActionResult Banners(int pageNumber = 1, string search = null)
         {
-            return View();
+            IEnumerable<Banner> banners;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                banners =
+                    _mediaService.GetBanners().Where(p =>
+                        p.BannerTitle.Contains(search) ||
+                        p.BannerDescription.Contains(search) ||
+                        p.BannerId.ToString() == search);
+
+                ViewBag.search = search;
+            }
+            else
+                banners =
+                    _mediaService.GetBanners();
+
+            if (!banners.Any())
+            {
+                ViewBag.isEmpty = true;
+
+                return View();
+            }
+
+            var page =
+                new Paging<Banner>(banners, 11, pageNumber);
+
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+                
+            var bannersPage =
+                page.QueryResult;
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+
+            return View(bannersPage);
         }
 
         #endregion

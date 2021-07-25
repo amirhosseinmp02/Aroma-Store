@@ -107,7 +107,7 @@
 
                         <td class="cart-item-cells align-middle">@productAttributePriceLabel</td>
                     }
-                    <td class="cart-item-cells align-middle">@(!string.IsNullOrEmpty(product.ProductShortDescription)? product.ProductShortDescription:"")</td>
+                    <td class="cart-item-cells align-middle">@product.ProductShortDescription</td>
                     <td class="cart-item-cells align-middle">@product.RegistrationTime.ToSolarWithTime()</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
