@@ -451,7 +451,27 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                var deleteImageResult = 
+                var banner =
+                    _mediaRepository
+                        .GetBanner(bannerId);
+
+                if (banner == null)
+                    return false;
+
+                var deleteBannerImageResult =
+                    _fileService
+                        .DeleteBannerImage(banner.BannerImage);
+
+                if (!deleteBannerImageResult)
+                    return false;
+
+                _mediaRepository
+                    .DeleteBanner(banner);
+
+                _mediaRepository
+                    .Save();
+
+                return true;
 
             }
             catch (Exception error)

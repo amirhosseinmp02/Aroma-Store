@@ -402,7 +402,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                         .AddBanner(model);
 
                 if (result)
-                    return RedirectToAction("");
+                    return RedirectToAction("Banners");
 
                 ModelState.AddModelError("","مشکلی در زمان افزودن بنر رخ داد");
             }
@@ -417,7 +417,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Banners/DeleteBanner")]
         public IActionResult DeleteBanner(int bannerId)
         {
-            return View();
+            var result =
+                _mediaService
+                    .DeleteBannerById(bannerId);
+
+            if (result)
+                return RedirectToAction("Banners");
+
+            return NotFound();
         }
 
         #endregion
