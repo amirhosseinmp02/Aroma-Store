@@ -30,6 +30,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> ReplyToMessage(string messageReplyDescription, int messageId);
         bool SetMessageAsRead(Message message);
         IEnumerable<Banner> GetBanners();
+        Banner GetBannerForEdit(int bannerId);
         bool AddBanner(AddEditBannerViewModel bannerViewModel);
         bool DeleteBannerById(int bannerId);
     }
