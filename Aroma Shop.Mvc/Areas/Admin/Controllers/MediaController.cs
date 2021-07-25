@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.Message;
 using Aroma_Shop.Domain.Models.MediaModels;
 using Microsoft.AspNetCore.Authorization;
@@ -338,6 +339,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpGet("/Admin/Banners/AddBanner")]
         public IActionResult AddBanner()
+        {
+            return View();
+        }
+
+        [HttpGet("/Admin/Banners/AddBanner")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddBanner(AddEditBannerViewModel model)
         {
             return View();
         }
