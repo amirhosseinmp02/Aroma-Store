@@ -517,6 +517,7 @@
                     $("#required-quantity").val($(this).val());
                 } else if (parseInt($(this).val()) > parseInt($("#maximum-available-quantity").val())) {
                     $(this).val($("#maximum-available-quantity").val());
+                    $("#required-quantity").val($("#maximum-available-quantity").val());
                 }
                 else {
                     $(this).val(1);

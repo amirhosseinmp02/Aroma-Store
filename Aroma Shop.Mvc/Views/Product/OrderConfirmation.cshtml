@@ -1,6 +1,6 @@
 ﻿@using Aroma_Shop.Application.Utilites
 
-@model Aroma_Shop.Domain.Models.ProductModels.Order
+@model Aroma_Shop.Application.ViewModels.Product.OrderViewModel
 
 @{
     ViewData["Title"] = @ViewData["HeaderTitle"];
@@ -37,20 +37,15 @@
                                 </tr>
                                 <tr>
                                     <td>تاریخ پرداخت</td>
-                                    <td>: @(Model.IsFinally? Model.OrderRegistrationDate.ToSolarWithTime():"-")</td>
+                                    <td>: @Model.PaymentTime</td>
                                 </tr>
                                 <tr>
                                     <td>جمع کل</td>
-                                    @{
-                                        var totalOrderPrice =
-                                            @Model.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                                            @Model.Discounts.Sum(p => p.DiscountPrice);
-                                    }
-                                    <td>: @(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
+                                    <td>: @Model.OrderTotalPrice</td>
                                 </tr>
                                 <tr>
                                     <td>روش پرداخت</td>
-                                    <td>: @(Model.IsFinally? "زرین پال":"-")</td>
+                                    <td>: @Model.PaymentMethod</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -122,30 +117,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var orderDetails in Model.OrdersDetails)
+                            @foreach (var orderInvoiceDetails in Model.OrderInvoicesDetails)    
                             {
-                                var orderDetailsPrice =
-                                    orderDetails.IsOrderDetailsProductSimple ?
-                                        orderDetails.Product.ProductPrice :
-                                        orderDetails.ProductVariation.ProductVariationPrice;
                                 <tr>
                                     <td class="py-2">
-                                        <p>@orderDetails.Product.ProductName</p>
-                                        @if (!orderDetails.IsOrderDetailsProductSimple)
+                                        <p>@orderInvoiceDetails.InvoiceDetailsProductName</p>
+                                        @if (!orderInvoiceDetails.IsInvoiceDetailsProductSimple)
                                         {
                                             <ul class="orderconfirmation-variations">
-                                                @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                                @for (int i = 0; i < orderInvoiceDetails.InvoiceDetailsProductAttributesNames.Count; i++)
                                                 {
-                                                    <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                                    <li class="text-secondary">@orderInvoiceDetails.InvoiceDetailsProductAttributesNames.ElementAtOrDefault(i) : @orderInvoiceDetails.InvoiceDetailsProductVariationValues.ElementAtOrDefault(i)</li>
                                                 }
                                             </ul>
                                         }
                                     </td>
                                     <td class="align-middle py-2">
-                                        <h5>x <span class="middle-number d-inline-block">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></h5>
+                                        <h5>x <span class="middle-number d-inline-block">@orderInvoiceDetails.InvoiceDetailsQuantity.ToString("D2")</span></h5>
                                     </td>
                                     <td class="align-middle py-2">
-                                        <p>@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</p>
+                                        <p>@(orderInvoiceDetails.InvoiceDetailsTotalPrice != 0 ? $"{orderInvoiceDetails.InvoiceDetailsTotalPrice} تومان" : "رایگان")</p>
                                     </td>
                                 </tr>
                             }
@@ -181,7 +172,7 @@
                                     <h5></h5>
                                 </td>
                                 <td>
-                                    <h4>@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</h4>
+                                    <h4>@Model.OrderTotalPrice</h4>
                                 </td>
                             </tr>
                         </tbody>

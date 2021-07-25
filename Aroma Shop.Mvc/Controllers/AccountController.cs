@@ -205,7 +205,8 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             var loggedUserOrders =
                 _productService
-                    .GetLoggedUserOrders();
+                    .GetLoggedUserOrders()
+                    .Where(p=>p.NotEmpty);
 
             return View(loggedUserOrders);
         }
@@ -218,18 +219,18 @@ namespace Aroma_Shop.Mvc.Controllers
         [HttpGet("/My-Account/Order/{orderId}")]
         public IActionResult AccountOrder(int orderId)
         {
-            var order =
+            var orderViewModel =
                 _productService
-                    .GetOrderInvoice(orderId);
+                    .GetLoggedUserOrderInvoice(orderId);
 
-            if (order == null)
+            if (orderViewModel == null)
                 return NotFound();
 
             ViewData["HeaderTitle"] = "مشاهده سفارش";
 
-            ViewData["Message"] = $"فاکتور شماره {order.OrderId} فروشگاه آروما";
+            ViewData["Message"] = $"فاکتور شماره {orderViewModel.OrderId} فروشگاه آروما";
 
-            return View("/Views/Product/OrderConfirmation.cshtml", order);
+            return View("/Views/Product/OrderConfirmation.cshtml", orderViewModel);
         }
 
         #endregion

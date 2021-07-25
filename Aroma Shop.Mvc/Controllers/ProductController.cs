@@ -280,7 +280,7 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedUserOpenOrder = 
+                var loggedUserOpenOrder =
                     _productService
                         .GetLoggedUserOpenOrder();
 
@@ -343,7 +343,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 if (result == AddDiscountToCartResult.Successful)
                     ViewData["Message"] = "تخفیف با موفقیت اعمال شد";
 
-                else if(result == AddDiscountToCartResult.AlreadyApplied)
+                else if (result == AddDiscountToCartResult.AlreadyApplied)
                     ViewData["Message"] = "کد تخفیف قبلا اعمال شده است";
 
                 else
@@ -368,9 +368,9 @@ namespace Aroma_Shop.Mvc.Controllers
                     _productService
                         .GetLoggedUserOpenOrder();
 
-                    var result = 
-                    _productService
-                        .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
+                var result =
+                _productService
+                    .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
 
                 if (result)
                     return RedirectToAction("CartCheckOut");
@@ -391,7 +391,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 _productService
                     .GetLoggedUserCartCheckOut();
 
-            if (cartCheckOutViewModel.Order == null)
+            if (cartCheckOutViewModel == null)
                 return NotFound();
 
             return View(cartCheckOutViewModel);
@@ -414,11 +414,7 @@ namespace Aroma_Shop.Mvc.Controllers
                 return NotFound();
             }
 
-            var cartCheckOutViewModel = 
-                    _productService
-                        .GetLoggedUserCartCheckOut();
-
-            return View(cartCheckOutViewModel);
+            return View(model);
         }
 
         #endregion
@@ -446,7 +442,11 @@ namespace Aroma_Shop.Mvc.Controllers
 
                 ViewData["Message"] = "با تشکر ، سفارش شما دریافت شد.";
 
-                return View(loggedUserOpenOrder);
+                var orderViewModel =
+                    _productService
+                        .GetConfirmedOrderInvoice(loggedUserOpenOrder);
+
+                return View(orderViewModel);
             }
 
             return NotFound();
@@ -468,17 +468,17 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var order =
+                var orderViewModel =
                     _productService
-                        .GetOrderWithDetails(model.OrderId);
+                        .OrderTrackingByUserEmail(model.Email, model.OrderId);
 
-                if (order != null && order.OwnerUser.Email == model.Email)
+                if (orderViewModel != null)
                 {
                     ModelState.Clear();
 
                     model = new OrderTrackingViewModel()
                     {
-                        Order = order
+                        Order = orderViewModel
                     };
 
                     return View(model);

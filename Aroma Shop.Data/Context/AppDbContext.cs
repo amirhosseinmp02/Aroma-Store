@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Aroma_Shop.Domain.Models;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.FileModels;
@@ -35,6 +36,7 @@ namespace Aroma_Shop.Data.Context
         public DbSet<ProductInformation> ProductsInformations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetails> OrdersDetails { get; set; }
+        public DbSet<OrderInvoiceDetails> OrdersInvoicesDetails { get; set; }          
         public DbSet<Discount> Discounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -53,6 +55,21 @@ namespace Aroma_Shop.Data.Context
 
             builder.Entity<ProductVariation>()
                 .Property(p => p.ProductVariationValues)
+                .HasConversion(
+                    p => string.Join(',', p),
+                    p => p.Split(",", StringSplitOptions.RemoveEmptyEntries));
+
+
+
+
+            builder.Entity<OrderInvoiceDetails>()
+                .Property(p => p.InvoiceDetailsProductAttributesNames)
+                .HasConversion(
+                    p => string.Join(',', p),
+                    p => p.Split(",", StringSplitOptions.RemoveEmptyEntries));
+
+            builder.Entity<OrderInvoiceDetails>()
+                .Property(p => p.InvoiceDetailsProductVariationValues)
                 .HasConversion(
                     p => string.Join(',', p),
                     p => p.Split(",", StringSplitOptions.RemoveEmptyEntries));

@@ -40,7 +40,6 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.Replies)
                 .ThenInclude(p => p.User)
-                .AsSplitQuery()
                 .SingleOrDefault(p => p.ProductId == productId);
 
             return product;
@@ -123,6 +122,7 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .Orders
                     .Include(p => p.OrdersDetails)
+                    .Include(p=>p.InvoicesDetails)
                     .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails);
@@ -134,9 +134,12 @@ namespace Aroma_Shop.Data.Repositories
             var orders =
                 _context
                     .Orders
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails)
                     .Where(p => p.OwnerUser.Id == userId)
                     .Include(p => p.OrdersDetails)
-                    .Include(p=>p.Discounts);
+                    .Include(p=>p.Discounts)
+                    .Include(p=>p.InvoicesDetails);
 
             return orders;
         }
@@ -154,6 +157,7 @@ namespace Aroma_Shop.Data.Repositories
             var order =
                 _context
                     .Orders
+                    .Include(p=>p.InvoicesDetails)
                     .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
@@ -175,9 +179,10 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.Product)
+                    .ThenInclude(p=>p.Images)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
-                    .SingleOrDefault(p => p.OwnerUser.Id == userId && !p.IsFinally);
+                    .SingleOrDefault(p => p.OwnerUser.Id == userId && !p.IsOrderCompleted);
 
             return order;
         }
@@ -187,6 +192,7 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .Orders
                     .Include(p => p.Discounts)
+                    .Include(p=>p.InvoicesDetails)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
@@ -197,12 +203,29 @@ namespace Aroma_Shop.Data.Repositories
 
             return order;
         }
+        public Order GetUserOrderByEmail(string userEmail, int orderId)
+        {
+            var userOrder =
+                _context
+                    .Orders
+                    .Include(p => p.InvoicesDetails)
+                    .Include(p => p.Discounts)
+                    .Include(p => p.OwnerUser)
+                    .ThenInclude(p => p.UserDetails)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.Product)
+                    .Include(p => p.OrdersDetails)
+                    .ThenInclude(p => p.ProductVariation)
+                    .SingleOrDefault(p => p.OrderId == orderId);
+
+            return userOrder;
+        }
         public int GetUnSeenOrdersCount()
         {
             var unSeenOrdersCount =
                 _context
                     .Orders
-                    .Count(p => !p.IsSeen);
+                    .Count(p => !p.IsOrderSeen);
 
             return unSeenOrdersCount;
         }
@@ -224,18 +247,20 @@ namespace Aroma_Shop.Data.Repositories
             var unFinishedOrdersDetails =
                 _context
                     .OrdersDetails
-                    .Where(p => !p.Order.IsFinally)
+                    .Where(p => !p.Order.IsOrderCompleted)
                     .Include(p => p.Product)
                     .Include(p => p.ProductVariation);
 
             return unFinishedOrdersDetails;
         }
-        public IEnumerable<OrderDetails> GetOrderDetailsByProductId(int productId)
+        public IEnumerable<OrderDetails> GetOrdersDetailsByProductId(int productId)
         {
             var orderDetails =
                 _context
                     .OrdersDetails
-                    .Where(p => p.Product.ProductId == productId);
+                    .Where(p => p.Product.ProductId == productId)
+                    .Include(p=>p.Order)
+                    .Include(p=>p.ProductVariation);
 
             return orderDetails;
         }
@@ -253,7 +278,7 @@ namespace Aroma_Shop.Data.Repositories
             var userOpenOrderDetailsCount =
                 _context
                     .OrdersDetails
-                    .Count(p => p.Order.OwnerUser.Id == userId && !p.Order.IsFinally);
+                    .Count(p => p.Order.OwnerUser.Id == userId && !p.Order.IsOrderCompleted);
 
             return userOpenOrderDetailsCount;
         }
@@ -268,6 +293,11 @@ namespace Aroma_Shop.Data.Repositories
         public void DeleteOrderDetails(OrderDetails orderDetails)
         {
             _context.Remove(orderDetails);
+        }
+        public void AddInvoiceDetails(OrderInvoiceDetails invoiceDetails)
+        {
+            _context
+                .Add(invoiceDetails);
         }
         public IEnumerable<Discount> GetDiscounts()
         {

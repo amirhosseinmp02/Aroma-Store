@@ -1,5 +1,5 @@
 ﻿@using Aroma_Shop.Application.Utilites
-@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Order>
+@model IEnumerable<Aroma_Shop.Application.ViewModels.Product.OrdersViewModel>
 
 @{
     ViewData["Title"] = "سفارشات";
@@ -32,37 +32,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var order in Model)
+            @foreach (var orderViewModel in Model)
             {
-                var orderName = 
-                    $"#{order.OrderId} {order.OwnerUser.UserDetails.FirstName} {order.OwnerUser.UserDetails.LastName}";
-
-                var orderDate = "";
-
-                if (order.OrderRegistrationDate == default)
-                {
-                    orderDate = order.CreateTime.ToSolarWithTime();
-                }
-                else
-                {
-                    orderDate = order.OrderRegistrationDate.ToSolarWithTime();
-                }
-
-                var totalOrderPrice =
-                    order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                    order.Discounts.Sum(p => p.DiscountPrice);
-            <tr>
-                <td class="cart-item-cells align-middle">@orderName</td>
-                <td class="cart-item-cells align-middle">@orderDate</td>
+                <tr class="@(orderViewModel.IsOrderSeen?"":"isunread")">
+                <td class="cart-item-cells align-middle">@orderViewModel.OrderName</td>
+                <td class="cart-item-cells align-middle">@orderViewModel.OrderDate</td>
                 <td class="cart-item-cells align-middle text-success">
-                    <b>@order.OrderStatus</b>
+                    <b>@orderViewModel.OrderStatus</b>
                 </td>
-                <td class="cart-item-cells align-middle">@(totalOrderPrice>0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
+                <td class="cart-item-cells align-middle">@orderViewModel.OrderTotalPrice</td>
                 <td class="align-middle">
                     <div class="admin-products-actions">
-                        <a class="btn text-light btn-primary m-1" asp-action="EditOrder" asp-route-orderId="@order.OrderId">مشاهده</a>
-                        <button class="btn text-light btn-primary m-1" data-toggle="modal" data-target="#deletemodal@(order.OrderId)">حذف</button>
-                        <div class="modal fade" id="deletemodal@(order.OrderId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(order.OrderId)" aria-hidden="true">
+                        <a class="btn text-light btn-primary m-1" asp-action="EditOrder" asp-route-orderId="@orderViewModel.OrderId">مشاهده</a>
+                        <button class="btn text-light btn-primary m-1" data-toggle="modal" data-target="#deletemodal@(orderViewModel.OrderId)">حذف</button>
+                        <div class="modal fade" id="deletemodal@(orderViewModel.OrderId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(orderViewModel.OrderId)" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header justify-content-center">
@@ -77,11 +60,11 @@
                                                 <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                             </svg>
                                         </h1>
-                                        <p class="lead">آیا از حذف سفارش <span class="text-warning">@orderName</span> مطمئن هستید ؟</p>
+                                        <p class="lead">آیا از حذف سفارش <span class="text-warning">@orderViewModel.OrderName</span> مطمئن هستید ؟</p>
                                         <p class="text-info">تمامی اطلاعات سفارش حذف خواهند شد</p>
                                     </div>
                                     <div class="modal-footer justify-content-center">
-                                        <a type="button" class="btn btn-danger" asp-action="DeleteOrder" asp-route-orderId="@order.OrderId">حذف</a>
+                                        <a type="button" class="btn btn-danger" asp-action="DeleteOrder" asp-route-orderId="@orderViewModel.OrderId">حذف</a>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
                                     </div>
                                 </div>
@@ -97,5 +80,5 @@
 }
 else
 {
-    <div class="alert alert-danger text-left" role="alert">دسته ای برای نمایش وجود ندارد</div>
+    <div class="alert alert-danger text-left" role="alert">سفارشی برای نمایش وجود ندارد</div>
 }

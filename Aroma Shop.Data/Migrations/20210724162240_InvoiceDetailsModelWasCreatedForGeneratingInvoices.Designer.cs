@@ -4,14 +4,16 @@ using Aroma_Shop.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aroma_Shop.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210724162240_InvoiceDetailsModelWasCreatedForGeneratingInvoices")]
+    partial class InvoiceDetailsModelWasCreatedForGeneratingInvoices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,6 +332,42 @@ namespace Aroma_Shop.Data.Migrations
                     b.ToTable("Discounts");
                 });
 
+            modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.InvoiceDetails", b =>
+                {
+                    b.Property<int>("InvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("InvoiceDetailsProductAttributesNames")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InvoiceDetailsProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InvoiceDetailsProductVariationValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InvoiceDetailsQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvoiceDetailsTotalPrice")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsInvoiceDetailsProductSimple")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("InvoiceId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("InvoiceDetails");
+                });
+
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.Order", b =>
                 {
                     b.Property<int>("OrderId")
@@ -337,19 +375,19 @@ namespace Aroma_Shop.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsOrderCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsOrderSeen")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("OrderCreateTime")
+                    b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFinally")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OrderNote")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OrderPaymentTime")
+                    b.Property<DateTime>("OrderRegistrationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderStatus")
@@ -402,42 +440,6 @@ namespace Aroma_Shop.Data.Migrations
                     b.HasIndex("ProductVariationId");
 
                     b.ToTable("OrdersDetails");
-                });
-
-            modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.OrderInvoiceDetails", b =>
-                {
-                    b.Property<int>("OrderInvoiceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("InvoiceDetailsProductAttributesNames")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InvoiceDetailsProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InvoiceDetailsProductVariationValues")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("InvoiceDetailsQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InvoiceDetailsTotalPrice")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsInvoiceDetailsProductSimple")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderInvoiceId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrdersInvoicesDetails");
                 });
 
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.Product", b =>
@@ -780,6 +782,17 @@ namespace Aroma_Shop.Data.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.InvoiceDetails", b =>
+                {
+                    b.HasOne("Aroma_Shop.Domain.Models.ProductModels.Order", "Order")
+                        .WithMany("InvoicesDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.Order", b =>
                 {
                     b.HasOne("Aroma_Shop.Domain.Models.CustomIdentityModels.CustomIdentityUser", "OwnerUser")
@@ -814,17 +827,6 @@ namespace Aroma_Shop.Data.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ProductVariation");
-                });
-
-            modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.OrderInvoiceDetails", b =>
-                {
-                    b.HasOne("Aroma_Shop.Domain.Models.ProductModels.Order", "Order")
-                        .WithMany("InvoicesDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.ProductInformation", b =>

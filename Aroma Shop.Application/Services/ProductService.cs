@@ -599,7 +599,60 @@ namespace Aroma_Shop.Application.Services
 
             return orders;
         }
-        public IEnumerable<Order> GetLoggedUserOrders()
+        public IEnumerable<OrdersViewModel> GetOrdersListView()
+        {
+            var orders =
+                _productRepository
+                    .GetOrders();
+
+            var ordersViewModel =
+                orders
+                    .Select(p =>
+                    {
+                        var orderName =
+                            $"#{p.OrderId} {p.OwnerUser.UserDetails.FirstName} {p.OwnerUser.UserDetails.LastName}";
+
+                        var orderDate =
+                            p.OrderPaymentTime == default
+                                ? p.OrderCreateTime.ToSolarWithTime()
+                                : p.OrderPaymentTime.ToSolarWithTime();
+
+                        int totalOrderPrice;
+
+                        if (p.OrdersDetails.NotNullOrEmpty())
+                        {
+                            totalOrderPrice =
+                                p.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                p.Discounts.Sum(p => p.DiscountPrice);
+                        }
+                        else
+                        {
+                            totalOrderPrice =
+                                p.InvoicesDetails.Sum(p => p.InvoiceDetailsTotalPrice) -
+                                p.Discounts.Sum(p => p.DiscountPrice);
+                        }
+
+                        var notEmpty =
+                            p.OrdersDetails.NotNullOrEmpty() ||
+                            p.InvoicesDetails.NotNullOrEmpty();
+
+                        var orderViewModel = new OrdersViewModel()
+                        {
+                            OrderId = p.OrderId,
+                            OrderName = orderName,
+                            OrderDate = orderDate,
+                            OrderStatus = p.OrderStatus,
+                            IsOrderSeen = p.IsOrderSeen,
+                            NotEmpty = notEmpty,
+                            OrderTotalPrice = totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان"
+                        };
+
+                        return orderViewModel;
+                    });
+
+            return ordersViewModel;
+        }
+        public IEnumerable<OrdersViewModel> GetLoggedUserOrders()
         {
             var loggedUserId =
                 _accessor.HttpContext
@@ -609,15 +662,153 @@ namespace Aroma_Shop.Application.Services
                 _productRepository
                     .GetUserOrders(loggedUserId);
 
-            return loggedUserOrders;
+            var ordersViewModel =
+                loggedUserOrders
+                    .Select(p =>
+                    {
+                        var orderName =
+                            $"#{p.OrderId} {p.OwnerUser.UserDetails.FirstName} {p.OwnerUser.UserDetails.LastName}";
+
+                        var orderDate =
+                            p.OrderPaymentTime == default
+                                ? p.OrderCreateTime.ToSolarWithTime()
+                                : p.OrderPaymentTime.ToSolarWithTime();
+
+                        var notEmpty =
+                            p.OrdersDetails.NotNullOrEmpty() ||
+                            p.InvoicesDetails.NotNullOrEmpty();
+
+                            int totalOrderPrice;
+
+                        if (p.OrdersDetails.NotNullOrEmpty())
+                        {
+                            totalOrderPrice =
+                                p.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                                p.Discounts.Sum(p => p.DiscountPrice);
+                        }
+                        else
+                        {
+                            totalOrderPrice =
+                                p.InvoicesDetails.Sum(p => p.InvoiceDetailsTotalPrice) -
+                                p.Discounts.Sum(p => p.DiscountPrice);
+                        }
+
+                        var orderViewModel = new OrdersViewModel()
+                        {
+                            OrderId = p.OrderId,
+                            OrderName = orderName,
+                            OrderDate = orderDate,
+                            OrderStatus = p.OrderStatus,
+                            OrderTotalPrice = totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان",
+                            NotEmpty = notEmpty
+                        };
+
+                        return orderViewModel;
+                    });
+
+            return ordersViewModel;
         }
-        public Order GetOrderWithDetails(int orderId)
+        public OrderViewModel GetOrderForEdit(int orderId)
         {
             var order =
                 _productRepository
                     .GetOrderWithDetails(orderId);
 
-            return order;
+            if (order == null)
+                return null;
+
+            var orderName =
+                $"#{order.OrderId} {order.OwnerUser.UserDetails.FirstName} {order.OwnerUser.UserDetails.LastName}";
+
+            var createTime =
+                order
+                    .OrderCreateTime
+                    .ToSolarWithTime();
+
+            var paymentTime =
+                order.OrderPaymentTime != default
+                    ? order.OrderPaymentTime.ToSolarWithTime() :
+                    "-";
+
+            var paymentMethod =
+                order.IsOrderCompleted ?
+                    "زرین پال" :
+                    "-";
+
+            var orderViewModel = new OrderViewModel()
+            {
+                OrderName = orderName,
+                OrderId = order.OrderId,
+                CreateTime = createTime,
+                PaymentTime = paymentTime,
+                PaymentMethod = paymentMethod,
+                OrderStatus = order.OrderStatus,
+                OrderNote = order.OrderNote,
+                OwnerUser = order.OwnerUser,
+                Discounts = order.Discounts
+            };
+
+            int totalOrderPrice;
+
+            if (order.OrdersDetails.NotNullOrEmpty())
+            {
+                totalOrderPrice =
+                    order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                    order.Discounts.Sum(p => p.DiscountPrice);
+
+                orderViewModel
+                        .OrderTotalPrice =
+                    totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان";
+
+                orderViewModel
+                        .OrderInvoicesDetails =
+                    order
+                        .OrdersDetails
+                        .Select(p =>
+                        {
+                            var orderInvoiceDetails = new OrderInvoiceDetails()
+                            {
+                                IsInvoiceDetailsProductSimple = p.IsOrderDetailsProductSimple,
+                                InvoiceDetailsProductName = p.Product.ProductName,
+                                InvoiceDetailsTotalPrice = p.OrderDetailsTotalPrice,
+                                InvoiceDetailsQuantity = p.OrderDetailsQuantity,
+                            };
+
+                            if (!p.IsOrderDetailsProductSimple)
+                            {
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductAttributesNames =
+                                    p.Product
+                                        .ProductAttributesNames;
+
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductVariationValues =
+                                    p.ProductVariation
+                                        .ProductVariationValues;
+                            }
+
+                            return orderInvoiceDetails;
+                        }).ToList();
+            }
+            else
+            {
+                totalOrderPrice =
+                    order.InvoicesDetails.Sum(p => p.InvoiceDetailsTotalPrice) -
+                    order.Discounts.Sum(p => p.DiscountPrice);
+
+                orderViewModel
+                        .OrderTotalPrice =
+                    totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان";
+
+                orderViewModel
+                        .OrderInvoicesDetails =
+                    order
+                        .InvoicesDetails;
+            }
+
+            SetOrderAsSeen(order);
+
+            return orderViewModel;
         }
         public Order GetLoggedUserOpenOrder()
         {
@@ -631,17 +822,252 @@ namespace Aroma_Shop.Application.Services
 
             return loggedUserOpenOrder;
         }
-        public Order GetOrderInvoice(int orderId)
+        public OrderViewModel OrderTrackingByUserEmail(string userEmail, int orderId)
+        {
+            var userOrder =
+                _productRepository
+                    .GetUserOrderByEmail(userEmail, orderId);
+
+            if (userOrder == null)
+                return null;
+
+            var orderName =
+               $"#{userOrder.OrderId} {userOrder.OwnerUser.UserDetails.FirstName} {userOrder.OwnerUser.UserDetails.LastName}";
+
+            var createTime =
+                userOrder
+                    .OrderCreateTime
+                    .ToSolarWithTime();
+
+            var paymentTime =
+                userOrder.OrderPaymentTime != default
+                    ? userOrder.OrderPaymentTime.ToSolarWithTime() :
+                    "-";
+
+            var paymentMethod =
+                userOrder.IsOrderCompleted ?
+                    "زرین پال" :
+                    "-";
+
+            var orderViewModel = new OrderViewModel()
+            {
+                OrderName = orderName,
+                OrderId = userOrder.OrderId,
+                CreateTime = createTime,
+                PaymentTime = paymentTime,
+                PaymentMethod = paymentMethod,
+                OrderStatus = userOrder.OrderStatus,
+                OrderNote = userOrder.OrderNote,
+                OwnerUser = userOrder.OwnerUser,
+                Discounts = userOrder.Discounts
+            };
+
+            int totalOrderPrice;
+
+            if (userOrder.OrdersDetails != null)
+            {
+                totalOrderPrice =
+                    userOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                    userOrder.Discounts.Sum(p => p.DiscountPrice);
+
+                orderViewModel
+                        .OrderTotalPrice =
+                    totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان";
+
+                orderViewModel
+                        .OrderInvoicesDetails =
+                    userOrder
+                        .OrdersDetails
+                        .Select(p =>
+                        {
+                            var orderInvoiceDetails = new OrderInvoiceDetails()
+                            {
+                                IsInvoiceDetailsProductSimple = p.IsOrderDetailsProductSimple,
+                                InvoiceDetailsProductName = p.Product.ProductName,
+                                InvoiceDetailsTotalPrice = p.OrderDetailsTotalPrice,
+                                InvoiceDetailsQuantity = p.OrderDetailsQuantity,
+                            };
+
+                            if (!p.IsOrderDetailsProductSimple)
+                            {
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductAttributesNames =
+                                    p.Product
+                                        .ProductAttributesNames;
+
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductVariationValues =
+                                    p.ProductVariation
+                                        .ProductVariationValues;
+                            }
+
+                            return orderInvoiceDetails;
+                        }).ToList();
+            }
+            else
+            {
+                totalOrderPrice =
+                    userOrder.InvoicesDetails.Sum(p => p.InvoiceDetailsTotalPrice) -
+                    userOrder.Discounts.Sum(p => p.DiscountPrice);
+
+                orderViewModel
+                        .OrderTotalPrice =
+                    totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان";
+
+                orderViewModel
+                        .OrderInvoicesDetails =
+                    userOrder
+                        .InvoicesDetails;
+            }
+
+            return orderViewModel;
+        }
+        public OrderViewModel GetConfirmedOrderInvoice(Order confirmedOrder)
+        {
+            var orderName =
+                $"#{confirmedOrder.OrderId} {confirmedOrder.OwnerUser.UserDetails.FirstName} {confirmedOrder.OwnerUser.UserDetails.LastName}";
+
+            var createTime =
+                confirmedOrder
+                    .OrderCreateTime
+                    .ToSolarWithTime();
+
+            var paymentTime =
+                confirmedOrder.OrderPaymentTime != default
+                    ? confirmedOrder.OrderPaymentTime.ToSolarWithTime() :
+                    "-";
+
+            var paymentMethod =
+                confirmedOrder.IsOrderCompleted ?
+                    "زرین پال" :
+                    "-";
+
+            int totalOrderPrice;
+
+            totalOrderPrice =
+                confirmedOrder.InvoicesDetails.Sum(p => p.InvoiceDetailsTotalPrice) -
+                confirmedOrder.Discounts.Sum(p => p.DiscountPrice);
+
+            var orderViewModel = new OrderViewModel()
+            {
+                OrderName = orderName,
+                OrderId = confirmedOrder.OrderId,
+                CreateTime = createTime,
+                PaymentTime = paymentTime,
+                PaymentMethod = paymentMethod,
+                OrderStatus = confirmedOrder.OrderStatus,
+                OrderNote = confirmedOrder.OrderNote,
+                OrderTotalPrice = totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان",
+                OwnerUser = confirmedOrder.OwnerUser,
+                Discounts = confirmedOrder.Discounts,
+                OrderInvoicesDetails = confirmedOrder.InvoicesDetails
+            };
+
+            return orderViewModel;
+        }
+        public OrderViewModel GetLoggedUserOrderInvoice(int orderId)
         {
             var loggedUserId =
                 _accessor.HttpContext
                     .User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var order =
+            var userOrder =
                 _productRepository
                     .GetUserOrder(loggedUserId, orderId);
 
-            return order;
+            if (userOrder == null || (!userOrder.OrdersDetails.NotNullOrEmpty() && !userOrder.InvoicesDetails.NotNullOrEmpty()))
+                return null;
+
+            var orderName =
+               $"#{userOrder.OrderId} {userOrder.OwnerUser.UserDetails.FirstName} {userOrder.OwnerUser.UserDetails.LastName}";
+
+            var createTime =
+                userOrder
+                    .OrderCreateTime
+                    .ToSolarWithTime();
+
+            var paymentTime =
+                userOrder.OrderPaymentTime != default
+                    ? userOrder.OrderPaymentTime.ToSolarWithTime() :
+                    "-";
+
+            var paymentMethod =
+                userOrder.IsOrderCompleted ?
+                    "زرین پال" :
+                    "-";
+
+            var orderViewModel = new OrderViewModel()
+            {
+                OrderName = orderName,
+                OrderId = userOrder.OrderId,
+                CreateTime = createTime,
+                PaymentTime = paymentTime,
+                PaymentMethod = paymentMethod,
+                OrderStatus = userOrder.OrderStatus,
+                OrderNote = userOrder.OrderNote,
+                OwnerUser = userOrder.OwnerUser,
+                Discounts = userOrder.Discounts
+            };
+
+            int totalOrderPrice;
+
+            if (userOrder.OrdersDetails.NotNullOrEmpty())
+            {
+                totalOrderPrice =
+                    userOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
+                    userOrder.Discounts.Sum(p => p.DiscountPrice);
+
+                orderViewModel
+                        .OrderTotalPrice =
+                    totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان";
+
+                orderViewModel
+                        .OrderInvoicesDetails =
+                    userOrder
+                        .OrdersDetails
+                        .Select(p =>
+                        {
+                            var orderInvoiceDetails = new OrderInvoiceDetails()
+                            {
+                                IsInvoiceDetailsProductSimple = p.IsOrderDetailsProductSimple,
+                                InvoiceDetailsProductName = p.Product.ProductName,
+                                InvoiceDetailsTotalPrice = p.OrderDetailsTotalPrice,
+                                InvoiceDetailsQuantity = p.OrderDetailsQuantity,
+                            };
+
+                            if (!p.IsOrderDetailsProductSimple)
+                            {
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductAttributesNames =
+                                    p.Product
+                                        .ProductAttributesNames;
+
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductVariationValues =
+                                    p.ProductVariation
+                                        .ProductVariationValues;
+                            }
+
+                            return orderInvoiceDetails;
+                        }).ToList();
+            }
+            else
+            {
+                totalOrderPrice =
+                    userOrder.InvoicesDetails.Sum(p => p.InvoiceDetailsTotalPrice) -
+                    userOrder.Discounts.Sum(p => p.DiscountPrice);
+
+                orderViewModel
+                        .OrderTotalPrice =
+                    totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان";
+
+                orderViewModel
+                        .OrderInvoicesDetails =
+                    userOrder
+                        .InvoicesDetails;
+            }
+
+            return orderViewModel;
         }
         public int GetUnSeenOrdersCount()
         {
@@ -685,10 +1111,10 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                if (order.IsSeen)
+                if (order.IsOrderSeen)
                     return true;
 
-                order.IsSeen = true;
+                order.IsOrderSeen = true;
 
                 _productRepository
                     .UpdateOrder(order);
@@ -844,8 +1270,8 @@ namespace Aroma_Shop.Application.Services
                     {
                         loggedUserOrder = new Order()
                         {
-                            IsFinally = false,
-                            CreateTime = DateTime.Now,
+                            IsOrderCompleted = false,
+                            OrderCreateTime = DateTime.Now,
                             OrderStatus = OrderStatus.AwaitingPayment.GetDescription(),
                             OwnerUser = loggedUser
                         };
@@ -917,8 +1343,8 @@ namespace Aroma_Shop.Application.Services
                     {
                         loggedUserOrder = new Order()
                         {
-                            IsFinally = false,
-                            CreateTime = DateTime.Now,
+                            IsOrderCompleted = false,
+                            OrderCreateTime = DateTime.Now,
                             OrderStatus = OrderStatus.AwaitingPayment.GetDescription(),
                             OwnerUser = loggedUser
                         };
@@ -1024,6 +1450,9 @@ namespace Aroma_Shop.Application.Services
         {
             var loggedUserOpenOrder =
                 GetLoggedUserOpenOrder();
+
+            if (loggedUserOpenOrder == null || !loggedUserOpenOrder.OrdersDetails.NotNullOrEmpty())
+                return null;
 
             var cartCheckOutViewModel = new CartCheckOutViewModel()
             {
@@ -1166,7 +1595,7 @@ namespace Aroma_Shop.Application.Services
                     if (result.Status == 100)
                     {
                         loggedUserOpenOrder
-                                .OrderRegistrationDate =
+                                .OrderPaymentTime =
                             DateTime.Now;
 
                         loggedUserOpenOrder
@@ -1176,7 +1605,7 @@ namespace Aroma_Shop.Application.Services
                                 .GetDescription();
 
                         loggedUserOpenOrder
-                            .IsFinally = true;
+                            .IsOrderCompleted = true;
 
                         _productRepository
                             .UpdateOrder(loggedUserOpenOrder);
@@ -1288,6 +1717,40 @@ namespace Aroma_Shop.Application.Services
                             }
                         }
 
+                        foreach (var ordersDetails in loggedUserOpenOrder.OrdersDetails)
+                        {
+                            var orderInvoiceDetails = new OrderInvoiceDetails()
+                            {
+                                IsInvoiceDetailsProductSimple = ordersDetails.Product.IsSimpleProduct,
+                                InvoiceDetailsProductName = ordersDetails.Product.ProductName,
+                                InvoiceDetailsTotalPrice = ordersDetails.OrderDetailsTotalPrice,
+                                InvoiceDetailsQuantity = ordersDetails.OrderDetailsQuantity,
+                                Order = loggedUserOpenOrder
+                            };
+
+                            if (!ordersDetails.IsOrderDetailsProductSimple)
+                            {
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductAttributesNames =
+                                    ordersDetails.Product
+                                        .ProductAttributesNames;
+
+                                orderInvoiceDetails
+                                        .InvoiceDetailsProductVariationValues =
+                                    ordersDetails.ProductVariation
+                                        .ProductVariationValues;
+                            }
+
+                            _productRepository
+                                .AddInvoiceDetails(orderInvoiceDetails);
+                        }
+
+                        loggedUserOpenOrder
+                            .OrdersDetails = null;
+
+                        _productRepository
+                            .UpdateOrder(loggedUserOpenOrder);
+
                         _productRepository
                             .Save();
 
@@ -1297,7 +1760,7 @@ namespace Aroma_Shop.Application.Services
                 else if (totalOrderPrice <= 0)
                 {
                     loggedUserOpenOrder
-                            .OrderRegistrationDate =
+                            .OrderPaymentTime =
                         DateTime.Now;
 
                     loggedUserOpenOrder
@@ -1307,7 +1770,7 @@ namespace Aroma_Shop.Application.Services
                             .GetDescription();
 
                     loggedUserOpenOrder
-                        .IsFinally = true;
+                        .IsOrderCompleted = true;
 
                     _productRepository
                         .UpdateOrder(loggedUserOpenOrder);
@@ -1419,6 +1882,40 @@ namespace Aroma_Shop.Application.Services
                         }
                     }
 
+                    foreach (var ordersDetails in loggedUserOpenOrder.OrdersDetails)
+                    {
+                        var orderInvoiceDetails = new OrderInvoiceDetails()
+                        {
+                            IsInvoiceDetailsProductSimple = ordersDetails.Product.IsSimpleProduct,
+                            InvoiceDetailsProductName = ordersDetails.Product.ProductName,
+                            InvoiceDetailsTotalPrice = ordersDetails.OrderDetailsTotalPrice,
+                            InvoiceDetailsQuantity = ordersDetails.OrderDetailsQuantity,
+                            Order = loggedUserOpenOrder
+                        };
+
+                        if (!ordersDetails.IsOrderDetailsProductSimple)
+                        {
+                            orderInvoiceDetails
+                                    .InvoiceDetailsProductAttributesNames =
+                                ordersDetails.Product
+                                    .ProductAttributesNames;
+
+                            orderInvoiceDetails
+                                    .InvoiceDetailsProductVariationValues =
+                                ordersDetails.ProductVariation
+                                    .ProductVariationValues;
+                        }
+
+                        _productRepository
+                            .AddInvoiceDetails(orderInvoiceDetails);
+                    }
+
+                    loggedUserOpenOrder
+                        .OrdersDetails = null;
+
+                    _productRepository
+                        .UpdateOrder(loggedUserOpenOrder);
+
                     _productRepository
                         .Save();
 
@@ -1496,7 +1993,7 @@ namespace Aroma_Shop.Application.Services
                 var doesDiscountHasAnyFinishedOrder =
                     discount
                         .Orders
-                        .Any(p => p.IsFinally);
+                        .Any(p => p.IsOrderCompleted);
 
                 if (!doesDiscountHasAnyFinishedOrder)
                 {
@@ -1506,7 +2003,7 @@ namespace Aroma_Shop.Application.Services
                 else
                 {
                     var unfinishedDiscountOrders =
-                        discount.Orders.Where(p => !p.IsFinally);
+                        discount.Orders.Where(p => !p.IsOrderCompleted);
 
                     for (int i = unfinishedDiscountOrders.Count() - 1; i >= 0; i--)
                     {
@@ -1848,6 +2345,17 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
+                //All Finished OrderDetails Will Remove After Order Confirmation
+                var unFinishedProductOrdersDetails =
+                    _productRepository
+                        .GetOrdersDetailsByProductId(product.ProductId);
+
+                foreach (var unfinishedProductOrderDetails in unFinishedProductOrdersDetails)
+                {
+                    _productRepository
+                        .DeleteOrderDetails(unfinishedProductOrderDetails);
+                }
+
                 product.ProductAttributesNames = null;
                 product.ProductAttributesValues = null;
 

@@ -1,6 +1,6 @@
 ﻿@using Aroma_Shop.Application.Utilites
 @using Aroma_Shop.Application.ViewModels.Product
-@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Order>
+@model IEnumerable<Aroma_Shop.Application.ViewModels.Product.OrdersViewModel>
 
 @{
     ViewData["Title"] = "حساب کاربری";
@@ -34,12 +34,7 @@
             </form>
         </div>
         <div class="col-lg-9 col-md-8 col-sm-11">
-            @{
-                var orders =
-                    Model
-                        .Where(p => p.OrdersDetails.Any());
-            }
-            @if (orders.Any())
+            @if (Model.Any())
             {
                 <table class="table table-responsive-lg table-responsive-sm table-striped table-bordered text-center table-light">
                     <thead>
@@ -54,27 +49,13 @@
                     <tbody>
 
 
-                        @foreach (var order in orders)
+                        @foreach (var order in Model)
                         {
-                            var orderDate = "";
-
-                            if (order.OrderRegistrationDate == default)
-                            {
-                                orderDate = order.CreateTime.ToSolarWithTime();
-                            }
-                            else
-                            {
-                                orderDate = order.OrderRegistrationDate.ToSolarWithTime();
-                            }
-
-                            var totalOrderPrice =
-                                order.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                                order.Discounts.Sum(p => p.DiscountPrice);
                             <tr>
                                 <td class="cart-item-cells align-middle">#@order.OrderId</td>
-                                <td class="cart-item-cells align-middle">@orderDate</td>
+                                <td class="cart-item-cells align-middle">@order.OrderDate</td>
                                 <td class="cart-item-cells align-middle text-success">@order.OrderStatus</td>
-                                <td class="cart-item-cells align-middle">@(totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان")</td>
+                                <td class="cart-item-cells align-middle">@order.OrderTotalPrice</td>
                                 <td class="cart-item-cells align-middle">
                                     @if (order.OrderStatus == OrderStatus.AwaitingPayment.GetDescription())
                                     {

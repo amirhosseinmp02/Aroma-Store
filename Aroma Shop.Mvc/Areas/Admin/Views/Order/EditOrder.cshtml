@@ -1,7 +1,8 @@
-﻿@using Aroma_Shop.Application.Utilites
-@using Aroma_Shop.Application.Interfaces
+﻿@using Aroma_Shop.Application.Interfaces
+@using Aroma_Shop.Application.Utilites
 @using Aroma_Shop.Application.ViewModels.Product
-@model Aroma_Shop.Domain.Models.ProductModels.Order
+
+@model Aroma_Shop.Application.ViewModels.Product.OrderViewModel
 
 @inject IAccountService AccountService
 
@@ -16,20 +17,15 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 mr-auto">
         <div class="p-4">
-            @{
-                var orderName =
-                    $"#{Model.OrderId} {Model.OwnerUser.UserDetails.FirstName} {Model.OwnerUser.UserDetails.LastName}";
-            }
-
-            <h4>جزئیات سفارش @orderName</h4>
+            <h4>جزئیات سفارش @Model.OrderName</h4>
             <div class="row">
                 <div class="col p-4 mx-4 mt-4 rounded-lg bg-info text-light edit-order-content-section">
                     <h5 class="mb-3">اطلاعات سفارش</h5>
                     <ul class="edit-order-menu">
                         <li>شناسه سفارش : @Model.OrderId</li>
-                        <li>تاریخ ثبت سفارش : @Model.CreateTime.ToSolarWithTime()</li>
-                        <li>تاریخ پرداخت : @(Model.OrderRegistrationDate!=default?Model.OrderRegistrationDate.ToSolarWithTime():"-")</li>
-                        <li>روش پرداخت : @(Model.IsFinally?"زرین پال":"-")</li>
+                        <li>تاریخ ثبت سفارش : @Model.CreateTime</li>
+                        <li>تاریخ پرداخت : @Model.PaymentTime</li>
+                        <li>روش پرداخت : @Model.PaymentMethod</li>
                         <li>
                             وضعیت :
                             <form id="edit-order-form" class="d-inline" asp-action="EditOrder">
@@ -101,28 +97,28 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var orderDetails in Model.OrdersDetails)
+                @foreach (var orderInvoiceDetails in Model.OrderInvoicesDetails)
                 {
-                    var orderDetailsPrice =
-                        orderDetails.IsOrderDetailsProductSimple ?
-                            orderDetails.Product.ProductPrice :
-                            orderDetails.ProductVariation.ProductVariationPrice;
+                    var productPrice =
+                        orderInvoiceDetails.InvoiceDetailsTotalPrice != 0 ?
+                    (orderInvoiceDetails.InvoiceDetailsTotalPrice /
+                    orderInvoiceDetails.InvoiceDetailsQuantity).ToString() : "رایگان";
                     <tr>
                         <td class="cart-item-cells align-middle pl-5 text-left py-2">
-                            @orderDetails.Product.ProductName
-                            @if (!orderDetails.IsOrderDetailsProductSimple)
+                            @orderInvoiceDetails.InvoiceDetailsProductName
+                            @if (!orderInvoiceDetails.IsInvoiceDetailsProductSimple)
                             {
                                 <ul class="edit-order-variations mt-1">
-                                    @for (int i = 0; i < orderDetails.Product.ProductAttributesNames.Count; i++)
+                                    @for (int i = 0; i < orderInvoiceDetails.InvoiceDetailsProductAttributesNames.Count; i++)
                                     {
-                                        <li class="text-secondary">@orderDetails.Product.ProductAttributesNames.ElementAtOrDefault(i) : @orderDetails.ProductVariation.ProductVariationValues.ElementAtOrDefault(i)</li>
+                                        <li class="text-secondary">@orderInvoiceDetails.InvoiceDetailsProductAttributesNames.ElementAtOrDefault(i) : @orderInvoiceDetails.InvoiceDetailsProductVariationValues.ElementAtOrDefault(i)</li>
                                     }
                                 </ul>
                             }
                         </td>
-                        <td class="cart-item-cells align-middle py-2">@orderDetailsPrice</td>
-                        <td class="cart-item-cells align-middle py-2">@orderDetails.OrderDetailsQuantity</td>
-                        <td class="cart-item-cells align-middle py-2">@orderDetails.OrderDetailsTotalPrice</td>
+                        <td class="cart-item-cells align-middle py-2">@productPrice</td>
+                        <td class="cart-item-cells align-middle py-2">@orderInvoiceDetails.InvoiceDetailsQuantity</td>
+                        <td class="cart-item-cells align-middle py-2">@(orderInvoiceDetails.InvoiceDetailsTotalPrice != 0 ? $"{orderInvoiceDetails.InvoiceDetailsTotalPrice} تومان" : "رایگان")</td>
                     </tr>
                 }
                 <tr>
@@ -159,12 +155,7 @@
                         <p class="h5">جمع کل</p>
                     </td>
                     <td class="align-middle">
-                        @{
-                            var totalOrderPrice =
-                                @Model.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
-                                @Model.Discounts.Sum(p => p.DiscountPrice);
-                        }
-                        <p class="h5">@(totalOrderPrice > 0 ? $"{totalOrderPrice} تومان" : "رایگان")</p>
+                        <p class="h5">@Model.OrderTotalPrice</p>
                     </td>
                     <td>
                         <p></p>

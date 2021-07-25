@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -78,6 +79,15 @@ namespace Aroma_Shop.Application.Utilites
                     return ((DescriptionAttribute)attrs[0]).Description;
             }
             return en.ToString();
+        }
+
+        #endregion
+
+        #region NotNullOrEmpty
+
+        public static bool NotNullOrEmpty<T>(this IEnumerable<T> source)
+        {
+            return source != null && source.Any();
         }
 
         #endregion

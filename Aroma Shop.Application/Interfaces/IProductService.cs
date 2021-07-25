@@ -34,10 +34,13 @@ namespace Aroma_Shop.Application.Interfaces
         //Start Order Section
 
         IEnumerable<Order> GetOrders();
-        IEnumerable<Order> GetLoggedUserOrders();
-        Order GetOrderWithDetails(int orderId);
+        IEnumerable<OrdersViewModel> GetOrdersListView();       
+        IEnumerable<OrdersViewModel> GetLoggedUserOrders();
+        OrderViewModel GetOrderForEdit(int orderId);
         Order GetLoggedUserOpenOrder();
-        Order GetOrderInvoice(int orderId);
+        OrderViewModel OrderTrackingByUserEmail(string userEmail, int orderId);
+        OrderViewModel GetConfirmedOrderInvoice(Order confirmedOrder);
+        OrderViewModel GetLoggedUserOrderInvoice(int orderId);
         int GetUnSeenOrdersCount();
         bool UpdateOrder(Order order);
         bool SetOrderAsSeen(Order order);

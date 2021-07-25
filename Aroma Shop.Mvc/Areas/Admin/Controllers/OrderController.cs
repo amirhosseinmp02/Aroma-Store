@@ -29,25 +29,24 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Orders")]
         public IActionResult Index(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Order> orders;
+            IEnumerable<OrdersViewModel> ordersViewModels;
 
             if (!string.IsNullOrEmpty(search))
             {
-                orders = _productService.GetOrders()
+                ordersViewModels = _productService.GetOrdersListView()
                     .Where(p => p.OrderId.ToString() == search
-                                || p.OwnerUser
-                                    .UserDetails.FirstName
-                                    .Contains(search) ||
-                                p.OwnerUser.UserDetails
-                                    .LastName.Contains(search));
+                                || p.OrderName
+                                    .Contains(search) && p.NotEmpty);
 
                 ViewBag.search = search;
             }
             else
-                orders = _productService
-                    .GetOrders();
+                ordersViewModels =
+                    _productService
+                    .GetOrdersListView()
+                    .Where(p => p.NotEmpty);
 
-            if (!orders.Any())
+            if (!ordersViewModels.Any())
             {
                 ViewBag.isEmpty = true;
 
@@ -55,12 +54,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             var page =
-                new Paging<Order>(orders, 11, pageNumber);
+                new Paging<OrdersViewModel>(ordersViewModels, 11, pageNumber);
 
             if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
                 return NotFound();
 
-            var ordersPage =
+            var ordersViewModelsPage =
                 page.QueryResult;
 
             ViewBag.pageNumber = pageNumber;
@@ -69,7 +68,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             ViewBag.prevPage = page.PreviousPage;
             ViewBag.nextPage = page.NextPage;
 
-            return View(ordersPage);
+            return View(ordersViewModels);
         }
 
         #endregion
@@ -81,13 +80,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var order =
                 _productService
-                    .GetOrderWithDetails(orderId);
+                    .GetOrderForEdit(orderId);
 
             if (order == null)
                 return NotFound();
-
-            _productService
-                .SetOrderAsSeen(order);
 
             return View(order);
         }

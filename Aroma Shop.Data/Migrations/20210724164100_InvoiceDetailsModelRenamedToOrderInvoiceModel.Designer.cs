@@ -4,14 +4,16 @@ using Aroma_Shop.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aroma_Shop.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210724164100_InvoiceDetailsModelRenamedToOrderInvoiceModel")]
+    partial class InvoiceDetailsModelRenamedToOrderInvoiceModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,19 +339,19 @@ namespace Aroma_Shop.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsOrderCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsOrderSeen")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("OrderCreateTime")
+                    b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFinally")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OrderNote")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OrderPaymentTime")
+                    b.Property<DateTime>("OrderRegistrationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderStatus")
@@ -406,7 +408,7 @@ namespace Aroma_Shop.Data.Migrations
 
             modelBuilder.Entity("Aroma_Shop.Domain.Models.ProductModels.OrderInvoiceDetails", b =>
                 {
-                    b.Property<int>("OrderInvoiceId")
+                    b.Property<int>("InvoiceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -433,7 +435,7 @@ namespace Aroma_Shop.Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderInvoiceId");
+                    b.HasKey("InvoiceId");
 
                     b.HasIndex("OrderId");
 

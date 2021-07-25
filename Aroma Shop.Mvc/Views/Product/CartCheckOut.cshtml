@@ -104,6 +104,7 @@
                                 <span class="text-danger field-validation-valid"></span>
                             </div>
                         </div>
+                        <div class="alert alert-danger text-left current-password-label mt-3" role="alert" asp-validation-summary="All"></div>
                     </div>
                     <div class="col-lg-4">
                         <div class="order_box">
@@ -112,12 +113,8 @@
                                 <li><a><h4>محصول <span>قیمت کل</span></h4></a></li>
                                 @foreach (var orderDetails in Model.Order.OrdersDetails)
                                 {
-                                    var orderDetailsPrice =
-                                        orderDetails.IsOrderDetailsProductSimple ?
-                                            orderDetails.Product.ProductPrice :
-                                            orderDetails.ProductVariation.ProductVariationPrice;
                                     <li>
-                                        <a>@orderDetails.Product.ProductName <span class="middle">x <span class="middle-number">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></span> <span class="last">@(orderDetailsPrice != 0 ? $"{orderDetailsPrice} تومان" : "رایگان")</span></a>
+                                        <a>@orderDetails.Product.ProductName <span class="middle">x <span class="middle-number">@orderDetails.OrderDetailsQuantity.ToString("D2")</span></span> <span class="last">@(orderDetails.OrderDetailsTotalPrice != 0 ? $"{orderDetails.OrderDetailsTotalPrice} تومان" : "رایگان")</span></a>
                                         @if (!orderDetails.IsOrderDetailsProductSimple)
                                         {
                                             <ul class="cart-checkout-variations">
@@ -179,7 +176,6 @@
                     </div>
                 </div>
                 <input type="checkbox" asp-for="HiddenAcceptTheRules" class="d-none" />
-                <div class="alert alert-danger text-left current-password-label mt-3" role="alert" asp-validation-summary="All"></div>
             </form>
         </div>
     </div>
