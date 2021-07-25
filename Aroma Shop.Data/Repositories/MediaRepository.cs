@@ -109,6 +109,16 @@ namespace Aroma_Shop.Data.Repositories
 
             return banners;
         }
+        public Banner GetBanner(int bannerId)
+        {
+            var banner =
+                _context
+                    .Banners
+                    .Include(p => p.BannerImage)
+                    .SingleOrDefault(p => p.BannerId == bannerId);
+
+            return banner;
+        }
         public void AddBanner(Banner banner)
         {
             _context
