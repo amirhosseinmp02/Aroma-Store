@@ -448,12 +448,67 @@ namespace Aroma_Shop.Application.Services
                     BannerDescription = bannerViewModel.BannerDescription
                 };
 
-                var bannerImage =
+                var addBannerImageResult =
                     _fileService
                         .AddBannerImage(banner,bannerViewModel);
 
+                if (!addBannerImageResult)
+                    return false;
+
                 _mediaRepository
                     .AddBanner(banner);
+
+                _mediaRepository
+                    .Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        public bool UpdateBanner(AddEditBannerViewModel bannerViewModel)
+        {
+            try
+            {
+                var currentBanner =
+                    _mediaRepository
+                        .GetBanner(bannerViewModel.BannerId);
+
+                if (currentBanner == null)
+                    return false;
+
+                if (bannerViewModel.BannerImage != null)
+                {
+                    var deleteBannerImageResult =
+                        _fileService
+                            .DeleteBannerImage(currentBanner.BannerImage);
+
+                    if (!deleteBannerImageResult)
+                        return false;
+
+                    var addBannerImageResult =
+                        _fileService
+                            .AddBannerImage(currentBanner, bannerViewModel);
+
+                    if (!addBannerImageResult)
+                        return false;
+                }
+
+                currentBanner
+                        .BannerTitle =
+                    bannerViewModel
+                        .BannerTitle;
+
+                currentBanner
+                        .BannerDescription =
+                    bannerViewModel
+                        .BannerDescription;
+
+                _mediaRepository
+                    .UpdateBanner(currentBanner);
 
                 _mediaRepository
                     .Save();

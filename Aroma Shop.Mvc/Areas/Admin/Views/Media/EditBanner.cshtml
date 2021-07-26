@@ -20,7 +20,7 @@
 <hr>
 <div class="row">
     <div class="col-lg-7 col-md-9 col-sm-12 m-auto">
-        <form asp-action="AddBanner" enctype="multipart/form-data">
+        <form asp-action="EditBanner" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="control-label" for="BannerTitle">عنوان بنر</label>
                 <input class="form-control" id="BannerTitle" asp-for="BannerTitle">
@@ -44,6 +44,7 @@
                     </label>
                 </div>
             </div>
+            <input type="hidden" asp-for="BannerId" />
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
             </div>

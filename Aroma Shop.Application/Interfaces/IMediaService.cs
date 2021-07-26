@@ -32,6 +32,7 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Banner> GetBanners();
         AddEditBannerViewModel GetBannerForEdit(int bannerId);
         bool AddBanner(AddEditBannerViewModel bannerViewModel);
+        bool UpdateBanner(AddEditBannerViewModel bannerViewModel);
         bool DeleteBannerById(int bannerId);
     }
 }

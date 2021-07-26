@@ -427,6 +427,25 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             return View(bannerViewModel);
         }
 
+        [HttpPost("/Admin/Banners/EditBanner")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditBanner(AddEditBannerViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _mediaService
+                        .UpdateBanner(model);
+
+                if (result)
+                    return RedirectToAction("Banners");
+
+                ModelState.AddModelError("","مشکلی در زمان ویرایش بنر رخ داد");
+            }
+
+            return View(model);
+        }
+
         #endregion
 
         #region DeleteBanner
