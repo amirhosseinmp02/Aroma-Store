@@ -264,6 +264,6 @@ i.jstree-icon.jstree-themeicon {
     border-top: 1.1px solid black
 }
 
-.custom-file-input ~ .custom-file-label::after {
-    content: "انتخاب";
+#current-banner-image {
+    max-height: 340px;
 }

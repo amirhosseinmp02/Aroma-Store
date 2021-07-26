@@ -419,7 +419,6 @@ namespace Aroma_Shop.Application.Services
 
             return banners;
         }
-
         public AddEditBannerViewModel GetBannerForEdit(int bannerId)
         {
             var banner =
@@ -439,7 +438,6 @@ namespace Aroma_Shop.Application.Services
 
             return bannerViewModel;
         }
-
         public bool AddBanner(AddEditBannerViewModel bannerViewModel)
         {
             try

@@ -1,20 +1,20 @@
 ﻿@model Aroma_Shop.Application.ViewModels.Banner.AddEditBannerViewModel
 
 @{
-    ViewData["Title"] = "افزودن بنر";
+    ViewData["Title"] = "ویرایش بنر";
 }
 
 @section Styles
 {
     <style>
         .custom-file-input ~ .custom-file-label::after {
-            content: "انتخاب";
+            content: "تغییر";
         }
     </style>
 }
 
 <div class="h2 mt-3">
-    <h1 class="h2 d-inline">افزودن بنر</h1>
+    <h1 class="h2 d-inline">ویرایش بنر</h1>
     <a class="btn btn-warning float-left" asp-action="Banners">بازگشت</a>
 </div>
 <hr>
@@ -32,11 +32,17 @@
                 </textarea>
                 <span class="text-danger field-validation-valid"></span>
             </div>
-            <div class="custom-file mb-3" id="customFile" lang="es">
-                <input type="file" class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" asp-for="BannerImage">
-                <label class="custom-file-label" for="exampleInputFile">
-                    انتخاب عکس بنر
-                </label>
+            <div class="form-group">
+                <label class="control-label d-block">عکس بنر</label>
+                <img src="/img/@Model.BannerCurrentImagePath" class="img-fluid img-thumbnail" id="current-banner-image" alt="عکس فعلی بنر">
+            </div>
+            <div class="form-group">
+                <div class="custom-file" id="customFile" lang="es">
+                    <input type="file" onchange="FileChanged(this)" class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" asp-for="BannerImage">
+                    <label class="custom-file-label" for="exampleInputFile">
+                        تغییر عکس بنر
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">
@@ -56,6 +62,11 @@
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
     <script>
+
+        function FileChanged(files) {
+            $("#current-banner-image").attr("src", URL.createObjectURL(files.files.item(0)));
+        };
+
 
         ClassicEditor.create(document.querySelector('#editor'),
             {

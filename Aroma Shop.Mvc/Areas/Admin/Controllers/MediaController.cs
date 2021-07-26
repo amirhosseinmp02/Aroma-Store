@@ -417,7 +417,14 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Banners/EditBanner")]
         public IActionResult EditBanner(int bannerId)
         {
+            var bannerViewModel =
+                _mediaService
+                    .GetBannerForEdit(bannerId);
 
+            if (bannerViewModel == null)
+                return NotFound();
+
+            return View(bannerViewModel);
         }
 
         #endregion
