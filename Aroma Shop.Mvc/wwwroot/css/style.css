@@ -5123,9 +5123,9 @@ span.reset_variations:hover {
     color: white;
 }
 
-.button-paypal:hover {
-    color: black;
-}
+    .button-paypal:hover {
+        color: black;
+    }
 
 .orderconfirmation-variations {
     font-size: 13px;
@@ -5142,5 +5142,5 @@ span.reset_variations:hover {
 }
 
 .banner-slider-img {
-    height: 90vh
+    
 }
