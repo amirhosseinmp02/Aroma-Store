@@ -181,7 +181,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool AddBannerImage(Banner banner, AddEditBannerViewModel bannerViewModel)
+        public bool AddBannerImage(Banner banner, IFormFile uploadedBannerImage)
         {
             try
             {
@@ -198,13 +198,13 @@ namespace Aroma_Shop.Application.Services
                 }
 
                 var bannerImageFileName =
-                    $"{Guid.NewGuid().ToString()} - {bannerViewModel.BannerImage.FileName.ToLower()}";
+                    $"{Guid.NewGuid().ToString()} - {uploadedBannerImage.FileName.ToLower()}";
                 var fullBannerImagePath
                     = Path.Combine(bannerImagePath, bannerImageFileName);
 
                 using (var stream = new FileStream(fullBannerImagePath, FileMode.Create))
                 {
-                    bannerViewModel.BannerImage.CopyTo(stream);
+                    uploadedBannerImage.CopyTo(stream);
                 }
 
                 var bannerImage = new Image()

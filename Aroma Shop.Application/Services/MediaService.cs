@@ -419,7 +419,7 @@ namespace Aroma_Shop.Application.Services
 
             return banners;
         }
-        public AddEditBannerViewModel GetBannerForEdit(int bannerId)
+        public EditBannerViewModel GetBannerForEdit(int bannerId)
         {
             var banner =
                 _mediaRepository
@@ -428,29 +428,31 @@ namespace Aroma_Shop.Application.Services
             if (banner == null)
                 return null;
 
-            var bannerViewModel = new AddEditBannerViewModel()
+            var bannerViewModel = new EditBannerViewModel()
             {
                 BannerId = bannerId,
                 BannerCurrentImagePath = banner.BannerImage.ImagePath,
+                BannerLink = banner.BannerLink,
                 BannerTitle = banner.BannerTitle,
                 BannerDescription = banner.BannerDescription
             };
 
             return bannerViewModel;
         }
-        public bool AddBanner(AddEditBannerViewModel bannerViewModel)
+        public bool AddBanner(AddBannerViewModel bannerViewModel)
         {
             try
             {
                 var banner = new Banner()
                 {
                     BannerTitle = bannerViewModel.BannerTitle,
-                    BannerDescription = bannerViewModel.BannerDescription
+                    BannerDescription = bannerViewModel.BannerDescription,
+                    BannerLink = bannerViewModel.BannerLink
                 };
 
                 var addBannerImageResult =
                     _fileService
-                        .AddBannerImage(banner,bannerViewModel);
+                        .AddBannerImage(banner,bannerViewModel.BannerImage);
 
                 if (!addBannerImageResult)
                     return false;
@@ -469,7 +471,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool UpdateBanner(AddEditBannerViewModel bannerViewModel)
+        public bool UpdateBanner(EditBannerViewModel bannerViewModel)
         {
             try
             {
@@ -491,7 +493,7 @@ namespace Aroma_Shop.Application.Services
 
                     var addBannerImageResult =
                         _fileService
-                            .AddBannerImage(currentBanner, bannerViewModel);
+                            .AddBannerImage(currentBanner, bannerViewModel.BannerImage);
 
                     if (!addBannerImageResult)
                         return false;
@@ -501,6 +503,11 @@ namespace Aroma_Shop.Application.Services
                         .BannerTitle =
                     bannerViewModel
                         .BannerTitle;
+
+                currentBanner
+                        .BannerLink =
+                    bannerViewModel
+                        .BannerLink;
 
                 currentBanner
                         .BannerDescription =

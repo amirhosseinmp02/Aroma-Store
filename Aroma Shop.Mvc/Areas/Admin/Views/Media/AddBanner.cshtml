@@ -1,4 +1,4 @@
-﻿@model Aroma_Shop.Application.ViewModels.Banner.AddEditBannerViewModel
+﻿@model Aroma_Shop.Application.ViewModels.Banner.AddBannerViewModel
 
 @{
     ViewData["Title"] = "افزودن بنر";
@@ -24,6 +24,11 @@
             <div class="form-group">
                 <label class="control-label" for="BannerTitle">عنوان بنر</label>
                 <input class="form-control" id="BannerTitle" asp-for="BannerTitle">
+                <span class="text-danger field-validation-valid"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="BannerTitle">پیوند</label>
+                <input class="form-control" id="BannerTitle" asp-for="BannerLink">
                 <span class="text-danger field-validation-valid"></span>
             </div>
             <div class="form-group">

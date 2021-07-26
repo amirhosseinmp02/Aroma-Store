@@ -393,7 +393,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Banners/AddBanner")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddBanner(AddEditBannerViewModel model)
+        public IActionResult AddBanner(AddBannerViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -429,7 +429,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Banners/EditBanner")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditBanner(AddEditBannerViewModel model)
+        public IActionResult EditBanner(EditBannerViewModel model)
         {
             if (ModelState.IsValid)
             {
