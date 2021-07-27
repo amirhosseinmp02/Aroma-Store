@@ -7,7 +7,13 @@
 @inject IProductService ProductService
 
 <div class="row">
-    @foreach (var product in @Model)
+    @{
+        var products =
+            @Model.
+                OrderBy(p=>p.ProductHits)
+                .Take(8);
+    }
+    @foreach (var product in products)
     {
         string productImagePath;
         if (product.Images.Any())
@@ -28,9 +34,9 @@
                         {
                             <li>
                                 <form asp-controller="Product" asp-action="AddProductToCart">
-                                    <input type="hidden" value="@product.ProductId" name="productId" />
-                                    <input type="hidden" id="required-quantity" value="1" name="requestedQuantity" />
-                                    <input type="hidden" id="product-variation-id" value="-1" name="productVariationId" />
+                                    <input type="hidden" value="@product.ProductId" name="productId"/>
+                                    <input type="hidden" id="required-quantity" value="1" name="requestedQuantity"/>
+                                    <input type="hidden" id="product-variation-id" value="-1" name="productVariationId"/>
                                     <button type="submit"><i class="bi bi-bag"></i></button>
                                 </form>
                             </li>
@@ -53,7 +59,7 @@
                     </ul>
                 </div>
                 <div class="card-body">
-                    <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
+                    <p>@(product.Categories.Count > 0 ? product.Categories.First().CategoryName : "")</p>
                     <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
 
                     @if (product.IsSimpleProduct)
@@ -89,13 +95,13 @@
                             product
                                 .ProductVariations
                                 .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
-                                .Min(p => (int?)p.ProductVariationPrice);
+                                .Min(p => (int?) p.ProductVariationPrice);
 
                         int? maximumPrice =
                             product
                                 .ProductVariations
                                 .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
-                                .Max(p => (int?)p.ProductVariationPrice);
+                                .Max(p => (int?) p.ProductVariationPrice);
 
                         if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
                         {

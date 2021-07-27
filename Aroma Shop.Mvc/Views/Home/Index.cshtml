@@ -5,6 +5,12 @@
     ViewData["Title"] = "خانه";
 }
 
+@section Styles
+{
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+}
+
 <!--================ Hero banner start =================-->
 @if (Model.Banners.NotNullOrEmpty())
 {
@@ -82,6 +88,70 @@ else
     </section>
 }
 <!--================ Hero banner end =================-->
+<!--================ Hero Carousel start =================-->
+<section class="section-margin mt-0">
+    <div class="owl-carousel owl-theme hero-carousel">
+        <div class="hero-carousel__slide">
+            <img src="img/home/hero-slide1.png" alt="" class="img-fluid">
+            <a href="#" class="hero-carousel__slideOverlay">
+                <h3>Wireless Headphone</h3>
+                <p>Accessories Item</p>
+            </a>
+        </div>
+        <div class="hero-carousel__slide">
+            <img src="img/home/hero-slide2.png" alt="" class="img-fluid">
+            <a href="#" class="hero-carousel__slideOverlay">
+                <h3>Wireless Headphone</h3>
+                <p>Accessories Item</p>
+            </a>
+        </div>
+        <div class="hero-carousel__slide">
+            <img src="img/home/hero-slide3.png" alt="" class="img-fluid">
+            <a href="#" class="hero-carousel__slideOverlay">
+                <h3>Wireless Headphone</h3>
+                <p>Accessories Item</p>
+            </a>
+        </div>
+    </div>
+</section>
+<!--================ Hero Carousel end =================-->
+<!-- ================ holders section end ================= -->
+<div class="mt-5">
+    <h2 class="text-center mb-5">چرا از فروشگاه ما خرید می کنید؟</h2>
+    <div class="row mx-5">
+        <div class="col d-flex flex-column flex-wrap mr-2 my-3">
+            <i class="bi bi-bag text-secondary text-center h1"></i>
+            <div class="text-center">
+                فروشگاه کامل لوازم مورد نیاز شما
+            </div>
+        </div>
+        <div class="col d-flex flex-column flex-wrap mr-2 my-3">
+            <i class="bi bi-box-seam text-secondary text-center h1"></i>
+            <div class="text-center holder-texts">
+                ارسال در همان روز برای همه سفارشات
+            </div>
+        </div>
+        <div class="col d-flex flex-column flex-wrap mr-2 my-3">
+            <i class="bi bi-truck text-secondary text-center h1"></i>
+            <div class="text-center holder-texts">
+                تحویل رایگان برای همه سفارشات در دسترس است
+            </div>
+        </div>
+        <div class="col d-flex flex-column flex-wrap my-3 my-3">
+            <i class="bi bi-telephone text-secondary text-center h1"></i>
+            <div class="text-center holder-texts">
+                مشاوره حرفه ای و پشتیبانی عالی
+            </div>
+        </div>
+        <div class="col d-flex flex-column flex-wrap ml-2 my-3">
+            <i class="bi bi-lightning text-secondary text-center h1"></i>
+            <div class="text-center holder-texts">
+                ارسال در همان روز برای همه سفارشات
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ================ holders section end ================= -->
 <!-- ================ trending product section start ================= -->
 <section class="section-margin calc-60px">
     <div class="container">
@@ -118,4 +188,67 @@ else
 @section Scripts
 {
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
+    <script src="~/vendors/skrollr.min.js"></script>
+    <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+
+    <script>
+        //------- hero carousel -------//
+        $(".hero-carousel").owlCarousel({
+            rtl:true,
+            items:3,
+            margin: 10,
+            autoplay:false,
+            autoplayTimeout: 5000,
+            loop:true,
+            nav:false,
+            dots:false,
+            responsive:{
+                0:{
+                    items:1
+                },
+                600:{
+                    items: 2
+                },
+                810:{
+                    items:3
+                }
+            }
+        });
+
+        //------- Best Seller Carousel -------//
+        if($('.owl-carousel').length > 0){
+            $('#bestSellerCarousel').owlCarousel({
+                rtl:true,
+                loop:true,
+                margin:30,
+                nav:true,
+                navText: ["<i class='ti-arrow-left'></i>","<i class='ti-arrow-right'></i>"],
+                dots: false,
+                responsive:{
+                    0:{
+                        items:1
+                    },
+                    600:{
+                        items: 2
+                    },
+                    900:{
+                        items:3
+                    },
+                    1130:{
+                        items:4
+                    }
+                }
+            })
+        }
+
+        //------- single product area carousel -------//
+        $(".s_Product_carousel").owlCarousel({
+            items:1,
+            autoplay:false,
+            autoplayTimeout: 5000,
+            loop:true,
+            nav:false,
+            dots:false
+        });
+    </script>
 }

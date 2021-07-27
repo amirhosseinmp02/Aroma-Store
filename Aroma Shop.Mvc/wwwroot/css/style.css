@@ -100,7 +100,7 @@ a {
     }
 
         .section-margin.calc-60px {
-            margin: 120px 0 70px 0
+            margin: 90px 0 70px 0
         }
 }
 
@@ -5141,6 +5141,6 @@ span.reset_variations:hover {
     font-size: 15px
 }
 
-.banner-slider-img {
-    
+.holder-texts {
+    font-size: 17px
 }
