@@ -34,6 +34,7 @@ namespace Aroma_Shop.Domain.Models.ProductModels
         [Required(ErrorMessage = "لطفا تعداد محصول را وارد نمایید")]
         public int ProductQuantityInStock { get; set; }
         public int ProductHits { get; set; }
+        public int ProductSalesCount { get; set; }
 
         public DateTime RegistrationTime { get; set; }
 
