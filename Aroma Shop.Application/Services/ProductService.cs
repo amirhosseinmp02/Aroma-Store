@@ -1617,26 +1617,31 @@ namespace Aroma_Shop.Application.Services
                             _productRepository
                                 .GetUnFinishedOrdersDetails();
 
-                        foreach (var ordersDetail in loggedUserOpenOrder.OrdersDetails)
+                        foreach (var orderDetails in loggedUserOpenOrder.OrdersDetails)
                         {
-                            if (ordersDetail.IsOrderDetailsProductSimple)
+                            if (orderDetails.IsOrderDetailsProductSimple)
                             {
                                 var finalProductQuantity =
-                                    ordersDetail
+                                    orderDetails
                                         .Product
                                         .ProductQuantityInStock -
-                                    ordersDetail.OrderDetailsQuantity;
+                                    orderDetails.OrderDetailsQuantity;
 
                                 finalProductQuantity =
                                     finalProductQuantity > 0 ? finalProductQuantity : 0;
 
-                                ordersDetail
+                                orderDetails
                                     .Product
                                     .ProductQuantityInStock =
                                     finalProductQuantity;
 
+                                orderDetails
+                                        .Product
+                                        .ProductSalesCount +=
+                                    orderDetails.OrderDetailsQuantity;
+
                                 _productRepository
-                                    .UpdateProduct(ordersDetail.Product);
+                                    .UpdateProduct(orderDetails.Product);
 
                                 var simpleUnFinishedOrdersDetails =
                                     unFinishedOrdersDetails
@@ -1646,7 +1651,7 @@ namespace Aroma_Shop.Application.Services
                                 {
                                     if (unFinishedOrdersDetail
                                             .Product.ProductId ==
-                                        ordersDetail.Product.ProductId &&
+                                        orderDetails.Product.ProductId &&
                                         unFinishedOrdersDetail.OrderDetailsQuantity >
                                         finalProductQuantity)
                                     {
@@ -1670,21 +1675,26 @@ namespace Aroma_Shop.Application.Services
                             else
                             {
                                 var finalProductQuantity =
-                                    ordersDetail
+                                    orderDetails
                                         .ProductVariation
                                         .ProductVariationQuantityInStock -
-                                    ordersDetail.OrderDetailsQuantity;
+                                    orderDetails.OrderDetailsQuantity;
 
                                 finalProductQuantity =
                                     finalProductQuantity > 0 ? finalProductQuantity : 0;
 
-                                ordersDetail
+                                orderDetails
                                     .ProductVariation
                                     .ProductVariationQuantityInStock =
                                     finalProductQuantity;
 
+                                orderDetails
+                                        .Product
+                                        .ProductSalesCount +=
+                                    orderDetails.OrderDetailsQuantity;
+
                                 _productRepository
-                                    .UpdateProductVariation(ordersDetail.ProductVariation);
+                                    .UpdateProductVariation(orderDetails.ProductVariation);
 
                                 var diverseUnFinishedOrdersDetails =
                                     unFinishedOrdersDetails
@@ -1694,7 +1704,7 @@ namespace Aroma_Shop.Application.Services
                                 {
                                     if (unFinishedOrdersDetail
                                             .ProductVariation.ProductVariationId ==
-                                        ordersDetail.ProductVariation.ProductVariationId &&
+                                        orderDetails.ProductVariation.ProductVariationId &&
                                         unFinishedOrdersDetail.OrderDetailsQuantity >
                                         finalProductQuantity)
                                     {
@@ -1782,26 +1792,31 @@ namespace Aroma_Shop.Application.Services
                             _productRepository
                                 .GetUnFinishedOrdersDetails();
 
-                    foreach (var ordersDetail in loggedUserOpenOrder.OrdersDetails)
+                    foreach (var orderDetails in loggedUserOpenOrder.OrdersDetails)
                     {
-                        if (ordersDetail.IsOrderDetailsProductSimple)
+                        if (orderDetails.IsOrderDetailsProductSimple)
                         {
                             var finalProductQuantity =
-                                ordersDetail
+                                orderDetails
                                     .Product
                                     .ProductQuantityInStock -
-                                ordersDetail.OrderDetailsQuantity;
+                                orderDetails.OrderDetailsQuantity;
 
                             finalProductQuantity =
                                 finalProductQuantity > 0 ? finalProductQuantity : 0;
 
-                            ordersDetail
+                            orderDetails
                                 .Product
                                 .ProductQuantityInStock =
                                 finalProductQuantity;
 
+                            orderDetails
+                                    .Product
+                                    .ProductSalesCount +=
+                                orderDetails.OrderDetailsQuantity;
+
                             _productRepository
-                                .UpdateProduct(ordersDetail.Product);
+                                .UpdateProduct(orderDetails.Product);
 
                             var simpleUnFinishedOrdersDetails =
                                 unFinishedOrdersDetails
@@ -1811,7 +1826,7 @@ namespace Aroma_Shop.Application.Services
                             {
                                 if (unFinishedOrdersDetail
                                         .Product.ProductId ==
-                                    ordersDetail.Product.ProductId &&
+                                    orderDetails.Product.ProductId &&
                                     unFinishedOrdersDetail.OrderDetailsQuantity >
                                     finalProductQuantity)
                                 {
@@ -1835,21 +1850,26 @@ namespace Aroma_Shop.Application.Services
                         else
                         {
                             var finalProductQuantity =
-                                ordersDetail
+                                orderDetails
                                     .ProductVariation
                                     .ProductVariationQuantityInStock -
-                                ordersDetail.OrderDetailsQuantity;
+                                orderDetails.OrderDetailsQuantity;
 
                             finalProductQuantity =
                                 finalProductQuantity > 0 ? finalProductQuantity : 0;
 
-                            ordersDetail
+                            orderDetails
                                 .ProductVariation
                                 .ProductVariationQuantityInStock =
                                 finalProductQuantity;
 
+                            orderDetails
+                                    .Product
+                                    .ProductSalesCount +=
+                                orderDetails.OrderDetailsQuantity;
+
                             _productRepository
-                                .UpdateProductVariation(ordersDetail.ProductVariation);
+                                .UpdateProductVariation(orderDetails.ProductVariation);
 
                             var diverseUnFinishedOrdersDetails =
                                 unFinishedOrdersDetails
@@ -1859,7 +1879,7 @@ namespace Aroma_Shop.Application.Services
                             {
                                 if (unFinishedOrdersDetail
                                         .ProductVariation.ProductVariationId ==
-                                    ordersDetail.ProductVariation.ProductVariationId &&
+                                    orderDetails.ProductVariation.ProductVariationId &&
                                     unFinishedOrdersDetail.OrderDetailsQuantity >
                                     finalProductQuantity)
                                 {

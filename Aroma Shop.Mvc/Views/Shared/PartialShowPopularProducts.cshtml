@@ -9,7 +9,7 @@
 <div class="row">
     @{
         var products =
-            @Model.
+            Model.
                 OrderBy(p=>p.ProductHits)
                 .Take(8);
     }

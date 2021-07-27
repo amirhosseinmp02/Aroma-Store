@@ -7,8 +7,8 @@
 
 @section Styles
 {
-    <link rel="stylesheet" href="vendors/owl-carousel/owl.theme.default.min.css">
-    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/vendors/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/vendors/owl-carousel/owl.carousel.min.css">
 }
 
 <!--================ Hero banner start =================-->
@@ -162,7 +162,7 @@ else
 
         @if (Model.Products.Any())
         {
-            await Html.RenderPartialAsync("PartialShowProducts", Model.Products);
+            await Html.RenderPartialAsync("PartialShowPopularProducts", Model.Products);
         }
 
     </div>
@@ -189,7 +189,7 @@ else
 {
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
     <script src="~/vendors/skrollr.min.js"></script>
-    <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/vendors/owl-carousel/owl.carousel.min.js"></script>
 
     <script>
         //------- hero carousel -------//
