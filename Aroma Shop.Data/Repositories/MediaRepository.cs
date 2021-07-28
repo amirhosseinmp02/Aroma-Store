@@ -134,6 +134,28 @@ namespace Aroma_Shop.Data.Repositories
             _context
                 .Remove(banner);
         }
+        public IEnumerable<Newsletter> GetNewsletters()
+        {
+            var newsletters =
+                _context
+                    .Newsletters;
+
+            return newsletters;
+        }
+        public bool IsEmailExistInNewslettersCustomers(string customerEmail)
+        {
+            var isEmailExistInNewslettersCustomers =
+                _context
+                    .Newsletters
+                    .Any(p => p.CustomerEmail == customerEmail);
+
+            return isEmailExistInNewslettersCustomers;
+        }
+        public void AddNewsletter(Newsletter newsletter)
+        {
+            _context
+                .Add(newsletter);
+        }
 
         public void Save()
         {
