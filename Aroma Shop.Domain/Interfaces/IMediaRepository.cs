@@ -24,5 +24,8 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddBanner(Banner banner);
         void UpdateBanner(Banner banner);
         void DeleteBanner(Banner banner);
+        IEnumerable<Newsletter> GetNewsletters();
+        bool IsEmailExistInNewslettersCustomers(string customerEmail);
+        void AddNewsletter(Newsletter newsletter);
     }
 }
