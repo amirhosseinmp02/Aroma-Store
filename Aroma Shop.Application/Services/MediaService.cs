@@ -607,6 +607,24 @@ namespace Aroma_Shop.Application.Services
                 Console.WriteLine(error.Message);
                 return false;
             }
-        }   
+        }
+        public bool DeleteNewsletterById(int newsletterId)
+        {
+            try
+            {
+                _mediaRepository
+                    .DeleteNewsletterById(newsletterId);
+
+                _mediaRepository
+                    .Save();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
     }
 }
