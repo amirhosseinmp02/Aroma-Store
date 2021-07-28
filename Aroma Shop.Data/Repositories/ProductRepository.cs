@@ -29,6 +29,20 @@ namespace Aroma_Shop.Data.Repositories
 
             return products;
         }
+        public IEnumerable<Product> GetAvailableProducts()
+        {
+            var availableProducts =
+                _context.Products
+                .Where(p => p.IsSimpleProduct ?
+                    p.ProductQuantityInStock > 0 :
+                    p.ProductVariations.Any(p => p.ProductVariationQuantityInStock > 0))
+                .Include(p => p.Categories)
+                .Include(p => p.Images)
+                .Include(p => p.ProductVariations)
+                .AsSplitQuery();
+
+            return availableProducts;
+        }
         public Product GetProduct(int productId)
         {
             var product = _context.Products
@@ -123,7 +137,7 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .Orders
                     .Include(p => p.OrdersDetails)
-                    .Include(p=>p.InvoicesDetails)
+                    .Include(p => p.InvoicesDetails)
                     .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails);
@@ -139,8 +153,8 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.UserDetails)
                     .Where(p => p.OwnerUser.Id == userId)
                     .Include(p => p.OrdersDetails)
-                    .Include(p=>p.Discounts)
-                    .Include(p=>p.InvoicesDetails);
+                    .Include(p => p.Discounts)
+                    .Include(p => p.InvoicesDetails);
 
             return orders;
         }
@@ -158,7 +172,7 @@ namespace Aroma_Shop.Data.Repositories
             var order =
                 _context
                     .Orders
-                    .Include(p=>p.InvoicesDetails)
+                    .Include(p => p.InvoicesDetails)
                     .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
@@ -180,7 +194,7 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.Product)
-                    .ThenInclude(p=>p.Images)
+                    .ThenInclude(p => p.Images)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
                     .SingleOrDefault(p => p.OwnerUser.Id == userId && !p.IsOrderCompleted);
@@ -193,7 +207,7 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .Orders
                     .Include(p => p.Discounts)
-                    .Include(p=>p.InvoicesDetails)
+                    .Include(p => p.InvoicesDetails)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
@@ -260,8 +274,8 @@ namespace Aroma_Shop.Data.Repositories
                 _context
                     .OrdersDetails
                     .Where(p => p.Product.ProductId == productId)
-                    .Include(p=>p.Order)
-                    .Include(p=>p.ProductVariation);
+                    .Include(p => p.Order)
+                    .Include(p => p.ProductVariation);
 
             return orderDetails;
         }

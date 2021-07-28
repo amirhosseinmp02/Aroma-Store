@@ -8,6 +8,7 @@ namespace Aroma_Shop.Domain.Interfaces
     public interface IProductRepository : IGeneralRepository
     {
         IEnumerable<Product> GetProducts();
+        IEnumerable<Product> GetAvailableProducts();
         Product GetProduct(int productId);
         void AddProduct(Product product);
         void AddProductInformation(ProductInformation productInformation);

@@ -96,7 +96,7 @@ a {
 
 @media (min-width: 1100px) {
     .section-margin {
-        margin: 120px 0
+        margin: 100px 0
     }
 
         .section-margin.calc-60px {
@@ -1200,8 +1200,9 @@ a {
     box-shadow: none
 }
 
-.subscribe-form button {
-    margin-left: 15px
+.subscribe-form-button {
+    margin-left: auto;
+    margin-right: 15px
 }
 
 .subscribe-position {
@@ -5144,3 +5145,25 @@ span.reset_variations:hover {
 .holder-texts {
     font-size: 17px
 }
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .banner-slider-img {
+        height: 60vh;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .banner-slider-img {
+        height: 80vh;
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .banner-slider-img {
+        height: 90vh;
+    }
+}
+

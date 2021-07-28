@@ -6,124 +6,122 @@
 @inject IAccountService AccountService
 @inject IProductService ProductService
 
-<div class="row">
-    @{
-        var products =
-            Model.
-                OrderBy(p=>p.ProductHits)
-                .Take(8);
-    }
-    @foreach (var product in products)
-    {
-        string productImagePath;
-        if (product.Images.Any())
-        {
-            productImagePath = $"/img/{product.Images.FirstOrDefault().ImagePath}";
-        }
-        else
-        {
-            productImagePath = Image.DefaultImagePath;
-        }
-        <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="card text-center card-product">
-                <div class="card-product__img">
-                    <img class="card-img product-images-card" src="@productImagePath" alt="">
-                    <ul class="card-product__imgOverlay">
-                        <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-search"></i></a></li>
-                        @if (product.IsSimpleProduct)
-                        {
-                            <li>
-                                <form asp-controller="Product" asp-action="AddProductToCart">
-                                    <input type="hidden" value="@product.ProductId" name="productId"/>
-                                    <input type="hidden" id="required-quantity" value="1" name="requestedQuantity"/>
-                                    <input type="hidden" id="product-variation-id" value="-1" name="productVariationId"/>
-                                    <button type="submit"><i class="bi bi-bag"></i></button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-bag"></i></a></li>
-                        }
-                        @if (AccountService.IsUserSignedIn())
-                        {
-                            if (!await ProductService.IsProductInLoggedUserFavoriteProducts(product.ProductId))
+@{
+    var products =
+        Model.
+            OrderByDescending(p => p.ProductHits)
+            .Take(8);
+}
+
+<section class="section-margin calc-60px">
+    <div class="container">
+        <div class="section-intro pb-60px">
+            <p>بهترین محصولات در فروشگاه موجود است</p>
+            <h2><span class="section-intro__style">محصولات</span> پرطرفدار ترین</h2>
+        </div>
+        <div class="row">
+            @foreach (var product in products)
+            {
+                string productImagePath;
+                productImagePath = product.Images.Any() ?
+                    $"/img/{product.Images.FirstOrDefault().ImagePath}" :
+                    Image.DefaultImagePath;
+
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="card-img product-images-card" src="@productImagePath" alt="@product.ProductName">
+                            <ul class="card-product__imgOverlay">
+                                <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-search"></i></a></li>
+                                @if (product.IsSimpleProduct)
+                                {
+                                    <li>
+                                        <form asp-controller="Product" asp-action="AddProductToCart">
+                                            <input type="hidden" value="@product.ProductId" name="productId" />
+                                            <input type="hidden" id="required-quantity" value="1" name="requestedQuantity" />
+                                            <input type="hidden" id="product-variation-id" value="-1" name="productVariationId" />
+                                            <button type="submit"><i class="bi bi-bag"></i></button>
+                                        </form>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-bag"></i></a></li>
+                                }
+                                @if (AccountService.IsUserSignedIn())
+                                {
+                                    if (!await ProductService.IsProductInLoggedUserFavoriteProducts(product.ProductId))
+                                    {
+                                        <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="ti-heart"></i></a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a asp-controller="Product" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="bi bi-heart-fill"></i></a></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>@(product.Categories.Count > 0 ? product.Categories.First().CategoryName : "")</p>
+                            <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
+                            @{
+                                var productPriceLabel = "";
+                            }
+
+                            @if (product.IsSimpleProduct)
                             {
-                                <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="ti-heart"></i></a></li>
+                                if (product.ProductPrice != 0 && product.ProductQuantityInStock != 0)
+                                {
+                                    productPriceLabel = $"{product.ProductPrice} تومان";
+
+                                }
+                                else if (product.ProductPrice == 0 && product.ProductQuantityInStock > 0)
+                                {
+                                    productPriceLabel = "رایگان";
+                                }
                             }
                             else
                             {
-                                <li><a asp-controller="Product" asp-action="RemoveProductFromUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="bi bi-heart-fill"></i></a></li>
+
+                                var doesProductHaveAFreeVariation =
+                                    product
+                                        .ProductVariations
+                                        .Any(p => p.ProductVariationPrice == 0 && p.ProductVariationQuantityInStock > 0);
+
+                                int? minimumPrice =
+                                    product
+                                        .ProductVariations
+                                        .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
+                                        .Min(p => (int?)p.ProductVariationPrice);
+
+                                int? maximumPrice =
+                                    product
+                                        .ProductVariations
+                                        .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
+                                        .Max(p => (int?)p.ProductVariationPrice);
+
+                                if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
+                                {
+                                    productPriceLabel = $"{minimumPrice} تومان - {maximumPrice} تومان";
+                                }
+                                else if ((minimumPrice != null && maximumPrice != null) && minimumPrice == maximumPrice && !doesProductHaveAFreeVariation)
+                                {
+                                    productPriceLabel = $"{minimumPrice} تومان";
+                                }
+                                else if (minimumPrice == null && doesProductHaveAFreeVariation)
+                                {
+                                    productPriceLabel = $"رایگان";
+                                }
+                                else if (maximumPrice != null && doesProductHaveAFreeVariation)
+                                {
+                                    productPriceLabel = $"رایگان - {maximumPrice} تومان";
+                                }
                             }
-                        }
-                    </ul>
+                            <p class="card-product__price">@productPriceLabel</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p>@(product.Categories.Count > 0 ? product.Categories.First().CategoryName : "")</p>
-                    <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
-
-                    @if (product.IsSimpleProduct)
-                    {
-                        var simpleProductPriceLabel = "";
-
-                        if (product.ProductPrice != 0 && product.ProductQuantityInStock != 0)
-                        {
-                            simpleProductPriceLabel = $"{product.ProductPrice} تومان";
-
-                        }
-                        else if (product.ProductPrice == 0 && product.ProductQuantityInStock > 0)
-                        {
-                            simpleProductPriceLabel = "رایگان";
-                        }
-                        else
-                        {
-                            simpleProductPriceLabel = "";
-                        }
-
-                        <p class="card-product__price">@simpleProductPriceLabel</p>
-                    }
-                    else
-                    {
-                        var productAttributePriceLabel = "";
-
-                        var doesProductHaveAFreeVariation =
-                            product
-                                .ProductVariations
-                                .Any(p => p.ProductVariationPrice == 0 && p.ProductVariationQuantityInStock > 0);
-
-                        int? minimumPrice =
-                            product
-                                .ProductVariations
-                                .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
-                                .Min(p => (int?) p.ProductVariationPrice);
-
-                        int? maximumPrice =
-                            product
-                                .ProductVariations
-                                .Where(p => p.ProductVariationQuantityInStock != 0 && p.ProductVariationPrice != 0)
-                                .Max(p => (int?) p.ProductVariationPrice);
-
-                        if ((minimumPrice != null && maximumPrice != null) && minimumPrice != maximumPrice && !doesProductHaveAFreeVariation)
-                        {
-                            productAttributePriceLabel = $"{minimumPrice} تومان - {maximumPrice} تومان";
-                        }
-                        else if ((minimumPrice != null && maximumPrice != null) && minimumPrice == maximumPrice && !doesProductHaveAFreeVariation)
-                        {
-                            productAttributePriceLabel = $"{minimumPrice} تومان";
-                        }
-                        else if (minimumPrice == null && doesProductHaveAFreeVariation)
-                        {
-                            productAttributePriceLabel = $"رایگان";
-                        }
-                        else if (maximumPrice != null && doesProductHaveAFreeVariation)
-                        {
-                            productAttributePriceLabel = $"رایگان - {maximumPrice} تومان";
-                        }
-
-                        <p class="card-product__price">@productAttributePriceLabel</p>
-                    }
-                </div>
-            </div>
+            }
         </div>
-    }
-</div>
+    </div>
+</section>

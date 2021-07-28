@@ -14,7 +14,7 @@
 <!--================ Hero banner start =================-->
 @if (Model.Banners.NotNullOrEmpty())
 {
-    <section>
+    <section class="mb-2">
         <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
@@ -32,12 +32,14 @@
             <div class="carousel-inner">
                 @{
                     var firstBanner =
-                        @Model.Banners.FirstOrDefault();
+                        Model.Banners.FirstOrDefault();
                 }
                 <div class="carousel-item active">
-                    <a href="@firstBanner.BannerLink">
-                        <img src="/img/@firstBanner.BannerImage.ImagePath" class="d-block w-100 banner-slider-img" alt="@firstBanner.BannerTitle">
+
+                    <a href="@firstBanner.BannerLink" class="w-100">
+                        <img src="/img/@firstBanner.BannerImage.ImagePath" alt="@firstBanner.BannerTitle" class="d-block w-100 banner-slider-img">
                     </a>
+
                     <div class="carousel-caption d-none d-md-block">
                         @Html.Raw(firstBanner.BannerDescription)
                     </div>
@@ -45,8 +47,8 @@
                 @foreach (var banner in Model.Banners.Skip(1))
                 {
                     <div class="carousel-item">
-                        <a href="@banner.BannerLink">
-                            <img src="/img/@banner.BannerImage.ImagePath" class="d-block w-100 banner-slider-img" alt="@banner.BannerTitle">
+                        <a href="@banner.BannerLink" class="w-100">
+                            <img src="/img/@banner.BannerImage.ImagePath" alt="@banner.BannerTitle" class="d-block w-100 banner-slider-img">
                         </a>
                         <div class="carousel-caption d-none d-md-block">
                             @Html.Raw(banner.BannerDescription)
@@ -115,10 +117,50 @@ else
     </div>
 </section>
 <!--================ Hero Carousel end =================-->
+<!-- ================ trending product section start ================= -->
+
+@{
+    var doesModelHasAnyProduct =
+        Model.Products.Any();
+}
+
+@if (doesModelHasAnyProduct)
+{
+    await Html.RenderPartialAsync("PartialShowPopularProducts", Model.Products);
+}
+<!-- ================ trending product section end ================= -->
+<!-- ================ offer section start ================= -->
+<section class="offer" id="parallax-1" data-anchor-target="#parallax-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5">
+                <div class="offer__content text-center">
+                    <h3>تا 50% تخفیف</h3>
+                    <h4>جشنواره زمستانی</h4>
+                    <p>خرید کنید ، لذت ببرید !</p>
+                    <a class="button button--active mt-3 mt-xl-4" href="#">خرید</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ================ offer section end ================= -->
+<!-- ================ Best Selling item  carousel start================= -->
+@if (doesModelHasAnyProduct)
+{
+    await Html.RenderPartialAsync("PartialBestSellingProducts", Model.Products);
+}
+<!-- ================ Best Selling item  carousel end ================= -->
 <!-- ================ holders section end ================= -->
-<div class="mt-5">
+<div class="my-5">
     <h2 class="text-center mb-5">چرا از فروشگاه ما خرید می کنید؟</h2>
     <div class="row mx-5">
+        <div class="col d-flex flex-column flex-wrap ml-2 my-3">
+            <i class="bi bi-bookmark-check text-secondary text-center h1"></i>
+            <div class="text-center holder-texts">
+                تخفیف های باور نکردنی
+            </div>
+        </div>
         <div class="col d-flex flex-column flex-wrap mr-2 my-3">
             <i class="bi bi-bag text-secondary text-center h1"></i>
             <div class="text-center">
@@ -143,47 +185,27 @@ else
                 مشاوره حرفه ای و پشتیبانی عالی
             </div>
         </div>
-        <div class="col d-flex flex-column flex-wrap ml-2 my-3">
-            <i class="bi bi-lightning text-secondary text-center h1"></i>
-            <div class="text-center holder-texts">
-                ارسال در همان روز برای همه سفارشات
-            </div>
-        </div>
     </div>
 </div>
 <!-- ================ holders section end ================= -->
-<!-- ================ trending product section start ================= -->
-<section class="section-margin calc-60px">
+<!-- ================ Subscribe section start ================= -->
+<section class="subscribe-position">
     <div class="container">
-        <div class="section-intro pb-60px">
-            <p>بهترین محصولات در فروشگاه موجود است</p>
-            <h2><span class="section-intro__style">محصولات</span> پرطرفدار</h2>
-        </div>
-
-        @if (Model.Products.Any())
-        {
-            await Html.RenderPartialAsync("PartialShowPopularProducts", Model.Products);
-        }
-
-    </div>
-</section>
-<!-- ================ trending product section end ================= -->
-<!-- ================ offer section start ================= -->
-<section class="offer" id="parallax-1" data-anchor-target="#parallax-1">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-5">
-                <div class="offer__content text-center">
-                    <h3>تا 50% تخفیف</h3>
-                    <h4>جشنواره زمستانی</h4>
-                    <p>خرید کنید ، لذت ببرید !</p>
-                    <a class="button button--active mt-3 mt-xl-4" href="#">خرید</a>
-                </div>
+        <div class="subscribe text-center">
+            <h3 class="subscribe__title">هر کجا که هستید ، به روز شوید</h3>
+            <p class="text-secondary">عضو خبرنامه ما شوید</p>
+            <div id="mc_embed_signup">
+                <form method="get" action="#" class="subscribe-form form-inline mt-5 pt-1">
+                    <div class="form-group ml-sm-auto">
+                        <input class="form-control mb-1" placeholder="ایمیل خود را وارد نمایید" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل خود را وارد نمایید'">
+                    </div>
+                    <button class="button button-subscribe mb-1 subscribe-form-button" type="submit">ثبت</button>
+                </form>
             </div>
         </div>
     </div>
 </section>
-<!-- ================ offer section end ================= -->
+<!-- ================ Subscribe section end ================= -->
 
 @section Scripts
 {
@@ -194,48 +216,48 @@ else
     <script>
         //------- hero carousel -------//
         $(".hero-carousel").owlCarousel({
-            rtl:true,
-            items:3,
+            rtl: true,
+            items: 3,
             margin: 10,
-            autoplay:false,
+            autoplay: false,
             autoplayTimeout: 5000,
-            loop:true,
-            nav:false,
-            dots:false,
-            responsive:{
-                0:{
-                    items:1
+            loop: true,
+            nav: false,
+            dots: false,
+            responsive: {
+                0: {
+                    items: 1
                 },
-                600:{
+                600: {
                     items: 2
                 },
-                810:{
-                    items:3
+                810: {
+                    items: 3
                 }
             }
         });
 
         //------- Best Seller Carousel -------//
-        if($('.owl-carousel').length > 0){
+        if ($('.owl-carousel').length > 0) {
             $('#bestSellerCarousel').owlCarousel({
-                rtl:true,
-                loop:true,
-                margin:30,
-                nav:true,
-                navText: ["<i class='ti-arrow-left'></i>","<i class='ti-arrow-right'></i>"],
+                rtl: true,
+                loop: true,
+                margin: 30,
+                nav: true,
+                navText: ["<i class='ti-arrow-left'></i>", "<i class='ti-arrow-right'></i>"],
                 dots: false,
-                responsive:{
-                    0:{
-                        items:1
+                responsive: {
+                    0: {
+                        items: 1
                     },
-                    600:{
+                    600: {
                         items: 2
                     },
-                    900:{
-                        items:3
+                    900: {
+                        items: 3
                     },
-                    1130:{
-                        items:4
+                    1130: {
+                        items: 4
                     }
                 }
             })
@@ -243,12 +265,12 @@ else
 
         //------- single product area carousel -------//
         $(".s_Product_carousel").owlCarousel({
-            items:1,
-            autoplay:false,
+            items: 1,
+            autoplay: false,
             autoplayTimeout: 5000,
-            loop:true,
-            nav:false,
-            dots:false
+            loop: true,
+            nav: false,
+            dots: false
         });
     </script>
 }

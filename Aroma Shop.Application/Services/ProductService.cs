@@ -37,6 +37,14 @@ namespace Aroma_Shop.Application.Services
             _linkGenerator = linkGenerator;
             _accessor = accessor;
         }
+        public IEnumerable<Product> GetAvailableProducts()
+        {
+            var availableProducts =
+                _productRepository
+                    .GetAvailableProducts();
+
+            return availableProducts;
+        }
         public Product GetProduct(int productId)
         {
             var product =

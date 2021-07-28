@@ -31,8 +31,9 @@ namespace Aroma_Shop.Mvc.Controllers
                 _mediaService
                     .GetBanners();
 
-            var products = 
-                _productService.GetProducts();
+            var products =
+                _productService
+                    .GetAvailableProducts();
 
             var indexViewModel = new IndexViewModel()
             {

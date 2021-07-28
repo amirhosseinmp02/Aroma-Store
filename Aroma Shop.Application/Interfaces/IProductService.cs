@@ -13,6 +13,7 @@ namespace Aroma_Shop.Application.Interfaces
     public interface IProductService
     {
         IEnumerable<Product> GetProducts();
+        IEnumerable<Product> GetAvailableProducts();
         Product GetProduct(int productId);
         bool AddProduct(AddEditProductViewModel productViewModel);
         bool UpdateProduct(AddEditProductViewModel productViewModel);
