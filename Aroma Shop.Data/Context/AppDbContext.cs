@@ -25,7 +25,8 @@ namespace Aroma_Shop.Data.Context
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageReply> MessagesReplies { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Banner> Banners { get; set; }  
+        public DbSet<Banner> Banners { get; set; }
+        public DbSet<Newsletter> Newsletters { get; set; }  
 
         public DbSet<Image> Images { get; set; }
 

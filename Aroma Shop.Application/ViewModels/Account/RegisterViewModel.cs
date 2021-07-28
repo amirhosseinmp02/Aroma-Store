@@ -15,6 +15,7 @@ namespace Aroma_Shop.Application.ViewModels.Account
             , AdditionalFields = "__RequestVerificationToken")]
         public string UserName { get; set; }
         [EmailAddress(ErrorMessage = "فیلد وارد شده ایمیل نمی باشد")]
+        [MaxLength(256,ErrorMessage = "حداکثر 256 کارکتر مجاز می باشد")]
         [Required(ErrorMessage = "لطفا آدرس ایمیل خود را وارد نمایید")]
         [Remote("IsEmailExist", "Account", HttpMethod = "POST"
             , AdditionalFields = "__RequestVerificationToken")]
