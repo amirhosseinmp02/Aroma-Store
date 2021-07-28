@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.Home;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.MediaModels;
 
@@ -101,6 +104,44 @@ namespace Aroma_Shop.Mvc.Controllers
             }
 
             return View("/Views/Product/ProductDetails.cshtml", model);
+        }
+
+        #endregion
+
+        #region AddNewsletter
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddNewsletter(string customerEmail)
+        {
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrWhiteSpace(customerEmail))
+                    return Content("EmptyError");
+
+                if (!customerEmail.IsValidEmailAddress())
+                    return Content("InvalidEmail");
+
+                if (customerEmail.Length >= 256)
+                    return Content("MoreThan256Character");
+
+                var isEmailExistInNewslettersCustomers =
+                    _mediaService
+                        .IsEmailExistInNewslettersCustomers(customerEmail);
+
+                if (isEmailExistInNewslettersCustomers)
+                    return Content("CustomerEmailExist");
+
+                var result =
+                    _mediaService
+                        .AddNewsletter(customerEmail);
+
+                if (result)
+                    return Content("Successful");
+
+            }
+
+            return Content("Failed");
         }
 
         #endregion

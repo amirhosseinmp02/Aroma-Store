@@ -6,12 +6,6 @@ $(function() {
     forceHeight: false
   });
 
-  //------- mailchimp --------//  
-	function mailChimp() {
-		$('#mc_embed_signup').find('form').ajaxChimp();
-	}
-  mailChimp();
-  
   //------- fixed navbar --------//  
   $(window).scroll(function(){
     var sticky = $('.header_area'),

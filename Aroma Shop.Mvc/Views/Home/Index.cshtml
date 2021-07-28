@@ -100,7 +100,7 @@ else
                     .Banners
                     .Where(p => !p.IsPrimaryBanner);
         }
-        
+
         @foreach (var secondaryBanner in secondaryBanners)
         {
             <div class="hero-carousel__slide">
@@ -192,12 +192,14 @@ else
             <h3 class="subscribe__title">هر کجا که هستید ، به روز شوید</h3>
             <p class="text-secondary">عضو خبرنامه ما شوید</p>
             <div id="mc_embed_signup">
-                <form method="get" action="#" class="subscribe-form form-inline mt-5 pt-1">
+                <form method="post" data-ajax="true" data-ajax-method="post" data-ajax-url="@Url.Action("AddNewsletter","Media")" data-ajax-complete="completed" class="subscribe-form form-inline mt-5 pt-1">
                     <div class="form-group ml-sm-auto">
-                        <input class="form-control mb-1" placeholder="ایمیل خود را وارد نمایید" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل خود را وارد نمایید'">
+                        <input class="form-control mb-1" placeholder="ایمیل خود را وارد نمایید" onfocus="this.placeholder = ''" onblur="this.placeholder = 'ایمیل خود را وارد نمایید'" name="customerEmail">
                     </div>
                     <button class="button button-subscribe mb-1 subscribe-form-button" type="submit">ثبت</button>
                 </form>
+                <div class="success-message text-success mt-3" style="display: none"></div>
+                <div class="error-message text-danger mt-3" style="display: none"></div>    
             </div>
         </div>
     </div>
@@ -207,10 +209,51 @@ else
 @section Scripts
 {
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
-    <script src="~/vendors/skrollr.min.js"></script>
     <script src="~/vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
 
     <script>
+        completed = function (xhr) {
+            if (xhr.responseText === "Successful") {
+                $(".subscribe-form input").val("");
+                $(".error-message").hide();
+                $(".success-message").text("ایمیل شما با موفقیت ثبت شد");
+                $(".success-message").show();
+            }
+            else if (xhr.responseText === "EmptyError") {
+                $(".subscribe-form input").val("");
+                $(".success-message").hide();
+                $(".error-message").text("لطفا ایمیل خود را وارد نمایید");
+                $(".error-message").show();
+            }
+            else if (xhr.responseText === "InvalidEmail") {
+                $(".subscribe-form input").val("");
+                $(".success-message").hide();
+                $(".error-message").text("ایمیل وارد شده معتبر نمی باشد");
+                $(".error-message").show();
+            }
+            else if (xhr.responseText === "CustomerEmailExist") {
+                $(".subscribe-form input").val("");
+                $(".success-message").hide();
+                $(".error-message").text("ایمیل قبلا ثبت شده است");
+                $(".error-message").show();
+            }
+            else if (xhr.responseText === "MoreThan256Character") {
+                $(".subscribe-form input").val("");
+                $(".success-message").hide();
+                $(".error-message").text("حداکثر 256 کارکتر مجاز می باشد");
+                $(".error-message").show();
+            }
+            else if (xhr.responseText === "Failed") {
+                $(".subscribe-form input").val("");
+                $(".success-message").hide();
+                $(".error-message").text("مشکلی در زمان ثبت ایمیل رخ داد");
+                $(".error-message").show();
+            }
+            $("input[name=__RequestVerificationToken]").remove();
+            $(".subscribe-form").append('@Html.AntiForgeryToken()');
+        };
+
         //------- hero carousel -------//
         $(".hero-carousel").owlCarousel({
             rtl: true,

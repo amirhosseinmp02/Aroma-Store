@@ -577,21 +577,23 @@ namespace Aroma_Shop.Application.Services
 
             return newsletters;
         }
-        public JsonResult IsEmailExistInNewslettersCustomers(string customerEmail)
+        public bool IsEmailExistInNewslettersCustomers(string customerEmail)
         {
             var isEmailExistInNewslettersCustomers =
                 _mediaRepository
                     .IsEmailExistInNewslettersCustomers(customerEmail);
 
-            if (!isEmailExistInNewslettersCustomers)
-                return new JsonResult(true);
-
-            return new JsonResult("ایمیل قبلا عضو ثبت شده است");
+            return isEmailExistInNewslettersCustomers;
         }
-        public bool AddNewsletter(Newsletter newsletter)
+        public bool AddNewsletter(string customerEmail)
         {
             try
             {
+                var newsletter = new Newsletter()
+                {
+                    CustomerEmail = customerEmail
+                };
+
                 _mediaRepository
                     .AddNewsletter(newsletter);
 
@@ -605,6 +607,6 @@ namespace Aroma_Shop.Application.Services
                 Console.WriteLine(error.Message);
                 return false;
             }
-        }
+        }   
     }
 }

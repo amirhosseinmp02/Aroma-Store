@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -88,6 +89,21 @@ namespace Aroma_Shop.Application.Utilites
         public static bool NotNullOrEmpty<T>(this IEnumerable<T> source)
         {
             return source != null && source.Any();
+        }
+
+        #endregion
+
+        #region EmailValidation
+
+        public static bool IsValidEmailAddress(this string email)
+        {
+            var emailAddressAttribute =
+                new EmailAddressAttribute();
+
+            var result =
+                emailAddressAttribute.IsValid(email);
+
+            return result;
         }
 
         #endregion
