@@ -156,6 +156,16 @@ namespace Aroma_Shop.Data.Repositories
             _context
                 .Add(newsletter);
         }
+        public void DeleteNewsletterById(int newsletterId)
+        {
+            var newsletter =
+                _context
+                    .Newsletters
+                    .Find(newsletterId);
+
+            _context
+                .Remove(newsletter);
+        }
 
         public void Save()
         {

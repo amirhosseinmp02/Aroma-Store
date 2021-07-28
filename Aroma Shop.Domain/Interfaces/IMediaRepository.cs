@@ -27,6 +27,6 @@ namespace Aroma_Shop.Domain.Interfaces
         IEnumerable<Newsletter> GetNewsletters();
         bool IsEmailExistInNewslettersCustomers(string customerEmail);
         void AddNewsletter(Newsletter newsletter);
-        void DeleteNewsletterById(Newsletter newsletter);   
+        void DeleteNewsletterById(int newsletterId);   
     }
 }
