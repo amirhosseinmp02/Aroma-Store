@@ -1,15 +1,15 @@
-﻿@using Aroma_Shop.Application.Utilites
-@model IEnumerable<Aroma_Shop.Domain.Models.MediaModels.Message>
+﻿@model IEnumerable<Aroma_Shop.Domain.Models.MediaModels.Newsletter>
 
 @{
-    ViewData["Title"] = "صندوق پیام ها";
+    ViewData["Title"] = "کاربران خبرنامه";
 }
 
 <div class="h2 mt-3">
-    <h1 class="h2 d-inline">صندوق پیام ها</h1>
+    <h1 class="h2 d-inline">کاربران خبرنامه</h1>
+    <a class="btn btn-warning float-left" asp-controller="Media" asp-action="AddNewsletter">افزودن</a>
 </div>
 <hr />
-<form asp-action="Messages" method="get">
+<form asp-action="Newsletters" method="get">
     <div class="input-group mb-4">
         <input name="search" type="text" value="@ViewBag.search" class="form-control" placeholder="جستجو..." aria-label="جستجو...">
         <button type="submit" class="input-group-text" id="search-textbox">
@@ -21,31 +21,29 @@
 </form>
 @if (!Convert.ToBoolean(ViewBag.isEmpty))
 {
-    <table class="table table-responsive-lg table-responsive-sm table-bordered text-center table-light">
+    <table class="table table-responsive-sm table-striped table-bordered text-center table-light">
         <thead>
             <tr>
-                <th class="cart-item-cells">عنوان</th>
-                <th class="cart-item-cells">از طرف</th>
-                <th class="cart-item-cells">تاریخ</th>
+                <th class="cart-item-cells">شناسه</th>
+                <th class="cart-item-cells">ایمیل</th>
                 <th class="cart-item-cells">عملیات</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var message in Model)
+            @foreach (var newsletter in Model)
             {
-                <tr class="@(message.IsRead==false?"isunread":"")">
-                    <td class="cart-item-cells align-middle">@message.MessageSubject</td>
-                    <td class="cart-item-cells align-middle">@message.MessageSenderName | @message.MessageSenderEmail</td>
-                    <td class="cart-item-cells align-middle">@message.SubmitTime.ToSolarWithTime()</td>
+
+                <tr>
+                    <td class="cart-item-cells align-middle">@newsletter.NewsletterId</td>
+                    <td class="cart-item-cells align-middle">@newsletter.CustomerEmail</td>
                     <td class="align-middle">
                         <div class="admin-products-actions">
-                            <a class="btn text-light btn-primary m-3" asp-action="MessageDetails" asp-route-messageId="@message.MessageId">نمایش</a>
-                            <button class="btn text-light btn-primary" data-toggle="modal" data-target="#deletemodal@(message.MessageId)">حذف</button>
-                            <div class="modal fade" id="deletemodal@(message.MessageId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(message.MessageId)" aria-hidden="true">
+                            <button class="btn text-light btn-primary m-1" data-toggle="modal" data-target="#deletemodal@(newsletter.NewsletterId)">حذف</button>
+                            <div class="modal fade" id="deletemodal@(newsletter.NewsletterId)" tabindex="-1" role="dialog" aria-labelledby="#deletemodal@(newsletter.NewsletterId)" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header justify-content-center">
-                                            <h5 class="modal-title text-center" id="deletemodalLabel">حذف پیام</h5>
+                                            <h5 class="modal-title text-center" id="deletemodalLabel">حذف دسته بندی</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -56,10 +54,11 @@
                                                     <path class="text-danger" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                                 </svg>
                                             </h1>
-                                            <p class="lead">آیا از حذف پیام با عنوان <span class="text-warning">@message.MessageSubject</span> مطمئن هستید ؟</p>
+                                            <p class="lead">آیا از حذف کاربر خبرنامه  <span class="text-warning">@newsletter.CustomerEmail</span> مطمئن هستید ؟</p>
+                                            <p class="text-info">تمامی اطلاعات حذف خواهند شد</p>
                                         </div>
                                         <div class="modal-footer justify-content-center">
-                                            <a type="button" class="btn btn-danger" asp-action="DeleteMessage" asp-route-messageId="@message.MessageId">حذف</a>
+                                            <a type="button" class="btn btn-danger" asp-action="DeleteNewsletter" asp-route-newsletterId="@newsletter.NewsletterId">حذف</a>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
                                         </div>
                                     </div>
@@ -71,9 +70,9 @@
             }
         </tbody>
     </table>
-    @await Html.PartialAsync("PartialPaging", "Messages")
+    @await Html.PartialAsync("PartialPaging", "Newsletters")
 }
 else
 {
-    <div class="alert alert-danger text-left" role="alert">پیامی برای نمایش وجود ندارد</div>
+    <div class="alert alert-danger text-left" role="alert">هیچ کاربری عضو خبرنامه نیست</div>
 }
