@@ -7,6 +7,7 @@ using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.Message;
+using Aroma_Shop.Application.ViewModels.Newsletter;
 using Aroma_Shop.Domain.Models.MediaModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -509,6 +510,53 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             ViewBag.nextPage = page.NextPage;
 
             return View(newslettersPage);
+        }
+
+        #endregion
+
+        #region AddNewsletter
+
+        [HttpGet("/Admin/Newsletters/AddNewsletter")]
+        public IActionResult AddNewsletter()
+        {
+            return View();
+        }
+
+        [HttpPost("/Admin/Newsletters/AddNewsletter")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddNewsletter(AddNewsletterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result =
+                    _mediaService
+                        .AddNewsletter(model.CustomerEmail);
+
+                if (result)
+                    return RedirectToAction("Newsletters");
+
+                ModelState.AddModelError("","مشکلی در زمان ثبت ایمیل رخ داد");
+            }
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region CheckNewNewsletterCustomerEmailExist
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult IsNewsletterEmailExist(string customerEmail)
+        {
+            var isNewsletterEmailExist =
+                _mediaService
+                    .IsEmailExistInNewslettersCustomers(customerEmail);
+
+            if (!isNewsletterEmailExist)
+                return new JsonResult(true);
+
+            return new JsonResult("ایمیل قبلا ثبت شده");
         }
 
         #endregion
