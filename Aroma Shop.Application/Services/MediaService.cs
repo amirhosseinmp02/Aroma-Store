@@ -13,6 +13,7 @@ using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.MediaModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Aroma_Shop.Application.Services
 {
@@ -561,6 +562,43 @@ namespace Aroma_Shop.Application.Services
 
                 return true;
 
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        public IEnumerable<Newsletter> GetNewsletters()
+        {
+            var newsletters =
+                _mediaRepository
+                    .GetNewsletters();
+
+            return newsletters;
+        }
+        public JsonResult IsEmailExistInNewslettersCustomers(string customerEmail)
+        {
+            var isEmailExistInNewslettersCustomers =
+                _mediaRepository
+                    .IsEmailExistInNewslettersCustomers(customerEmail);
+
+            if (!isEmailExistInNewslettersCustomers)
+                return new JsonResult(true);
+
+            return new JsonResult("ایمیل قبلا عضو ثبت شده است");
+        }
+        public bool AddNewsletter(Newsletter newsletter)
+        {
+            try
+            {
+                _mediaRepository
+                    .AddNewsletter(newsletter);
+
+                _mediaRepository
+                    .Save();
+
+                return true;
             }
             catch (Exception error)
             {

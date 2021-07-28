@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.MediaModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Aroma_Shop.Application.Interfaces
 {
@@ -35,7 +36,7 @@ namespace Aroma_Shop.Application.Interfaces
         bool UpdateBanner(EditBannerViewModel bannerViewModel);
         bool DeleteBannerById(int bannerId);
         IEnumerable<Newsletter> GetNewsletters();
-        bool IsEmailExistInNewslettersCustomers(string customerEmail);
+        JsonResult IsEmailExistInNewslettersCustomers(string customerEmail);
         bool AddNewsletter(Newsletter newsletter);
     }
 }
