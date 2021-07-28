@@ -49,6 +49,17 @@
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="control-label d-block">مکان قرار گیری</label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline1" class="custom-control-input" value="true" asp-for="IsPrimaryBanner">
+                    <label class="custom-control-label" for="customRadioInline1">بنر اصلی</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline2" class="custom-control-input" value="false" asp-for="IsPrimaryBanner">
+                    <label class="custom-control-label" for="customRadioInline2">بنر فرعی</label>
+                </div>
+            </div>
             <input type="hidden" asp-for="BannerId" />
             <div class="form-group">
                 <input type="submit" value="افزودن" class="btn btn-block btn-primary">

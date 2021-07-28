@@ -19,6 +19,8 @@ namespace Aroma_Shop.Application.ViewModels.Banner
         [MaxFileSize(4194304, ErrorMessage = "حداکثر حجم مجاز برای عکس بنر 4 مگابایت می باشد")]
         [DataType(DataType.Upload)]
         public IFormFile BannerImage { get; set; }
+        [Required(ErrorMessage = "لطفا مکان قرار گیری بنر را انتخاب نمایید")]
+        public bool IsPrimaryBanner { get; set; }
 
         //For Edit
 

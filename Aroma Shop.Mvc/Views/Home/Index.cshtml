@@ -19,12 +19,13 @@
             <ol class="carousel-indicators">
                 <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
                 @{
-                    var bannersCount =
+                    var primaryBanners =
                         Model
                             .Banners
-                            .Count();
+                            .Where(p => p.IsPrimaryBanner);
+
                 }
-                @for (int i = 1; i < bannersCount; i++)
+                @for (int i = 1; i < primaryBanners.Count(); i++)
                 {
                     <li data-target="#carouselExampleCaptions" data-slide-to="@i"></li>
                 }
@@ -32,7 +33,7 @@
             <div class="carousel-inner">
                 @{
                     var firstBanner =
-                        Model.Banners.FirstOrDefault();
+                        primaryBanners.FirstOrDefault();
                 }
                 <div class="carousel-item active">
 
@@ -44,14 +45,14 @@
                         @Html.Raw(firstBanner.BannerDescription)
                     </div>
                 </div>
-                @foreach (var banner in Model.Banners.Skip(1))
+                @foreach (var primaryBanner in primaryBanners.Skip(1))
                 {
                     <div class="carousel-item">
-                        <a href="@banner.BannerLink" class="w-100">
-                            <img src="/img/@banner.BannerImage.ImagePath" alt="@banner.BannerTitle" class="d-block w-100 banner-slider-img">
+                        <a href="@primaryBanner.BannerLink" class="w-100">
+                            <img src="/img/@primaryBanner.BannerImage.ImagePath" alt="@primaryBanner.BannerTitle" class="d-block w-100 banner-slider-img">
                         </a>
                         <div class="carousel-caption d-none d-md-block">
-                            @Html.Raw(banner.BannerDescription)
+                            @Html.Raw(primaryBanner.BannerDescription)
                         </div>
                     </div>
                 }
@@ -93,27 +94,23 @@ else
 <!--================ Hero Carousel start =================-->
 <section class="section-margin mt-0">
     <div class="owl-carousel owl-theme hero-carousel">
-        <div class="hero-carousel__slide">
-            <img src="img/home/hero-slide1.png" alt="" class="img-fluid">
-            <a href="#" class="hero-carousel__slideOverlay">
-                <h3>Wireless Headphone</h3>
-                <p>Accessories Item</p>
-            </a>
-        </div>
-        <div class="hero-carousel__slide">
-            <img src="img/home/hero-slide2.png" alt="" class="img-fluid">
-            <a href="#" class="hero-carousel__slideOverlay">
-                <h3>Wireless Headphone</h3>
-                <p>Accessories Item</p>
-            </a>
-        </div>
-        <div class="hero-carousel__slide">
-            <img src="img/home/hero-slide3.png" alt="" class="img-fluid">
-            <a href="#" class="hero-carousel__slideOverlay">
-                <h3>Wireless Headphone</h3>
-                <p>Accessories Item</p>
-            </a>
-        </div>
+        @{
+            var secondaryBanners =
+                Model
+                    .Banners
+                    .Where(p => !p.IsPrimaryBanner);
+        }
+        
+        @foreach (var secondaryBanner in secondaryBanners)
+        {
+            <div class="hero-carousel__slide">
+                <img src="~/img/@secondaryBanner.BannerImage.ImagePath" alt="" class="img-fluid">
+                <a href="@secondaryBanner.BannerLink" class="hero-carousel__slideOverlay">
+                    <h3>@secondaryBanner.BannerTitle</h3>
+                    <p>@Html.Raw(secondaryBanner.BannerDescription)</p>
+                </a>
+            </div>
+        }
     </div>
 </section>
 <!--================ Hero Carousel end =================-->

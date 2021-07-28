@@ -434,7 +434,8 @@ namespace Aroma_Shop.Application.Services
                 BannerCurrentImagePath = banner.BannerImage.ImagePath,
                 BannerLink = banner.BannerLink,
                 BannerTitle = banner.BannerTitle,
-                BannerDescription = banner.BannerDescription
+                BannerDescription = banner.BannerDescription,
+                IsPrimaryBanner = banner.IsPrimaryBanner
             };
 
             return bannerViewModel;
@@ -447,7 +448,8 @@ namespace Aroma_Shop.Application.Services
                 {
                     BannerTitle = bannerViewModel.BannerTitle,
                     BannerDescription = bannerViewModel.BannerDescription,
-                    BannerLink = bannerViewModel.BannerLink
+                    BannerLink = bannerViewModel.BannerLink,
+                    IsPrimaryBanner = bannerViewModel.IsPrimaryBanner
                 };
 
                 var addBannerImageResult =
@@ -513,6 +515,11 @@ namespace Aroma_Shop.Application.Services
                         .BannerDescription =
                     bannerViewModel
                         .BannerDescription;
+
+                currentBanner
+                        .IsPrimaryBanner =
+                    bannerViewModel
+                        .IsPrimaryBanner;
 
                 _mediaRepository
                     .UpdateBanner(currentBanner);

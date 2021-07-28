@@ -14,6 +14,8 @@ namespace Aroma_Shop.Domain.Models.MediaModels
         public string BannerTitle { get; set; }
         public string BannerLink { get; set; }  
         public string BannerDescription { get; set; }
+        [Required]
+        public bool IsPrimaryBanner { get; set; }   
 
         //Navigations Proterties
 

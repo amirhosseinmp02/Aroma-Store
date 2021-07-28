@@ -17,6 +17,8 @@ namespace Aroma_Shop.Application.ViewModels.Banner
         [Required(ErrorMessage = "عکس بنر را انتخاب کنید")]
         [DataType(DataType.Upload)]
         public IFormFile BannerImage { get; set; }
+        [Required(ErrorMessage = "لطفا مکان قرار گیری بنر را انتخاب نمایید")]
+        public bool IsPrimaryBanner { get; set; }
 
         //For Edit
 
