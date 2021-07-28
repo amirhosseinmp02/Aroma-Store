@@ -464,5 +464,53 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region ShowNewsletters
+
+        [HttpGet("/Admin/Newsletters")]
+        public IActionResult Newsletters(int pageNumber = 1, string search = null)
+        {
+            IEnumerable<Newsletter> newsletters;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                newsletters =
+                    _mediaService.GetNewsletters().Where(p =>
+                        p.CustomerEmail.Contains(search) ||
+                        p.NewsletterId.ToString() == search);
+
+                ViewBag.search = search;
+            }
+            else
+                newsletters =
+                    _mediaService
+                        .GetNewsletters();
+
+            if (!newsletters.Any())
+            {
+                ViewBag.isEmpty = true;
+
+                return View();
+            }
+
+            var page =
+                new Paging<Newsletter>(newsletters, 11, pageNumber);
+
+            if (pageNumber < page.FirstPage || pageNumber > page.LastPage)
+                return NotFound();
+
+            var newslettersPage =   
+                page.QueryResult;
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.firstPage = page.FirstPage;
+            ViewBag.lastPage = page.LastPage;
+            ViewBag.prevPage = page.PreviousPage;
+            ViewBag.nextPage = page.NextPage;
+
+            return View(newslettersPage);
+        }
+
+        #endregion
     }
 }
