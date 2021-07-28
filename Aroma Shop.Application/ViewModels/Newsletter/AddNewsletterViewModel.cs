@@ -10,7 +10,7 @@ namespace Aroma_Shop.Application.ViewModels.Newsletter
     {
         [EmailAddress(ErrorMessage = "فیلد وارد شده ایمیل نمی باشد")]
         [MaxLength(256, ErrorMessage = "حداکثر 256 کارکتر مجاز می باشد")]
-        [Required(ErrorMessage = "لطفا آدرس ایمیل خود را وارد نمایید")]
+        [Required(ErrorMessage = "لطفا آدرس ایمیل را وارد نمایید")]
         [Remote("IsNewsletterEmailExist", "Media", "Admin", HttpMethod = "POST"
             , AdditionalFields = "__RequestVerificationToken,")]
         public string CustomerEmail { get; set; }

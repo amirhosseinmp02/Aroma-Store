@@ -543,6 +543,23 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         #endregion
 
+        #region DeleteNewsletter
+
+        [HttpGet("/Admin/Newsletters/DeleteNewsletter")]
+        public IActionResult DeleteNewsletter(int newsletterId)
+        {
+            var result =
+                _mediaService
+                    .DeleteNewsletterById(newsletterId);
+
+            if (result)
+                return RedirectToAction("Newsletters");
+
+            return NotFound();
+        }
+
+        #endregion
+
         #region CheckNewNewsletterCustomerEmailExist
 
         [HttpPost]
