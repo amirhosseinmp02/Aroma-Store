@@ -37,6 +37,7 @@ namespace Aroma_Shop.Application.Interfaces
         bool DeleteBannerById(int bannerId);
         IEnumerable<Newsletter> GetNewsletters();
         bool IsEmailExistInNewslettersCustomers(string customerEmail);
-        bool AddNewsletter(string customerEmail);   
+        bool AddNewsletter(string customerEmail);
+        bool DeleteNewsletterById(int newsletterId);
     }
 }
