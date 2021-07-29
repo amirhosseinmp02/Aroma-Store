@@ -20,7 +20,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         }
 
         public IEnumerable<Domain.Models.ProductModels.Product> Products { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
+        public IEnumerable<CategoryTreeView> CategoriesTreeViews { get; set; }  
         public IEnumerable<SelectListItem> SortList { get; set; }
         public string SortBy { get; set; }
         public IEnumerable<int> SelectedCategories { get; set; }

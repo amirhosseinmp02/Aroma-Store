@@ -70,19 +70,17 @@ namespace Aroma_Shop.Mvc.Controllers
 
             ProductsViewModel productsViewModel;
 
-            var allCategories =
-                _productService.GetCategories();
+            var categoriesTreeViews =
+                _productService
+                    .GetCategoriesTreeViews();
 
             if (!products.Any())
             {
                 ViewBag.isEmpty = true;
 
-                allCategories =
-                    _productService.GetCategories();
-
                 productsViewModel = new ProductsViewModel()
                 {
-                    Categories = allCategories,
+                    CategoriesTreeViews = categoriesTreeViews,
                     SelectedCategories = SelectedCategories,
                     SortBy = SortBy
                 };
@@ -177,7 +175,7 @@ namespace Aroma_Shop.Mvc.Controllers
             productsViewModel = new ProductsViewModel()
             {
                 Products = productsPage,
-                Categories = allCategories,
+                CategoriesTreeViews = categoriesTreeViews,
                 SelectedCategories = SelectedCategories,
                 SortBy = SortBy
             };

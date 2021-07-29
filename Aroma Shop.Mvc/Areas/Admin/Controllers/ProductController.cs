@@ -81,7 +81,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public IActionResult AddProduct()
         {
             var productCategories =
-                _productService.GetCategoriesTreeView().Skip(1);
+                _productService.GetCategoriesTreeViewForAdd().Skip(1);
 
             var model = new AddEditProductViewModel()
             {
@@ -105,7 +105,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     ModelState.Clear();
 
                     var returnProductCategories =
-                        _productService.GetCategoriesTreeView().Skip(1);
+                        _productService.GetCategoriesTreeViewForAdd().Skip(1);
 
                     model = new AddEditProductViewModel()
                     {
@@ -121,7 +121,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             var productCategories =
-                _productService.GetCategoriesTreeView();
+                _productService.GetCategoriesTreeViewForAdd();
 
             model.ProductCategories = productCategories;
 
@@ -143,7 +143,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 return NotFound();
 
             var productCategories =
-                _productService.GetCategoriesTreeView().Skip(1);
+                _productService.GetCategoriesTreeViewForAdd().Skip(1);
 
             foreach (var productCategory in productCategories)
             {
@@ -217,7 +217,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 _productService.GetProduct(model.ProductId);
 
             var productCategories =
-                _productService.GetCategoriesTreeView().Skip(1);
+                _productService.GetCategoriesTreeViewForAdd().Skip(1);
 
             foreach (var productCategory in productCategories)
             {
@@ -309,7 +309,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         {
             var categoriesTreeView =
                 _productService
-                    .GetCategoriesTreeView();
+                    .GetCategoriesTreeViewForAdd();
 
             var model = new AddEditCategoryViewModel()
             {
@@ -335,7 +335,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     model = new AddEditCategoryViewModel()
                     {
                         AllCategories =
-                            _productService.GetCategoriesTreeView()
+                            _productService.GetCategoriesTreeViewForAdd()
                     };
 
                     ViewData["SuccessMessage"] = "دسته مورد نظر با موفقیت افزوده شد.";
@@ -347,7 +347,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             model.AllCategories =
-                _productService.GetCategoriesTreeView();
+                _productService.GetCategoriesTreeViewForAdd();
 
             return View(model);
         }

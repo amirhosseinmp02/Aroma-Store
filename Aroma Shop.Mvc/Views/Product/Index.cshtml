@@ -85,12 +85,9 @@
                         <ul class="main-categories">
                             <li class="common-filter">
                                 <ul>
-                                    @foreach (var category in Model.Categories)
+                                    @foreach (var categoryTreeView in Model.CategoriesTreeViews)
                                     {
-                                        var categoryProductsCount =
-                                            category.Products.Count;
-
-                                        <li class="filter-list"><input class="pixel-radio" type="checkbox" id="@category.CategoryName" name="SelectedCategories" value="@category.CategoryId" @(Model.SelectedCategories.Any(p => p == category.CategoryId) ? "checked" : "")><label class="ml-2" for="@category.CategoryName">@category.CategoryName<span> (@categoryProductsCount)</span></label></li>
+                                        <li class="filter-list mb-1" style="margin-right: @(categoryTreeView.CategoryLevel*20)px"><input class="pixel-radio" type="checkbox" id="@categoryTreeView.CategoryName" name="SelectedCategories" value="@categoryTreeView.CategoryId" @(Model.SelectedCategories.Any(p => p == categoryTreeView.CategoryId) ? "checked" : "")><label class="ml-2" for="@categoryTreeView.CategoryName">@categoryTreeView.CategoryName<span> (@categoryTreeView.CategoryProductsCount)</span></label></li>
                                     }
                                 </ul>
                             </li>

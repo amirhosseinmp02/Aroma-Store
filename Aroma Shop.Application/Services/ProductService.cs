@@ -349,7 +349,64 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public IEnumerable<SelectListItem> GetCategoriesTreeView()
+        public IEnumerable<CategoryTreeView> GetCategoriesTreeViews()
+        {
+            var categories =
+                _productRepository.GetCategories();
+
+            List<CategoryTreeView> items =
+                new List<CategoryTreeView>();
+
+            var parentsCategories =
+                categories.Where(p => p.ParentCategory == null);
+
+            foreach (var parentCategory in parentsCategories)
+            {
+                var item =
+                    new CategoryTreeView()
+                    {
+                        CategoryId = parentCategory.CategoryId,
+                        CategoryName = parentCategory.CategoryName,
+                        CategoryLevel = 0,
+                        CategoryProductsCount = parentCategory.Products.Count
+                    };
+
+                    items
+                    .Add(item);
+
+                CategoriesScrolling(parentCategory);
+            }
+
+            void CategoriesScrolling(Category parentCategory, int counter = 0)
+            {
+                var subCategories =
+                    categories
+                        .Where(p => p.ParentCategory?.CategoryId == parentCategory.CategoryId);
+
+                foreach (var subCategory in subCategories)
+                {
+                    ++counter;
+
+                    var item =
+                        new CategoryTreeView()
+                        {
+                            CategoryId = subCategory.CategoryId,
+                            CategoryName = subCategory.CategoryName,
+                            CategoryLevel = counter,
+                            CategoryProductsCount = subCategory.Products.Count
+                        };
+
+                    items
+                        .Add(item);
+
+                    CategoriesScrolling(subCategory, counter);
+                    --counter;
+                }
+            }
+
+            return items;
+        }
+        public IEnumerable<SelectListItem> GetCategoriesTreeViewForAdd()
         {
             var categories =
                 _productRepository.GetCategories();
@@ -363,15 +420,17 @@ namespace Aroma_Shop.Application.Services
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
 
-            foreach (var parentsCategory in parentsCategories)
+            foreach (var parentCategory in parentsCategories)
             {
-                items
-                    .Add
-                    (new SelectListItem
+                var item =
+                    new SelectListItem
                     (new string('─', 0)
-                     + $" {parentsCategory.CategoryName}", parentsCategory.CategoryId.ToString()));
+                     + $" {parentCategory.CategoryName}", parentCategory.CategoryId.ToString());
 
-                CategoriesScrolling(parentsCategory);
+                items
+                    .Add(item);
+
+                CategoriesScrolling(parentCategory);
             }
 
             void CategoriesScrolling(Category parentCategory, int counter = 0)
@@ -383,11 +442,14 @@ namespace Aroma_Shop.Application.Services
                 foreach (var subCategory in subCategories)
                 {
                     ++counter;
-                    items
-                        .Add
-                        (new SelectListItem
+
+                    var item =
+                        new SelectListItem
                         (new string('─', counter * 2)
-                         + $" {subCategory.CategoryName}", subCategory.CategoryId.ToString()));
+                         + $" {subCategory.CategoryName}", subCategory.CategoryId.ToString());
+
+                    items
+                        .Add(item);
 
                     CategoriesScrolling(subCategory, counter);
                     --counter;
@@ -398,48 +460,9 @@ namespace Aroma_Shop.Application.Services
         }
         public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory)
         {
-            var categories =
-                _productRepository.GetCategories();
-
-            List<SelectListItem> items =
-                new List<SelectListItem>()
-                {
-                    new SelectListItem("انتخاب کنید", "-1")
-                };
-
-            var parentsCategories =
-                categories.Where(p => p.ParentCategory == null);
-
-            foreach (var parentsCategory in parentsCategories)
-            {
-                items
-                    .Add
-                    (new SelectListItem
-                    (new string('─', 0)
-                     + $" {parentsCategory.CategoryName}", parentsCategory.CategoryId.ToString()));
-
-                CategoriesScrolling(parentsCategory);
-            }
-
-            void CategoriesScrolling(Category parentCategory, int counter = 0)
-            {
-                var subCategories =
-                    categories
-                        .Where(p => p.ParentCategory?.CategoryId == parentCategory.CategoryId);
-
-                foreach (var subCategory in subCategories)
-                {
-                    ++counter;
-                    items
-                        .Add
-                        (new SelectListItem
-                        (new string('─', counter * 2)
-                         + $" {subCategory.CategoryName}", subCategory.CategoryId.ToString()));
-
-                    CategoriesScrolling(subCategory, counter);
-                    --counter;
-                }
-            }
+            var items =
+                GetCategoriesTreeViewForAdd()
+                    .ToList();
 
             var selfItem =
                 items
