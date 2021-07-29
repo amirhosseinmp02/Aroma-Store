@@ -307,12 +307,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Products/AddCategory")]
         public IActionResult AddCategory()
         {
-            var categories =
-                _productService.GetCategories();
+            var categoriesTreeView =
+                _productService
+                    .GetCategoriesTreeView();
 
             var model = new AddEditCategoryViewModel()
             {
-                AllCategories = _productService.GetCategoriesTreeView()
+                AllCategories = categoriesTreeView
             };
 
             return View(model);

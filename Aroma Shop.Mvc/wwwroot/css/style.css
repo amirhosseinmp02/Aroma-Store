@@ -874,7 +874,7 @@ a {
     position: absolute;
     bottom: 50px;
     background: #384aeb;
-    padding: 23px 90px 23px 25px;
+    padding: 23px 25px 23px 90px;
     transform: translateY(50px);
     opacity: 0;
     z-index: -1;
@@ -1005,7 +1005,7 @@ a {
 
 @media (min-width: 650px) {
     .offer__content h3 {
-        font-size: 50px;
+        font-size: 46px;
         margin-bottom: 25px
     }
 }
@@ -1015,7 +1015,8 @@ a {
 }
 
 .offer__content p {
-    color: #555555
+    color: #555555;
+    padding-top: 8px;
 }
 
 #bestSellerCarousel .owl-prev,

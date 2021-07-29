@@ -63,7 +63,6 @@ namespace Aroma_Shop.Data.Repositories
         {
             var categories = _context.Categories
                 .Include(p => p.ParentCategory)
-                .Include(p => p.ChildrenCategories)
                 .Include(p => p.Products);
 
             return categories;
@@ -72,7 +71,6 @@ namespace Aroma_Shop.Data.Repositories
         {
             var category = _context.Categories
                 .Include(p => p.ParentCategory)
-                .Include(p => p.ChildrenCategories)
                 .SingleOrDefault(p => p.CategoryId == categoryId);
 
             return category;

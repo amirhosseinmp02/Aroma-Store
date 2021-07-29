@@ -338,6 +338,7 @@ namespace Aroma_Shop.Application.Services
             try
             {
                 DeleteCascadeCategoryById(categoryId);
+
                 _productRepository.Save();
 
                 return true;
@@ -354,61 +355,42 @@ namespace Aroma_Shop.Application.Services
                 _productRepository.GetCategories();
 
             List<SelectListItem> items =
-                new List<SelectListItem>();
-
-            var item = new SelectListItem("انتخاب کنید", "-1");
-
-            items.Add(item);
+                new List<SelectListItem>()
+                {
+                    new SelectListItem("انتخاب کنید", "-1")
+                };
 
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
 
-            int count = 0;
-
-            ParentsCategoriesScrolling(parentsCategories);
-
-            void ParentsCategoriesScrolling(IEnumerable<Category> parents)
+            foreach (var parentsCategory in parentsCategories)
             {
-                foreach (var parent in parents)
-                {
-                    items
-                        .Add
-                            (new SelectListItem
-                            (new string('─', count * 2)
-                             + $" {parent.CategoryName}", parent.CategoryId.ToString()));
+                items
+                    .Add
+                    (new SelectListItem
+                    (new string('─', 0)
+                     + $" {parentsCategory.CategoryName}", parentsCategory.CategoryId.ToString()));
 
-                    var category =
-                        _productRepository.GetCategory(parent.CategoryId);
-
-                    if (category.ChildrenCategories.Any())
-                    {
-                        ++count;
-                        ChildrenCategoriesScrolling(category.ChildrenCategories, count);
-                    }
-
-                    count = 0;
-                }
+                CategoriesScrolling(parentsCategory);
             }
 
-            void ChildrenCategoriesScrolling(IEnumerable<Category> children, int counter)
+            void CategoriesScrolling(Category parentCategory, int counter = 0)
             {
-                foreach (var child in children)
+                var subCategories =
+                    categories
+                        .Where(p => p.ParentCategory?.CategoryId == parentCategory.CategoryId);
+
+                foreach (var subCategory in subCategories)
                 {
+                    ++counter;
                     items
-                        .Add(new SelectListItem
-                            (new string('─', counter * 2)
-                             + $" {child.CategoryName}", child.CategoryId.ToString()));
+                        .Add
+                        (new SelectListItem
+                        (new string('─', counter * 2)
+                         + $" {subCategory.CategoryName}", subCategory.CategoryId.ToString()));
 
-                    var category =
-                        _productRepository.GetCategory(child.CategoryId);
-
-                    if (category.ChildrenCategories.Any())
-                    {
-                        ++counter;
-                        ChildrenCategoriesScrolling(category.ChildrenCategories, counter);
-                        --counter;
-                    }
-
+                    CategoriesScrolling(subCategory, counter);
+                    --counter;
                 }
             }
 
@@ -420,76 +402,52 @@ namespace Aroma_Shop.Application.Services
                 _productRepository.GetCategories();
 
             List<SelectListItem> items =
-                new List<SelectListItem>();
-
-            var item = new SelectListItem("انتخاب کنید", "-1");
-
-            items.Add(item);
+                new List<SelectListItem>()
+                {
+                    new SelectListItem("انتخاب کنید", "-1")
+                };
 
             var parentsCategories =
                 categories.Where(p => p.ParentCategory == null);
 
-            int count = 0;
-
-            ParentsCategoriesScrolling(parentsCategories);
-
-            void ParentsCategoriesScrolling(IEnumerable<Category> parents)
-            {
-                foreach (var parent in parents)
-                {
-                    if (parent.CategoryId != selfCategory.CategoryId)
-                    {
-                        var item = new SelectListItem
-                        (new string('─', count * 2) +
-                         $" {parent.CategoryName}", parent.CategoryId.ToString());
-
-                        items.Add(item);
-
-                        var category =
-                            _productRepository.GetCategory(parent.CategoryId);
-
-                        if (category.ChildrenCategories.Any())
-                        {
-                            ++count;
-                            ChildrenCategoriesScrolling(category.ChildrenCategories, count);
-                        }
-
-                        count = 0;
-                    }
-                }
-            }
-
-            void ChildrenCategoriesScrolling(IEnumerable<Category> children, int counter)
-            {
-                foreach (var child in children)
-                {
-                    if (child.CategoryId != selfCategory.CategoryId)
-                    {
-                        items.Add(new SelectListItem
-                            (new string('─', counter * 2) +
-                             $" {child.CategoryName}", child.CategoryId.ToString()));
-
-                        var category =
-                            _productRepository.GetCategory(child.CategoryId);
-
-                        if (category.ChildrenCategories.Any())
-                        {
-                            ++counter;
-                            ChildrenCategoriesScrolling(category.ChildrenCategories, counter);
-                            --counter;
-                        }
-                    }
-                }
-            }
-
-            if (selfCategory.ParentCategory != null)
+            foreach (var parentsCategory in parentsCategories)
             {
                 items
-                    .SingleOrDefault
-                    (p =>
-                        p.Value == selfCategory.ParentCategory.CategoryId.ToString())
-                    .Selected = true;
+                    .Add
+                    (new SelectListItem
+                    (new string('─', 0)
+                     + $" {parentsCategory.CategoryName}", parentsCategory.CategoryId.ToString()));
+
+                CategoriesScrolling(parentsCategory);
             }
+
+            void CategoriesScrolling(Category parentCategory, int counter = 0)
+            {
+                var subCategories =
+                    categories
+                        .Where(p => p.ParentCategory?.CategoryId == parentCategory.CategoryId);
+
+                foreach (var subCategory in subCategories)
+                {
+                    ++counter;
+                    items
+                        .Add
+                        (new SelectListItem
+                        (new string('─', counter * 2)
+                         + $" {subCategory.CategoryName}", subCategory.CategoryId.ToString()));
+
+                    CategoriesScrolling(subCategory, counter);
+                    --counter;
+                }
+            }
+
+            var selfItem =
+                items
+                    .SingleOrDefault
+                    (p => p.Value ==
+                          selfCategory.CategoryId.ToString());
+
+            items.Remove(selfItem);
 
             return items;
         }
@@ -686,7 +644,7 @@ namespace Aroma_Shop.Application.Services
                             p.OrdersDetails.NotNullOrEmpty() ||
                             p.InvoicesDetails.NotNullOrEmpty();
 
-                            int totalOrderPrice;
+                        int totalOrderPrice;
 
                         if (p.OrdersDetails.NotNullOrEmpty())
                         {
@@ -2129,29 +2087,43 @@ namespace Aroma_Shop.Application.Services
             {
                 var category =
                     GetCategory(categoryId);
+
                 if (category == null)
                     return false;
 
-                _productRepository.DeleteCategory(category);
+                var allCategories =
+                    _productRepository
+                        .GetCategories();
 
-                if (category.ChildrenCategories.Count != 0)
+                var childrenCategories =
+                    allCategories
+                        .Where(p => p.ParentCategory?.CategoryId == categoryId);
+
+                foreach (var childrenCategory in childrenCategories)
                 {
-                    ChildrenCategoriesScrolling(category.ChildrenCategories);
+                    DeleteChildrenCategories(childrenCategory);
 
-                    void ChildrenCategoriesScrolling(IEnumerable<Category> children)
+                    _productRepository
+                        .DeleteCategory(childrenCategory);
+                }
+
+                void DeleteChildrenCategories(Category childrenCategory)
+                {
+                    var subCategories =
+                        allCategories
+                            .Where(p => p.ParentCategory?.CategoryId == childrenCategory.CategoryId);
+
+                    foreach (var subCategory in subCategories)
                     {
-                        foreach (var child in children)
-                        {
-                            _productRepository.DeleteCategory(child);
+                        DeleteChildrenCategories(subCategory);
 
-                            var temp =
-                                GetCategory(child.CategoryId);
-
-                            if (temp.ChildrenCategories.Count != 0)
-                                ChildrenCategoriesScrolling(temp.ChildrenCategories);
-                        }
+                        _productRepository
+                            .DeleteCategory(subCategory);
                     }
                 }
+
+                _productRepository
+                    .DeleteCategory(category);
 
                 return true;
             }
