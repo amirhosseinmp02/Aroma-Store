@@ -8,8 +8,8 @@
 
 @{
     var products =
-        Model.
-            OrderByDescending(p => p.ProductHits)
+        Model
+            .OrderByDescending(p => p.ProductHits)
             .Take(8);
 }
 

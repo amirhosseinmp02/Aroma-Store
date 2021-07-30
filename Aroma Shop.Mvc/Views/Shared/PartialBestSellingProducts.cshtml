@@ -8,8 +8,8 @@
 
 @{
     var products =
-        Model.
-            OrderByDescending(p => p.ProductSalesCount)
+        Model
+            .OrderByDescending(p => p.ProductSalesCount)
             .Take(12);
 }
 
@@ -29,7 +29,7 @@
 
                 <div class="card text-center card-product">
                     <div class="card-product__img">
-                        <img class="card-img product-images-card" src="@productImagePath" alt="@product.ProductName">
+                        <img class="card-img product-images-card m-auto" src="@productImagePath" alt="@product.ProductName">
                         <ul class="card-product__imgOverlay">
                             <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-search"></i></a></li>
                             @if (product.IsSimpleProduct)
