@@ -34,40 +34,59 @@
 <div class="product_image_area">
     <div class="container">
         <div class="row s_product_inner">
-            <div class="col-lg-6">
-                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            @{
-                                var productImagePath = 
-                                    Model.Product.Images.Any() ? 
-                                        $"/img/{Model.Product.Images.FirstOrDefault().ImagePath}" : 
-                                        Image.DefaultImagePath;
-                            }
-                            <img class="product-image-detail" src="@productImagePath" alt="First slide">
-                        </div>
-                        @if (Model.Product.Images.Count > 1)
-                        {
-                            @foreach (var productImage in Model.Product.Images.Skip(1))
+            @*<div class="col-lg-6">
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                @{
+                                    var productImagePath =
+                                        Model.Product.Images.Any() ?
+                                            $"/img/{Model.Product.Images.FirstOrDefault().ImagePath}" :
+                                            Image.DefaultImagePath;
+                                }
+                                <img class="product-image-detail" src="@productImagePath" alt="First slide">
+                            </div>
+                            @if (Model.Product.Images.Count > 1)
                             {
-                                <div class="carousel-item">
-                                    <img class="product-image-detail" src="~/img/@productImage.ImagePath" alt="First slide">
-                                </div>
+                                @foreach (var productImage in Model.Product.Images.Skip(1))
+                                {
+                                    <div class="carousel-item">
+                                        <img class="product-image-detail" src="~/img/@productImage.ImagePath" alt="First slide">
+                                    </div>
+                                }
                             }
-                        }
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="40" height="40" fill="currentColor" class="text-dark bi bi-arrow-left-short" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z" />
+                            </svg>
+                            <span class="sr-only">قبلی</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="40" height="40" fill="currentColor" class="text-dark bi bi-arrow-right-short" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                            </svg>
+                            <span class="sr-only">بعدی</span>
+                        </a>
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="40" height="40" fill="currentColor" class="text-dark bi bi-arrow-left-short" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z" />
-                        </svg>
-                        <span class="sr-only">قبلی</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="40" height="40" fill="currentColor" class="text-dark bi bi-arrow-right-short" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
-                        </svg>
-                        <span class="sr-only">بعدی</span>
-                    </a>
+                </div>*@
+            <div class="col-lg-6">
+                <div class="owl-carousel owl-theme s_Product_carousel">
+                    @if (Model.Product.Images.Any())
+                    {
+                        foreach (var productImage in Model.Product.Images)
+                        {
+                            <div class="single-prd-item">
+                                <img class="img-fluid product-image-detail" src="~/img/@productImage.ImagePath" alt="@Model.Product.ProductName">
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="single-prd-item">
+                            <img class="img-fluid" src="@Image.DefaultImagePath" alt="@Model.Product.ProductName">
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-lg-5 offset-lg-1">

@@ -5,12 +5,6 @@
     ViewData["Title"] = "خانه";
 }
 
-@section Styles
-{
-    <link rel="stylesheet" href="~/vendors/owl-carousel/owl.theme.default.min.css">
-    <link rel="stylesheet" href="~/vendors/owl-carousel/owl.carousel.min.css">
-}
-
 <!--================ Hero banner start =================-->
 @if (Model.Banners.NotNullOrEmpty())
 {
@@ -209,7 +203,6 @@ else
 @section Scripts
 {
     <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
-    <script src="~/vendors/owl-carousel/owl.carousel.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
 
     <script>
@@ -253,55 +246,5 @@ else
             $("input[name=__RequestVerificationToken]").remove();
             $(".subscribe-form").append('@Html.AntiForgeryToken()');
         };
-
-        //------- hero carousel -------//
-        $(".hero-carousel").owlCarousel({
-            rtl: true,
-            items: 3,
-            margin: 10,
-            autoplay: false,
-            autoplayTimeout: 5000,
-            loop: true,
-            nav: false,
-            dots: false,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                810: {
-                    items: 3
-                }
-            }
-        });
-
-        //------- Best Seller Carousel -------//
-        if ($('.owl-carousel').length > 0) {
-            $('#bestSellerCarousel').owlCarousel({
-                rtl: true,
-                loop: true,
-                margin: 30,
-                nav: true,
-                navText: ["<i class='ti-arrow-left'></i>", "<i class='ti-arrow-right'></i>"],
-                dots: false,
-                responsive: {
-                    0: {
-                        items: 1,
-                        center: true
-                    },
-                    770: {
-                        items: 2
-                    },
-                    992: {
-                        items: 3
-                    },
-                    1198: {
-                        items: 4
-                    }
-                }
-            });
-        }
     </script>
 }
