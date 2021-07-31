@@ -156,7 +156,15 @@
                                                 </ul>
                                             </div>
                                             <div class="card-body">
-                                                <p>@(product.Categories.Count>0? product.Categories.First().CategoryName:"")</p>
+                                                @{
+                                                    var firstCategory =
+                                                        product.Categories
+                                                            .FirstOrDefault();
+                                                }
+                                                @if (firstCategory != null)
+                                                {
+                                                    <a class="text-dark" asp-controller="Product" asp-action="Index" asp-route-SelectedCategories="@firstCategory.CategoryId">@firstCategory.CategoryName</a>
+                                                }
                                                 <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
 
                                                 @if (product.IsSimpleProduct)

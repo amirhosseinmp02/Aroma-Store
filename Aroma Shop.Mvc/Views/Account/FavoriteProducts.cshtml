@@ -43,15 +43,9 @@
                 {
                     @foreach (var favoriteProduct in @Model)
                     {
-                        string productImagePath;
-                        if (favoriteProduct.Images.Any())
-                        {
-                            productImagePath = $"/img/{favoriteProduct.Images.FirstOrDefault().ImagePath}";
-                        }
-                        else
-                        {
-                            productImagePath = Image.DefaultImagePath;
-                        }
+                        var productImagePath = favoriteProduct.Images.Any() ?
+                            $"/img/{favoriteProduct.Images.FirstOrDefault().ImagePath}" :
+                            Image.DefaultImagePath;
                         <div class="">
                             <div class="card text-center card-product">
                                 <div class="card-product__img">
