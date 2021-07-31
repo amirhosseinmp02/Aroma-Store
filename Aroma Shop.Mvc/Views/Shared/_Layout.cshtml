@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="~/vendors/owl-carousel/owl.theme.default.min.css">
     <link rel="stylesheet" href="~/vendors/owl-carousel/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/style.css">
+    <style>
+        
+    </style>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="rtl">
@@ -48,21 +51,16 @@
                                     <li class="nav-item"><a class="nav-link" href="category.html">شاخه ها</a></li>
                                     <li class="nav-item"><a class="nav-link" href="single-product.html">جزیات محصول</a></li>
                                     <li class="nav-item"><a class="nav-link" href="checkout.html">خرید محصول</a></li>
-                                    <li class="dropdown-submenu nav-item">
-                                        <a class="dropdown-item dropdown-toggle nav-link" href="#">زیر منو ها</a>
+                                    <li class="nav-item dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">زیر مجموعه</a>
                                         <ul class="dropdown-menu">
-                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر منو شماره 1</a></li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item dropdown-toggle" href="#">زیر منو شماره 2</a>
+                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر 1</a></li>
+                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر 2</a></li>
+                                            <li class="nav-item dropdown-submenu">
+                                                <a class="dropdown-item dropdown-toggle" href="#">زیر مجموعه 2</a>
                                                 <ul class="dropdown-menu">
-                                                    <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر منو شماره 1</a></li>
-                                                    <li class="dropdown-submenu">
-                                                        <a class="dropdown-item dropdown-toggle" href="#">زیر زیر منو شماره 2</a>
-                                                        <ul class="dropdown-menu">
-                                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر زیر منو شماره 1</a></li>
-                                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر زیر منو شماره 2</a></li>
-                                                        </ul>
-                                                    </li>
+                                                    <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر 1</a></li>
+                                                    <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر 1</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
