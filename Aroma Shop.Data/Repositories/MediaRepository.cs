@@ -53,6 +53,11 @@ namespace Aroma_Shop.Data.Repositories
 
             return unreadMessagesCount;
         }
+        public void DeleteComments(IEnumerable<Comment> comments)
+        {
+            _context
+                .RemoveRange(comments);
+        }
         public void DeleteComment(Comment comment)
         {
             _context.Remove(comment);

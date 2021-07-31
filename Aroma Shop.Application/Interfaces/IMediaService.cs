@@ -19,6 +19,7 @@ namespace Aroma_Shop.Application.Interfaces
         Comment GetComment(int commentId);
         bool UpdateComment(Comment comment);
         bool SetCommentAsRead(Comment comment);
+        bool DeleteCommentsByParents(IEnumerable<Comment> comments);
         bool DeleteComment(Comment comment);
         bool DeleteCommentById(int commentId);
         bool ConfirmComment(int commentId);

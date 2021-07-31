@@ -120,7 +120,7 @@
                     </div>
                     <!-- End Filter Bar -->
                     <!-- Start Best Seller -->
-                    @if (!Convert.ToBoolean(ViewBag.isEmpty))
+                    @if (!ViewBag.isEmpty)
                     {
                         <section class="lattest-product-area pb-40 category-list">
                             <div class="row">
@@ -300,20 +300,23 @@
 
             int productsMaximumPrice = 0;
 
-            var allProducts =
-                ProductService.GetProducts();
+            if (!ViewBag.isEmpty)
+            {
+                var allProducts =
+                                ProductService.GetProducts();
 
-            productsMinimumPrice =
-                allProducts
-                    .Min(p =>
-                        p.IsSimpleProduct ? p.ProductPrice : p.ProductVariations
-                            .Min(t => t.ProductVariationPrice));
+                productsMinimumPrice =
+                    allProducts
+                        .Min(p =>
+                            p.IsSimpleProduct ? p.ProductPrice : p.ProductVariations
+                                .Min(t => t.ProductVariationPrice));
 
-            productsMaximumPrice =
-                allProducts
-                    .Max(p =>
-                        p.IsSimpleProduct ? p.ProductPrice : p.ProductVariations
-                            .Max(t => t.ProductVariationPrice));
+                productsMaximumPrice =
+                    allProducts
+                        .Max(p =>
+                            p.IsSimpleProduct ? p.ProductPrice : p.ProductVariations
+                                .Max(t => t.ProductVariationPrice));
+            }
         }
 
         function collision($div1, $div2) {

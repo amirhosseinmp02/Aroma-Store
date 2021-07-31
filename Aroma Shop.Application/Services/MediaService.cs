@@ -194,16 +194,38 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public bool DeleteCommentsByParents(IEnumerable<Comment> parentsComments)
+        {
+            try
+            {
+                foreach (var comment in parentsComments) 
+                {
+                    if (comment.Replies.NotNullOrEmpty())
+                    {
+                        _mediaRepository
+                            .DeleteComments(comment.Replies);
+                    }
+                }
+
+                _mediaRepository
+                    .DeleteComments(parentsComments);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
         public bool DeleteComment(Comment comment)
         {
             try
             {
-                if (comment.Replies.Any())
+                if (comment.Replies.NotNullOrEmpty())
                 {
-                    foreach (var commentReply in comment.Replies)
-                    {
-                        _mediaRepository.DeleteComment(commentReply);
-                    }
+                    _mediaRepository
+                        .DeleteComments(comment.Replies);
                 }
 
                 _mediaRepository.DeleteComment(comment);

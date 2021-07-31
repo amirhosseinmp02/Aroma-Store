@@ -11,6 +11,7 @@ namespace Aroma_Shop.Domain.Interfaces
         void UpdateComment(Comment comment);
         IEnumerable<Comment> GetComments();
         int GetUnreadCommentsCount();
+        void DeleteComments(IEnumerable<Comment> parentsComments); 
         void DeleteComment(Comment comment);
         void DeleteCommentById(int commentId);
         void AddMessage(Message message);

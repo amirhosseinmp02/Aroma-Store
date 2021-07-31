@@ -204,10 +204,13 @@ namespace Aroma_Shop.Application.Services
                 if (product.Informations.Any())
                     DeleteProductInformation(product);
 
-                foreach (var productComment in product.Comments)
-                {
-                    _mediaService.DeleteComment(productComment);
-                }
+                var productParentsComments =   
+                    product
+                        .Comments
+                        .Where(p => p.ParentComment == null);
+
+                _mediaService
+                    .DeleteCommentsByParents(productParentsComments);
 
                 _productRepository.DeleteProduct(product);
                 _productRepository.Save();
