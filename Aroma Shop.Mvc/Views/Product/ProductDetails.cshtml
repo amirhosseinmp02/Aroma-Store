@@ -117,7 +117,7 @@
                                 <span>دسته :</span>
                                 @foreach (var category in Model.Product.Categories)
                                 {
-                                    <a>@category.CategoryName</a> <span> , </span>
+                                    <a class="text-secondary" asp-action="Index" asp-route-SelectedCategories="@category.CategoryId">@category.CategoryName</a> <span> , </span>
                                 }
                             </li>
                             <li>
@@ -228,8 +228,7 @@
                                 <span>دسته :</span>
                                 @foreach (var category in Model.Product.Categories)
                                 {
-                                    <a>@category.CategoryName</a>
-                                    <span> , </span>
+                                    <a class="text-secondary" asp-action="Index" asp-route-SelectedCategories="@category.CategoryId">@category.CategoryName</a> <span> , </span>
                                 }
                             </li>
                             <li>
