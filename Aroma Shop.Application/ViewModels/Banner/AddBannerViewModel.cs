@@ -8,7 +8,7 @@ namespace Aroma_Shop.Application.ViewModels.Banner
     {
         [MaxLength(200, ErrorMessage = "حداکثر 200 کارکتر مجاز می باشد")]
         public string BannerTitle { get; set; }
-        [RegularExpression("(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})", ErrorMessage = "پیوند وارد شده معتبر نیست")]
+        //[RegularExpression("(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})", ErrorMessage = "پیوند وارد شده معتبر نیست")]
         public string BannerLink { get; set; }
         public string BannerDescription { get; set; }
 

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.CustomIdentityModels.Translations;
+using Aroma_Shop.Mvc.Models.CustomMiddleWares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -93,6 +94,8 @@ namespace Aroma_Shop.Mvc
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<VisitorCounterMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

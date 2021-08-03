@@ -91,6 +91,15 @@ namespace Aroma_Shop.Data.Repositories
 
             return message;
         }
+        public int GetMessagesCount()
+        {
+            var messagesCount =
+                _context
+                    .Messages
+                    .Count();
+
+            return messagesCount;
+        }
         public IEnumerable<Message> GetMessages()
         {
             var messages =

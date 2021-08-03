@@ -6,19 +6,19 @@
 }
 
 <!--================ Hero banner start =================-->
-@if (Model.Banners.NotNullOrEmpty())
+@{
+    var primaryBanners =
+        Model
+            .Banners
+            .Where(p => p.IsPrimaryBanner);
+
+}
+@if (primaryBanners.Any())
 {
     <section class="mb-2">
         <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                @{
-                    var primaryBanners =
-                        Model
-                            .Banners
-                            .Where(p => p.IsPrimaryBanner);
-
-                }
                 @for (int i = 1; i < primaryBanners.Count(); i++)
                 {
                     <li data-target="#carouselExampleCaptions" data-slide-to="@i"></li>
@@ -77,7 +77,7 @@ else
                         <h4>خرید خوب است</h4>
                         <h1>محصولات ویژه را مشاهده کنید</h1>
                         <p>لورم ایپسوم یا طرح‌نما به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود.</p>
-                        <a class="button button-hero" href="#">مشاهده</a>
+                        <a class="button button-hero" href="/Products">مشاهده</a>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@ else
                 <img src="~/img/@secondaryBanner.BannerImage.ImagePath" alt="" class="img-fluid">
                 <a href="@secondaryBanner.BannerLink" class="hero-carousel__slideOverlay">
                     <h3>@secondaryBanner.BannerTitle</h3>
-                    <p>@Html.Raw(secondaryBanner.BannerDescription)</p>
+                    @*<p>@Html.Raw(secondaryBanner.BannerDescription)</p>*@
                 </a>
             </div>
         }
@@ -127,7 +127,7 @@ else
             <div class="col-xl-5">
                 <div class="offer__content text-center">
                     <h3>با کد تخفیف BestShop</h3>
-                    <h4>تا 1 میلیون تومان تخفیف</h4>
+                    <h4>تا 100 هزار تومان تخفیف</h4>
                     <p>خرید کنید ، لذت ببرید !</p>
                     <a class="button button--active mt-3 mt-xl-4" asp-controller="Product" asp-action="Index">خرید</a>
                 </div>
@@ -193,7 +193,7 @@ else
                     <button class="button button-subscribe mb-1 subscribe-form-button" type="submit">ثبت</button>
                 </form>
                 <div class="success-message text-success mt-3" style="display: none"></div>
-                <div class="error-message text-danger mt-3" style="display: none"></div>    
+                <div class="error-message text-danger mt-3" style="display: none"></div>
             </div>
         </div>
     </div>

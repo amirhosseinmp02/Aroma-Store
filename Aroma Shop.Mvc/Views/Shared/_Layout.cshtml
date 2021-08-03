@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@ViewData["Title"] - فروشگاه آروما</title>
+    <link rel="icon" href="~/img/Fevicon.png" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="~/vendors/bootstrap/bootstrap-rtl.min.css">
     <link rel="stylesheet" href="~/vendors/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="~/vendors/themify-icons/themify-icons.css">
@@ -43,56 +44,57 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav mx-auto">
                             <li class="nav-item active"><a class="nav-link" asp-controller="Home" asp-action="Index">خانه</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Product" asp-action="Index">فروشگاه</a></li>
                             <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                   aria-expanded="false">فروشگاه</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" href="category.html">شاخه ها</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="single-product.html">جزیات محصول</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="checkout.html">خرید محصول</a></li>
-                                    <li class="nav-item dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#">زیر مجموعه</a>
-                                        <ul class="dropdown-menu">
-                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر 1</a></li>
-                                            <li class="nav-item"><a class="dropdown-item" href="#">زیر 2</a></li>
-                                            <li class="nav-item dropdown-submenu">
-                                                <a class="dropdown-item dropdown-toggle" href="#">زیر مجموعه 2</a>
-                                                <ul class="dropdown-menu">
-                                                    <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر 1</a></li>
-                                                    <li class="nav-item"><a class="dropdown-item" href="#">زیر زیر 1</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="nav-item"><a class="nav-link" href="confirmation.html">ادامه کار</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                   aria-expanded="false">وبلاگ</a>
+                                <a href="/Products?SelectedCategories=56" class="nav-link dropdown-toggle text-dark" data-toggle="dropdown" role="button" aria-haspopup="true"
+                                   aria-expanded="false">مد و پوشاک</a>
                                 <ul class="dropdown-menu dropdown-block">
-                                    <li class="nav-item d-flex justify-content-around">
-                                        <div class="border-left text-center">
-                                            
+                                    <li class="nav-item d-flex justify-content-around flex-sm-column flex-column flex-md-column flex-lg-row py-3 text-dark">
+                                        <div class="border-left text-left pl-3">
+                                            <a href="/Products?SelectedCategories=57" class="text-center text-dark d-block mb-3 font-weight-bold">مردانه</a>
+                                            <a href="/Products?SelectedCategories=60" class="d-block text-dark mb-2">لباس</a>
+                                            <a href="/Products?SelectedCategories=69" class="d-block text-dark mb-2">تی شرت</a>
+                                            <a href="/Products?SelectedCategories=70" class="d-block text-dark mb-2">پیراهن</a>
+                                            <a href="/Products?SelectedCategories=61" class="d-block text-dark mb-2">کفش مردانه</a>
+                                            <a href="/Products?SelectedCategories=62" class="d-block text-dark mb-2">اکسسوری</a>
+                                            <a href="/Products?SelectedCategories=75" class="d-block text-dark mb-2">ساعت</a>
+                                            <a href="/Products?SelectedCategories=76" class="d-block text-dark mb-2">کیف</a>
+                                            <a href="/Products?SelectedCategories=77" class="d-block text-dark mb-2">کمربند</a>
                                         </div>
-                                        <div class="border-left text-center">
-                                            
+                                        <div class="border-left text-left pl-3">
+                                            <a href="/Products?SelectedCategories=58" class="text-center text-dark d-block mb-3 font-weight-bold">زنانه</a>
+                                            <a href="/Products?SelectedCategories=63" class="d-block text-dark mb-2">لباس</a>
+                                            <a href="/Products?SelectedCategories=79" class="d-block text-dark mb-2">بلوز و شومیز</a>
+                                            <a href="/Products?SelectedCategories=80" class="d-block text-dark mb-2">تی شرت</a>
+                                            <a href="/Products?SelectedCategories=81" class="d-block text-dark mb-2">شلوار</a>
+                                            <a href="/Products?SelectedCategories=84" class="d-block text-dark mb-2">کفش</a>
+                                            <a href="/Products?SelectedCategories=65" class="d-block text-dark mb-2">اکسسوری</a>
+                                            <a href="/Products?SelectedCategories=85" class="d-block text-dark mb-2">کیف</a>
+                                            <a href="/Products?SelectedCategories=86" class="d-block text-dark mb-2">کمربند</a>
+                                            <a href="/Products?SelectedCategories=87" class="d-block text-dark mb-2">شال و روسری</a>
                                         </div>
-                                        <div class="text-center">
-                                            
+                                        <div class="d-md-none d-sm-none d-none d-lg-flex flex-column justify-content-around align-items-center">
+                                            <img src="~/img/Others/Hermes-Logo.png" />
+                                            <img src="~/img/Others/Prada-logo.png" />
                                         </div>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                   aria-expanded="false">صفحات</a>
+                                <a href="/Products?SelectedCategories=89" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                                   aria-expanded="false">کالای دیجیتال</a>
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">ورود</a></li>
-                                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">ثبت نام</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#">پیگیری سفارش</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=90">موبایل و تبلت</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=91">ساعت هوشمند</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=92">هدفون و هنزفری</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=93">اسپیکر</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=94">هارد و فلش</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=95">دوربین</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=96">کنسول بازی</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Products?SelectedCategories=97">لپ تاپ</a></li>
                                 </ul>
                             </li>
+
                             <li class="nav-item"><a class="nav-link" asp-controller="Media" asp-action="ContactUs">تماس با ما</a></li>
                         </ul>
                         <div id="searchOverlay" class="searchSectionOverlay">
@@ -145,38 +147,36 @@
                 <div class="row section_gap">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="single-footer-widget tp_widgets">
-                            <h4 class="footer_title large_title">لورم ایپسوم</h4>
+                            <h4 class="footer_title large_title">فروشگاه آروما</h4>
                             <p>
-                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.
+                                فروشگاهی کامل از لوازم مورد نیاز شما که به پشوانه تلاش سخت جمعی از نوآوران ایرانی به وجود آمده است.
                             </p>
                             <p>
-                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
+                                هدف ما خدمت به جامعه به وسیله رفع نیاز هاست.
                             </p>
                         </div>
                     </div>
                     <div class="offset-lg-1 col-lg-2 col-md-6 col-sm-6">
                         <div class="single-footer-widget tp_widgets">
-                            <h4 class="footer_title">لینک ها</h4>
+                            <h4 class="footer_title">راهنما مشتریان</h4>
                             <ul class="list">
-                                <li><a asp-controller="Home">خانه</a></li>
-                                <li><a href="#">فروشگاه</a></li>
-                                <li><a href="#">وبلاگ</a></li>
-                                <li><a href="#">محصولات</a></li>
-                                <li><a href="#">برند ها</a></li>
-                                <li><a asp-controller="Home" asp-action="ContactUs">تماس با ما</a></li>
+                                <li><a href="/">خانه</a></li>
+                                <li><a asp-controller="Product" asp-action="Index">فروشگاه</a></li>
+                                <li><a asp-controller="Account" asp-action="ManageAccount">حساب کاربری</a></li>
+                                <li><a asp-controller="Account" asp-action="FavoriteProducts">علاقه مندی ها</a></li>
+                                <li><a asp-controller="Product" asp-action="OrderTracking">پیگیری سفارشات</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-6 col-sm-6">
-                        <div class="single-footer-widget instafeed">
-                            <h4 class="footer_title">گالری</h4>
-                            <ul class="list instafeed d-flex flex-wrap">
-                                <li><img src="~/img/gallery/r1.jpg" alt=""></li>
-                                <li><img src="~/img/gallery/r2.jpg" alt=""></li>
-                                <li><img src="~/img/gallery/r3.jpg" alt=""></li>
-                                <li><img src="~/img/gallery/r5.jpg" alt=""></li>
-                                <li><img src="~/img/gallery/r7.jpg" alt=""></li>
-                                <li><img src="~/img/gallery/r8.jpg" alt=""></li>
+                        <div class="single-footer-widget tp_widgets">
+                            <h4 class="footer_title">خدمات مشتریان</h4>
+                            <ul class="list">
+                                <li><a href="/About-Us">درباره ما</a></li>
+                                <li><a href="/Faq">پرسش های متداول</a></li>
+                                <li><a href="/Terms">شرایط و مقررات</a></li>
+                                <li><a href="/Privacy">سیاست حفظ حریم خصوصی</a></li>
+                                <li><a asp-controller="Media" asp-action="ContactUs">تماس با ما</a></li>
                             </ul>
                         </div>
                     </div>
@@ -195,7 +195,7 @@
                                     شماره تماس
                                 </p>
                                 <p>
-                                    ۰۷۸۹۶۵۳۳۶۵۸
+                                    ۰۹۳۹۲۰۶۲۷۷۳
                                 </p>
 
                                 <p class="sm-head">
@@ -203,7 +203,7 @@
                                     ایمیل
                                 </p>
                                 <p>
-                                    exam@exam.ir
+                                    amirhosseinmp02@gmail.com
                                 </p>
                             </div>
                         </div>
@@ -216,10 +216,7 @@
             <div class="container">
                 <div class="row d-flex">
                     <p class="col-lg-12 footer-text text-center">
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        کپی رایت &copy;
-                        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        طراحی شده توسط Amirhosseinmp02
                     </p>
                 </div>
             </div>

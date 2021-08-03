@@ -244,9 +244,9 @@ i.jstree-icon.jstree-themeicon {
     font-size: 16px
 }
 
-.edit-order-menu li {
-    margin: 10px 0px
-}
+    .edit-order-menu li {
+        margin: 10px 0px
+    }
 
 .edit-order-content-section {
     min-width: 320px
@@ -266,4 +266,80 @@ i.jstree-icon.jstree-themeicon {
 
 #current-banner-image {
     max-height: 340px;
+}
+
+.dashbord-content-boxes {
+    padding: 10px 20px;
+    margin: 15px;
+    cursor: pointer
+}
+
+@media (max-width: 992px) {
+    .dashbord-content-boxes {
+        padding: 10px 20px;
+        margin-top: 15px !important;
+        margin: 0px;
+    }
+}
+
+    .dashbord-content-boxes:nth-child(1) {
+        background: #13a2a6;
+    }
+
+    .dashbord-content-boxes:nth-child(2) {
+        background: #14B9D6;
+    }
+
+    .dashbord-content-boxes:nth-child(3) {
+        background: #ffbd15;
+    }
+
+    .dashbord-content-boxes:nth-child(4) {
+        background: #f55145;
+    }
+
+    .dashbord-content-boxes:nth-child(5) {
+        background: #2f4f4f;
+    }
+
+    .dashbord-content-boxes p {
+        font-size: 18px;
+        color: #ffffff;
+    }
+
+    .dashbord-content-boxes i {
+        font-size: 48pt;
+        color: #ffffff;
+    }
+
+.dashbord-icons {
+    vertical-align: text-bottom;
+}
+
+#ordersChart {
+    max-height: 400px;
+}
+
+.dashbord-orderStatus-comments {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+    .dashbord-orderStatus-comments:nth-child(2) div div:last-child {
+        border-bottom: 0px !important;
+    }
+
+#sidebarMenu .sidebar-sticky .nav-item .nav-link {
+    font-size: 16px;
+    line-height: 30px
+}
+
+#sidebarMenu .sidebar-sticky .nav-item .nav-link i {
+    margin-left: 7.5px
+}
+
+.dashbord-welcome-badge {
+    font-size: 13px;
+    background: seagreen;
+    border-radius: 0px;
 }

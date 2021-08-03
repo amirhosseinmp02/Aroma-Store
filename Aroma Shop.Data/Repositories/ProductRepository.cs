@@ -59,11 +59,23 @@ namespace Aroma_Shop.Data.Repositories
 
             return product;
         }
+        public int GetProductsCount()
+        {
+            var productsCount =
+                _context
+                    .Products
+                    .Count();
+
+            return productsCount;
+        }
         public IEnumerable<Category> GetCategories()
         {
-            var categories = _context.Categories
+            var categories =
+                _context.Categories
                 .Include(p => p.ParentCategory)
-                .Include(p => p.Products);
+                .Include(p => p.Products)
+                .AsSplitQuery()
+                .ToList();
 
             return categories;
         }
@@ -232,6 +244,24 @@ namespace Aroma_Shop.Data.Repositories
                     .SingleOrDefault(p => p.OrderId == orderId);
 
             return userOrder;
+        }
+        public int GetCompletedOrdersCount()
+        {
+            var completedOrdersCount =
+                _context
+                    .Orders
+                    .Count(p => p.IsOrderCompleted);
+
+            return completedOrdersCount;
+        }
+        public int GetUnCompletedOrdersCount()
+        {
+            var unCompletedOrdersCount =
+                _context
+                    .Orders
+                    .Count(p => !p.IsOrderCompleted);
+
+            return unCompletedOrdersCount;
         }
         public int GetUnSeenOrdersCount()
         {

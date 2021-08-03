@@ -1,149 +1,144 @@
-﻿
+﻿@model Aroma_Shop.Application.ViewModels.AdminArea.AdminDashbordViewModel
+
 @{
     ViewData["Title"] = "خانه";
 }
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">پیشخوان</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">اشتراک گذاری</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">دریافت</button>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg col-sm-12 d-flex flex-wrap justify-content-between align-items-center dashbord-content-boxes">
+            <p>@Model.UsersCount-1 <br /> کاربر</p>
+            <i class="bi bi-people"></i>
         </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            این هفته
-        </button>
+        <div class="col-lg col-sm-12 d-flex flex-wrap justify-content-between align-items-center dashbord-content-boxes">
+            <p>@Model.ProductsCount <br /> محصول</p>
+            <i class="bi bi-gift"></i>
+        </div>
+        <div class="col-lg col-sm-12 d-flex flex-wrap justify-content-between align-items-center dashbord-content-boxes">
+            <p>@Model.CompletedOrdersCount <br /> سفارش</p>
+            <i class="bi bi-gem"></i>
+        </div>
+        <div class="col-lg col-sm-12 d-flex flex-wrap justify-content-between align-items-center dashbord-content-boxes">
+            <p>@Model.MessagesCount <br /> پیام</p>
+            <i class="bi bi-chat-text"></i>
+        </div>
+        <div class="col-lg col-sm-12 d-flex flex-wrap justify-content-between align-items-center dashbord-content-boxes">
+            <p>@Model.NumberOfVisits <br /> بازدید</p>
+            <i class="bi bi-tv"></i>
+        </div>
+    </div>
+
+    <div class="row dashbord-orderStatus-comments mb-5">
+        <div class="col mt-3 p-4 bg-light">
+            <h5 class="text-left"><i class="bi bi-pie-chart mr-2 dashbord-icons"></i> وضعیت سفارشات</h5>
+            <hr />
+            <div>
+                <canvas id="ordersChart"></canvas>
+            </div>
+        </div>
+        <div class="col mt-3 p-4 bg-light ml-lg-0 ml-xl-3">
+            <div>
+                <h5 class="text-left"><i class="bi bi-chat-left-text mr-2 dashbord-icons"></i> آخرین دیدگاه ها</h5>
+                <hr />
+                <div class="d-flex flex-column">
+                    @{
+                        var comments =
+                            Model
+                                .Comments
+                                .Take(4);
+                    }
+                    @foreach (var comment in comments)
+                    {
+                        <div class="p-3 border-bottom">
+                            <p class="text-left h6"><span class="text-danger">@("@")</span>@comment.User.UserName</p>
+                            <p class="text-left mt-1">@comment.CommentDescription</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h2>گزارشات</h2>
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1,001</td>
-                <td>random</td>
-                <td>data</td>
-                <td>placeholder</td>
-                <td>text</td>
-            </tr>
-            <tr>
-                <td>1,002</td>
-                <td>placeholder</td>
-                <td>irrelevant</td>
-                <td>visual</td>
-                <td>layout</td>
-            </tr>
-            <tr>
-                <td>1,003</td>
-                <td>data</td>
-                <td>rich</td>
-                <td>dashboard</td>
-                <td>tabular</td>
-            </tr>
-            <tr>
-                <td>1,003</td>
-                <td>information</td>
-                <td>placeholder</td>
-                <td>illustrative</td>
-                <td>data</td>
-            </tr>
-            <tr>
-                <td>1,004</td>
-                <td>text</td>
-                <td>random</td>
-                <td>layout</td>
-                <td>dashboard</td>
-            </tr>
-            <tr>
-                <td>1,005</td>
-                <td>dashboard</td>
-                <td>irrelevant</td>
-                <td>text</td>
-                <td>placeholder</td>
-            </tr>
-            <tr>
-                <td>1,006</td>
-                <td>dashboard</td>
-                <td>illustrative</td>
-                <td>rich</td>
-                <td>data</td>
-            </tr>
-            <tr>
-                <td>1,007</td>
-                <td>placeholder</td>
-                <td>tabular</td>
-                <td>information</td>
-                <td>irrelevant</td>
-            </tr>
-            <tr>
-                <td>1,008</td>
-                <td>random</td>
-                <td>data</td>
-                <td>placeholder</td>
-                <td>text</td>
-            </tr>
-            <tr>
-                <td>1,009</td>
-                <td>placeholder</td>
-                <td>irrelevant</td>
-                <td>visual</td>
-                <td>layout</td>
-            </tr>
-            <tr>
-                <td>1,010</td>
-                <td>data</td>
-                <td>rich</td>
-                <td>dashboard</td>
-                <td>tabular</td>
-            </tr>
-            <tr>
-                <td>1,011</td>
-                <td>information</td>
-                <td>placeholder</td>
-                <td>illustrative</td>
-                <td>data</td>
-            </tr>
-            <tr>
-                <td>1,012</td>
-                <td>text</td>
-                <td>placeholder</td>
-                <td>layout</td>
-                <td>dashboard</td>
-            </tr>
-            <tr>
-                <td>1,013</td>
-                <td>dashboard</td>
-                <td>irrelevant</td>
-                <td>text</td>
-                <td>visual</td>
-            </tr>
-            <tr>
-                <td>1,014</td>
-                <td>dashboard</td>
-                <td>illustrative</td>
-                <td>rich</td>
-                <td>data</td>
-            </tr>
-            <tr>
-                <td>1,015</td>
-                <td>random</td>
-                <td>tabular</td>
-                <td>information</td>
-                <td>text</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <script>
+
+        window.onload = function () {
+
+            const data = {
+                labels: ['تکمیل شده', 'در انتظار پرداخت'],
+                datasets: [
+                    {
+                        data: [@Model.CompletedOrdersCount, @Model.UnCompletedOrdersCount],
+                        backgroundColor: ['#28a745', '#ee335e']
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'pie',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: "'Samim', sans-serif",
+                                    size: 16
+                                }
+                            }
+                        },
+                        //title: {
+                        //    display: true,
+                        //    text: 'سفارشات',
+                        //    font: {
+                        //        family: "'Samim', sans-serif",
+                        //        size: 20
+                        //    }
+                        //},
+                        tooltip: {
+                            displayColors: false,
+                            bodyFont: {
+                                family: "'Samim', sans-serif"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var ordersChart = new Chart(document.getElementById('ordersChart'),
+                config);
+
+            $(".dashbord-content-boxes:nth-child(1)").click(function() {
+                window.location.href = "@Url.Action("Index","User")";
+            });
+
+            $(".dashbord-content-boxes:nth-child(2)").click(function() {
+                window.location.href = "@Url.Action("Index","Product")";
+            });
+
+            $(".dashbord-content-boxes:nth-child(3)").click(function() {
+                window.location.href = "@Url.Action("Index","Order")";
+            });
+
+            $(".dashbord-content-boxes:nth-child(4)").click(function() {
+                window.location.href = "@Url.Action("Messages","Media")";
+            });
+
+            $(".dashbord-content-boxes:nth-child(5)").click(function() {
+                window.location.href = "@Url.Action("Visitors","Report")";
+            });
+
+        }
+
+    </script>
+}

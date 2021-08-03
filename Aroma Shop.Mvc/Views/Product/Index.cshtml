@@ -5,6 +5,9 @@
 
 @{
     ViewData["Title"] = "محصولات";
+
+    var isModelNotEmpty =
+        !Convert.ToBoolean(ViewBag.isEmpty);
 }
 
 @inject IAccountService AccountService
@@ -85,9 +88,16 @@
                         <ul class="main-categories">
                             <li class="common-filter">
                                 <ul>
-                                    @foreach (var categoryTreeView in Model.CategoriesTreeViews)
+                                    @{
+                                        var availableCategoriesTreeViews =
+                                            Model
+                                                .CategoriesTreeViews
+                                                .Where(p => p.CategoryProductsCount > 0);
+                                    }
+
+                                    @foreach (var categoryTreeView in availableCategoriesTreeViews)
                                     {
-                                        <li class="filter-list mb-1" style="margin-right: @(categoryTreeView.CategoryLevel*20)px"><input class="pixel-radio" type="checkbox" id="@categoryTreeView.CategoryName" name="SelectedCategories" value="@categoryTreeView.CategoryId" @(Model.SelectedCategories.Any(p => p == categoryTreeView.CategoryId) ? "checked" : "")><label class="ml-2" for="@categoryTreeView.CategoryName">@categoryTreeView.CategoryName<span> (@categoryTreeView.CategoryProductsCount)</span></label></li>
+                                        <li class="filter-list mb-1" style="margin-right: @(categoryTreeView.CategoryLevel * 15)px"><input class="pixel-radio" type="checkbox" id="@categoryTreeView.CategoryName" name="SelectedCategories" value="@categoryTreeView.CategoryId" @(Model.SelectedCategories.Any(p => p == categoryTreeView.CategoryId) ? "checked" : "")><label class="ml-2" for="@categoryTreeView.CategoryName">@categoryTreeView.CategoryName<span> (@categoryTreeView.CategoryProductsCount)</span></label></li>
                                     }
                                 </ul>
                             </li>
@@ -120,7 +130,7 @@
                     </div>
                     <!-- End Filter Bar -->
                     <!-- Start Best Seller -->
-                    @if (!ViewBag.isEmpty)
+                    @if (isModelNotEmpty)
                     {
                         <section class="lattest-product-area pb-40 category-list">
                             <div class="row">
@@ -157,13 +167,13 @@
                                             </div>
                                             <div class="card-body">
                                                 @{
-                                                    var firstCategory =
+                                                    var lastCategory =
                                                         product.Categories
-                                                            .FirstOrDefault();
+                                                            .LastOrDefault();
                                                 }
-                                                @if (firstCategory != null)
+                                                @if (lastCategory != null)
                                                 {
-                                                    <a class="text-dark" asp-controller="Product" asp-action="Index" asp-route-SelectedCategories="@firstCategory.CategoryId">@firstCategory.CategoryName</a>
+                                                    <a class="text-dark" asp-controller="Product" asp-action="Index" asp-route-SelectedCategories="@lastCategory.CategoryId">@lastCategory.CategoryName</a>
                                                 }
                                                 <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
 
@@ -300,19 +310,20 @@
 
             int productsMaximumPrice = 0;
 
-            if (!ViewBag.isEmpty)
+            if (isModelNotEmpty)
             {
-                var allProducts =
-                                ProductService.GetProducts();
+                var currentProducts =
+                    Model
+                        .Products;
 
                 productsMinimumPrice =
-                    allProducts
+                    currentProducts
                         .Min(p =>
                             p.IsSimpleProduct ? p.ProductPrice : p.ProductVariations
                                 .Min(t => t.ProductVariationPrice));
 
                 productsMaximumPrice =
-                    allProducts
+                    currentProducts
                         .Max(p =>
                             p.IsSimpleProduct ? p.ProductPrice : p.ProductVariations
                                 .Max(t => t.ProductVariationPrice));
@@ -334,7 +345,7 @@
 
         $('#slider').slider({
             range: true,
-            min: @productsMinimumPrice,
+            min: 0,
             max: @productsMaximumPrice,
             values: [@(ViewBag.minimumPrice==null?0: ViewBag.minimumPrice), @(ViewBag.maximumPrice==null? productsMaximumPrice: ViewBag.maximumPrice)],
             slide: function (event, ui) {

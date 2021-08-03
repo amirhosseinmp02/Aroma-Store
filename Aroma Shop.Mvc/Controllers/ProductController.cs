@@ -60,8 +60,8 @@ namespace Aroma_Shop.Mvc.Controllers
                         .Where(p => p.IsSimpleProduct
                             ? p.ProductPrice >= minimumPrice &&
                               p.ProductPrice <= maximumPrice
-                            : p.ProductVariations.Min(t => t.ProductVariationPrice) >= minimumPrice && p.ProductVariations
-                                .Min(t => t.ProductVariationPrice) <= maximumPrice)
+                            : p.ProductVariations.Min(t => t.ProductVariationQuantityInStock != 0 ? t.ProductVariationPrice : 0) > minimumPrice &&
+                              p.ProductVariations.Min(t => t.ProductVariationQuantityInStock != 0 ? t.ProductVariationPrice : ++maximumPrice) <= maximumPrice)
                         .Where(p => p.IsSimpleProduct ? p.ProductQuantityInStock != 0 : p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0));
 
                 ViewBag.minimumPrice = minimumPrice;

@@ -8,9 +8,11 @@ using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Page;
 using Aroma_Shop.Domain.Models.PageModels;
 using Aroma_Shop.Domain.Models.ProductModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 {
+    [Authorize(Policy = "Writer")]
     [Area("Admin")]
     public class PageController : Controller
     {

@@ -1,0 +1,49 @@
+﻿@using Aroma_Shop.Application.Utilites
+@model IEnumerable<Aroma_Shop.Domain.Models.VisitorModels.Visitor>
+
+@{
+    ViewData["Title"] = "بازدید ها";
+}
+
+<div class="h2 mt-3">
+    <h1 class="h2 d-inline">بازدید ها</h1>
+</div>
+<hr />
+<form asp-action="Visitors" method="get">
+    <div class="input-group mb-4">
+        <input name="search" type="text" value="@ViewBag.search" class="form-control" placeholder="جستجو..." aria-label="جستجو...">
+        <button type="submit" class="input-group-text" id="search-textbox">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+            </svg>
+        </button>
+    </div>
+</form>
+@if (!Convert.ToBoolean(ViewBag.isEmpty))
+{
+    <table class="table table-responsive-sm table-striped table-bordered text-center table-light">
+        <thead>
+            <tr>
+                <th class="cart-item-cells">ای پی</th>
+                <th class="cart-item-cells">تعداد بازدید</th>
+                <th class="cart-item-cells">آخرین بازدید</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var visitor in Model)
+            {
+
+                <tr>
+                    <td class="cart-item-cells align-middle">@visitor.VisitorIpAddress</td>
+                    <td class="cart-item-cells align-middle">@visitor.CountOfVisit</td>
+                    <td class="cart-item-cells align-middle">@visitor.LastVisitTime.ToSolarWithTime()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @await Html.PartialAsync("PartialPaging", "Visitors")
+}
+else
+{
+    <div class="alert alert-danger text-left" role="alert">لیست بازدید ها خالیست</div>
+}

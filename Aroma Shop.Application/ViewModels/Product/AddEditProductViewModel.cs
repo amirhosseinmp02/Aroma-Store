@@ -52,7 +52,7 @@ namespace Aroma_Shop.Application.ViewModels.Product
         public IEnumerable<int?> ProductVariationsPrices { get; set; }
         public IEnumerable<int?> ProductVariationsQuantityInStocks { get; set; }
 
-        [MaxFilesCount(6)]
+        [MaxFilesCount(11)]
         [MaxFilesSize(4194304)]
         [AllowedFilesExtensions(new string[] { ".png", ".jpg", ".jpeg" })]
         public IEnumerable<IFormFile> ProductImagesFiles { get; set; }

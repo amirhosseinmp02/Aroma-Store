@@ -26,8 +26,9 @@ namespace Aroma_Shop.Application.Interfaces
         bool RejectComment(int commentId);
         bool AddMessage(Message message);
         bool DeleteMessageById(int messageId);
-        Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
+        int GetMessagesCount();
+        Message GetMessage(int messageId);
         int GetUnreadMessagesCount();
         Task<bool> ReplyToMessage(string messageReplyDescription, int messageId);
         bool SetMessageAsRead(Message message);

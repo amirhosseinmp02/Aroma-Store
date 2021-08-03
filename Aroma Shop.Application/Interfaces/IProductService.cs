@@ -15,6 +15,7 @@ namespace Aroma_Shop.Application.Interfaces
         IEnumerable<Product> GetProducts();
         IEnumerable<Product> GetAvailableProducts();
         Product GetProduct(int productId);
+        int GetProductsCount();
         bool AddProduct(AddEditProductViewModel productViewModel);
         bool UpdateProduct(AddEditProductViewModel productViewModel);
         bool DeleteProduct(Product product);
@@ -43,6 +44,8 @@ namespace Aroma_Shop.Application.Interfaces
         OrderViewModel OrderTrackingByUserEmail(string userEmail, int orderId);
         OrderViewModel GetConfirmedOrderInvoice(Order confirmedOrder);
         OrderViewModel GetLoggedUserOrderInvoice(int orderId);
+        int GetCompletedOrdersCount();
+        int GetUnCompletedOrdersCount();
         int GetUnSeenOrdersCount();
         bool UpdateOrder(Order order);
         bool SetOrderAsSeen(Order order);

@@ -7,6 +7,7 @@ using Aroma_Shop.Domain.Models.MediaModels;
 using Aroma_Shop.Domain.Models.PageModels;
 using Aroma_Shop.Domain.Models.ProductModels;
 using Aroma_Shop.Domain.Models.UserModels;
+using Aroma_Shop.Domain.Models.VisitorModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +41,8 @@ namespace Aroma_Shop.Data.Context
         public DbSet<OrderDetails> OrdersDetails { get; set; }
         public DbSet<OrderInvoiceDetails> OrdersInvoicesDetails { get; set; }          
         public DbSet<Discount> Discounts { get; set; }
+
+        public DbSet<Visitor> Visitors { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -475,7 +475,7 @@ namespace Aroma_Shop.Application.Services
                         UserId = p.Id,
                         UserName = p.UserName,
                         UserEmail = p.Email,
-                        UserRoleName = GetUserRole(p),
+                        UserRoleName = GetUserRole(p).Result,
                         RegisterTime = p.RegisterTime
                     });
             }
@@ -488,7 +488,7 @@ namespace Aroma_Shop.Application.Services
                         UserId = p.Id,
                         UserName = p.UserName,
                         UserEmail = p.Email,
-                        UserRoleName = GetUserRole(p)
+                        UserRoleName = GetUserRole(p).Result
                     });
             }
 
@@ -504,7 +504,7 @@ namespace Aroma_Shop.Application.Services
                     .SingleOrDefaultAsync(p => p.Id == userId);
 
             var requestedUserRole =
-                GetUserRole(requestedUser);
+                await GetUserRole(requestedUser);
 
             var loggedUserRole =
                 await GetLoggedUserRole();
@@ -524,6 +524,15 @@ namespace Aroma_Shop.Application.Services
 
             return user;
         }
+        public int GetUsersCount()
+        {
+            var usersCount =
+                _userManager
+                    .Users
+                    .Count();
+
+            return usersCount;
+        }
         public async Task<EditUserViewModel> GetUserForEdit(string userId)
         {
             var requestedUser =
@@ -532,7 +541,7 @@ namespace Aroma_Shop.Application.Services
                     .SingleOrDefaultAsync(p => p.Id == userId);
 
             var requestedUserRole =
-                GetUserRole(requestedUser);
+                await GetUserRole(requestedUser);
 
             var loggedUserRole =
                 await GetLoggedUserRole();
@@ -553,7 +562,7 @@ namespace Aroma_Shop.Application.Services
                     Email = requestedUser.Email,
                     MobileNumber = requestedUser.MobileNumber,
                     Roles = roles,
-                    UserRoleName = GetUserRole(requestedUser),
+                    UserRoleName = requestedUserRole,
                     FirstName = requestedUser.UserDetails.FirstName,
                     LastName = requestedUser.UserDetails.LastName,
                     UserProvince = requestedUser.UserDetails.UserProvince,
@@ -581,7 +590,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var requestedUserRole =
-                    GetUserRole(requestedUser);
+                    await GetUserRole(requestedUser);
 
                 if ((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     || ((loggedUserRole == "Manager") &&
@@ -696,7 +705,7 @@ namespace Aroma_Shop.Application.Services
             user.UserDetails.UserZipCode = userViewModel.UserZipCode;
 
             var oldUserRole =
-                GetUserRole(user);
+                await GetUserRole(user);
 
             if (oldUserRole != userViewModel.UserRoleName)
             {
@@ -778,22 +787,23 @@ namespace Aroma_Shop.Application.Services
 
             return loggedUser;
         }
+        public async Task<string> GetUserRole(CustomIdentityUser user)
+        {
+            var userRoles =
+                await _userManager
+                    .GetRolesAsync(user);
+
+            var userRole =
+                userRoles
+                    .FirstOrDefault();
+
+            return userRole;
+        }
         public async Task<string> GetLoggedUserRole()
         {
             var user =
                 await GetLoggedUser();
 
-            var userRole =
-                _userManager.GetRolesAsync(user)
-                    .Result.FirstOrDefault();
-
-            return userRole;
-        }
-
-        //Utilities Methods
-
-        private string GetUserRole(CustomIdentityUser user)
-        {
             var userRole =
                 _userManager.GetRolesAsync(user)
                     .Result.FirstOrDefault();

@@ -345,6 +345,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
+        public int GetMessagesCount()
+        {
+            var messagesCount =
+                _mediaRepository
+                    .GetMessagesCount();
+
+            return messagesCount;
+        }
         public Message GetMessage(int messageId)
         {
             var message =

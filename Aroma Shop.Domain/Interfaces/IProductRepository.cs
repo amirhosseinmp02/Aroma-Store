@@ -10,6 +10,7 @@ namespace Aroma_Shop.Domain.Interfaces
         IEnumerable<Product> GetProducts();
         IEnumerable<Product> GetAvailableProducts();
         Product GetProduct(int productId);
+        int GetProductsCount();
         void AddProduct(Product product);
         void AddProductInformation(ProductInformation productInformation);
         void DeleteProductInformation(ProductInformation productInformation);
@@ -34,6 +35,8 @@ namespace Aroma_Shop.Domain.Interfaces
         Order GetUserOpenOrder(string userId);
         Order GetUserOrder(string userId, int orderId);
         Order GetUserOrderByEmail(string userEmail, int orderId);
+        int GetCompletedOrdersCount();
+        int GetUnCompletedOrdersCount();
         int GetUnSeenOrdersCount();
         void AddOrder(Order order);
         void UpdateOrder(Order order);

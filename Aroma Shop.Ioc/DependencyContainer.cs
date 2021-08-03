@@ -50,6 +50,9 @@ namespace Aroma_Shop.Ioc
 
             services.AddScoped<IPageRepository, PageRepository>();
             services.AddScoped<IPageService, PageService>();
+
+            services.AddScoped<IVisitorRepository, VisitorRepository>();
+            services.AddScoped<IVisitorService, VisitorService>();
         }
     }
 }

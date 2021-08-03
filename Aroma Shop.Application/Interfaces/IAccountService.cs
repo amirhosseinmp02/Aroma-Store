@@ -38,6 +38,7 @@ namespace Aroma_Shop.Application.Interfaces
 
         Task<IEnumerable<UserViewModel>> GetUsers();
         Task<UserDetailsViewModel> GetUser(string userId);
+        int GetUsersCount();
         Task<EditUserViewModel> GetUserForEdit(string userId);
         Task<bool> DeleteUser(string userId);
         Task<IEnumerable<SelectListItem>> GetRoles();
@@ -46,6 +47,7 @@ namespace Aroma_Shop.Application.Interfaces
         Task<bool> UpdateUser(CustomIdentityUser loggedUser);
         Task<CustomIdentityUser> GetLoggedUser();
         Task<CustomIdentityUser> GetLoggedUserWithDetails();
+        Task<string> GetUserRole(CustomIdentityUser user);
         Task<string> GetLoggedUserRole();
     }
 }

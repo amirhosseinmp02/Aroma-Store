@@ -52,6 +52,14 @@ namespace Aroma_Shop.Application.Services
 
             return product;
         }
+        public int GetProductsCount()
+        {
+            var productsCount =
+                _productRepository
+                    .GetProductsCount();
+
+            return productsCount;
+        }
         public bool AddProduct(AddEditProductViewModel productViewModel)
         {
             try
@@ -107,7 +115,7 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
+                Console.WriteLine($"{error.Message} | {error.InnerException.Message}");
                 return false;
             }
         }
@@ -1060,6 +1068,22 @@ namespace Aroma_Shop.Application.Services
             }
 
             return orderViewModel;
+        }
+        public int GetCompletedOrdersCount()
+        {
+            var completedOrdersCount =
+                _productRepository
+                    .GetCompletedOrdersCount();
+
+            return completedOrdersCount;
+        }
+        public int GetUnCompletedOrdersCount()
+        {
+            var unCompletedOrdersCount =
+                _productRepository
+                    .GetUnCompletedOrdersCount();
+
+            return unCompletedOrdersCount;
         }
         public int GetUnSeenOrdersCount()
         {

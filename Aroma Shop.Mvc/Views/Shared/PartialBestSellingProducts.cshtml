@@ -61,13 +61,13 @@
                     </div>
                     <div class="card-body">
                         @{
-                            var firstCategory =
+                            var lastCategory =
                                 product.Categories
-                                    .FirstOrDefault();
+                                    .LastOrDefault();
                         }
-                        @if (firstCategory != null)
+                        @if (lastCategory != null)
                         {
-                            <a class="text-dark" asp-controller="Product" asp-action="Index" asp-route-SelectedCategories="@firstCategory.CategoryId">@firstCategory.CategoryName</a>
+                            <a class="text-dark" asp-controller="Product" asp-action="Index" asp-route-SelectedCategories="@lastCategory.CategoryId">@lastCategory.CategoryName</a>
                         }
                         <h4 class="card-product__title"><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId">@product.ProductName</a></h4>
                         @{

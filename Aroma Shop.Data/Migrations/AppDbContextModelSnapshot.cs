@@ -624,6 +624,29 @@ namespace Aroma_Shop.Data.Migrations
                     b.ToTable("UsersDetails");
                 });
 
+            modelBuilder.Entity("Aroma_Shop.Domain.Models.VisitorModels.Visitor", b =>
+                {
+                    b.Property<int>("VisitorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CountOfVisit")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastVisitTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VisitorIpAddress")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("VisitorId");
+
+                    b.ToTable("Visitors");
+                });
+
             modelBuilder.Entity("CategoryProduct", b =>
                 {
                     b.Property<int>("CategoriesCategoryId")

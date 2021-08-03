@@ -980,8 +980,9 @@ a {
 }
 
 .card-product__price {
-    font-size: 18px;
-    font-weight: 500
+    font-size: 17.5px;
+    font-weight: 500;
+    color: #4a4a4a;
 }
 
 .card-product:hover .card-product__imgOverlay {
@@ -995,7 +996,7 @@ a {
 }
 
 .offer {
-    background: url("../img/home/parallax-bg.png") right center no-repeat;
+    background: url("../img/Others/parallax-bg.png") right center no-repeat;
     background-size: cover
 }
 
@@ -2711,7 +2712,7 @@ a {
 }
 
 .common-filter {
-    padding: 20px 28px;
+    padding: 20px 16px;
 }
 
 
@@ -4328,6 +4329,10 @@ a {
     margin-left: -15px;
 }
 
+    .s_product_text h3 {
+        line-height: normal;
+    }
+
 @media only screen and (max-width: 992px) {
     .s_product_text {
         margin-top: 65px;
@@ -4556,7 +4561,8 @@ a {
     border-left: 1px solid #eee;
     border-right: 1px solid #eee;
     border-bottom: 1px solid #eee;
-    padding: 30px 30px 15px 30px
+    padding: 30px 30px 15px 30px;
+    overflow: auto
 }
 
     .product_description_area .tab-content .total_rate .box_total {
@@ -5182,21 +5188,21 @@ span.reset_variations:hover {
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
     .banner-slider-img {
-        height: 60vh;
+        height: 59vh;
     }
 }
 
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     .banner-slider-img {
-        height: 80vh;
+        height: 79vh;
     }
 }
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     .banner-slider-img {
-        height: 91vh;
+        height: 89vh;
     }
 }
 
@@ -5288,3 +5294,8 @@ span.reset_variations:hover {
     .dropdown-block div {
         width: 33.33%;
     }
+
+.card-product__title {
+    font-size: 19px;
+    line-height: 1.5;
+}

@@ -17,8 +17,9 @@ namespace Aroma_Shop.Domain.Interfaces
         void AddMessage(Message message);
         void UpdateMessage(Message message);
         void DeleteMessage(Message message);
-        Message GetMessage(int messageId);
         IEnumerable<Message> GetMessages();
+        Message GetMessage(int messageId);
+        int GetMessagesCount();
         int GetUnreadMessagesCount();
         IEnumerable<Banner> GetBanners();
         Banner GetBanner(int bannerId);
