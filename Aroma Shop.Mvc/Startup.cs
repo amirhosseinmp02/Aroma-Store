@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.CustomIdentityModels.Translations;
+using Aroma_Shop.Mvc.Areas.Admin.Controllers;
 using Aroma_Shop.Mvc.Models.CustomMiddleWares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +33,12 @@ namespace Aroma_Shop.Mvc
             {
                 options.MaxModelBindingCollectionSize = int.MaxValue;
             });
+
             services.AddDbContextPool<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AromaAppDBConnection"));
             });
+
             services.AddIdentity<CustomIdentityUser, CustomIdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -52,22 +55,26 @@ namespace Aroma_Shop.Mvc
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders()
                 .AddErrorDescriber<PersianIdentityErrorDescriber>();
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Login";
                 options.LogoutPath = "/LogOut";
             });
+
             services.Configure<SecurityStampValidatorOptions>(options =>
             {
                 // enables immediate logout, after updating the user's stat.
                 options.ValidationInterval = TimeSpan.Zero;
             });
+
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
                     options.ClientId = "168190188156-bl2bbkcna0bgd8f8s2ih1mhps80dogbc.apps.googleusercontent.com";
                     options.ClientSecret = "5JhPg-OAJDEXQwm8v-fwbYrU";
                 });
+
             RegisterServices(services);
         }
 

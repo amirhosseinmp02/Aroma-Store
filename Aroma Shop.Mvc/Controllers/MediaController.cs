@@ -3,12 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
 using Aroma_Shop.Application.ViewModels.Home;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Models.MediaModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Aroma_Shop.Mvc.Controllers
 {
@@ -16,11 +22,15 @@ namespace Aroma_Shop.Mvc.Controllers
     {
         private readonly IMediaService _mediaService;
         private readonly IProductService _productService;
+        private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public MediaController(IMediaService mediaService, IProductService productService)
+        public MediaController(IMediaService mediaService, IProductService productService, IConfiguration configuration)
         {
             _mediaService = mediaService;
             _productService = productService;
+            _configuration = configuration;
+            _httpClient = new HttpClient();
         }
 
         #region ContactUs
@@ -35,6 +45,28 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ContactUs(Message model)
         {
+            string recaptchaResponse =
+                Request.Form["g-recaptcha-response"];
+
+            var url =
+                "https://www.google.com/recaptcha/api/siteverify";
+
+            var response =
+            _httpClient
+                .PostAsync($"{url}?secret={_configuration["reCAPTCHA:SecretKey"]}&response={recaptchaResponse}", new StringContent(""))
+                .Result;
+
+            var responseString =
+                response.Content.ReadAsStringAsync()
+                    .Result;
+
+            dynamic jsonResponse =
+                JObject.Parse(responseString);
+
+            if (jsonResponse.success != true)
+                ModelState
+                    .AddModelError("", "مشکلی در زمان تایید گوگل کپچا رخ داد ، لطفا بعدا تلاش کنید");
+
             if (ModelState.IsValid)
             {
                 var result =
@@ -63,6 +95,28 @@ namespace Aroma_Shop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCommentToProduct(ProductViewModel model)
         {
+            string recaptchaResponse =
+                Request.Form["g-recaptcha-response"];
+
+            var url =
+                "https://www.google.com/recaptcha/api/siteverify";
+
+            var response =
+                _httpClient
+                    .PostAsync($"{url}?secret={_configuration["reCAPTCHA:SecretKey"]}&response={recaptchaResponse}", new StringContent(""))
+                    .Result;
+
+            var responseString =
+                response.Content.ReadAsStringAsync()
+                    .Result;
+
+            dynamic jsonResponse =
+                JObject.Parse(responseString);
+
+            if (jsonResponse.success != true)
+                ModelState
+                    .AddModelError("", "مشکلی در زمان تایید گوگل کپچا رخ داد ، لطفا بعدا تلاش کنید");
+
             if (ModelState.IsValid)
             {
                 var productId =
@@ -95,7 +149,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
                     ViewData["SuccessMessage"] = "دیدگاه / پاسخ شما با موفقیت ثبت و بعد از تایید ادمین نمایش داده خواهد شد";
 
-                    ModelState.Clear(); 
+                    ModelState.Clear();
 
                     return View("/Views/Product/ProductDetails.cshtml", model);
                 }

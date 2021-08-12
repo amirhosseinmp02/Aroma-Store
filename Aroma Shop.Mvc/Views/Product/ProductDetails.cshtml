@@ -3,10 +3,12 @@
 @using Aroma_Shop.Application.Interfaces
 @using Aroma_Shop.Application.Utilites
 @using Aroma_Shop.Domain.Models.FileModels
+@using Microsoft.Extensions.Configuration
 @using Newtonsoft.Json
 
 @inject IAccountService AccountService
 @inject IProductService ProductService
+@inject IConfiguration Configuration
 
 @{
     ViewData["Title"] = Model.Product.ProductName;
@@ -452,12 +454,16 @@
                         {
                             <div class="review_box">
                                 <h4 id="commentTitle">ثبت دیدگاه</h4>
-                                <form asp-controller="Media" asp-action="AddCommentToProduct">
+                                <form asp-controller="Media" asp-action="AddCommentToProduct" id="comment-form">
                                     @{
                                         TempData["productId"] = Model.Product.ProductId;
                                     }
                                     <div class="form-group">
                                         <textarea class="form-control different-control w-100" id="textarea" cols="30" rows="5" placeholder="نظر خود را وارد نمایید..." style="margin-top: 0px; margin-bottom: 0px; height: 150px;" asp-for="CommentDescription"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="g-recaptcha" data-sitekey="@Configuration["reCAPTCHA:SiteKey"]"></div>
+                                        <span class="field-validation-error recaptcha-error" style="display: none;">لطفا تیک من ربات نیستم را بزنید</span>
                                     </div>
                                     <div class="form-group text-center text-md-left mt-3">
                                         <button type="submit" class="button button--active button-review">ثبت</button>
@@ -483,7 +489,17 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <script>
+
+        $("#comment-form").on("submit",
+            function (e) {
+                if (grecaptcha.getResponse() == "") {
+                    e.preventDefault();
+                    $(".recaptcha-error").show();
+                }
+            });
 
         var productVariationsValues = [];
 
