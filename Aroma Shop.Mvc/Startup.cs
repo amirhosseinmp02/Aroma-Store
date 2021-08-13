@@ -14,6 +14,7 @@ using Aroma_Shop.Mvc.Areas.Admin.Controllers;
 using Aroma_Shop.Mvc.Models.CustomMiddleWares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebMarkupMin.AspNetCore3;
 
 namespace Aroma_Shop.Mvc
 {
@@ -29,6 +30,15 @@ namespace Aroma_Shop.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddWebMarkupMin(options =>
+                {
+                    options.AllowMinificationInDevelopmentEnvironment = true;
+                    options.AllowCompressionInDevelopmentEnvironment = true;
+                })
+                .AddHtmlMinification()
+                .AddHttpCompression()
+                .AddXmlMinification();
+
             services.AddControllersWithViews(options =>
             {
                 options.MaxModelBindingCollectionSize = int.MaxValue;
@@ -96,6 +106,7 @@ namespace Aroma_Shop.Mvc
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseWebMarkupMin();
 
             app.UseRouting();
 
