@@ -60,7 +60,7 @@ namespace Aroma_Shop.Mvc
                     options.User.RequireUniqueEmail = true;
                     options.User.AllowedUserNameCharacters =
                         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-                    options.SignIn.RequireConfirmedEmail = false;
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders()
@@ -81,8 +81,8 @@ namespace Aroma_Shop.Mvc
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "168190188156-bl2bbkcna0bgd8f8s2ih1mhps80dogbc.apps.googleusercontent.com";
-                    options.ClientSecret = "5JhPg-OAJDEXQwm8v-fwbYrU";
+                    options.ClientId = Configuration["googleAuthentication:ClientId"];
+                    options.ClientSecret = Configuration["googleAuthentication:ClientSecret"];
                 });
 
             RegisterServices(services);

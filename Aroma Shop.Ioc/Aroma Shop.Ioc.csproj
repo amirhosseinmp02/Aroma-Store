@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Aroma_Shop.Ioc</RootNamespace>
+    <PackageId>AromaShop.Ioc</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Aroma_Shop.Domain</RootNamespace>
+    <PackageId>AromaShop.Domain</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
