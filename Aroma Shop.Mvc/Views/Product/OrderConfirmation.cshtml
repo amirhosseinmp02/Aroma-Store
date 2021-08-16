@@ -72,6 +72,10 @@
                                     <td>وضعیت سفارش</td>
                                     <td>: @Model.OrderStatus</td>
                                 </tr>
+                                <tr>
+                                    <td>یادداشت سفارش</td>
+                                    <td>: @(!string.IsNullOrWhiteSpace(Model.OrderNote)?Model.OrderNote:"-")</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -117,7 +121,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var orderInvoiceDetails in Model.OrderInvoicesDetails)    
+                            @foreach (var orderInvoiceDetails in Model.OrderInvoicesDetails)
                             {
                                 <tr>
                                     <td class="py-2">

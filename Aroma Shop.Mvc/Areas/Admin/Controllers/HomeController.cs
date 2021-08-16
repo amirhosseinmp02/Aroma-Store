@@ -32,6 +32,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 await _accountService
                     .GetUsersCountAsync();
 
+            usersCount -= 1;
+
             var productsCount =
                 await _productService
                     .GetProductsCountAsync();

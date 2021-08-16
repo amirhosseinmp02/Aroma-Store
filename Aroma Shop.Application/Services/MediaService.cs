@@ -673,7 +673,7 @@ namespace Aroma_Shop.Application.Services
         {
             try
             {
-                _mediaRepository
+                await _mediaRepository
                     .DeleteNewsletterByIdAsync(newsletterId);
 
                 await _mediaRepository

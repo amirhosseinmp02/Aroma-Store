@@ -1,15 +1,15 @@
 ﻿@model string
 <nav class="mt-2 mb-5">
     <ul class="pagination justify-content-center">
-        <li class="page-item @(ViewBag.pageNumber==ViewBag.firstPage?"disabled":"")">
-            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewBag.firstPage" asp-route-search="@ViewBag.search">ابتدا</a>
+        <li class="page-item @(ViewData["pageNumber"].ToString()==ViewData["firstPage"].ToString()?"disabled":"")">
+            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewData["firstPage"]" asp-route-search="@ViewData["search"]">ابتدا</a>
         </li>
-        @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
+        @for (int i = Convert.ToInt32(ViewData["firstPage"]); i <= Convert.ToInt32(ViewData["lastPage"]); i++)
         {
-            <li class="page-item @(ViewBag.pageNumber==i?"active":"")"><a class="page-link" asp-action="@Model" asp-route-pageNumber="@i" asp-route-search="@ViewBag.search">@i</a></li>
+            <li class="page-item @(ViewData["pageNumber"].ToString()==i.ToString()?"active":"")"><a class="page-link" asp-action="@Model" asp-route-pageNumber="@i" asp-route-search="@ViewData["search"]">@i</a></li>
         }
-        <li class="page-item @(ViewBag.pageNumber==ViewBag.lastPage?"disabled":"")">
-            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewBag.lastPage" asp-route-search="@ViewBag.search">انتها</a>
+        <li class="page-item @(ViewData["pageNumber"].ToString()==ViewData["lastPage"].ToString()?"disabled":"")">
+            <a class="page-link" asp-action="@Model" asp-route-pageNumber="@ViewData["lastPage"]" asp-route-search="@ViewData["search"]">انتها</a>
         </li>
     </ul>
 </nav>

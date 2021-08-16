@@ -45,13 +45,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     products
                         .Where(p => p.ProductName.Contains(search) ||
                                     p.Categories.Any(t => t.CategoryName.Contains(search)));
-
-                ViewBag.search = search;
             }
 
             if (!products.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -65,11 +63,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var productsPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(productsPage);
         }
@@ -87,7 +87,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             var model = new AddEditProductViewModel()
             {
-                ProductCategories = productCategories
+                ProductCategories = productCategories.Skip(1)
             };
 
             return View(model);
@@ -113,7 +113,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
                     model = new AddEditProductViewModel()
                     {
-                        ProductCategories = returnProductCategories
+                        ProductCategories = returnProductCategories.Skip(1)
                     };
 
                     ViewData["SuccessMessage"] = "محصول مورد نظر با موفقیت افزوده شد.";
@@ -129,7 +129,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     .GetCategoriesTreeViewForAddAsync();
 
             model.ProductCategories =
-                productCategories;
+                productCategories.Skip(1);
 
             return View(model);
         }
@@ -170,7 +170,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 IsSimpleProduct = product.IsSimpleProduct,
                 ProductPrice = product.ProductPrice,
                 ProductQuantityInStock = product.ProductQuantityInStock,
-                ProductCategories = productCategories,
+                ProductCategories = productCategories.Skip(1),
                 InformationNames = product.Informations.Select(p => p.Name),
                 InformationValues = product.Informations.Select(p => p.Value),
                 CurrentProductImages = product.Images
@@ -240,7 +240,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             model.ProductCategories =
-                productCategories;
+                productCategories.Skip(1);
 
             model.CurrentProductImages =
                 product.Images;
@@ -285,13 +285,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                         .Where(p =>
                     p.CategoryName.Contains(search) ||
                     (Convert.ToBoolean(p.ParentCategory?.CategoryName.Contains(search))));
-
-                ViewBag.search = search;
             }
 
             if (!categories.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -305,11 +303,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var categoriesPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(categoriesPage);
         }

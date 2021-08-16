@@ -36,13 +36,11 @@ namespace Aroma_Shop.Mvc.Controllers
 
             if (!string.IsNullOrEmpty(Search))
             {
-                products = 
+                products =
                     products
                     .Where(p => p.ProductName.Contains(Search)
                                 || p.Categories
                                     .Any(t => t.CategoryName.Contains(Search)));
-
-                ViewBag.search = Search;
             }
 
             if (SelectedCategories.Any())
@@ -56,15 +54,24 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 products =
                     products
-                        .Where(p => p.IsSimpleProduct
-                            ? p.ProductPrice >= minimumPrice &&
-                              p.ProductPrice <= maximumPrice
-                            : p.ProductVariations.Min(t => t.ProductVariationQuantityInStock != 0 ? t.ProductVariationPrice : 0) > minimumPrice &&
-                              p.ProductVariations.Min(t => t.ProductVariationQuantityInStock != 0 ? t.ProductVariationPrice : ++maximumPrice) <= maximumPrice)
-                        .Where(p => p.IsSimpleProduct ? p.ProductQuantityInStock != 0 : p.ProductVariations.Any(t => t.ProductVariationQuantityInStock != 0));
+                        .Where(p =>
+                        {
+                            var minimumPriceForAvailableProductVariations =
+                                p.ProductVariations
+                                    .Where(t => t.ProductVariationQuantityInStock != 0)
+                                    .DefaultIfEmpty(new ProductVariation(){ProductVariationPrice = -1})
+                                    .Min(t => t.ProductVariationPrice);
 
-                ViewBag.minimumPrice = minimumPrice;
-                ViewBag.maximumPrice = maximumPrice;
+                            var result =
+                                p.IsSimpleProduct
+                                    ? (p.ProductQuantityInStock != 0 &&
+                                       (p.ProductPrice >= minimumPrice &&
+                                        p.ProductPrice <= maximumPrice))
+                                    : (minimumPriceForAvailableProductVariations >= minimumPrice &&
+                                       minimumPriceForAvailableProductVariations <= maximumPrice);
+
+                            return result;
+                        });
             }
 
             ProductsViewModel productsViewModel;
@@ -73,9 +80,13 @@ namespace Aroma_Shop.Mvc.Controllers
                 await _productService
                     .GetCategoriesTreeViewsAsync();
 
+            ViewData["search"] = Search;
+            ViewData["minimumPrice"] = minimumPrice;
+            ViewData["maximumPrice"] = maximumPrice;
+
             if (!products.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 productsViewModel = new ProductsViewModel()
                 {
@@ -165,11 +176,12 @@ namespace Aroma_Shop.Mvc.Controllers
             var productsPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["isEmpty"] = false;
 
             productsViewModel = new ProductsViewModel()
             {
@@ -199,7 +211,7 @@ namespace Aroma_Shop.Mvc.Controllers
             await _productService
                 .AddHitsToProductAsync(product);
 
-            product.Comments = 
+            product.Comments =
                 product
                     .Comments
                 .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
@@ -256,7 +268,7 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 ViewData["OutOfStockError"] = "موجودی کافی نیست";
 
-                product.Comments = 
+                product.Comments =
                     product
                         .Comments
                     .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
@@ -287,7 +299,7 @@ namespace Aroma_Shop.Mvc.Controllers
                     await _productService
                         .GetLoggedUserOpenOrderAsync();
 
-                var result = 
+                var result =
                     await _productService
                         .UpdateCartAsync(loggedUserOpenOrder, orderDetailsQuantities);
 
@@ -371,7 +383,7 @@ namespace Aroma_Shop.Mvc.Controllers
                     await _productService
                         .GetLoggedUserOpenOrderAsync();
 
-                var result = 
+                var result =
                     await _productService
                     .UpdateCartAsync(loggedUserOpenOrder, orderDetailsQuantities);
 

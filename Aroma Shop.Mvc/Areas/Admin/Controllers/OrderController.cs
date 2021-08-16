@@ -40,8 +40,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                         .Where(p => p.OrderId.ToString() == search
                                                 || p.OrderName
                                                     .Contains(search) && p.NotEmpty);
-
-                ViewBag.search = search;
             }
             else
                 ordersViewModels =
@@ -50,7 +48,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!ordersViewModels.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -64,11 +62,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var ordersViewModelsPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(ordersViewModels);
         }
@@ -143,8 +143,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     discounts
                         .Where(p =>
                         p.DiscountCode.Contains(search) && !p.IsTrash);
-
-                ViewBag.search = search;
             }
             else
                 discounts =
@@ -153,7 +151,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!discounts.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -167,11 +165,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var discountsPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(discountsPage);
         }

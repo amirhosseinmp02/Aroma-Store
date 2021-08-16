@@ -36,13 +36,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     visitors
                         .Where(p =>
                             p.VisitorIpAddress.Contains(search));
-
-                ViewBag.search = search;
             }
 
             if (!visitors.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -56,11 +54,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var visitorsPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(visitorsPage);
         }

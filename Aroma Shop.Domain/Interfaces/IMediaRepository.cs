@@ -31,6 +31,6 @@ namespace Aroma_Shop.Domain.Interfaces
         Task<IEnumerable<Newsletter>> GetNewslettersAsync();
         Task<bool> IsEmailExistInNewslettersCustomersAsync(string customerEmail);
         Task AddNewsletterAsync(Newsletter newsletter);
-        void DeleteNewsletterByIdAsync(int newsletterId);   
+        Task DeleteNewsletterByIdAsync(int newsletterId);   
     }
 }

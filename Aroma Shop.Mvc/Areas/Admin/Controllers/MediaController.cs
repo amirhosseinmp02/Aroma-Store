@@ -42,10 +42,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                                                || p.MessageSubject.Contains(search)
                                                || p.MessageSenderEmail.Contains(search))
                     .OrderBy(p => p.IsRead);
-
-                ViewData["search"]
-
-                ViewBag.search = search;
             }
             else
                 messages =
@@ -54,7 +50,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!messages.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -68,11 +64,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var messagesPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"]= page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"]= page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(messagesPage);
         }
@@ -175,8 +173,6 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     p.User.UserName.Contains(search) ||
                     p.Product.ProductName.Contains(search))
                     .OrderBy(p => p.IsRead);
-
-                ViewBag.search = search;
             }
             else
                 comments =
@@ -185,7 +181,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             if (!comments.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -199,11 +195,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var commentsPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(commentsPage);
         }
@@ -372,13 +370,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                         p.BannerTitle.Contains(search) ||
                         p.BannerDescription.Contains(search) ||
                         p.BannerId.ToString() == search);
-
-                ViewBag.search = search;
             }
 
             if (!banners.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -392,11 +388,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var bannersPage =
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(bannersPage);
         }
@@ -501,13 +499,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                         .Where(p =>
                         p.CustomerEmail.Contains(search) ||
                         p.NewsletterId.ToString() == search);
-
-                ViewBag.search = search;
             }
 
             if (!newsletters.Any())
             {
-                ViewBag.isEmpty = true;
+                ViewData["isEmpty"] = true;
 
                 return View();
             }
@@ -521,11 +517,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             var newslettersPage =   
                 page.QueryResult;
 
-            ViewBag.pageNumber = pageNumber;
-            ViewBag.firstPage = page.FirstPage;
-            ViewBag.lastPage = page.LastPage;
-            ViewBag.prevPage = page.PreviousPage;
-            ViewBag.nextPage = page.NextPage;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["firstPage"] = page.FirstPage;
+            ViewData["lastPage"] = page.LastPage;
+            ViewData["prevPage"] = page.PreviousPage;
+            ViewData["nextPage"] = page.NextPage;
+            ViewData["search"] = search;
+            ViewData["isEmpty"] = false;
 
             return View(newslettersPage);
         }

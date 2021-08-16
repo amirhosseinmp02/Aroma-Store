@@ -193,7 +193,7 @@ namespace Aroma_Shop.Data.Repositories
             await _context
                 .AddAsync(newsletter);
         }
-        public async void DeleteNewsletterByIdAsync(int newsletterId)
+        public async Task DeleteNewsletterByIdAsync(int newsletterId)
         {
             var newsletter =
                 await _context

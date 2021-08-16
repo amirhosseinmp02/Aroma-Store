@@ -5303,3 +5303,7 @@ span.reset_variations:hover {
 .card-product__imgOverlay li {
     margin-left: 10px;
 }
+
+.page_content {
+    overflow: auto;
+}

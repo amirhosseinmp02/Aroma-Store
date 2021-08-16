@@ -315,7 +315,7 @@
                     !string.IsNullOrWhiteSpace(Model.Product.ProductDescription);
 
                 var isProductInformationsNotNull =
-                    Model.Product.Informations.Any();
+                    Model.Product.Informations.NotNullOrEmpty();
             }
 
             @if (isProductDescriptionNotNull && isProductInformationsNotNull)
@@ -328,6 +328,12 @@
                        aria-selected="false">مشخصات</a>
                 </li>
             }
+            else if (isProductDescriptionNotNull)
+            {
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">توضیحات</a>
+                </li>
+            }
             else if (isProductInformationsNotNull)
             {
                 <li class="nav-item">
@@ -335,9 +341,15 @@
                        aria-selected="true">مشخصات</a>
                 </li>
             }
+
+            @{
+                var isCommentSectionActive =
+                    (!isProductDescriptionNotNull && !isProductInformationsNotNull);
+            }
+
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact-section" role="tab" aria-controls="contact-section"
-                   aria-selected="false">نظرات کاربران</a>
+                <a class="nav-link @(isCommentSectionActive?"active":"")" id="contact-tab" data-toggle="tab" href="#contact-section" role="tab" aria-controls="contact-section"
+                   aria-selected="@(isCommentSectionActive?"true":"false")">نظرات کاربران</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -366,6 +378,12 @@
                     </div>
                 </div>
             }
+            else if (isProductDescriptionNotNull)
+            {
+                <div class="tab-pane fade active show ck-content" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    @Html.Raw(Model.Product.ProductDescription)
+                </div>
+            }
             else if (isProductInformationsNotNull)
             {
                 <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -388,7 +406,7 @@
                     </div>
                 </div>
             }
-            <div class="tab-pane fade" id="contact-section" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="tab-pane fade @(isCommentSectionActive?"active show":"")" id="contact-section" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="comment_list">
@@ -488,7 +506,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?hl=fa" async defer></script>
 
     <script>
 

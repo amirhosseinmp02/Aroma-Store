@@ -1,5 +1,8 @@
 ﻿@using Aroma_Shop.Domain.Models.FileModels
 @using Aroma_Shop.Application.Interfaces
+@using Aroma_Shop.Application.Utilites
+
+@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
 
 @inject IAccountService AccountService
 
@@ -36,7 +39,7 @@
         </div>
         <div class="col-lg-9 col-md-8 col-sm-11">
             <div class="d-flex flex-lg-row flex-md-column flex-sm-column flex-column justify-content-between flex-wrap">
-                @if (Model.Any())
+                @if (Model.NotNullOrEmpty())
                 {
                     @foreach (var favoriteProduct in @Model)
                     {

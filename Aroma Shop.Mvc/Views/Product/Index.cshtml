@@ -7,7 +7,10 @@
     ViewData["Title"] = "محصولات";
 
     var isModelNotEmpty =
-        !Convert.ToBoolean(ViewBag.isEmpty);
+        !Convert.ToBoolean(ViewData["isEmpty"]);
+
+    var isUserSignIn =
+        AccountService.IsUserSignedIn();
 }
 
 @inject IAccountService AccountService
@@ -119,7 +122,7 @@
                         </div>
                         <div>
                             <div class="input-group filter-bar-search">
-                                <input type="text" placeholder="جستجو..." class="pl-2" name="Search" value="@ViewBag.search">
+                                <input type="text" placeholder="جستجو..." class="pl-2" name="Search" value="@ViewData["search"]">
                                 <div class="input-group-append">
                                     <button type="submit"><i class="ti-search"></i></button>
                                 </div>
@@ -149,8 +152,7 @@
                                                 <img class="card-img product-images-card" src="@productImagePath" alt="">
                                                 <ul class="card-product__imgOverlay">
                                                     <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-search"></i></a></li>
-                                                    <li><button><i class="bi bi-bag"></i></button></li>
-                                                    @if (AccountService.IsUserSignedIn())
+                                                    @if (isUserSignIn)
                                                     {
                                                         if (!await AccountService.IsProductInLoggedUserFavoriteProductsAsync(product.ProductId))
                                                         {
@@ -243,17 +245,17 @@
                         </section>
                         <nav class="mt-2 mb-5">
                             <ul class="pagination justify-content-center">
-                                <li class="page-item @(ViewBag.pageNumber == ViewBag.firstPage ? "disabled" : "")">
-                                    <button class="page-link" value="@ViewBag.firstPage">ابتدا</button>
+                                <li class="page-item @(ViewData["pageNumber"].ToString() == ViewData["firstPage"].ToString() ? "disabled" : "")">
+                                    <button class="page-link" value="@ViewData["firstPage"]">ابتدا</button>
                                 </li>
-                                @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
+                                @for (int i = Convert.ToInt32(ViewData["firstPage"]); i <= Convert.ToInt32(ViewData["lastPage"]); i++)
                                 {
-                                    <li class="page-item @(ViewBag.pageNumber == i ? "active" : "")">
+                                    <li class="page-item @(ViewData["pageNumber"].ToString() == i.ToString() ? "active" : "")">
                                         <button class="page-link" value="@i">@i</button>
                                     </li>
                                 }
-                                <li class="page-item @(ViewBag.pageNumber == ViewBag.lastPage ? "disabled" : "")">
-                                    <button class="page-link" value="@ViewBag.lastPage">انتها</button>
+                                <li class="page-item @(ViewData["pageNumber"].ToString()  == ViewData["lastPage"].ToString() ? "disabled" : "")">
+                                    <button class="page-link" value="@ViewData["lastPage"]">انتها</button>
                                 </li>
                             </ul>
                         </nav>
@@ -265,8 +267,8 @@
                     <!-- End Best Seller -->
                 </div>
             </div>
-            <input id="minimum-price" type="hidden" name="minimumPrice" value="@ViewBag.minimumPrice"/>
-            <input id="maximum-price" type="hidden" name="maximumPrice"  value="@ViewBag.maximumPrice"/>
+            <input id="minimum-price" type="hidden" name="minimumPrice" value="@ViewData["minimumPrice"]"/>
+            <input id="maximum-price" type="hidden" name="maximumPrice"  value="@ViewData["maximumPrice"]"/>
             <input id="page-number-input" type="hidden" name="pageNumber" />
         </form>
     </div>
@@ -345,7 +347,7 @@
             range: true,
             min: 0,
             max: @productsMaximumPrice,
-            values: [@(ViewBag.minimumPrice==null?0: ViewBag.minimumPrice), @(ViewBag.maximumPrice==null? productsMaximumPrice: ViewBag.maximumPrice)],
+            values: [@ViewData["minimumPrice"], @(ViewData["maximumPrice"].ToString() == 0.ToString()? productsMaximumPrice: ViewData["maximumPrice"])],
             slide: function (event, ui) {
 
                 $('.ui-slider-handle:eq(0) .price-range-min').html(ui.values[0] + 'تومان');
