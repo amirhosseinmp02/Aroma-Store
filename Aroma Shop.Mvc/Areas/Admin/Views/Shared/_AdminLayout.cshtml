@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="~/css/admin/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <link href="~/vendors/tags/tags.min.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="rtl">
@@ -28,11 +29,11 @@
         </button>
         @{
             var loggedUser =
-                await AccountService.GetLoggedUser();
+                await AccountService.GetLoggedUserAsync();
 
             var loggedUserRole =
                 await AccountService
-                    .GetUserRole(loggedUser);
+                    .GetUserRoleAsync(loggedUser);
         }
         <span class="badge badge-primary mr-auto ml-2 p-2 dashbord-welcome-badge">@loggedUser.UserName خوش آمدید</span>
         <ul class="navbar-nav px-3">
@@ -60,7 +61,7 @@
                         <li class="nav-item ">
                             @{
                                 var unSeenOrdersCount =
-                                    ProductService.GetUnSeenOrdersCount();
+                                    await ProductService.GetUnSeenOrdersCountAsync();
 
                                 var isThereAnyUnSeenOrder =
                                     unSeenOrdersCount != 0;
@@ -117,15 +118,15 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Media" asp-action="Messages">
                                 <i class="bi bi-envelope"></i>
-                                صندوق پیام ها @if (MediaService.GetUnreadMessagesCount() != 0)
-                                {<span class="badge badge-danger">@MediaService.GetUnreadMessagesCount()</span>}
+                                صندوق پیام ها @if (await (MediaService.GetUnreadMessagesCountAsync()) != 0)
+                                {<span class="badge badge-danger">@await MediaService.GetUnreadMessagesCountAsync()</span>}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Media" asp-action="Comments">
                                 <i class="fa fa-comments-o" aria-hidden="true"></i>
-                                دیدگاه ها @if (MediaService.GetUnreadCommentsCount() != 0)
-                                {<span class="badge badge-danger">@MediaService.GetUnreadCommentsCount()</span>}
+                                دیدگاه ها @if (await (MediaService.GetUnreadCommentsCountAsync()) != 0)
+                                {<span class="badge badge-danger">@await MediaService.GetUnreadCommentsCountAsync()</span>}
                             </a>
                         </li>
                         <li class="nav-item">

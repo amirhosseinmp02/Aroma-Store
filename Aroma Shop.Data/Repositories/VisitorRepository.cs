@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.VisitorModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aroma_Shop.Data.Repositories
 {
@@ -16,47 +18,49 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context = context;
         }
-        public IEnumerable<Visitor> GetVisitors()
+
+        public async Task<IEnumerable<Visitor>> GetVisitorsAsync()
         {
             var visitors =
-                _context
-                    .Visitors;
+                await _context
+                    .Visitors
+                    .ToListAsync();
 
             return visitors;
         }
-        public Visitor GetVisitorByIpAddress(string visitorIpAddress)
+        public async Task<Visitor> GetVisitorByIpAddressAsync(string visitorIpAddress)
         {
             var visitor =
-                _context
+                await _context
                     .Visitors
-                    .SingleOrDefault(p => p.VisitorIpAddress == visitorIpAddress);
+                    .SingleOrDefaultAsync(p => p.VisitorIpAddress == visitorIpAddress);
 
             return visitor;
         }
-        public int GetNumberOfVisits()
+        public async Task<int> GetNumberOfVisitsAsync()
         {
             var numberOfVisits =
-                _context
+                await _context
                     .Visitors
-                    .Sum(p => p.CountOfVisit);
+                    .SumAsync(p => p.CountOfVisit);
 
             return numberOfVisits;
         }
-        public void AddVisitor(Visitor visitor)
+        public async Task AddVisitorAsync(Visitor visitor)
         {
-            _context
-                .Add(visitor);
+            await _context
+                .AddAsync(visitor);
         }
         public void UpdateVisitor(Visitor visitor)
-        {
+        { 
             _context
                 .Update(visitor);
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context
-                .SaveChanges();
+            await _context
+                .SaveChangesAsync();
         }
     }
 }

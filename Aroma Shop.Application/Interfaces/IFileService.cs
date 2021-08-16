@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
@@ -12,13 +13,13 @@ namespace Aroma_Shop.Application.Interfaces
 {
     public interface IFileService
     {
-        JsonResult UploadEditorFile(IFormFile file);
-        IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds);
-        bool AddProductImages(Product product, IEnumerable<IFormFile> productImagesFiles);
-        bool DeleteProductImagesByIds(IEnumerable<int> productImagesIds);
+        Task<JsonResult> UploadEditorFileAsync(IFormFile file);
+        Task<IEnumerable<Image>> GetProductImagesByIdsAsync(IEnumerable<int> productImagesIds);
+        Task<bool> AddProductImagesAsync(Product product, IEnumerable<IFormFile> productImagesFiles);
+        Task<bool> DeleteProductImagesByIdsAsync(IEnumerable<int> productImagesIds);
         bool DeleteProductImages(IEnumerable<Image> productImages);
 
-        bool AddBannerImage(Banner banner, IFormFile uploadedBannerImage);
+        Task<bool> AddBannerImageAsync(Banner banner, IFormFile uploadedBannerImage);
         bool DeleteBannerImage(Image bannerImage);
     }
 }

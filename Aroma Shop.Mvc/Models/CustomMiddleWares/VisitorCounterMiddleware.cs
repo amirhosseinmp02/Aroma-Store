@@ -20,13 +20,14 @@ namespace Aroma_Shop.Mvc.Models.CustomMiddleWares
         public async Task Invoke(HttpContext context, IVisitorService visitorService)
         {
             string visitorId = context.Request.Cookies["VisitorId"];
+
             if (visitorId == null)
             {
                 var remoteIpAddress =
                     context.Connection.RemoteIpAddress.ToString();
 
-                visitorService
-                    .AddOrUpdateVisitor(remoteIpAddress);
+                await visitorService
+                    .AddOrUpdateVisitorAsync(remoteIpAddress);
 
                 context.Response.Cookies.Append("VisitorId", Guid.NewGuid().ToString(), new CookieOptions()
                 {

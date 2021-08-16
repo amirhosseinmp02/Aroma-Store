@@ -47,7 +47,7 @@
                     <ul class="edit-order-menu">
                         @{
                             var loggedUserRole =
-                                await AccountService.GetLoggedUserRole();
+                                await AccountService.GetLoggedUserRoleAsync();
 
                             var isLoggedUserRoleAdmin =
                                 loggedUserRole == "Founder" ||

@@ -22,7 +22,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [HttpPost("/UploadEditorFile")]
         [IgnoreAntiforgeryToken]
-        public IActionResult UploadEditorFile(IFormFile upload)
+        public async Task<IActionResult> UploadEditorFile(IFormFile upload)
         {
             var isLocal = 
                 Request.IsLocal();
@@ -31,7 +31,8 @@ namespace Aroma_Shop.Mvc.Controllers
                 return NotFound();
 
             var result =
-                _fileService.UploadEditorFile(upload);
+                await _fileService
+                    .UploadEditorFileAsync(upload);
 
             return result;
         }

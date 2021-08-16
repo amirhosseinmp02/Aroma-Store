@@ -37,30 +37,48 @@ namespace Aroma_Shop.Application.Services
             _linkGenerator = linkGenerator;
             _accessor = accessor;
         }
-        public IEnumerable<Product> GetAvailableProducts()
+        public async Task<IEnumerable<Product>> GetAvailableProductsAsync()
         {
             var availableProducts =
-                _productRepository
-                    .GetAvailableProducts();
+                await _productRepository
+                    .GetAvailableProductsAsync();
 
             return availableProducts;
         }
-        public Product GetProduct(int productId)
+
+        public async Task<Product> GetProductAsync(int productId)
         {
             var product =
-                _productRepository.GetProduct(productId);
+                await _productRepository
+                    .GetProductAsync(productId);
 
             return product;
         }
-        public int GetProductsCount()
+        public async Task<IEnumerable<Product>> GetProductsAsync()
+        {
+            var products =
+                await _productRepository
+                    .GetProductsAsync();
+
+            return products;
+        }
+        public async Task<Product> GetProductWithDetailsAsync(int productId)
+        {
+            var product =
+                await _productRepository
+                    .GetProductWithDetailsAsync(productId);
+
+            return product;
+        }
+        public async Task<int> GetProductsCountAsync()
         {
             var productsCount =
-                _productRepository
-                    .GetProductsCount();
+                await _productRepository
+                    .GetProductsCountAsync();
 
             return productsCount;
         }
-        public bool AddProduct(AddEditProductViewModel productViewModel)
+        public async Task<bool> AddProductAsync(AddEditProductViewModel productViewModel)
         {
             try
             {
@@ -78,18 +96,22 @@ namespace Aroma_Shop.Application.Services
 
                 if (productViewModel.ProductCategoriesId.Any())
                 {
-                    AddProductCategories(product, productViewModel.ProductCategoriesId);
+                    await AddProductCategoriesAsync(product, productViewModel.ProductCategoriesId);
                 }
 
                 if (productViewModel.ProductImagesFiles.Any())
-                    _fileService.AddProductImages(product, productViewModel.ProductImagesFiles);
+                    await _fileService
+                        .AddProductImagesAsync(product, productViewModel.ProductImagesFiles);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
-                    AddProductsInformation
+                    await AddProductsInformationAsync
                         (product, productViewModel.InformationNames, productViewModel.InformationValues);
 
-                _productRepository.AddProduct(product);
-                _productRepository.Save();
+                await _productRepository
+                    .AddProductAsync(product);
+
+                await _productRepository
+                    .SaveAsync();
 
                 if (productViewModel.IsSimpleProduct)
                 {
@@ -97,16 +119,17 @@ namespace Aroma_Shop.Application.Services
 
                     product.ProductQuantityInStock = productViewModel.ProductQuantityInStock;
 
-                    _productRepository.Save();
+                    await _productRepository
+                        .SaveAsync();
                 }
                 else
                 {
                     var result =
-                        AddProductAttributes(product, productViewModel);
+                        await AddProductAttributesAsync(product, productViewModel);
 
                     if (!result)
                     {
-                        DeleteProduct(product);
+                        DeleteProductAsync(product);
                         return false;
                     }
                 }
@@ -115,49 +138,55 @@ namespace Aroma_Shop.Application.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"{error.Message} | {error.InnerException.Message}");
+                Console.WriteLine(error.Message);
                 return false;
             }
         }
-        public bool UpdateProduct(AddEditProductViewModel productViewModel)
+        public async Task<bool> UpdateProductAsync(AddEditProductViewModel productViewModel)
         {
             try
             {
-                var product = GetProduct(productViewModel.ProductId);
+                var product =
+                    await GetProductWithDetailsAsync(productViewModel.ProductId);
 
                 product.ProductName = productViewModel.ProductName;
                 product.ProductShortDescription = productViewModel.ProductShortDescription;
                 product.ProductDescription = productViewModel.ProductDescription;
 
                 if (productViewModel.ProductCategoriesId.Any())
-                    UpdateProductCategories
+                    await UpdateProductCategoriesAsync
                         (product, productViewModel.ProductCategoriesId);
 
                 else if (product.Categories.Any())
                     product.Categories.Clear();
 
                 if (productViewModel.ProductImagesFiles.Any())
-                    _fileService.AddProductImages(product, productViewModel.ProductImagesFiles);
+                    await _fileService
+                        .AddProductImagesAsync(product, productViewModel.ProductImagesFiles);
 
                 if (productViewModel.DeletedProductImagesIds != null)
-                    _fileService.DeleteProductImagesByIds(productViewModel.DeletedProductImagesIds);
+                    await _fileService
+                        .DeleteProductImagesByIdsAsync(productViewModel.DeletedProductImagesIds);
 
                 if (productViewModel.InformationNames.Any() && productViewModel.InformationValues.Any())
-                    UpdateProductsInformation
+                    await UpdateProductsInformationAsync
                         (product, productViewModel.InformationNames, productViewModel.InformationValues);
 
                 else if (product.Informations.Any())
                     DeleteProductInformation(product);
 
-                _productRepository.UpdateProduct(product);
-                _productRepository.Save();
+                _productRepository
+                    .UpdateProduct(product);
+
+                await _productRepository
+                    .SaveAsync();
 
                 if (productViewModel.IsSimpleProduct)
                 {
                     if (!product.IsSimpleProduct)
                     {
                         if (product.ProductAttributesNames.Any())
-                            DeleteProductAttributes(product);
+                            await DeleteProductAttributesAsync(product);
 
                         product.IsSimpleProduct = true;
                     }
@@ -173,20 +202,24 @@ namespace Aroma_Shop.Application.Services
                     product.ProductQuantityInStock = 0;
 
                     if (!product.IsSimpleProduct)
-                        DeleteProductAttributes(product);
+                        await DeleteProductAttributesAsync(product);
 
-                    _productRepository.Save();
+                    await _productRepository
+                        .SaveAsync();
 
                     var result =
-                        AddProductAttributesForUpdate(product, productViewModel);
+                        await AddProductAttributesForUpdateAsync(product, productViewModel);
 
                     if (!result)
                         return false;
 
                 }
 
-                _productRepository.UpdateProduct(product);
-                _productRepository.Save();
+                _productRepository
+                    .UpdateProduct(product);
+
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -196,7 +229,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteProduct(Product product)
+        public async Task<bool> DeleteProductAsync(Product product)
         {
             try
             {
@@ -204,7 +237,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 if (!product.IsSimpleProduct)
-                    DeleteProductAttributes(product);
+                    await DeleteProductAttributesAsync(product);
 
                 if (product.Images.Any())
                     _fileService.DeleteProductImages(product.Images);
@@ -212,7 +245,7 @@ namespace Aroma_Shop.Application.Services
                 if (product.Informations.Any())
                     DeleteProductInformation(product);
 
-                var productParentsComments =   
+                var productParentsComments =
                     product
                         .Comments
                         .Where(p => p.ParentComment == null);
@@ -220,8 +253,11 @@ namespace Aroma_Shop.Application.Services
                 _mediaService
                     .DeleteCommentsByParents(productParentsComments);
 
-                _productRepository.DeleteProduct(product);
-                _productRepository.Save();
+                _productRepository
+                    .DeleteProduct(product);
+
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -231,15 +267,15 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteProductById(int productId)
+        public async Task<bool> DeleteProductByIdAsync(int productId)
         {
             try
             {
                 var product =
-                    GetProduct(productId);
+                    await GetProductWithDetailsAsync(productId);
 
                 var result =
-                    DeleteProduct(product);
+                    await DeleteProductAsync(product);
 
                 return result;
             }
@@ -249,13 +285,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool AddHitsToProduct(Product product)
+        public async Task<bool> AddHitsToProductAsync(Product product)
         {
             try
             {
                 ++product.ProductHits;
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -265,28 +302,23 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public IEnumerable<Product> GetProducts()
-        {
-            var products =
-                _productRepository.GetProducts();
-
-            return products;
-        }
-        public IEnumerable<Category> GetCategories()
+        public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             var categories =
-                _productRepository.GetCategories();
+                await _productRepository
+                    .GetCategoriesAsync();
 
             return categories;
         }
-        public Category GetCategory(int categoryId)
+        public async Task<Category> GetCategoryAsync(int categoryId)
         {
             var category =
-                _productRepository.GetCategory(categoryId);
+                await _productRepository
+                    .GetCategoryAsync(categoryId);
 
             return category;
         }
-        public bool AddCategory(AddEditCategoryViewModel categoryViewModel)
+        public async Task<bool> AddCategoryAsync(AddEditCategoryViewModel categoryViewModel)
         {
             try
             {
@@ -299,14 +331,17 @@ namespace Aroma_Shop.Application.Services
                 if (categoryViewModel.ParentCategoryId != -1)
                 {
                     var parentCategory =
-                        GetCategory(categoryViewModel.ParentCategoryId);
+                        await GetCategoryAsync(categoryViewModel.ParentCategoryId);
 
                     if (parentCategory != null)
                         category.ParentCategory = parentCategory;
                 }
 
-                _productRepository.AddCategory(category);
-                _productRepository.Save();
+                await _productRepository
+                    .AddCategoryAsync(category);
+
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -317,11 +352,12 @@ namespace Aroma_Shop.Application.Services
             }
 
         }
-        public bool UpdateCategory(AddEditCategoryViewModel categoryViewModel)
+        public async Task<bool> UpdateCategoryAsync(AddEditCategoryViewModel categoryViewModel)
         {
             try
             {
-                var category = GetCategory(categoryViewModel.CategoryId);
+                var category =
+                    await GetCategoryAsync(categoryViewModel.CategoryId);
 
                 category.CategoryName = categoryViewModel.CategoryName;
                 category.CategoryDescription = categoryViewModel.CategoryDescription;
@@ -329,12 +365,15 @@ namespace Aroma_Shop.Application.Services
                 var parentCategory =
                     categoryViewModel.ParentCategoryId == -1
                         ? null
-                        : GetCategory(categoryViewModel.ParentCategoryId);
+                        : await GetCategoryAsync(categoryViewModel.ParentCategoryId);
 
                 category.ParentCategory = parentCategory;
 
-                _productRepository.UpdateCategory(category);
-                _productRepository.Save();
+                _productRepository
+                    .UpdateCategory(category);
+
+                await _productRepository.
+                    SaveAsync();
 
                 return true;
             }
@@ -344,13 +383,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteCategoryById(int categoryId)
+        public async Task<bool> DeleteCategoryByIdAsync(int categoryId)
         {
             try
             {
-                DeleteCascadeCategoryById(categoryId);
+                await DeleteCascadeCategoryByIdAsync(categoryId);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -360,16 +400,18 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public IEnumerable<CategoryTreeView> GetCategoriesTreeViews()
+        public async Task<IEnumerable<CategoryTreeView>> GetCategoriesTreeViewsAsync()
         {
             var categories =
-                _productRepository.GetCategories();
+                await _productRepository
+                    .GetCategoriesAsync();
 
             List<CategoryTreeView> items =
                 new List<CategoryTreeView>();
 
             var parentsCategories =
-                categories.Where(p => p.ParentCategory == null);
+                categories
+                    .Where(p => p.ParentCategory == null);
 
             foreach (var parentCategory in parentsCategories)
             {
@@ -382,8 +424,8 @@ namespace Aroma_Shop.Application.Services
                         CategoryProductsCount = parentCategory.Products.Count
                     };
 
-                    items
-                    .Add(item);
+                items
+                .Add(item);
 
                 CategoriesScrolling(parentCategory);
             }
@@ -417,10 +459,11 @@ namespace Aroma_Shop.Application.Services
 
             return items;
         }
-        public IEnumerable<SelectListItem> GetCategoriesTreeViewForAdd()
+        public async Task<IEnumerable<SelectListItem>> GetCategoriesTreeViewForAddAsync()
         {
             var categories =
-                _productRepository.GetCategories();
+                await _productRepository
+                    .GetCategoriesAsync();
 
             List<SelectListItem> items =
                 new List<SelectListItem>()
@@ -429,7 +472,8 @@ namespace Aroma_Shop.Application.Services
                 };
 
             var parentsCategories =
-                categories.Where(p => p.ParentCategory == null);
+                categories
+                    .Where(p => p.ParentCategory == null);
 
             foreach (var parentCategory in parentsCategories)
             {
@@ -469,72 +513,51 @@ namespace Aroma_Shop.Application.Services
 
             return items;
         }
-        public IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory)
+        public async Task<IEnumerable<SelectListItem>> GetCategoriesTreeViewForEditAsync(Category selfCategory)
         {
+            var categoriesTreeViewForAdd =
+                await GetCategoriesTreeViewForAddAsync();
+
             var items =
-                GetCategoriesTreeViewForAdd()
-                    .ToList();
+                categoriesTreeViewForAdd.ToList();
 
             var selfItem =
-                items
-                    .SingleOrDefault
-                    (p => p.Value ==
-                          selfCategory.CategoryId.ToString());
+            items
+                .SingleOrDefault
+                (p => p.Value ==
+                      selfCategory.CategoryId.ToString());
 
             items.Remove(selfItem);
 
             return items;
         }
-        public async Task<bool> IsProductInLoggedUserFavoriteProducts(int favoriteProductId)
+        public async Task<bool> AddProductByIdToLoggedUserFavoriteProductsAsync(int favoriteProductId)
         {
             try
             {
                 var favoriteProduct =
-                    GetProduct(favoriteProductId);
-
-                if (favoriteProduct == null)
-                    return false;
-
-                var loggedUser =
-                    await _accountService.GetLoggedUserWithDetails();
-
-                var isProductInLoggedUserFavoriteProducts =
-                    loggedUser.FavoriteProducts
-                        .Any(p => p.ProductId == favoriteProductId);
-
-                return isProductInLoggedUserFavoriteProducts;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error.Message);
-                return false;
-            }
-        }
-        public async Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId)
-        {
-            try
-            {
-                var favoriteProduct =
-                    GetProduct(favoriteProductId);
+                    await GetProductAsync(favoriteProductId);
 
                 if (favoriteProduct == null)
                     return false;
 
                 var loggedUser =
                     await _accountService
-                        .GetLoggedUserWithDetails();
+                        .GetLoggedUserWithFavoriteProductsAsync();
 
                 var isFavoriteProductExistInUserFavoriteList =
-                    loggedUser.FavoriteProducts
+                    loggedUser
+                        .FavoriteProducts
                         .Any(p => p.ProductId == favoriteProductId);
 
                 if (isFavoriteProductExistInUserFavoriteList)
                     return false;
 
                 loggedUser
-                .FavoriteProducts.Add(favoriteProduct);
+                    .FavoriteProducts.Add(favoriteProduct);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -544,21 +567,23 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> RemoveProductByIdFromLoggedUserFavoriteProducts(int favoriteProductId)
+        public async Task<bool> RemoveProductByIdFromLoggedUserFavoriteProductsAsync(int favoriteProductId)
         {
             try
             {
                 var favoriteProduct =
-                    GetProduct(favoriteProductId);
+                    await GetProductAsync(favoriteProductId);
 
                 if (favoriteProduct == null)
                     return false;
 
                 var loggedUser =
-                    await _accountService.GetLoggedUserWithDetails();
+                    await _accountService
+                        .GetLoggedUserWithDetailsAsync();
 
                 var isFavoriteProductExistInUserFavoriteList =
-                    loggedUser.FavoriteProducts
+                    loggedUser
+                        .FavoriteProducts
                         .Any(p => p.ProductId == favoriteProductId);
 
                 if (!isFavoriteProductExistInUserFavoriteList)
@@ -568,7 +593,8 @@ namespace Aroma_Shop.Application.Services
                     .FavoriteProducts
                     .Remove(favoriteProduct);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -578,10 +604,11 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<IEnumerable<Product>> GetLoggedUserFavoriteProducts()
+        public async Task<IEnumerable<Product>> GetLoggedUserFavoriteProductsAsync()
         {
             var loggedUser =
-                await _accountService.GetLoggedUserWithDetails();
+                await _accountService
+                    .GetLoggedUserWithDetailsAsync();
 
             var loggedUserFavoriteProducts =
                 loggedUser.FavoriteProducts;
@@ -591,19 +618,19 @@ namespace Aroma_Shop.Application.Services
 
         //Start Order Section
 
-        public IEnumerable<Order> GetOrders()
+        public async Task<IEnumerable<Order>> GetOrdersAsync()
         {
             var orders =
-                _productRepository
-                    .GetOrders();
+                await _productRepository
+                    .GetOrdersAsync();
 
             return orders;
         }
-        public IEnumerable<OrdersViewModel> GetOrdersListView()
+        public async Task<IEnumerable<OrdersViewModel>> GetOrdersListViewAsync()
         {
             var orders =
-                _productRepository
-                    .GetOrders();
+                await _productRepository
+                    .GetOrdersAsync();
 
             var ordersViewModel =
                 orders
@@ -652,15 +679,15 @@ namespace Aroma_Shop.Application.Services
 
             return ordersViewModel;
         }
-        public IEnumerable<OrdersViewModel> GetLoggedUserOrders()
+        public async Task<IEnumerable<OrdersViewModel>> GetLoggedUserOrdersAsync()
         {
             var loggedUserId =
                 _accessor.HttpContext
                     .User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var loggedUserOrders =
-                _productRepository
-                    .GetUserOrders(loggedUserId);
+                await _productRepository
+                    .GetUserOrdersAsync(loggedUserId);
 
             var ordersViewModel =
                 loggedUserOrders
@@ -708,11 +735,11 @@ namespace Aroma_Shop.Application.Services
 
             return ordersViewModel;
         }
-        public OrderViewModel GetOrderForEdit(int orderId)
+        public async Task<OrderViewModel> GetOrderForEditAsync(int orderId)
         {
             var order =
-                _productRepository
-                    .GetOrderWithDetails(orderId);
+                await _productRepository
+                    .GetOrderWithDetailsAsync(orderId);
 
             if (order == null)
                 return null;
@@ -806,27 +833,29 @@ namespace Aroma_Shop.Application.Services
                         .InvoicesDetails;
             }
 
-            SetOrderAsSeen(order);
+            await SetOrderAsSeenAsync(order);
 
             return orderViewModel;
         }
-        public Order GetLoggedUserOpenOrder()
+        public async Task<Order> GetLoggedUserOpenOrderAsync()
         {
             var loggedUserId =
-                _accessor.HttpContext
-                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _accessor
+                    .HttpContext
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
 
             var loggedUserOpenOrder =
-                _productRepository
-                    .GetUserOpenOrder(loggedUserId);
+                await _productRepository
+                    .GetUserOpenOrderAsync(loggedUserId);
 
             return loggedUserOpenOrder;
         }
-        public OrderViewModel OrderTrackingByUserEmail(string userEmail, int orderId)
+        public async Task<OrderViewModel> OrderTrackingByUserEmailAsync(string userEmail, int orderId)
         {
             var userOrder =
-                _productRepository
-                    .GetUserOrderByEmail(userEmail, orderId);
+                await _productRepository
+                    .GetUserOrderByEmailAsync(userEmail, orderId);
 
             if (userOrder == null)
                 return null;
@@ -922,7 +951,7 @@ namespace Aroma_Shop.Application.Services
 
             return orderViewModel;
         }
-        public OrderViewModel GetConfirmedOrderInvoice(Order confirmedOrder)
+        public OrderViewModel GetConfirmedOrderInvoiceAsync(Order confirmedOrder)
         {
             var orderName =
                 $"#{confirmedOrder.OrderId} {confirmedOrder.OwnerUser.UserDetails.FirstName} {confirmedOrder.OwnerUser.UserDetails.LastName}";
@@ -965,15 +994,17 @@ namespace Aroma_Shop.Application.Services
 
             return orderViewModel;
         }
-        public OrderViewModel GetLoggedUserOrderInvoice(int orderId)
+        public async Task<OrderViewModel> GetLoggedUserOrderInvoiceAsync(int orderId)
         {
             var loggedUserId =
-                _accessor.HttpContext
-                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _accessor
+                    .HttpContext
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
 
             var userOrder =
-                _productRepository
-                    .GetUserOrder(loggedUserId, orderId);
+                await _productRepository
+                    .GetUserOrderAsync(loggedUserId, orderId);
 
             if (userOrder == null || (!userOrder.OrdersDetails.NotNullOrEmpty() && !userOrder.InvoicesDetails.NotNullOrEmpty()))
                 return null;
@@ -1069,37 +1100,37 @@ namespace Aroma_Shop.Application.Services
 
             return orderViewModel;
         }
-        public int GetCompletedOrdersCount()
+        public async Task<int> GetCompletedOrdersCountAsync()
         {
             var completedOrdersCount =
-                _productRepository
-                    .GetCompletedOrdersCount();
+                await _productRepository
+                    .GetCompletedOrdersCountAsync();
 
             return completedOrdersCount;
         }
-        public int GetUnCompletedOrdersCount()
+        public async Task<int> GetUnCompletedOrdersCountAsync()
         {
             var unCompletedOrdersCount =
-                _productRepository
-                    .GetUnCompletedOrdersCount();
+                await _productRepository
+                    .GetUnCompletedOrdersCountAsync();
 
             return unCompletedOrdersCount;
         }
-        public int GetUnSeenOrdersCount()
+        public async Task<int> GetUnSeenOrdersCountAsync()
         {
             var unSeenOrdersCount =
-                _productRepository
-                    .GetUnSeenOrdersCount();
+                await _productRepository
+                    .GetUnSeenOrdersCountAsync();
 
             return unSeenOrdersCount;
         }
-        public bool UpdateOrder(Order order)
+        public async Task<bool> UpdateOrderAsync(Order order)
         {
             try
             {
                 var currentOrder =
-                    _productRepository
-                        .GetOrder(order.OrderId);
+                    await _productRepository
+                        .GetOrderAsync(order.OrderId);
 
                 if (currentOrder == null)
                     return false;
@@ -1112,8 +1143,8 @@ namespace Aroma_Shop.Application.Services
                 _productRepository
                     .UpdateOrder(currentOrder);
 
-                _productRepository
-                    .Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -1123,7 +1154,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool SetOrderAsSeen(Order order)
+        public async Task<bool> SetOrderAsSeenAsync(Order order)
         {
             try
             {
@@ -1135,8 +1166,8 @@ namespace Aroma_Shop.Application.Services
                 _productRepository
                     .UpdateOrder(order);
 
-                _productRepository
-                    .Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -1146,13 +1177,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteOrderById(int orderId)
+        public async Task<bool> DeleteOrderByIdAsync(int orderId)
         {
             try
             {
                 var order =
-                    _productRepository
-                        .GetOrder(orderId);
+                    await _productRepository
+                        .GetOrderAsync(orderId);
 
                 if (order == null)
                     return false;
@@ -1160,8 +1191,8 @@ namespace Aroma_Shop.Application.Services
                 _productRepository
                     .DeleteOrder(order);
 
-                _productRepository
-                    .Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -1171,25 +1202,27 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public int GetLoggedUserOpenOrderDetailsCount()
+        public async Task<int> GetLoggedUserOpenOrderDetailsCountAsync()
         {
             var loggedUserId =
-                _accessor.HttpContext
-                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _accessor
+                    .HttpContext
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
 
             var loggedUserOpenOrderDetailsCount =
-                _productRepository
-                    .GetUserOpenOrderDetailsCount(loggedUserId);
+                await _productRepository
+                    .GetUserOpenOrderDetailsCountAsync(loggedUserId);
 
             return loggedUserOpenOrderDetailsCount;
         }
-        public bool DeleteOrderDetailsById(int orderDetailsId)
+        public async Task<bool> DeleteOrderDetailsByIdAsync(int orderDetailsId)
         {
             try
             {
                 var orderDetails =
-                    _productRepository
-                        .GetOrderDetails(orderDetailsId);
+                    await _productRepository
+                        .GetOrderDetailsAsync(orderDetailsId);
 
                 if (orderDetails == null)
                     return false;
@@ -1197,7 +1230,8 @@ namespace Aroma_Shop.Application.Services
                 _productRepository
                     .DeleteOrderDetails(orderDetails);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -1207,7 +1241,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1)
+        public async Task<AddProductToCartResult> AddProductToCartAsync(Product product, int requestedQuantity = 1, int productVariationId = -1)
         {
             try
             {
@@ -1231,11 +1265,11 @@ namespace Aroma_Shop.Application.Services
                 }
 
                 var loggedUserOrder =
-                    GetLoggedUserOpenOrder();
+                    await GetLoggedUserOpenOrderAsync();
 
                 var loggedUser =
                     await _accountService
-                        .GetLoggedUser();
+                        .GetLoggedUserAsync();
 
                 if (requestedVariation == null)
                 {
@@ -1279,7 +1313,8 @@ namespace Aroma_Shop.Application.Services
                                 Product = product
                             };
 
-                            _productRepository.AddOrderDetails(orderDetails);
+                            await _productRepository
+                                .AddOrderDetailsAsync(orderDetails);
                         }
                     }
                     else
@@ -1292,7 +1327,8 @@ namespace Aroma_Shop.Application.Services
                             OwnerUser = loggedUser
                         };
 
-                        _productRepository.AddOrder(loggedUserOrder);
+                        await _productRepository
+                            .AddOrderAsync(loggedUserOrder);
 
                         var orderDetailsTotalPrice =
                             product.ProductPrice * requestedQuantity;
@@ -1315,7 +1351,8 @@ namespace Aroma_Shop.Application.Services
                     if (loggedUserOrder != null)
                     {
                         var orderDetails =
-                            loggedUserOrder.OrdersDetails
+                            loggedUserOrder
+                                .OrdersDetails
                                 .SingleOrDefault(p => p.ProductVariation?.ProductVariationId == productVariationId);
 
                         if (orderDetails != null)
@@ -1352,7 +1389,8 @@ namespace Aroma_Shop.Application.Services
                                 ProductVariation = requestedVariation
                             };
 
-                            _productRepository.AddOrderDetails(orderDetails);
+                            await _productRepository
+                                .AddOrderDetailsAsync(orderDetails);
                         }
                     }
                     else
@@ -1365,7 +1403,8 @@ namespace Aroma_Shop.Application.Services
                             OwnerUser = loggedUser
                         };
 
-                        _productRepository.AddOrder(loggedUserOrder);
+                        await _productRepository
+                            .AddOrderAsync(loggedUserOrder);
 
                         var orderDetailsTotalPrice =
                             requestedVariation.ProductVariationPrice * requestedQuantity;
@@ -1385,7 +1424,8 @@ namespace Aroma_Shop.Application.Services
                     }
                 }
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return AddProductToCartResult.Successful;
             }
@@ -1395,7 +1435,7 @@ namespace Aroma_Shop.Application.Services
                 return AddProductToCartResult.Failed;
             }
         }
-        public bool UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities)
+        public async Task<bool> UpdateCartAsync(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities)
         {
             try
             {
@@ -1452,7 +1492,8 @@ namespace Aroma_Shop.Application.Services
                         .UpdateOrderDetails(currentOrderDetails);
                 }
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -1462,10 +1503,10 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public CartCheckOutViewModel GetLoggedUserCartCheckOut()
+        public async Task<CartCheckOutViewModel> GetLoggedUserCartCheckOutAsync()
         {
             var loggedUserOpenOrder =
-                GetLoggedUserOpenOrder();
+                await GetLoggedUserOpenOrderAsync();
 
             if (loggedUserOpenOrder == null || !loggedUserOpenOrder.OrdersDetails.NotNullOrEmpty())
                 return null;
@@ -1484,12 +1525,12 @@ namespace Aroma_Shop.Application.Services
 
             return cartCheckOutViewModel;
         }
-        public async Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel)
+        public async Task<string> PaymentProcessAsync(CartCheckOutViewModel cartCheckOutViewModel)
         {
             try
             {
                 var loggedUserOpenOrder =
-                    GetLoggedUserOpenOrder();
+                    await GetLoggedUserOpenOrderAsync();
 
                 if (loggedUserOpenOrder == null)
                     return null;
@@ -1498,7 +1539,8 @@ namespace Aroma_Shop.Application.Services
                     loggedUserOpenOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
                     loggedUserOpenOrder.Discounts.Sum(p => p.DiscountPrice);
 
-                var payment = new Payment(totalOrderPrice);
+                var payment = 
+                    new Payment(totalOrderPrice);
 
                 var callBackUrl =
                     _linkGenerator
@@ -1560,7 +1602,7 @@ namespace Aroma_Shop.Application.Services
                             .UserZipCode;
 
                     await _accountService
-                        .UpdateUser(loggedUserOpenOrder.OwnerUser);
+                        .UpdateUserAsync(loggedUserOpenOrder.OwnerUser);
 
                     loggedUserOpenOrder
                             .OrderNote =
@@ -1570,7 +1612,8 @@ namespace Aroma_Shop.Application.Services
                     _productRepository
                         .UpdateOrder(loggedUserOpenOrder);
 
-                    _productRepository.Save();
+                    await _productRepository
+                        .SaveAsync();
 
                     var redirectUrl =
                         totalOrderPrice > 0 ?
@@ -1588,7 +1631,7 @@ namespace Aroma_Shop.Application.Services
                 return null;
             }
         }
-        public async Task<bool> OrderConfirmation(Order loggedUserOpenOrder)
+        public async Task<bool> OrderConfirmationAsync(Order loggedUserOpenOrder)
         {
             try
             {
@@ -1601,7 +1644,10 @@ namespace Aroma_Shop.Application.Services
                     _accessor.HttpContext.Request.Query["Authority"] != "")
                 {
                     string authority =
-                        _accessor.HttpContext.Request.Query["Authority"].ToString();
+                        _accessor
+                            .HttpContext
+                            .Request
+                            .Query["Authority"].ToString();
 
                     var payment = new Payment(totalOrderPrice);
 
@@ -1626,12 +1672,12 @@ namespace Aroma_Shop.Application.Services
                         _productRepository
                             .UpdateOrder(loggedUserOpenOrder);
 
-                        _productRepository
-                            .Save();
+                        await _productRepository
+                            .SaveAsync();
 
                         var unFinishedOrdersDetails =
-                            _productRepository
-                                .GetUnFinishedOrdersDetails();
+                            await _productRepository
+                                .GetUnFinishedOrdersDetailsAsync();
 
                         foreach (var orderDetails in loggedUserOpenOrder.OrdersDetails)
                         {
@@ -1767,8 +1813,8 @@ namespace Aroma_Shop.Application.Services
                                         .ProductVariationValues;
                             }
 
-                            _productRepository
-                                .AddInvoiceDetails(orderInvoiceDetails);
+                            await _productRepository
+                                .AddInvoiceDetailsAsync(orderInvoiceDetails);
                         }
 
                         loggedUserOpenOrder
@@ -1777,8 +1823,8 @@ namespace Aroma_Shop.Application.Services
                         _productRepository
                             .UpdateOrder(loggedUserOpenOrder);
 
-                        _productRepository
-                            .Save();
+                        await _productRepository
+                            .SaveAsync();
 
                         return true;
                     }
@@ -1801,12 +1847,12 @@ namespace Aroma_Shop.Application.Services
                     _productRepository
                         .UpdateOrder(loggedUserOpenOrder);
 
-                    _productRepository
-                        .Save();
+                    await _productRepository
+                        .SaveAsync();
 
                     var unFinishedOrdersDetails =
-                            _productRepository
-                                .GetUnFinishedOrdersDetails();
+                            await _productRepository
+                                .GetUnFinishedOrdersDetailsAsync();
 
                     foreach (var orderDetails in loggedUserOpenOrder.OrdersDetails)
                     {
@@ -1942,8 +1988,8 @@ namespace Aroma_Shop.Application.Services
                                     .ProductVariationValues;
                         }
 
-                        _productRepository
-                            .AddInvoiceDetails(orderInvoiceDetails);
+                        await _productRepository
+                            .AddInvoiceDetailsAsync(orderInvoiceDetails);
                     }
 
                     loggedUserOpenOrder
@@ -1952,8 +1998,8 @@ namespace Aroma_Shop.Application.Services
                     _productRepository
                         .UpdateOrder(loggedUserOpenOrder);
 
-                    _productRepository
-                        .Save();
+                    await _productRepository
+                        .SaveAsync();
 
                     return true;
                 }
@@ -1966,13 +2012,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<AddDiscountToCartResult> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode)
+        public async Task<AddDiscountToCartResult> AddDiscountToCartAsync(Order loggedUserOpenOrder, string discountCode)
         {
             try
             {
                 var discount =
-                    _productRepository
-                        .GetDiscountByCode(discountCode);
+                    await _productRepository
+                        .GetDiscountByCodeAsync(discountCode);
 
                 if (discount == null || discount.IsTrash)
                     return AddDiscountToCartResult.Failed;
@@ -1990,7 +2036,8 @@ namespace Aroma_Shop.Application.Services
 
                 _productRepository.UpdateOrder(loggedUserOpenOrder);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return AddDiscountToCartResult.Successful;
             }
@@ -2000,28 +2047,28 @@ namespace Aroma_Shop.Application.Services
                 return AddDiscountToCartResult.Failed;
             }
         }
-        public IEnumerable<Discount> GetDiscounts()
+        public async Task<IEnumerable<Discount>> GetDiscountsAsync()
         {
             var discounts =
-                _productRepository
-                    .GetDiscounts();
+                await _productRepository
+                    .GetDiscountsAsync();
 
             return discounts;
         }
-        public Discount GetDiscount(int discountId)
+        public async Task<Discount> GetDiscountAsync(int discountId)
         {
             var discount =
-                _productRepository
-                    .GetDiscount(discountId);
+                await _productRepository
+                    .GetDiscountAsync(discountId);
 
             return discount;
         }
-        public bool MoveDiscountToTrash(int discountId)
+        public async Task<bool> MoveDiscountToTrashAsync(int discountId)
         {
             try
             {
                 var discount =
-                    GetDiscount(discountId);
+                    await GetDiscountAsync(discountId);
 
                 if (discount == null)
                     return false;
@@ -2054,7 +2101,8 @@ namespace Aroma_Shop.Application.Services
                         .UpdateDiscount(discount);
                 }
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -2064,12 +2112,12 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public AddUpdateDiscountResult AddDiscount(Discount discount)
+        public async Task<AddUpdateDiscountResult> AddDiscountAsync(Discount discount)
         {
             try
             {
                 var discounts =
-                    GetDiscounts();
+                    await GetDiscountsAsync();
 
                 var isDiscountCodeExistForAdd =
                     discounts
@@ -2078,9 +2126,11 @@ namespace Aroma_Shop.Application.Services
                 if (isDiscountCodeExistForAdd)
                     return AddUpdateDiscountResult.DiscountCodeExist;
 
-                _productRepository.AddDiscount(discount);
+                await _productRepository
+                    .AddDiscountAsync(discount);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return AddUpdateDiscountResult.Successful;
             }
@@ -2090,21 +2140,18 @@ namespace Aroma_Shop.Application.Services
                 return AddUpdateDiscountResult.Failed;
             }
         }
-        public AddUpdateDiscountResult UpdateDiscount(Discount discount)
+        public async Task<AddUpdateDiscountResult> UpdateDiscountAsync(Discount discount)
         {
             try
             {
                 var currentDiscount =
-                    GetDiscount(discount.DiscountId);
+                    await GetDiscountAsync(discount.DiscountId);
 
                 if (currentDiscount.DiscountCode != discount.DiscountCode)
                 {
-                    var discounts =
-                        GetDiscounts();
-
                     var isDiscountCodeExistForEdit =
-                        discounts
-                            .Any(p => p.DiscountCode == discount.DiscountCode);
+                        await _productRepository
+                            .IsDiscountCodeExistAsync(discount.DiscountCode);
 
                     if (isDiscountCodeExistForEdit)
                         return AddUpdateDiscountResult.DiscountCodeExist;
@@ -2116,7 +2163,8 @@ namespace Aroma_Shop.Application.Services
 
                 _productRepository.UpdateDiscount(currentDiscount);
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 return AddUpdateDiscountResult.Successful;
             }
@@ -2131,19 +2179,19 @@ namespace Aroma_Shop.Application.Services
 
         //Utilities Methods
 
-        private bool DeleteCascadeCategoryById(int categoryId)
+        private async Task<bool> DeleteCascadeCategoryByIdAsync(int categoryId)
         {
             try
             {
                 var category =
-                    GetCategory(categoryId);
+                    await GetCategoryAsync(categoryId);
 
                 if (category == null)
                     return false;
 
                 var allCategories =
-                    _productRepository
-                        .GetCategories();
+                    await _productRepository
+                        .GetCategoriesAsync();
 
                 var childrenCategories =
                     allCategories
@@ -2183,14 +2231,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool AddProductCategories(Product product, IEnumerable<int> productCategoriesId)
+        private async Task<bool> AddProductCategoriesAsync(Product product, IEnumerable<int> productCategoriesId)
         {
             try
             {
                 foreach (var productCategoryId in productCategoriesId)
                 {
                     var productCategory =
-                        GetCategory(productCategoryId);
+                        await GetCategoryAsync(productCategoryId);
 
                     product.Categories.Add(productCategory);
                 }
@@ -2203,13 +2251,15 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool UpdateProductCategories(Product product, IEnumerable<int> productCategoriesId)
+        private async Task<bool> UpdateProductCategoriesAsync(Product product, IEnumerable<int> productCategoriesId)
         {
             try
             {
-                product.Categories.Clear();
+                product.Categories
+                    .Clear();
 
-                AddProductCategories(product, productCategoriesId);
+                await
+                    AddProductCategoriesAsync(product, productCategoriesId);
 
                 return true;
             }
@@ -2219,7 +2269,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool AddProductsInformation(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
+        private async Task<bool> AddProductsInformationAsync(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
             try
             {
@@ -2235,7 +2285,8 @@ namespace Aroma_Shop.Application.Services
                             Product = product
                         };
 
-                        _productRepository.AddProductInformation(productInformations);
+                        await _productRepository
+                            .AddProductInformationAsync(productInformations);
                     }
                 }
 
@@ -2253,7 +2304,8 @@ namespace Aroma_Shop.Application.Services
             {
                 foreach (var productInformation in product.Informations)
                 {
-                    _productRepository.DeleteProductInformation(productInformation);
+                    _productRepository
+                        .DeleteProductInformation(productInformation);
                 }
 
                 return true;
@@ -2264,14 +2316,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool UpdateProductsInformation(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
+        private async Task<bool> UpdateProductsInformationAsync(Product product, IEnumerable<string> informationsNames, IEnumerable<string> informationsValues)
         {
             try
             {
                 if (product.Informations.Any())
                     DeleteProductInformation(product);
 
-                AddProductsInformation(product, informationsNames, informationsValues);
+                await AddProductsInformationAsync(product, informationsNames, informationsValues);
 
                 return true;
             }
@@ -2281,7 +2333,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool AddProductAttributes(Product product, AddEditProductViewModel productViewModel)
+        private async Task<bool> AddProductAttributesAsync(Product product, AddEditProductViewModel productViewModel)
         {
             try
             {
@@ -2293,7 +2345,8 @@ namespace Aroma_Shop.Application.Services
                     productViewModel
                         .AttributesValues.ToList();
 
-                _productRepository.Save();
+                await _productRepository
+                    .SaveAsync();
 
                 for (int i = 0; i < productViewModel.ProductVariationsNames.Count(); i++)
                 {
@@ -2323,8 +2376,11 @@ namespace Aroma_Shop.Application.Services
                         Product = product
                     };
 
-                    _productRepository.AddProductVariation(productVariation);
-                    _productRepository.Save();
+                    await _productRepository
+                        .AddProductVariationAsync(productVariation);
+
+                    await _productRepository
+                        .SaveAsync();
                 }
 
                 return true;
@@ -2335,7 +2391,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool AddProductAttributesForUpdate(Product product, AddEditProductViewModel productViewModel)
+        private async Task<bool> AddProductAttributesForUpdateAsync(Product product, AddEditProductViewModel productViewModel)
         {
             try
             {
@@ -2347,8 +2403,11 @@ namespace Aroma_Shop.Application.Services
                     productViewModel
                         .AttributesValues.ToList();
 
-                _productRepository.UpdateProduct(product);
-                _productRepository.Save();
+                _productRepository
+                    .UpdateProduct(product);
+
+                await _productRepository
+                    .SaveAsync();
 
                 for (int i = 0; i < productViewModel.ProductVariationsNames.Count(); i++)
                 {
@@ -2378,9 +2437,14 @@ namespace Aroma_Shop.Application.Services
                         Product = product
                     };
 
-                    _productRepository.AddProductVariation(productVariation);
-                    _productRepository.UpdateProduct(product);
-                    _productRepository.Save();
+                    await _productRepository
+                        .AddProductVariationAsync(productVariation);
+
+                    _productRepository
+                        .UpdateProduct(product);
+
+                    await _productRepository
+                        .SaveAsync();
                 }
 
                 return true;
@@ -2391,14 +2455,14 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        private bool DeleteProductAttributes(Product product)
+        private async Task<bool> DeleteProductAttributesAsync(Product product)
         {
             try
             {
                 //All Finished OrderDetails Will Remove After Order Confirmation
                 var unFinishedProductOrdersDetails =
-                    _productRepository
-                        .GetOrdersDetailsByProductId(product.ProductId);
+                    await _productRepository
+                        .GetOrdersDetailsByProductIdAsync(product.ProductId);
 
                 foreach (var unfinishedProductOrderDetails in unFinishedProductOrdersDetails)
                 {
@@ -2411,7 +2475,8 @@ namespace Aroma_Shop.Application.Services
 
                 foreach (var productVariation in product.ProductVariations)
                 {
-                    _productRepository.DeleteProductVariation(productVariation);
+                    _productRepository
+                        .DeleteProductVariation(productVariation);
                 }
 
                 return true;

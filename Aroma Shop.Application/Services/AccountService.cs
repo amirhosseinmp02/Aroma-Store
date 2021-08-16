@@ -44,7 +44,7 @@ namespace Aroma_Shop.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IdentityResult> CreateUser(CustomIdentityUser user, string password)
+        public async Task<IdentityResult> CreateUserAsync(CustomIdentityUser user, string password)
         {
             var userDetails = new UserDetails();
 
@@ -52,7 +52,8 @@ namespace Aroma_Shop.Application.Services
             user.UserDetails = userDetails;
 
             var result =
-                await _userManager.CreateAsync(user, password);
+                await _userManager
+                    .CreateAsync(user, password);
 
             if (!result.Succeeded)
                 return result;
@@ -61,7 +62,7 @@ namespace Aroma_Shop.Application.Services
 
             return result;
         }
-        public async Task<bool> SendEmailConfirmation(CustomIdentityUser user, string returnController, string returnAction)
+        public async Task<bool> SendEmailConfirmationAsync(CustomIdentityUser user, string returnController, string returnAction)
         {
             try
             {
@@ -90,7 +91,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> EmailConfirmation(string email, string token)
+        public async Task<bool> EmailConfirmationAsync(string email, string token)
         {
             try
             {
@@ -98,12 +99,15 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var user =
-                    await _userManager.FindByEmailAsync(email);
+                    await _userManager
+                        .FindByEmailAsync(email);
 
                 if (user == null)
                     return false;
+
                 var result =
-                    await _userManager.ConfirmEmailAsync(user, token);
+                    await _userManager
+                        .ConfirmEmailAsync(user, token);
 
                 return result.Succeeded;
             }
@@ -113,40 +117,46 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<JsonResult> IsUserNameExist(string userName)
+        public async Task<JsonResult> IsUserNameExistAsync(string userName)
         {
-            var user =
-                await _userManager.FindByNameAsync(userName);
+            var isUserExist =
+                await _userManager
+                    .Users
+                    .AnyAsync(p => p.UserName == userName);
 
-            if (user == null)
-                return new JsonResult(true);
+            if (isUserExist)
+                return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
 
-            return new JsonResult("امکان استفاده از این نام کاربری وجود ندارد");
+            return new JsonResult(true);
         }
-        public async Task<JsonResult> IsEmailExist(string userEmail)
+        public async Task<JsonResult> IsEmailExistAsync(string userEmail)
         {
-            var user =
-                await _userManager.FindByEmailAsync(userEmail);
+            var isUserExist =
+                await _userManager
+                    .Users
+                    .AnyAsync(p => p.Email == userEmail);
 
-            if (user == null)
-                return new JsonResult(true);
+            if (isUserExist)
+                return new JsonResult("امکان استفاده از این ایمیل وجود ندارد");
 
-            return new JsonResult("امکان استفاده از این ایمیل وجود ندارد");
+            return new JsonResult(true);
         }
         public bool IsUserSignedIn()
         {
             var isUserSignedIn =
-                _signInManager.IsSignedIn(_accessor.HttpContext.User);
+                _signInManager
+                    .IsSignedIn(_accessor.HttpContext.User);
 
             if (isUserSignedIn)
                 return true;
 
             return false;
         }
-        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications()
+        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationsAsync()
         {
             var externalLogins =
-                await _signInManager.GetExternalAuthenticationSchemesAsync();
+                await _signInManager
+                    .GetExternalAuthenticationSchemesAsync();
 
             return externalLogins;
         }
@@ -166,7 +176,7 @@ namespace Aroma_Shop.Application.Services
 
             return new ChallengeResult(provider, properties);
         }
-        public async Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null)
+        public async Task<bool> ConfigureExternalLoginsCallBacksGetUriByActionAsync(string remoteError = null)
         {
             try
             {
@@ -174,7 +184,8 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var externalLoginInfo =
-                    await _signInManager.GetExternalLoginInfoAsync();
+                    await _signInManager
+                        .GetExternalLoginInfoAsync();
 
                 if (externalLoginInfo == null)
                     return false;
@@ -188,12 +199,15 @@ namespace Aroma_Shop.Application.Services
                     return true;
 
                 var email =
-                    externalLoginInfo.Principal
+                    externalLoginInfo
+                        .Principal
                         .FindFirstValue(ClaimTypes.Email);
+
                 if (email != null)
                 {
                     var user =
-                        await _userManager.FindByEmailAsync(email);
+                        await _userManager
+                            .FindByEmailAsync(email);
 
                     if (user == null)
                     {
@@ -210,14 +224,19 @@ namespace Aroma_Shop.Application.Services
                             UserDetails = userDetails
                         };
 
-                        await _userManager.CreateAsync(user);
+                        await _userManager
+                            .CreateAsync(user);
 
                         await
-                            _userManager.AddToRoleAsync(user, "Customer");
+                            _userManager
+                                .AddToRoleAsync(user, "Customer");
                     }
-                    await _userManager.AddLoginAsync(user, externalLoginInfo);
 
-                    await _signInManager.SignInAsync(user, false);
+                    await _userManager
+                        .AddLoginAsync(user, externalLoginInfo);
+
+                    await _signInManager
+                        .SignInAsync(user, false);
 
                     return true;
                 }
@@ -230,18 +249,20 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> LoginWithPassword(LoginViewModel loginViewModel)
+        public async Task<bool> LoginWithPasswordAsync(LoginViewModel loginViewModel)
         {
             try
             {
                 var user =
-                    await _userManager.FindByEmailAsync(loginViewModel.Email);
+                    await _userManager
+                        .FindByEmailAsync(loginViewModel.Email);
 
                 if (user == null)
                     return false;
 
                 var result =
-                    await _signInManager.PasswordSignInAsync
+                    await _signInManager
+                        .PasswordSignInAsync
                     (user.UserName, loginViewModel.Password
                         , loginViewModel.RememberMe, false);
 
@@ -253,7 +274,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> LogOutUser()
+        public async Task<bool> LogOutUserAsync()
         {
             try
             {
@@ -268,7 +289,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction)
+        public async Task<bool> SendRestPasswordLinkAsync(string userEmail, string returnController, string returnAction)
         {
             try
             {
@@ -304,7 +325,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> RestPassword(string userEmail, string token, string newPassword)
+        public async Task<bool> RestPasswordAsync(string userEmail, string token, string newPassword)
         {
             try
             {
@@ -325,7 +346,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> IsUserHasPassword(CustomIdentityUser user)
+        public async Task<bool> IsUserHasPasswordAsync(CustomIdentityUser user)
         {
             try
             {
@@ -343,7 +364,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> IsUserHasPasswordById(string userId)
+        public async Task<bool> IsUserHasPasswordByIdAsync(string userId)
         {
             try
             {
@@ -354,7 +375,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var result =
-                    await IsUserHasPassword(user);
+                    await IsUserHasPasswordAsync(user);
 
                 return result;
             }
@@ -364,15 +385,15 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> IsLoggedUserHasPassword()
+        public async Task<bool> IsLoggedUserHasPasswordAsync()
         {
             try
             {
                 var loggedUser =
-                    await GetLoggedUser();
+                    await GetLoggedUserAsync();
 
                 var result =
-                    await IsUserHasPassword(loggedUser);
+                    await IsUserHasPasswordAsync(loggedUser);
 
                 return result;
             }
@@ -382,10 +403,10 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel)
+        public async Task<IdentityResult> EditAccountAsync(EditAccountViewModel editAccountViewModel)
         {
             var loggedUser =
-                await GetLoggedUserWithDetails();
+                await GetLoggedUserWithDetailsAsync();
 
             IdentityResult result;
 
@@ -393,7 +414,7 @@ namespace Aroma_Shop.Application.Services
                 !string.IsNullOrEmpty(editAccountViewModel.UserFirstPassword))
             {
                 var isLoggedUserHasPassword =
-                    await IsUserHasPassword(loggedUser);
+                    await IsUserHasPasswordAsync(loggedUser);
 
                 if (isLoggedUserHasPassword)
                 {
@@ -456,10 +477,10 @@ namespace Aroma_Shop.Application.Services
             return result;
         }
 
-        public async Task<IEnumerable<UserViewModel>> GetUsers()
+        public async Task<IEnumerable<UserViewModel>> GetUsersAsync()
         {
             var loggedUserRole =
-                await GetLoggedUserRole();
+                await GetLoggedUserRoleAsync();
 
             var users =
                 _userManager.Users.ToList();
@@ -475,7 +496,7 @@ namespace Aroma_Shop.Application.Services
                         UserId = p.Id,
                         UserName = p.UserName,
                         UserEmail = p.Email,
-                        UserRoleName = GetUserRole(p).Result,
+                        UserRoleName = GetUserRoleAsync(p).Result,
                         RegisterTime = p.RegisterTime
                     });
             }
@@ -488,13 +509,13 @@ namespace Aroma_Shop.Application.Services
                         UserId = p.Id,
                         UserName = p.UserName,
                         UserEmail = p.Email,
-                        UserRoleName = GetUserRole(p).Result
+                        UserRoleName = GetUserRoleAsync(p).Result
                     });
             }
 
             return result;
         }
-        public async Task<UserDetailsViewModel> GetUser(string userId)
+        public async Task<UserDetailsViewModel> GetUserAsync(string userId)
         {
             var requestedUser =
                 await _userManager.Users
@@ -504,10 +525,10 @@ namespace Aroma_Shop.Application.Services
                     .SingleOrDefaultAsync(p => p.Id == userId);
 
             var requestedUserRole =
-                await GetUserRole(requestedUser);
+                await GetUserRoleAsync(requestedUser);
 
             var loggedUserRole =
-                await GetLoggedUserRole();
+                await GetLoggedUserRoleAsync();
 
             UserDetailsViewModel user = null;
 
@@ -524,27 +545,28 @@ namespace Aroma_Shop.Application.Services
 
             return user;
         }
-        public int GetUsersCount()
+        public async Task<int> GetUsersCountAsync()
         {
             var usersCount =
-                _userManager
+                await _userManager
                     .Users
-                    .Count();
+                    .CountAsync();
 
             return usersCount;
         }
-        public async Task<EditUserViewModel> GetUserForEdit(string userId)
+        public async Task<EditUserViewModel> GetUserForEditAsync(string userId)
         {
             var requestedUser =
-                await _userManager.Users
+                await _userManager
+                    .Users
                     .Include(p => p.UserDetails)
                     .SingleOrDefaultAsync(p => p.Id == userId);
 
             var requestedUserRole =
-                await GetUserRole(requestedUser);
+                await GetUserRoleAsync(requestedUser);
 
             var loggedUserRole =
-                await GetLoggedUserRole();
+                await GetLoggedUserRoleAsync();
 
             EditUserViewModel user = null;
 
@@ -553,7 +575,7 @@ namespace Aroma_Shop.Application.Services
                   || (requestedUserRole != "Manager" && requestedUserRole != "Writer" && requestedUserRole != "Customer")))
             {
                 var roles =
-                    await GetRoles();
+                    await GetRolesAsync();
 
                 user = new EditUserViewModel()
                 {
@@ -574,23 +596,24 @@ namespace Aroma_Shop.Application.Services
 
             return user;
         }
-        public async Task<bool> DeleteUser(string userId)
+        public async Task<bool> DeleteUserAsync(string userId)
         {
             try
             {
                 var loggedUserRole =
-                    await GetLoggedUserRole();
+                    await GetLoggedUserRoleAsync();
 
                 var requestedUser =
-                    _userManager.Users
+                    await _userManager
+                        .Users
                         .Include(p => p.UserDetails)
-                        .SingleOrDefault(p => p.Id == userId);
+                        .SingleOrDefaultAsync(p => p.Id == userId);
 
                 if (requestedUser == null)
                     return false;
 
                 var requestedUserRole =
-                    await GetUserRole(requestedUser);
+                    await GetUserRoleAsync(requestedUser);
 
                 if ((loggedUserRole == "Founder" && requestedUserRole == "Founder")
                     || ((loggedUserRole == "Manager") &&
@@ -600,9 +623,10 @@ namespace Aroma_Shop.Application.Services
                 _userRepository.DeleteUserDetails(requestedUser.UserDetails);
 
                 var result =
-                    await _userManager.DeleteAsync(requestedUser);
+                    await _userManager
+                        .DeleteAsync(requestedUser);
 
-                _userRepository.Save();
+                _userRepository.SaveAsync();
 
                 return result.Succeeded;
             }
@@ -612,13 +636,15 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<IEnumerable<SelectListItem>> GetRoles()
+        public async Task<IEnumerable<SelectListItem>> GetRolesAsync()
         {
             var loggedUserRole =
-                await GetLoggedUserRole();
+                await GetLoggedUserRoleAsync();
 
             var roles =
-                _roleManager.Roles;
+                await _roleManager
+                    .Roles
+                    .ToListAsync();
 
             IEnumerable<SelectListItem> result;
 
@@ -636,9 +662,12 @@ namespace Aroma_Shop.Application.Services
                         new SelectListItem(p.PersianName, p.Name));
             }
 
-            return result.OrderBy(p => p.Value);
+            var orderedResult =
+                result.OrderBy(p => p.Value);
+
+            return orderedResult;
         }
-        public async Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel)
+        public async Task<IdentityResult> CreateUserByAdminAsync(CreateUserViewModel userViewModel)
         {
             var userDetail = new UserDetails()
             {
@@ -661,13 +690,14 @@ namespace Aroma_Shop.Application.Services
             };
 
             var result =
-                await _userManager.CreateAsync(user, userViewModel.UserPassword);
+                await _userManager
+                    .CreateAsync(user, userViewModel.UserPassword);
 
             if (!result.Succeeded)
                 return result;
 
             var loggedUserRole =
-                await GetLoggedUserRole();
+                await GetLoggedUserRoleAsync();
 
             string userRole;
 
@@ -682,14 +712,16 @@ namespace Aroma_Shop.Application.Services
                 userRole = userViewModel.UserRoleName;
             }
 
-            await _userManager.AddToRoleAsync(user, userRole);
+            await _userManager
+                .AddToRoleAsync(user, userRole);
 
             return result;
         }
-        public async Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel)
+        public async Task<IdentityResult> EditUserByAdminAsync(EditUserViewModel userViewModel)
         {
             var user =
-                await _userManager.Users
+                await _userManager
+                    .Users
                     .Include(p => p.UserDetails)
                     .SingleOrDefaultAsync(p => p.Id == userViewModel.UserId);
 
@@ -705,48 +737,55 @@ namespace Aroma_Shop.Application.Services
             user.UserDetails.UserZipCode = userViewModel.UserZipCode;
 
             var oldUserRole =
-                await GetUserRole(user);
+                await GetUserRoleAsync(user);
 
             if (oldUserRole != userViewModel.UserRoleName)
             {
                 var loggedUserRole =
-                    await GetLoggedUserRole();
+                    await GetLoggedUserRoleAsync();
 
                 if (!((loggedUserRole == "Founder" && userViewModel.UserRoleName == "Founder")
                       || ((loggedUserRole == "Manager") && (userViewModel.UserRoleName == "Founder" || userViewModel.UserRoleName == "Manager"))
                       || (userViewModel.UserRoleName != "Manager" && userViewModel.UserRoleName != "Writer" && userViewModel.UserRoleName != "Customer")))
                 {
-                    await _userManager.RemoveFromRoleAsync(user, oldUserRole);
-                    await _userManager.AddToRoleAsync(user, userViewModel.UserRoleName);
+                    await _userManager
+                        .RemoveFromRoleAsync(user, oldUserRole);
+
+                    await _userManager
+                        .AddToRoleAsync(user, userViewModel.UserRoleName);
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(userViewModel.UserPassword))
             {
                 var isUserHasPassword =
-                    await IsUserHasPassword(user);
+                    await IsUserHasPasswordAsync(user);
 
                 if (isUserHasPassword)
                 {
                     await
-                        _userManager.RemovePasswordAsync(user);
+                        _userManager
+                            .RemovePasswordAsync(user);
                 }
 
                 await
-                    _userManager.AddPasswordAsync(user, userViewModel.UserPassword);
+                    _userManager
+                        .AddPasswordAsync(user, userViewModel.UserPassword);
             }
 
             var result =
-                await _userManager.UpdateAsync(user);
+                await _userManager
+                    .UpdateAsync(user);
 
             if (!result.Succeeded)
                 return result;
 
-            await _userManager.UpdateSecurityStampAsync(user);
+            await _userManager
+                .UpdateSecurityStampAsync(user);
 
             return result;
         }
-        public async Task<bool> UpdateUser(CustomIdentityUser loggedUser)
+        public async Task<bool> UpdateUserAsync(CustomIdentityUser loggedUser)
         {
             try
             {
@@ -761,24 +800,46 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<CustomIdentityUser> GetLoggedUser()
-        {
-            var loggedUserId =
-                _accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var loggedUser =
-                await _userManager.FindByIdAsync(loggedUserId);
-
-            return loggedUser;
-        }
-        public async Task<CustomIdentityUser> GetLoggedUserWithDetails()
+        public async Task<CustomIdentityUser> GetLoggedUserAsync()
         {
             var loggedUserId =
                 _accessor.HttpContext
-                    .User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
 
             var loggedUser =
-                await _userManager.Users
+                await _userManager
+                    .FindByIdAsync(loggedUserId);
+
+            return loggedUser;
+        }
+        public async Task<CustomIdentityUser> GetLoggedUserWithFavoriteProductsAsync()
+        {
+            var loggedUserId =
+                _accessor
+                    .HttpContext
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loggedUserWithFavoriteProducts =    
+                await _userManager
+                    .Users
+                    .Include(p => p.FavoriteProducts)
+                    .SingleOrDefaultAsync(p => p.Id == loggedUserId);
+
+            return loggedUserWithFavoriteProducts;
+        }
+        public async Task<CustomIdentityUser> GetLoggedUserWithDetailsAsync()
+        {
+            var loggedUserId =
+                _accessor
+                    .HttpContext
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loggedUser =
+                await _userManager
+                    .Users
                     .Include(p => p.UserDetails)
                     .Include(p => p.UserOrders)
                     .Include(p => p.FavoriteProducts)
@@ -787,7 +848,23 @@ namespace Aroma_Shop.Application.Services
 
             return loggedUser;
         }
-        public async Task<string> GetUserRole(CustomIdentityUser user)
+        public async Task<bool> IsProductInLoggedUserFavoriteProductsAsync(int productId)
+        {
+            var loggedUserId =
+                _accessor
+                .HttpContext
+                .User
+                .FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var isProductInLoggedUserFavoriteProducts =
+                await _userManager
+                    .Users
+                    .Include(p => p.FavoriteProducts)
+                    .AnyAsync(p => p.Id == loggedUserId && p.FavoriteProducts.Any(p => p.ProductId == productId));
+
+            return isProductInLoggedUserFavoriteProducts;
+        }
+        public async Task<string> GetUserRoleAsync(CustomIdentityUser user)
         {
             var userRoles =
                 await _userManager
@@ -799,14 +876,18 @@ namespace Aroma_Shop.Application.Services
 
             return userRole;
         }
-        public async Task<string> GetLoggedUserRole()
+        public async Task<string> GetLoggedUserRoleAsync()
         {
             var user =
-                await GetLoggedUser();
+                await GetLoggedUserAsync();
+
+            var userRoles =
+                await _userManager
+                    .GetRolesAsync(user);
 
             var userRole =
-                _userManager.GetRolesAsync(user)
-                    .Result.FirstOrDefault();
+                userRoles
+                    .FirstOrDefault();
 
             return userRole;
         }

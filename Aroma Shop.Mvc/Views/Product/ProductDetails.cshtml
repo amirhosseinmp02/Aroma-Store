@@ -7,7 +7,6 @@
 @using Newtonsoft.Json
 
 @inject IAccountService AccountService
-@inject IProductService ProductService
 @inject IConfiguration Configuration
 
 @{
@@ -123,7 +122,7 @@
                         @if (isUserSignedIn)
                         {
                             var isProductInLoggedUserFavoriteProducts =
-                                await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
+                                await AccountService.IsProductInLoggedUserFavoriteProductsAsync(Model.Product.ProductId);
 
                             @if (!isProductInLoggedUserFavoriteProducts)
                             {
@@ -269,7 +268,7 @@
                         @if (isUserSignedIn)
                         {
                             var isProductInLoggedUserFavoriteProducts =
-                                await ProductService.IsProductInLoggedUserFavoriteProducts(Model.Product.ProductId);
+                                await AccountService.IsProductInLoggedUserFavoriteProductsAsync(Model.Product.ProductId);
 
                             @if (!isProductInLoggedUserFavoriteProducts)
                             {

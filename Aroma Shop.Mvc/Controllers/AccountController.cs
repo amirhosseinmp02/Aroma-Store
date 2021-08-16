@@ -46,13 +46,13 @@ namespace Aroma_Shop.Mvc.Controllers
                 };
 
                 var result =
-                    await _accountService.CreateUser(user, model.Password);
+                    await _accountService.CreateUserAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
                     var emailConfirmation =
-                        _accountService
-                            .SendEmailConfirmation(user, "Account", "EmailConfirmation");
+                        await _accountService
+                            .SendEmailConfirmationAsync(user, "Account", "EmailConfirmation");
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -79,7 +79,7 @@ namespace Aroma_Shop.Mvc.Controllers
             var model = new LoginViewModel()
             {
                 ReturnUrl = returnUrl,
-                ExternalsLogins = (await _accountService.GetExternalAuthentications()).ToList()
+                ExternalsLogins = (await _accountService.GetExternalAuthenticationsAsync()).ToList()
             };
 
             return View(model);
@@ -96,7 +96,8 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    await _accountService.LoginWithPassword(model);
+                    await _accountService
+                        .LoginWithPasswordAsync(model);
 
                 if (result)
                 {
@@ -109,7 +110,7 @@ namespace Aroma_Shop.Mvc.Controllers
             model.ReturnUrl = returnUrl;
 
             model.ExternalsLogins =
-                (await _accountService.GetExternalAuthentications()).ToList();
+                (await _accountService.GetExternalAuthenticationsAsync()).ToList();
 
             ModelState.AddModelError("", "نام کاربری یا رمز عبور اشتباه است.");
 
@@ -135,7 +136,8 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> EditAccount()
         {
             var loggedUser =
-                await _accountService.GetLoggedUserWithDetails();
+                await _accountService
+                    .GetLoggedUserWithDetailsAsync();
 
             var editAccountViewModel = new EditAccountViewModel()
             {
@@ -161,7 +163,7 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    await _accountService.EditAccount(model);
+                    await _accountService.EditAccountAsync(model);
 
                 if (result.Succeeded)
                 {
@@ -190,7 +192,8 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> FavoriteProducts()
         {
             var loggedUserFavoriteProducts =
-                await _productService.GetLoggedUserFavoriteProducts();
+                await _productService
+                    .GetLoggedUserFavoriteProductsAsync();
 
             return View(loggedUserFavoriteProducts);
         }
@@ -201,12 +204,16 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpGet("/My-Account/Orders")]
-        public IActionResult AccountOrders()
+        public async Task<IActionResult> AccountOrders()
         {
             var loggedUserOrders =
-                _productService
-                    .GetLoggedUserOrders()
-                    .Where(p=>p.NotEmpty);
+                await _productService
+                    .GetLoggedUserOrdersAsync();
+
+            var availableLoggedUserOrders =
+                loggedUserOrders
+                    .Where(p => p.NotEmpty);
+
 
             return View(loggedUserOrders);
         }
@@ -217,11 +224,11 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpGet("/My-Account/Order/{orderId}")]
-        public IActionResult AccountOrder(int orderId)
+        public async Task<IActionResult> AccountOrder(int orderId)
         {
             var orderViewModel =
-                _productService
-                    .GetLoggedUserOrderInvoice(orderId);
+                await _productService
+                    .GetLoggedUserOrderInvoiceAsync(orderId);
 
             if (orderViewModel == null)
                 return NotFound();
@@ -242,7 +249,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> LogOut()
         {
             var result =
-                await _accountService.LogOutUser();
+                await _accountService.LogOutUserAsync();
 
             return RedirectToAction("Index", "Home");
         }
@@ -263,7 +270,7 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 await _accountService
-                        .SendRestPasswordLink(model.Email, "Account", "ResetPassword");
+                        .SendRestPasswordLinkAsync(model.Email, "Account", "ResetPassword");
 
                 ViewData["SuccessMessage"] =
                     "در صورت معتبر بودن ایمیل وارد شده ، لینک تغییر کلمه عبور به ایمیل شما ارسال خواهد شد.";
@@ -301,7 +308,8 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    await _accountService.RestPassword(model.Email, model.Token, model.NewPassword);
+                    await _accountService
+                        .RestPasswordAsync(model.Email, model.Token, model.NewPassword);
 
                 if (result)
                 {
@@ -339,7 +347,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
             var result =
                 await _accountService
-                    .ConfigureExternalLoginsCallBacks(remoteError);
+                    .ConfigureExternalLoginsCallBacksGetUriByActionAsync(remoteError);
 
             if (result)
                 return Redirect(returnUrl);
@@ -356,7 +364,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> IsUserNameExist(string userName)
         {
             var isUserNameExist =
-                await _accountService.IsUserNameExist(userName);
+                await _accountService.IsUserNameExistAsync(userName);
 
             return isUserNameExist;
         }
@@ -366,7 +374,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> IsEmailExist(string email)
         {
             var isEmailExist =
-                await _accountService.IsEmailExist(email);
+                await _accountService.IsEmailExistAsync(email);
 
             return isEmailExist;
         }
@@ -378,7 +386,7 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> EmailConfirmation(string email, string token)
         {
             var result =
-                await _accountService.EmailConfirmation(email, token);
+                await _accountService.EmailConfirmationAsync(email, token);
 
             if (result)
                 return View();

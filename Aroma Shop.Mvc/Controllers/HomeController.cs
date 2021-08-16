@@ -25,15 +25,15 @@ namespace Aroma_Shop.Mvc.Controllers
             _mediaService = mediaService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var banners =
-                _mediaService
-                    .GetBanners();
+                await _mediaService
+                    .GetBannersAsync();
 
             var products =
-                _productService
-                    .GetAvailableProducts();
+                await _productService
+                    .GetAvailableProductsAsync();
 
             var indexViewModel = new IndexViewModel()
             {

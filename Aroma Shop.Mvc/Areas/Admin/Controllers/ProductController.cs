@@ -33,21 +33,21 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowProducts
 
         [HttpGet("/Admin/Products")]
-        public IActionResult Index(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Index(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Product> products;
+            var products =
+                await _productService
+                    .GetProductsAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
-                products = _productService.GetProducts()
-                    .Where(p => p.ProductName.Contains(search)
-                                || p.Categories
-                                    .Any(t => t.CategoryName.Contains(search)));
+                products =
+                    products
+                        .Where(p => p.ProductName.Contains(search) ||
+                                    p.Categories.Any(t => t.CategoryName.Contains(search)));
 
                 ViewBag.search = search;
             }
-            else
-                products = _productService.GetProducts();
 
             if (!products.Any())
             {
@@ -55,6 +55,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
                 return View();
             }
+
             var page =
                 new Paging<Product>(products, 11, pageNumber);
 
@@ -78,10 +79,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region AddProduct
 
         [HttpGet("/Admin/Products/AddProduct")]
-        public IActionResult AddProduct()
+        public async Task<IActionResult> AddProduct()
         {
             var productCategories =
-                _productService.GetCategoriesTreeViewForAdd().Skip(1);
+                await _productService
+                    .GetCategoriesTreeViewForAddAsync();
 
             var model = new AddEditProductViewModel()
             {
@@ -93,19 +95,21 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/AddProduct")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddProduct(AddEditProductViewModel model)
+        public async Task<IActionResult> AddProduct(AddEditProductViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _productService.AddProduct(model);
+                    await _productService
+                        .AddProductAsync(model);
 
                 if (result)
                 {
                     ModelState.Clear();
 
                     var returnProductCategories =
-                        _productService.GetCategoriesTreeViewForAdd().Skip(1);
+                        await _productService
+                            .GetCategoriesTreeViewForAddAsync();
 
                     model = new AddEditProductViewModel()
                     {
@@ -121,9 +125,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             var productCategories =
-                _productService.GetCategoriesTreeViewForAdd();
+                await _productService
+                    .GetCategoriesTreeViewForAddAsync();
 
-            model.ProductCategories = productCategories;
+            model.ProductCategories =
+                productCategories;
 
             return View(model);
         }
@@ -134,16 +140,18 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpGet("/Admin/Products/EditProduct")]
 
-        public IActionResult EditProduct(int productId)
+        public async Task<IActionResult> EditProduct(int productId)
         {
             var product =
-                _productService.GetProduct(productId);
+                await _productService
+                    .GetProductWithDetailsAsync(productId);
 
             if (product == null)
                 return NotFound();
 
             var productCategories =
-                _productService.GetCategoriesTreeViewForAdd().Skip(1);
+                await _productService
+                    .GetCategoriesTreeViewForAddAsync();
 
             foreach (var productCategory in productCategories)
             {
@@ -196,7 +204,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/EditProduct")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditProduct(AddEditProductViewModel model)
+        public async Task<IActionResult> EditProduct(AddEditProductViewModel model)
         {
             model.ProductId =
                 Convert.ToInt32(TempData["productId"]);
@@ -204,7 +212,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    _productService.UpdateProduct(model);
+                    await _productService
+                        .UpdateProductAsync(model);
 
                 if (result)
                 {
@@ -214,10 +223,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 ModelState.AddModelError("", "مشکلی در زمان ویرایش محصول رخ داد.");
             }
             var product =
-                _productService.GetProduct(model.ProductId);
+                await _productService
+                    .GetProductWithDetailsAsync(model.ProductId);
 
             var productCategories =
-                _productService.GetCategoriesTreeViewForAdd().Skip(1);
+                await _productService
+                    .GetCategoriesTreeViewForAddAsync();
 
             foreach (var productCategory in productCategories)
             {
@@ -228,9 +239,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 }
             }
 
-            model.ProductCategories = productCategories;
+            model.ProductCategories =
+                productCategories;
 
-            model.CurrentProductImages = product.Images;
+            model.CurrentProductImages =
+                product.Images;
 
             TempData.Keep("productId");
 
@@ -242,10 +255,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteProduct
 
         [HttpGet("/Admin/Products/DeleteProduct")]
-        public IActionResult DeleteProduct(int productId)
+        public async Task<IActionResult> DeleteProduct(int productId)
         {
             var result =
-                _productService.DeleteProductById(productId);
+                await _productService
+                    .DeleteProductByIdAsync(productId);
 
             if (result)
                 return RedirectToAction("Index");
@@ -258,22 +272,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowCategories
 
         [HttpGet("/Admin/Products/Categories")]
-        public IActionResult Categories(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Categories(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Category> categories;
+            var categories =
+                await _productService
+                    .GetCategoriesAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
                 categories =
-                    _productService.GetCategories().Where(p =>
+                    categories
+                        .Where(p =>
                     p.CategoryName.Contains(search) ||
                     (Convert.ToBoolean(p.ParentCategory?.CategoryName.Contains(search))));
 
                 ViewBag.search = search;
             }
-            else
-                categories =
-                    _productService.GetCategories();
 
             if (!categories.Any())
             {
@@ -305,11 +319,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region AddCategory
 
         [HttpGet("/Admin/Products/AddCategory")]
-        public IActionResult AddCategory()
+        public async Task<IActionResult> AddCategory()
         {
             var categoriesTreeView =
-                _productService
-                    .GetCategoriesTreeViewForAdd();
+                await _productService
+                    .GetCategoriesTreeViewForAddAsync();
 
             var model = new AddEditCategoryViewModel()
             {
@@ -321,12 +335,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/AddCategory")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddCategory(AddEditCategoryViewModel model)
+        public async Task<IActionResult> AddCategory(AddEditCategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _productService.AddCategory(model);
+                    await _productService
+                        .AddCategoryAsync(model);
 
                 if (result)
                 {
@@ -335,7 +350,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     model = new AddEditCategoryViewModel()
                     {
                         AllCategories =
-                            _productService.GetCategoriesTreeViewForAdd()
+                            await _productService
+                                .GetCategoriesTreeViewForAddAsync()
                     };
 
                     ViewData["SuccessMessage"] = "دسته مورد نظر با موفقیت افزوده شد.";
@@ -347,7 +363,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             model.AllCategories =
-                _productService.GetCategoriesTreeViewForAdd();
+                await _productService
+                    .GetCategoriesTreeViewForAddAsync();
 
             return View(model);
         }
@@ -357,10 +374,12 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region EditCategory
 
         [HttpGet("/Admin/Products/EditCategory")]
-        public IActionResult EditCategory(int categoryId)
+        public async Task<IActionResult> EditCategory(int categoryId)
         {
             var category =
-                _productService.GetCategory(categoryId);
+                await _productService
+                    .GetCategoryAsync(categoryId);
+
             if (category == null)
                 return NotFound();
 
@@ -371,7 +390,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             {
                 CategoryName = category.CategoryName,
                 CategoryDescription = category.CategoryDescription,
-                AllCategories = _productService.GetCategoriesTreeViewForEdit(category),
+                AllCategories = await _productService.GetCategoriesTreeViewForEditAsync(category),
                 ParentCategoryId = parentCategoryId
             };
 
@@ -382,7 +401,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Products/EditCategory")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditCategory(AddEditCategoryViewModel model)
+        public async Task<IActionResult> EditCategory(AddEditCategoryViewModel model)
         {
             model.CategoryId =
                 Convert.ToInt32(TempData["categoryId"]);
@@ -390,7 +409,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    _productService.UpdateCategory(model);
+                    await _productService
+                        .UpdateCategoryAsync(model);
 
                 if (result)
                 {
@@ -401,12 +421,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
 
             var category =
-                _productService.GetCategory(model.CategoryId);
+                await _productService
+                    .GetCategoryAsync(model.CategoryId);
 
             var categoryTreeView =
-                _productService.GetCategoriesTreeViewForEdit(category);
+                await _productService
+                    .GetCategoriesTreeViewForEditAsync(category);
 
-            model.AllCategories = categoryTreeView;
+            model.AllCategories = 
+                categoryTreeView;
+
             model.ParentCategoryId =
                 category.ParentCategory.CategoryId;
 
@@ -420,10 +444,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteCategory
 
         [HttpGet("/Admin/Products/DeleteCategory")]
-        public IActionResult DeleteCategory(int categoryId)
+        public async Task<IActionResult> DeleteCategory(int categoryId)
         {
             var result =
-                _productService.DeleteCategoryById(categoryId);
+                await _productService
+                    .DeleteCategoryByIdAsync(categoryId);
 
             if (result)
                 return RedirectToAction("Categories");

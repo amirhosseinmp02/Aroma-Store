@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Banner;
 using Aroma_Shop.Application.ViewModels.File;
@@ -24,7 +25,7 @@ namespace Aroma_Shop.Application.Services
             _fileRepository = fileRepository;
         }
 
-        public JsonResult UploadEditorFile(IFormFile file)
+        public async Task<JsonResult> UploadEditorFileAsync(IFormFile file)
         {
             try
             {
@@ -37,9 +38,10 @@ namespace Aroma_Shop.Application.Services
                 var filePath =
                     Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "Editor", fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                await using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    file.CopyTo(stream);
+                    await file
+                        .CopyToAsync(stream);
                 }
 
                 var url = $"/img/Editor/{fileName}";
@@ -62,7 +64,7 @@ namespace Aroma_Shop.Application.Services
                 return null;
             }
         }
-        public IEnumerable<Image> GetProductImagesByIds(IEnumerable<int> productImagesIds)
+        public async Task<IEnumerable<Image>> GetProductImagesByIdsAsync(IEnumerable<int> productImagesIds)
         {
             var productImages =
                 new List<Image>();
@@ -70,14 +72,16 @@ namespace Aroma_Shop.Application.Services
             foreach (var productImagesId in productImagesIds)
             {
                 var productImage =
-                    _fileRepository.GetImage(productImagesId);
+                    await _fileRepository
+                        .GetImageAsync(productImagesId);
 
-                productImages.Add(productImage);
+                productImages
+                    .Add(productImage);
             }
 
             return productImages;
         }
-        public bool AddProductImages(Product product, IEnumerable<IFormFile> productImagesFiles)
+        public async Task<bool> AddProductImagesAsync(Product product, IEnumerable<IFormFile> productImagesFiles)
         {
             try
             {
@@ -99,19 +103,22 @@ namespace Aroma_Shop.Application.Services
 
                 if (!isYearMonthProductImagesDirExists)
                 {
-                    Directory.CreateDirectory(productImagesPath);
+                    Directory
+                        .CreateDirectory(productImagesPath);
                 }
 
                 foreach (var productImageFile in productImagesFiles)
                 {
                     var productImageFileName =
                         $"{Guid.NewGuid().ToString()} - {productImageFile.FileName.ToLower()}";
+
                     var fullProductImagesPath
                         = Path.Combine(productImagesPath, productImageFileName);
 
-                    using (var stream = new FileStream(fullProductImagesPath, FileMode.Create))
+                    await using (var stream = new FileStream(fullProductImagesPath, FileMode.Create))
                     {
-                        productImageFile.CopyTo(stream);
+                        await productImageFile
+                            .CopyToAsync(stream);
                     }
 
                     var productImage = new Image()
@@ -120,7 +127,8 @@ namespace Aroma_Shop.Application.Services
                         Product = product
                     };
 
-                    _fileRepository.AddImage(productImage);
+                    await _fileRepository
+                        .AddImageAsync(productImage);
                 }
 
                 return true;
@@ -131,12 +139,12 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteProductImagesByIds(IEnumerable<int> productImagesIds)
+        public async Task<bool> DeleteProductImagesByIdsAsync(IEnumerable<int> productImagesIds)
         {
             try
             {
                 var productImages =
-                    GetProductImagesByIds(productImagesIds);
+                    await GetProductImagesByIdsAsync(productImagesIds);
 
                 foreach (var productImage in productImages)
                 {
@@ -146,7 +154,7 @@ namespace Aroma_Shop.Application.Services
 
                     File.Delete(imagePath);
 
-                    _fileRepository.DeleteImage(productImage);
+                    _fileRepository.DeleteImageAsync(productImage);
                 }
 
                 return true;
@@ -170,7 +178,7 @@ namespace Aroma_Shop.Application.Services
 
                     File.Delete(imagePath);
 
-                    _fileRepository.DeleteImage(productImage);
+                    _fileRepository.DeleteImageAsync(productImage);
                 }
 
                 return true;
@@ -181,7 +189,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool AddBannerImage(Banner banner, IFormFile uploadedBannerImage)
+        public async Task<bool> AddBannerImageAsync(Banner banner, IFormFile uploadedBannerImage)
         {
             try
             {
@@ -194,17 +202,20 @@ namespace Aroma_Shop.Application.Services
 
                 if (!isBannerImagePathDirExists)
                 {
-                    Directory.CreateDirectory(bannerImagePath);
+                    Directory
+                        .CreateDirectory(bannerImagePath);
                 }
 
                 var bannerImageFileName =
                     $"{Guid.NewGuid().ToString()} - {uploadedBannerImage.FileName.ToLower()}";
+
                 var fullBannerImagePath
                     = Path.Combine(bannerImagePath, bannerImageFileName);
 
-                using (var stream = new FileStream(fullBannerImagePath, FileMode.Create))
+                await using (var stream = new FileStream(fullBannerImagePath, FileMode.Create))
                 {
-                    uploadedBannerImage.CopyTo(stream);
+                    await uploadedBannerImage
+                        .CopyToAsync(stream);
                 }
 
                 var bannerImage = new Image()
@@ -212,7 +223,8 @@ namespace Aroma_Shop.Application.Services
                     ImagePath = $"Banners/{bannerImageFileName}"
                 };
 
-                _fileRepository.AddImage(bannerImage);
+                await _fileRepository
+                    .AddImageAsync(bannerImage);
 
                 banner
                     .BannerImage = bannerImage;
@@ -236,7 +248,8 @@ namespace Aroma_Shop.Application.Services
 
                 File.Delete(imagePath);
 
-                _fileRepository.DeleteImage(bannerImage);
+                _fileRepository
+                    .DeleteImageAsync(bannerImage);
 
                 return true;
             }

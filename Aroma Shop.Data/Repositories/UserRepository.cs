@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.UserModels;
@@ -20,9 +21,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Remove(userDetail);
         }
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context
+                .SaveChangesAsync();
         }
     }
 }

@@ -28,23 +28,22 @@ namespace Aroma_Shop.Mvc.Controllers
         #region ShowProducts
 
         [HttpGet("/Products/")]
-        public IActionResult Index(int pageNumber = 1, string SortBy = null, string Search = null, IEnumerable<int> SelectedCategories = null, int minimumPrice = 0, int maximumPrice = 0)
+        public async Task<IActionResult> Index(int pageNumber = 1, string SortBy = null, string Search = null, IEnumerable<int> SelectedCategories = null, int minimumPrice = 0, int maximumPrice = 0)
         {
-            IEnumerable<Product> products;
+            var products =
+                await _productService
+                    .GetProductsAsync();
 
             if (!string.IsNullOrEmpty(Search))
             {
-                products = _productService.GetProducts()
+                products = 
+                    products
                     .Where(p => p.ProductName.Contains(Search)
                                 || p.Categories
                                     .Any(t => t.CategoryName.Contains(Search)));
 
                 ViewBag.search = Search;
             }
-            else
-                products =
-                    _productService
-                        .GetProducts();
 
             if (SelectedCategories.Any())
             {
@@ -71,8 +70,8 @@ namespace Aroma_Shop.Mvc.Controllers
             ProductsViewModel productsViewModel;
 
             var categoriesTreeViews =
-                _productService
-                    .GetCategoriesTreeViews();
+                await _productService
+                    .GetCategoriesTreeViewsAsync();
 
             if (!products.Any())
             {
@@ -188,18 +187,21 @@ namespace Aroma_Shop.Mvc.Controllers
         #region ProductDetails
 
         [HttpGet("/Products/{productId}")]
-        public IActionResult ProductDetails(int productId)
+        public async Task<IActionResult> ProductDetails(int productId)
         {
             var product =
-                _productService.GetProduct(productId);
+                await _productService
+                    .GetProductWithDetailsAsync(productId);
 
             if (product == null)
                 return NotFound();
 
-            _productService
-                .AddHitsToProduct(product);
+            await _productService
+                .AddHitsToProductAsync(product);
 
-            product.Comments = product.Comments
+            product.Comments = 
+                product
+                    .Comments
                 .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
 
             var model = new ProductViewModel()
@@ -216,11 +218,11 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [Authorize]
         [HttpGet("/Shopping-Cart")]
-        public IActionResult ShoppingCart()
+        public async Task<IActionResult> ShoppingCart()
         {
             var loggedUserOpenOrder =
-                _productService
-                    .GetLoggedUserOpenOrder();
+                await _productService
+                    .GetLoggedUserOpenOrderAsync();
 
             return View(loggedUserOpenOrder);
         }
@@ -235,14 +237,15 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> AddProductToCart(int productId, int requestedQuantity, int productVariationId)
         {
             var product =
-                _productService.GetProduct(productId);
+                await _productService
+                    .GetProductWithDetailsAsync(productId);
 
             if (product == null)
                 return NotFound();
 
             var result =
                 await _productService
-                    .AddProductToCart(product, requestedQuantity, productVariationId);
+                    .AddProductToCartAsync(product, requestedQuantity, productVariationId);
 
             if (result == AddProductToCartResult.Successful)
             {
@@ -253,7 +256,9 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 ViewData["OutOfStockError"] = "موجودی کافی نیست";
 
-                product.Comments = product.Comments
+                product.Comments = 
+                    product
+                        .Comments
                     .Where(p => p.IsConfirmed && p.ParentComment == null).ToList();
 
                 var model = new ProductViewModel()
@@ -274,17 +279,17 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateCart(IEnumerable<int> orderDetailsQuantities)
+        public async Task<IActionResult> UpdateCart(IEnumerable<int> orderDetailsQuantities)
         {
             if (ModelState.IsValid)
             {
                 var loggedUserOpenOrder =
-                    _productService
-                        .GetLoggedUserOpenOrder();
+                    await _productService
+                        .GetLoggedUserOpenOrderAsync();
 
-                var result =
-                    _productService
-                        .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
+                var result = 
+                    await _productService
+                        .UpdateCartAsync(loggedUserOpenOrder, orderDetailsQuantities);
 
                 if (result)
                 {
@@ -304,13 +309,13 @@ namespace Aroma_Shop.Mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RemoveProductFormCart(int orderDetailsId)
+        public async Task<IActionResult> RemoveProductFormCart(int orderDetailsId)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _productService
-                        .DeleteOrderDetailsById(orderDetailsId);
+                    await _productService
+                        .DeleteOrderDetailsByIdAsync(orderDetailsId);
 
                 if (result)
                     return RedirectToAction("ShoppingCart");
@@ -329,14 +334,14 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> ApplyDiscountOnCart(string discountCode)
         {
             var loggedUserOpenOrder =
-                _productService
-                    .GetLoggedUserOpenOrder();
+                await _productService
+                    .GetLoggedUserOpenOrderAsync();
 
             if (ModelState.IsValid)
             {
                 var result =
                     await _productService
-                        .AddDiscountToCart(loggedUserOpenOrder, discountCode);
+                        .AddDiscountToCartAsync(loggedUserOpenOrder, discountCode);
 
                 if (result == AddDiscountToCartResult.Successful)
                     ViewData["Message"] = "تخفیف با موفقیت اعمال شد";
@@ -363,12 +368,12 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var loggedUserOpenOrder =
-                    _productService
-                        .GetLoggedUserOpenOrder();
+                    await _productService
+                        .GetLoggedUserOpenOrderAsync();
 
-                var result =
-                _productService
-                    .UpdateCart(loggedUserOpenOrder, orderDetailsQuantities);
+                var result = 
+                    await _productService
+                    .UpdateCartAsync(loggedUserOpenOrder, orderDetailsQuantities);
 
                 if (result)
                     return RedirectToAction("CartCheckOut");
@@ -386,8 +391,8 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> CartCheckOut()
         {
             var cartCheckOutViewModel =
-                _productService
-                    .GetLoggedUserCartCheckOut();
+                await _productService
+                    .GetLoggedUserCartCheckOutAsync();
 
             if (cartCheckOutViewModel == null)
                 return NotFound();
@@ -404,7 +409,7 @@ namespace Aroma_Shop.Mvc.Controllers
             {
                 var result =
                     await _productService
-                        .PaymentProcess(model);
+                        .PaymentProcessAsync(model);
 
                 if (!string.IsNullOrEmpty(result))
                     return Redirect(result);
@@ -424,15 +429,15 @@ namespace Aroma_Shop.Mvc.Controllers
         public async Task<IActionResult> OrderConfirmation()
         {
             var loggedUserOpenOrder =
-                _productService
-                    .GetLoggedUserOpenOrder();
+                await _productService
+                    .GetLoggedUserOpenOrderAsync();
 
             if (loggedUserOpenOrder == null)
                 return NotFound();
 
             var result =
                 await _productService
-                    .OrderConfirmation(loggedUserOpenOrder);
+                    .OrderConfirmationAsync(loggedUserOpenOrder);
 
             if (result)
             {
@@ -442,7 +447,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
                 var orderViewModel =
                     _productService
-                        .GetConfirmedOrderInvoice(loggedUserOpenOrder);
+                        .GetConfirmedOrderInvoiceAsync(loggedUserOpenOrder);
 
                 return View(orderViewModel);
             }
@@ -462,13 +467,13 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [HttpPost("/Order-Tracking")]
         [ValidateAntiForgeryToken]
-        public IActionResult OrderTracking(OrderTrackingViewModel model)
+        public async Task<IActionResult> OrderTracking(OrderTrackingViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var orderViewModel =
-                    _productService
-                        .OrderTrackingByUserEmail(model.Email, model.OrderId);
+                    await _productService
+                        .OrderTrackingByUserEmailAsync(model.Email, model.OrderId);
 
                 if (orderViewModel != null)
                 {
@@ -498,7 +503,7 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             var result =
                 await _productService
-                    .AddProductByIdToLoggedUserFavoriteProducts(favoriteProductId);
+                    .AddProductByIdToLoggedUserFavoriteProductsAsync(favoriteProductId);
 
             if (result)
             {
@@ -522,7 +527,7 @@ namespace Aroma_Shop.Mvc.Controllers
         {
             var result =
                 await _productService
-                    .RemoveProductByIdFromLoggedUserFavoriteProducts(favoriteProductId);
+                    .RemoveProductByIdFromLoggedUserFavoriteProductsAsync(favoriteProductId);
 
             if (result)
             {

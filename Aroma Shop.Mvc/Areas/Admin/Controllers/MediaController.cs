@@ -27,24 +27,29 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowMessages
 
         [HttpGet("/Admin/Messages")]
-        public IActionResult Messages(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Messages(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Message> messages;
+            var messages =
+                await _mediaService
+                    .GetMessagesAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
-                messages = _mediaService.GetMessages()
-                    .Where(p => p.MessageSenderName.Contains(search)
-                                || p.MessageDescription.Contains(search)
-                                || p.MessageSubject.Contains(search)
-                                || p.MessageSenderEmail.Contains(search))
+                messages = 
+                    messages
+                        .Where(p => p.MessageSenderName.Contains(search)
+                                               || p.MessageDescription.Contains(search)
+                                               || p.MessageSubject.Contains(search)
+                                               || p.MessageSenderEmail.Contains(search))
                     .OrderBy(p => p.IsRead);
+
+                ViewData["search"]
 
                 ViewBag.search = search;
             }
             else
                 messages =
-                    _mediaService.GetMessages()
+                    messages
                         .OrderBy(p => p.IsRead);
 
             if (!messages.Any())
@@ -77,10 +82,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region MessageDetails
 
         [HttpGet("/Admin/Messages/{messageId}")]
-        public IActionResult MessageDetails(int messageId)
+        public async Task<IActionResult> MessageDetails(int messageId)
         {
             var message =
-                _mediaService.GetMessage(messageId);
+                await _mediaService.
+                    GetMessageAsync(messageId);
 
             var model = new MessageDetailViewModel()
             {
@@ -89,7 +95,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 MessageSubmitTime = message.SubmitTime
             };
 
-            _mediaService.SetMessageAsRead(message);
+            await _mediaService
+                .SetMessageAsReadAsync(message);
 
             return View(model);
         }
@@ -107,10 +114,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
             var result =
                 await _mediaService
-                    .ReplyToMessage(model.MessageReplyDescription, messageId);
+                    .ReplyToMessageAsync(model.MessageReplyDescription, messageId);
 
             var message =
-                _mediaService.GetMessage(messageId);
+                await _mediaService
+                    .GetMessageAsync(messageId);
 
             model.Message = message;
 
@@ -136,10 +144,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteMessage
 
         [HttpGet("/Admin/Messages/DeleteMessage")]
-        public IActionResult DeleteMessage(int messageId)
+        public async Task<IActionResult> DeleteMessage(int messageId)
         {
             var result = 
-                _mediaService.DeleteMessageById(messageId);
+                await _mediaService
+                    .DeleteMessageByIdAsync(messageId);
 
             if (result)
                 return RedirectToAction("Messages");
@@ -152,14 +161,16 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowComments
 
         [HttpGet("/Admin/Comments")]
-        public IActionResult Comments(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Comments(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Comment> comments;
+            var comments =
+                await _mediaService
+                    .GetCommentsAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
                 comments =
-                    _mediaService.GetComments().Where(p =>
+                    comments.Where(p =>
                     p.CommentDescription.Contains(search) ||
                     p.User.UserName.Contains(search) ||
                     p.Product.ProductName.Contains(search))
@@ -169,7 +180,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             }
             else
                 comments =
-                    _mediaService.GetComments()
+                    comments
                     .OrderBy(p => p.IsRead);
 
             if (!comments.Any())
@@ -202,15 +213,17 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region CommentDetails
 
         [HttpGet("/Admin/Comments/{commentId}")]
-        public IActionResult CommentDetails(int commentId)
+        public async Task<IActionResult> CommentDetails(int commentId)
         {
             var comment =
-                _mediaService.GetComment(commentId);
+                await _mediaService
+                    .GetCommentAsync(commentId);
 
             if (comment == null)
                 return NotFound();
 
-            _mediaService.SetCommentAsRead(comment);
+            await _mediaService
+                .SetCommentAsReadAsync(comment);
 
             return View(comment);
         }
@@ -227,14 +240,15 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                 Convert.ToInt32(TempData["commentId"]);
 
             var result =
-                await _mediaService.AddReplyToCommentByAdmin(commentId, NewCommentReplyDescription);
+                await _mediaService
+                    .AddReplyToCommentByAdminAsync(commentId, NewCommentReplyDescription);
 
             if (result)
             {
                 ViewData["SuccessMessageForAddCommentReply"] = "پاسخ شما با موفقیت ثبت شد";
 
                 var comment =
-                    _mediaService.GetComment(commentId);
+                    await _mediaService.GetCommentAsync(commentId);
 
                 return View("CommentDetails", comment);
             }
@@ -248,18 +262,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Comments/EditComment")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditComment(string NewCommentDescription)
+        public async Task<IActionResult> EditComment(string NewCommentDescription)
         {
             var commentId =
                 Convert.ToInt32(TempData["commentId"]);
 
             var comment =
-                _mediaService.GetComment(commentId);
+                await _mediaService
+                    .GetCommentAsync(commentId);
 
             comment.CommentDescription = NewCommentDescription;
 
             var result =
-                _mediaService.UpdateComment(comment);
+                await _mediaService
+                    .UpdateCommentAsync(comment);
 
             if (result)
             {
@@ -276,10 +292,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ConfirmComment
 
         [HttpGet("/Admin/Comments/ConfirmComment")]
-        public IActionResult ConfirmComment(int commentId, string returnUrl)
+        public async Task<IActionResult> ConfirmComment(int commentId, string returnUrl)
         {
             var result =
-                _mediaService.ConfirmComment(commentId);
+                await _mediaService
+                    .ConfirmCommentAsync(commentId);
 
             if (result)
             {
@@ -297,10 +314,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region RejectComment
 
         [HttpGet("/Admin/Comments/RejectComment")]
-        public IActionResult RejectComment(int commentId, string returnUrl)
+        public async Task<IActionResult> RejectComment(int commentId, string returnUrl)
         {
             var result =
-                _mediaService.RejectComment(commentId);
+                await _mediaService
+                    .RejectCommentAsync(commentId);
 
             if (result)
             {
@@ -318,10 +336,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteComment
 
         [HttpGet("/Admin/Comments/DeleteComment")]
-        public IActionResult DeleteComment(int commentId, string returnUrl = null)
+        public async Task<IActionResult> DeleteComment(int commentId, string returnUrl = null)
         {
             var result =
-                _mediaService.DeleteCommentById(commentId);
+                await _mediaService
+                    .DeleteCommentByIdAsync(commentId);
 
             if (result)
             {
@@ -339,23 +358,23 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowBanners
 
         [HttpGet("/Admin/Banners")]
-        public IActionResult Banners(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Banners(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Banner> banners;
+            var banners =
+                await _mediaService
+                    .GetBannersAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
                 banners =
-                    _mediaService.GetBanners().Where(p =>
+                    banners
+                        .Where(p =>
                         p.BannerTitle.Contains(search) ||
                         p.BannerDescription.Contains(search) ||
                         p.BannerId.ToString() == search);
 
                 ViewBag.search = search;
             }
-            else
-                banners =
-                    _mediaService.GetBanners();
 
             if (!banners.Any())
             {
@@ -394,13 +413,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Banners/AddBanner")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddBanner(AddBannerViewModel model)
+        public async Task<IActionResult> AddBanner(AddBannerViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _mediaService
-                        .AddBanner(model);
+                    await _mediaService
+                        .AddBannerAsync(model);
 
                 if (result)
                     return RedirectToAction("Banners");
@@ -416,11 +435,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region EditBanner
 
         [HttpGet("/Admin/Banners/EditBanner")]
-        public IActionResult EditBanner(int bannerId)
+        public async Task<IActionResult> EditBanner(int bannerId)
         {
             var bannerViewModel =
-                _mediaService
-                    .GetBannerForEdit(bannerId);
+                await _mediaService
+                    .GetBannerForEditAsync(bannerId);
 
             if (bannerViewModel == null)
                 return NotFound();
@@ -430,13 +449,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Banners/EditBanner")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditBanner(EditBannerViewModel model)
+        public async Task<IActionResult> EditBanner(EditBannerViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _mediaService
-                        .UpdateBanner(model);
+                    await _mediaService
+                        .UpdateBannerAsync(model);
 
                 if (result)
                     return RedirectToAction("Banners");
@@ -452,11 +471,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteBanner
 
         [HttpGet("/Admin/Banners/DeleteBanner")]
-        public IActionResult DeleteBanner(int bannerId)
+        public async Task<IActionResult> DeleteBanner(int bannerId)
         {
             var result =
-                _mediaService
-                    .DeleteBannerById(bannerId);
+                await _mediaService
+                    .DeleteBannerByIdAsync(bannerId);
 
             if (result)
                 return RedirectToAction("Banners");
@@ -469,23 +488,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowNewsletters
 
         [HttpGet("/Admin/Newsletters")]
-        public IActionResult Newsletters(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Newsletters(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Newsletter> newsletters;
+            var newsletters =
+                await _mediaService
+                    .GetNewslettersAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
                 newsletters =
-                    _mediaService.GetNewsletters().Where(p =>
+                    newsletters
+                        .Where(p =>
                         p.CustomerEmail.Contains(search) ||
                         p.NewsletterId.ToString() == search);
 
                 ViewBag.search = search;
             }
-            else
-                newsletters =
-                    _mediaService
-                        .GetNewsletters();
 
             if (!newsletters.Any())
             {
@@ -524,13 +542,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Newsletters/AddNewsletter")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddNewsletter(AddNewsletterViewModel model)
+        public async Task<IActionResult> AddNewsletter(AddNewsletterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _mediaService
-                        .AddNewsletter(model.CustomerEmail);
+                    await _mediaService
+                        .AddNewsletterAsync(model.CustomerEmail);
 
                 if (result)
                     return RedirectToAction("Newsletters");
@@ -546,11 +564,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeleteNewsletter
 
         [HttpGet("/Admin/Newsletters/DeleteNewsletter")]
-        public IActionResult DeleteNewsletter(int newsletterId)
+        public async Task<IActionResult> DeleteNewsletter(int newsletterId)
         {
             var result =
-                _mediaService
-                    .DeleteNewsletterById(newsletterId);
+                await _mediaService
+                    .DeleteNewsletterByIdAsync(newsletterId);
 
             if (result)
                 return RedirectToAction("Newsletters");
@@ -564,11 +582,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult IsNewsletterEmailExist(string customerEmail)
+        public async Task<IActionResult> IsNewsletterEmailExist(string customerEmail)
         {
             var isNewsletterEmailExist =
-                _mediaService
-                    .IsEmailExistInNewslettersCustomers(customerEmail);
+                await _mediaService
+                    .IsEmailExistInNewslettersCustomersAsync(customerEmail);
 
             if (!isNewsletterEmailExist)
                 return new JsonResult(true);

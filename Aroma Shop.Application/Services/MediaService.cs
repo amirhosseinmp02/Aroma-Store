@@ -34,32 +34,35 @@ namespace Aroma_Shop.Application.Services
             _fileService = fileService;
         }
 
-        public IEnumerable<Comment> GetComments()
+        public async Task<IEnumerable<Comment>> GetCommentsAsync()
         {
             var comments =
-                _mediaRepository.GetComments();
+                await _mediaRepository
+                    .GetCommentsAsync();
 
             return comments;
         }
-        public int GetUnreadCommentsCount()
+        public async Task<int> GetUnreadCommentsCountAsync()
         {
             var unreadCommentsCount =
-                _mediaRepository.GetUnreadCommentsCount();
+                await _mediaRepository
+                    .GetUnreadCommentsCountAsync();
 
             return unreadCommentsCount;
         }
-        public async Task<bool> AddReplyToCommentByAdmin(int commentId, string newCommentReplyDescription)
+        public async Task<bool> AddReplyToCommentByAdminAsync(int commentId, string newCommentReplyDescription)
         {
             try
             {
                 var comment =
-                    GetComment(commentId);
+                    await GetCommentAsync(commentId);
 
                 if (comment == null)
                     return false;
 
                 var loggedUser =
-                    await _accountService.GetLoggedUser();
+                    await _accountService
+                        .GetLoggedUserAsync();
 
                 var commentReply = new Comment()
                 {
@@ -74,7 +77,8 @@ namespace Aroma_Shop.Application.Services
 
                 comment.Replies.Add(commentReply);
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -84,7 +88,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> AddCommentToProduct(ProductViewModel productViewModel)
+        public async Task<bool> AddCommentToProductAsync(ProductViewModel productViewModel)
         {
             try
             {
@@ -92,7 +96,8 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var user =
-                    await _accountService.GetLoggedUser();
+                    await _accountService
+                        .GetLoggedUserAsync();
 
                 var comment = new Comment()
                 {
@@ -104,7 +109,8 @@ namespace Aroma_Shop.Application.Services
 
                 productViewModel.Product.Comments.Add(comment);
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -114,7 +120,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> AddReplyToProductComment(ProductViewModel productViewModel)
+        public async Task<bool> AddReplyToProductCommentAsync(ProductViewModel productViewModel)
         {
             try
             {
@@ -122,12 +128,14 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var parentComment =
-                    GetComment(productViewModel.ParentCommentId);
+                    await GetCommentAsync(productViewModel.ParentCommentId);
+
                 if (parentComment == null)
                     return false;
 
                 var loggedUser =
-                    await _accountService.GetLoggedUser();
+                    await _accountService
+                        .GetLoggedUserAsync();
 
                 var commentReply = new Comment()
                 {
@@ -139,7 +147,8 @@ namespace Aroma_Shop.Application.Services
 
                 parentComment.Replies.Add(commentReply);
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -149,20 +158,23 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public Comment GetComment(int commentId)
+        public async Task<Comment> GetCommentAsync(int commentId)
         {
             var comment =
-                _mediaRepository.GetComment(commentId);
+                await _mediaRepository
+                    .GetCommentWithDetailsAsync(commentId);
 
             return comment;
         }
-        public bool UpdateComment(Comment comment)
+        public async Task<bool> UpdateCommentAsync(Comment comment)
         {
             try
             {
-                _mediaRepository.UpdateComment(comment);
+                _mediaRepository
+                    .UpdateCommentAsync(comment);
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -172,7 +184,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool SetCommentAsRead(Comment comment)
+        public async Task<bool> SetCommentAsReadAsync(Comment comment)
         {
             try
             {
@@ -182,9 +194,10 @@ namespace Aroma_Shop.Application.Services
                 comment.IsRead = true;
 
                 _mediaRepository
-                    .UpdateComment(comment);
+                    .UpdateCommentAsync(comment);
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -218,7 +231,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteComment(Comment comment)
+        public async Task<bool> DeleteCommentAsync(Comment comment)
         {
             try
             {
@@ -228,26 +241,11 @@ namespace Aroma_Shop.Application.Services
                         .DeleteComments(comment.Replies);
                 }
 
-                _mediaRepository.DeleteComment(comment);
+                _mediaRepository
+                    .DeleteComment(comment);
 
-                _mediaRepository.Save();
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error.Message);
-                return false;
-            }
-        }
-        public bool DeleteCommentById(int commentId)
-        {
-            try
-            {
-                var comment =
-                    GetComment(commentId);
-
-                DeleteComment(comment);
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -257,12 +255,29 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool ConfirmComment(int commentId)
+        public async Task<bool> DeleteCommentByIdAsync(int commentId)
         {
             try
             {
                 var comment =
-                    GetComment(commentId);
+                    await GetCommentAsync(commentId);
+
+                await DeleteCommentAsync(comment);
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return false;
+            }
+        }
+        public async Task<bool> ConfirmCommentAsync(int commentId)
+        {
+            try
+            {
+                var comment =
+                    await GetCommentAsync(commentId);
 
                 if (comment == null)
                     return false;
@@ -270,7 +285,8 @@ namespace Aroma_Shop.Application.Services
                 comment.IsRead = true;
                 comment.IsConfirmed = true;
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -280,12 +296,12 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool RejectComment(int commentId)
+        public async Task<bool> RejectCommentAsync(int commentId)
         {
             try
             {
                 var comment =
-                    GetComment(commentId);
+                    await GetCommentAsync(commentId);
 
                 if (comment.Replies.Any())
                 {
@@ -295,9 +311,11 @@ namespace Aroma_Shop.Application.Services
                     }
                 }
 
-                comment.IsConfirmed = false;
+                comment
+                    .IsConfirmed = false;
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -308,14 +326,18 @@ namespace Aroma_Shop.Application.Services
             }
         }
         
-        public bool AddMessage(Message message)
+        public async Task<bool> AddMessageAsync(Message message)
         {
             try
             {
-                message.SubmitTime = DateTime.Now;
+                message.SubmitTime = 
+                    DateTime.Now;
 
-                _mediaRepository.AddMessage(message);
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .AddMessageAsync(message);
+
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -325,17 +347,21 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteMessageById(int messageId)
+        public async Task<bool> DeleteMessageByIdAsync(int messageId)
         {
             try
             {
-                var message = GetMessage(messageId);
+                var message = 
+                    await GetMessageAsync(messageId);
 
                 if (message == null)
                     return false;
 
-                _mediaRepository.DeleteMessage(message);
-                _mediaRepository.Save();
+                _mediaRepository
+                    .DeleteMessage(message);
+
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -345,36 +371,39 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public int GetMessagesCount()
+        public async Task<int> GetMessagesCountAsync()
         {
             var messagesCount =
-                _mediaRepository
-                    .GetMessagesCount();
+                await _mediaRepository
+                    .GetMessagesCountAsync();
 
             return messagesCount;
         }
-        public Message GetMessage(int messageId)
+        public async Task<Message> GetMessageAsync(int messageId)
         {
             var message =
-                _mediaRepository.GetMessage(messageId);
+                await _mediaRepository
+                    .GetMessageAsync(messageId);
 
             return message;
         }
-        public IEnumerable<Message> GetMessages()
+        public async Task<IEnumerable<Message>> GetMessagesAsync()
         {
             var messages =
-                _mediaRepository.GetMessages();
+                await _mediaRepository
+                    .GetMessagesAsync();
 
             return messages;
         }
-        public int GetUnreadMessagesCount()
+        public async Task<int> GetUnreadMessagesCountAsync()
         {
             var getUnreadMessagesCount =
-                _mediaRepository.GetUnreadMessagesCount();
+                await _mediaRepository
+                    .GetUnreadMessagesCountAsync();
 
             return getUnreadMessagesCount;
         }
-        public async Task<bool> ReplyToMessage(string messageReplyDescription, int messageId)
+        public async Task<bool> ReplyToMessageAsync(string messageReplyDescription, int messageId)
         {
             try
             {
@@ -382,7 +411,7 @@ namespace Aroma_Shop.Application.Services
                     return false;
 
                 var message =
-                    GetMessage(messageId);
+                    await GetMessageAsync(messageId);
 
                 if (message == null)
                     return false;
@@ -410,7 +439,8 @@ namespace Aroma_Shop.Application.Services
                 message.MessageReply = messageReply;
                 message.IsReplied = true;
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -420,7 +450,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool SetMessageAsRead(Message message)
+        public async Task<bool> SetMessageAsReadAsync(Message message)
         {
             try
             {
@@ -432,7 +462,8 @@ namespace Aroma_Shop.Application.Services
                 _mediaRepository
                     .UpdateMessage(message);
 
-                _mediaRepository.Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -442,19 +473,19 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public IEnumerable<Banner> GetBanners()
+        public async Task<IEnumerable<Banner>> GetBannersAsync()
         {
             var banners =
-                _mediaRepository
-                    .GetBanners();
+                await _mediaRepository
+                    .GetBannersAsync();
 
             return banners;
         }
-        public EditBannerViewModel GetBannerForEdit(int bannerId)
+        public async Task<EditBannerViewModel> GetBannerForEditAsync(int bannerId)
         {
             var banner =
-                _mediaRepository
-                    .GetBanner(bannerId);
+                await _mediaRepository
+                    .GetBannerAsync(bannerId);
 
             if (banner == null)
                 return null;
@@ -471,7 +502,7 @@ namespace Aroma_Shop.Application.Services
 
             return bannerViewModel;
         }
-        public bool AddBanner(AddBannerViewModel bannerViewModel)
+        public async Task<bool> AddBannerAsync(AddBannerViewModel bannerViewModel)
         {
             try
             {
@@ -484,17 +515,17 @@ namespace Aroma_Shop.Application.Services
                 };
 
                 var addBannerImageResult =
-                    _fileService
-                        .AddBannerImage(banner,bannerViewModel.BannerImage);
+                    await _fileService
+                        .AddBannerImageAsync(banner,bannerViewModel.BannerImage);
 
                 if (!addBannerImageResult)
                     return false;
 
-                _mediaRepository
-                    .AddBanner(banner);
+                await _mediaRepository
+                    .AddBannerAsync(banner);
 
-                _mediaRepository
-                    .Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -504,13 +535,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool UpdateBanner(EditBannerViewModel bannerViewModel)
+        public async Task<bool> UpdateBannerAsync(EditBannerViewModel bannerViewModel)
         {
             try
             {
                 var currentBanner =
-                    _mediaRepository
-                        .GetBanner(bannerViewModel.BannerId);
+                    await _mediaRepository
+                        .GetBannerAsync(bannerViewModel.BannerId);
 
                 if (currentBanner == null)
                     return false;
@@ -525,8 +556,8 @@ namespace Aroma_Shop.Application.Services
                         return false;
 
                     var addBannerImageResult =
-                        _fileService
-                            .AddBannerImage(currentBanner, bannerViewModel.BannerImage);
+                        await _fileService
+                            .AddBannerImageAsync(currentBanner, bannerViewModel.BannerImage);
 
                     if (!addBannerImageResult)
                         return false;
@@ -555,8 +586,8 @@ namespace Aroma_Shop.Application.Services
                 _mediaRepository
                     .UpdateBanner(currentBanner);
 
-                _mediaRepository
-                    .Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -566,13 +597,13 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteBannerById(int bannerId)
+        public async Task<bool> DeleteBannerByIdAsync(int bannerId)
         {
             try
             {
                 var banner =
-                    _mediaRepository
-                        .GetBanner(bannerId);
+                    await _mediaRepository
+                        .GetBannerAsync(bannerId);
 
                 if (banner == null)
                     return false;
@@ -587,8 +618,8 @@ namespace Aroma_Shop.Application.Services
                 _mediaRepository
                     .DeleteBanner(banner);
 
-                _mediaRepository
-                    .Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
 
@@ -599,23 +630,23 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public IEnumerable<Newsletter> GetNewsletters()
+        public async Task<IEnumerable<Newsletter>> GetNewslettersAsync()
         {
             var newsletters =
-                _mediaRepository
-                    .GetNewsletters();
+                await _mediaRepository
+                    .GetNewslettersAsync();
 
             return newsletters;
         }
-        public bool IsEmailExistInNewslettersCustomers(string customerEmail)
+        public async Task<bool> IsEmailExistInNewslettersCustomersAsync(string customerEmail)
         {
             var isEmailExistInNewslettersCustomers =
-                _mediaRepository
-                    .IsEmailExistInNewslettersCustomers(customerEmail);
+                await _mediaRepository
+                    .IsEmailExistInNewslettersCustomersAsync(customerEmail);
 
             return isEmailExistInNewslettersCustomers;
         }
-        public bool AddNewsletter(string customerEmail)
+        public async Task<bool> AddNewsletterAsync(string customerEmail)
         {
             try
             {
@@ -624,11 +655,11 @@ namespace Aroma_Shop.Application.Services
                     CustomerEmail = customerEmail
                 };
 
-                _mediaRepository
-                    .AddNewsletter(newsletter);
+                await _mediaRepository
+                    .AddNewsletterAsync(newsletter);
 
-                _mediaRepository
-                    .Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }
@@ -638,15 +669,15 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public bool DeleteNewsletterById(int newsletterId)
+        public async Task<bool> DeleteNewsletterByIdAsync(int newsletterId)
         {
             try
             {
                 _mediaRepository
-                    .DeleteNewsletterById(newsletterId);
+                    .DeleteNewsletterByIdAsync(newsletterId);
 
-                _mediaRepository
-                    .Save();
+                await _mediaRepository
+                    .SaveAsync();
 
                 return true;
             }

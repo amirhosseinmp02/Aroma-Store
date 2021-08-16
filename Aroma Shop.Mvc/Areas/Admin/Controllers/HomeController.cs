@@ -26,34 +26,34 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             _visitorService = visitorService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var usersCount =
-                _accountService
-                    .GetUsersCount();
+                await _accountService
+                    .GetUsersCountAsync();
 
             var productsCount =
-                _productService
-                    .GetProductsCount();
+                await _productService
+                    .GetProductsCountAsync();
 
             var completedOrdersCount =
-                _productService
-                    .GetCompletedOrdersCount();
+                await _productService
+                    .GetCompletedOrdersCountAsync();
 
             var messagesCount =
-                _mediaService.GetMessagesCount();
+                await _mediaService.GetMessagesCountAsync();
 
             var numberOfVisits =
-                _visitorService
-                    .GetNumberOfVisits();
+                await _visitorService
+                    .GetNumberOfVisitsAsync();
 
             var unCompletedOrdersCount =
-            _productService
-                .GetUnCompletedOrdersCount();
+            await _productService
+                .GetUnCompletedOrdersCountAsync();
 
             var comments =
-                _mediaService
-                    .GetComments();
+                await _mediaService
+                    .GetCommentsAsync();
 
             var adminDashbordViewModel = new AdminDashbordViewModel()
             {

@@ -5299,3 +5299,7 @@ span.reset_variations:hover {
     font-size: 19px;
     line-height: 1.5;
 }
+
+.card-product__imgOverlay li {
+    margin-left: 10px;
+}

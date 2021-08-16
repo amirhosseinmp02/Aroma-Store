@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.PageModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aroma_Shop.Data.Repositories
 {
@@ -16,23 +18,46 @@ namespace Aroma_Shop.Data.Repositories
             _context = context;
         }
 
-        public Page GetPage(int pageId)
+        public async Task<Page> GetPageAsync(int pageId)
         {
             var page =
-                _context.Pages.Find(pageId);
+                await _context
+                    .Pages
+                    .FindAsync(pageId);
 
             return page;
         }
-        public IEnumerable<Page> GetPages()
+        public async Task<Page> GetPageByPathAddressAsync(string pagePathAddress)
+        {
+            var page =
+                await _context
+                    .Pages
+                    .SingleOrDefaultAsync(p => p.PagePathAddress == pagePathAddress);
+
+            return page;
+        }
+        public async Task<IEnumerable<Page>> GetPagesAsync()
         {
             var pages =
-                _context.Pages;
+                await _context
+                    .Pages
+                    .ToListAsync();
 
             return pages;
         }
-        public void CreatePage(Page page)
+        public async Task<bool> IsPagePathAddressExist(string pagePathAddress)
         {
-            _context.Add(page);
+            var isPagePathAddress =
+                await _context
+                    .Pages
+                    .AnyAsync(p => p.PagePathAddress == pagePathAddress);
+
+            return isPagePathAddress;
+        }
+        public async Task CreatePageAsync(Page page)
+        {
+            await _context
+                .AddAsync(page);
         }
         public void UpdatePage(Page page)
         {
@@ -42,9 +67,10 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Remove(page);
         }
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context
+                .SaveChangesAsync();
         }
     }
 }

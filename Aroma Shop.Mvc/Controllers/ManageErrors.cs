@@ -17,7 +17,7 @@ namespace Aroma_Shop.Mvc.Controllers
             _pageService = pageService;
         }
 
-        public IActionResult Error404()
+        public async Task<IActionResult> Error404()
         {
             var feature = 
                 HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -26,7 +26,8 @@ namespace Aroma_Shop.Mvc.Controllers
                 feature?.OriginalPath.Substring(1);
 
             var page =
-                _pageService.GetPageByPathAddress(originalPath);
+                await _pageService
+                    .GetPageByPathAddressAsync(originalPath);
 
             if (page != null)
                 return View("/Views/Home/Page.cshtml", page);

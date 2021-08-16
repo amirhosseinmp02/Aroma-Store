@@ -1,34 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Domain.Models.MediaModels;
 
 namespace Aroma_Shop.Domain.Interfaces
 {
     public interface IMediaRepository : IGeneralRepository
     {
-        Comment GetComment(int commentId);
-        void UpdateComment(Comment comment);
-        IEnumerable<Comment> GetComments();
-        int GetUnreadCommentsCount();
+        Task<Comment> GetCommentWithDetailsAsync(int commentId);
+        Task<Comment> GetCommentAsync(int commentId);
+        void UpdateCommentAsync(Comment comment);
+        Task<IEnumerable<Comment>> GetCommentsAsync();
+        Task<int> GetUnreadCommentsCountAsync();
         void DeleteComments(IEnumerable<Comment> parentsComments); 
         void DeleteComment(Comment comment);
         void DeleteCommentById(int commentId);
-        void AddMessage(Message message);
+        Task AddMessageAsync(Message message);
         void UpdateMessage(Message message);
         void DeleteMessage(Message message);
-        IEnumerable<Message> GetMessages();
-        Message GetMessage(int messageId);
-        int GetMessagesCount();
-        int GetUnreadMessagesCount();
-        IEnumerable<Banner> GetBanners();
-        Banner GetBanner(int bannerId);
-        void AddBanner(Banner banner);
+        Task<IEnumerable<Message>> GetMessagesAsync();
+        Task<Message> GetMessageAsync(int messageId);
+        Task<int> GetMessagesCountAsync();
+        Task<int> GetUnreadMessagesCountAsync();
+        Task<IEnumerable<Banner>> GetBannersAsync();
+        Task<Banner> GetBannerAsync(int bannerId);
+        Task AddBannerAsync(Banner banner);
         void UpdateBanner(Banner banner);
         void DeleteBanner(Banner banner);
-        IEnumerable<Newsletter> GetNewsletters();
-        bool IsEmailExistInNewslettersCustomers(string customerEmail);
-        void AddNewsletter(Newsletter newsletter);
-        void DeleteNewsletterById(int newsletterId);   
+        Task<IEnumerable<Newsletter>> GetNewslettersAsync();
+        Task<bool> IsEmailExistInNewslettersCustomersAsync(string customerEmail);
+        Task AddNewsletterAsync(Newsletter newsletter);
+        void DeleteNewsletterByIdAsync(int newsletterId);   
     }
 }

@@ -26,20 +26,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         [HttpGet("/Admin/Users")]
         public async Task<IActionResult> Index(int pageNumber = 1, string search = null)
         {
-            IEnumerable<UserViewModel> users;
+            var users =
+                await _accountService
+                    .GetUsersAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
-                users = _accountService.GetUsers()
-                    .Result.Where(p => p.UserName.Contains(search) ||
-                                       p.UserEmail.Contains(search) ||
-                                       p.UserRoleName.Contains(search));
+                users = 
+                    users
+                        .Where(p => p.UserName.Contains(search) ||
+                                         p.UserEmail.Contains(search) ||
+                                         p.UserRoleName.Contains(search));
 
                 ViewBag.search = search;
             }
-            else
-                users = 
-                    await _accountService.GetUsers();
 
             if (!users.Any())
             {
@@ -74,7 +74,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> UserDetails(string userId)
         {
             var user =
-                await _accountService.GetUser(userId);
+                await _accountService
+                    .GetUserAsync(userId);
 
             if (user == null)
                 return NotFound();
@@ -90,7 +91,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> CreateUser()
         {
             var roles = 
-                await _accountService.GetRoles();
+                await _accountService
+                    .GetRolesAsync();
 
             var model = new CreateUserViewModel()
             {
@@ -107,13 +109,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var result = 
-                    await _accountService.CreateUserByAdmin( model);
+                    await _accountService.CreateUserByAdminAsync( model);
                 if (result.Succeeded)
                 {
                     ModelState.Clear();
 
                     var roles = 
-                        await _accountService.GetRoles();
+                        await _accountService.GetRolesAsync();
 
                     model = new CreateUserViewModel()
                     {
@@ -141,7 +143,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> EditUser(string userId)
         {
             var user = 
-                await _accountService.GetUserForEdit(userId);
+                await _accountService
+                    .GetUserForEditAsync(userId);
 
             if (user == null)
                 return NotFound();
@@ -161,7 +164,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     TempData["userId"].ToString();
 
                 var result = 
-                    await _accountService.EditUserByAdmin(model);
+                    await _accountService
+                        .EditUserByAdminAsync(model);
 
                 if (result.Succeeded)
                     return RedirectToAction("Index");
@@ -171,8 +175,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     ModelState.AddModelError("", item.Description);
                 }
             }
+
             var roles = 
-                await _accountService.GetRoles();
+                await _accountService
+                    .GetRolesAsync();
 
             model.Roles = roles;
 
@@ -189,7 +195,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteUser(string userId)
         {
             var result = 
-                await _accountService.DeleteUser(userId);
+                await _accountService.DeleteUserAsync(userId);
 
             if (result)
                 return RedirectToAction("Index");

@@ -18,36 +18,38 @@ namespace Aroma_Shop.Application.Interfaces
     public interface IAccountService
     {
         bool IsUserSignedIn();
-        Task<IdentityResult> CreateUser(CustomIdentityUser user, string password);
-        Task<bool> SendEmailConfirmation(CustomIdentityUser user, string controllerName, string actionName);
-        Task<bool> EmailConfirmation(string email, string token);
-        Task<JsonResult> IsUserNameExist(string userName);
-        Task<JsonResult> IsEmailExist(string email);
-        Task<IEnumerable<AuthenticationScheme>> GetExternalAuthentications();
+        Task<IdentityResult> CreateUserAsync(CustomIdentityUser user, string password);
+        Task<bool> SendEmailConfirmationAsync(CustomIdentityUser user, string controllerName, string actionName);
+        Task<bool> EmailConfirmationAsync(string email, string token);
+        Task<JsonResult> IsUserNameExistAsync(string userName);
+        Task<JsonResult> IsEmailExistAsync(string email);
+        Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationsAsync();
         ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
             string returnUrl);
-        Task<bool> ConfigureExternalLoginsCallBacks(string remoteError = null);
-        Task<bool> LoginWithPassword(LoginViewModel loginViewModel); 
-        Task<bool> LogOutUser();
-        Task<bool> SendRestPasswordLink(string userEmail, string returnController, string returnAction);
-        Task<bool> RestPassword(string userEmail, string token, string newPassword);
-        Task<bool> IsUserHasPassword(CustomIdentityUser user);
-        Task<bool> IsUserHasPasswordById(string userId);  
-        Task<bool> IsLoggedUserHasPassword();
-        Task<IdentityResult> EditAccount(EditAccountViewModel editAccountViewModel); 
+        Task<bool> ConfigureExternalLoginsCallBacksGetUriByActionAsync(string remoteError = null);
+        Task<bool> LoginWithPasswordAsync(LoginViewModel loginViewModel); 
+        Task<bool> LogOutUserAsync();
+        Task<bool> SendRestPasswordLinkAsync(string userEmail, string returnController, string returnAction);
+        Task<bool> RestPasswordAsync(string userEmail, string token, string newPassword);
+        Task<bool> IsUserHasPasswordAsync(CustomIdentityUser user);
+        Task<bool> IsUserHasPasswordByIdAsync(string userId);  
+        Task<bool> IsLoggedUserHasPasswordAsync();
+        Task<IdentityResult> EditAccountAsync(EditAccountViewModel editAccountViewModel); 
 
-        Task<IEnumerable<UserViewModel>> GetUsers();
-        Task<UserDetailsViewModel> GetUser(string userId);
-        int GetUsersCount();
-        Task<EditUserViewModel> GetUserForEdit(string userId);
-        Task<bool> DeleteUser(string userId);
-        Task<IEnumerable<SelectListItem>> GetRoles();
-        Task<IdentityResult> CreateUserByAdmin(CreateUserViewModel userViewModel);
-        Task<IdentityResult> EditUserByAdmin(EditUserViewModel userViewModel);
-        Task<bool> UpdateUser(CustomIdentityUser loggedUser);
-        Task<CustomIdentityUser> GetLoggedUser();
-        Task<CustomIdentityUser> GetLoggedUserWithDetails();
-        Task<string> GetUserRole(CustomIdentityUser user);
-        Task<string> GetLoggedUserRole();
+        Task<IEnumerable<UserViewModel>> GetUsersAsync();
+        Task<UserDetailsViewModel> GetUserAsync(string userId);
+        Task<int> GetUsersCountAsync();
+        Task<EditUserViewModel> GetUserForEditAsync(string userId);
+        Task<bool> DeleteUserAsync(string userId);
+        Task<IEnumerable<SelectListItem>> GetRolesAsync();
+        Task<IdentityResult> CreateUserByAdminAsync(CreateUserViewModel userViewModel);
+        Task<IdentityResult> EditUserByAdminAsync(EditUserViewModel userViewModel);
+        Task<bool> UpdateUserAsync(CustomIdentityUser loggedUser);
+        Task<CustomIdentityUser> GetLoggedUserAsync();
+        Task<CustomIdentityUser> GetLoggedUserWithFavoriteProductsAsync();
+        Task<CustomIdentityUser> GetLoggedUserWithDetailsAsync();
+        Task<bool> IsProductInLoggedUserFavoriteProductsAsync(int productId);
+        Task<string> GetUserRoleAsync(CustomIdentityUser user);
+        Task<string> GetLoggedUserRoleAsync();
     }
 }

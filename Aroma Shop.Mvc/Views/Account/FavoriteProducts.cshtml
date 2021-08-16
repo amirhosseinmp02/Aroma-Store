@@ -1,10 +1,7 @@
 ﻿@using Aroma_Shop.Domain.Models.FileModels
 @using Aroma_Shop.Application.Interfaces
 
-@model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
-
 @inject IAccountService AccountService
-@inject IProductService ProductService
 
 @{
     ViewData["Title"] = "حساب کاربری";
@@ -55,7 +52,7 @@
                                         <li><button><i class="bi bi-bag"></i></button></li>
                                         @if (AccountService.IsUserSignedIn())
                                         {
-                                            if (!await ProductService.IsProductInLoggedUserFavoriteProducts(favoriteProduct.ProductId))
+                                            if (!await AccountService.IsProductInLoggedUserFavoriteProductsAsync(favoriteProduct.ProductId))
                                             {
                                                 <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@favoriteProduct.ProductId"><i class="ti-heart"></i></a></li>
                                             }

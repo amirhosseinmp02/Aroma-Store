@@ -43,7 +43,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [HttpPost("/Contact-Us")]
         [ValidateAntiForgeryToken]
-        public IActionResult ContactUs(Message model)
+        public async Task<IActionResult> ContactUs(Message model)
         {
             string recaptchaResponse =
                 Request.Form["g-recaptcha-response"];
@@ -52,13 +52,12 @@ namespace Aroma_Shop.Mvc.Controllers
                 "https://www.google.com/recaptcha/api/siteverify";
 
             var response =
-            _httpClient
-                .PostAsync($"{url}?secret={_configuration["reCAPTCHA:SecretKey"]}&response={recaptchaResponse}", new StringContent(""))
-                .Result;
+                await _httpClient
+                    .PostAsync($"{url}?secret={_configuration["reCAPTCHA:SecretKey"]}&response={recaptchaResponse}",
+                        new StringContent(""));
 
             var responseString =
-                response.Content.ReadAsStringAsync()
-                    .Result;
+                await response.Content.ReadAsStringAsync();
 
             dynamic jsonResponse =
                 JObject.Parse(responseString);
@@ -70,7 +69,8 @@ namespace Aroma_Shop.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var result =
-                    _mediaService.AddMessage(model);
+                    await _mediaService
+                        .AddMessageAsync(model);
 
                 if (result)
                 {
@@ -102,13 +102,12 @@ namespace Aroma_Shop.Mvc.Controllers
                 "https://www.google.com/recaptcha/api/siteverify";
 
             var response =
-                _httpClient
-                    .PostAsync($"{url}?secret={_configuration["reCAPTCHA:SecretKey"]}&response={recaptchaResponse}", new StringContent(""))
-                    .Result;
+                await _httpClient
+                    .PostAsync($"{url}?secret={_configuration["reCAPTCHA:SecretKey"]}&response={recaptchaResponse}",
+                        new StringContent(""));
 
             var responseString =
-                response.Content.ReadAsStringAsync()
-                    .Result;
+                await response.Content.ReadAsStringAsync();
 
             dynamic jsonResponse =
                 JObject.Parse(responseString);
@@ -123,18 +122,23 @@ namespace Aroma_Shop.Mvc.Controllers
                     Convert.ToInt32(TempData["productId"]);
 
                 var product =
-                    _productService.GetProduct(productId);
+                    await _productService
+                        .GetProductWithDetailsAsync(productId);
 
-                product.Comments = product.Comments;
+                product.Comments = 
+                    product.Comments;
 
-                model.Product = product;
+                model.Product = 
+                    product;
 
                 bool result;
 
                 if (model.ParentCommentId == 0)
-                    result = await _mediaService.AddCommentToProduct(model);
+                    result = await _mediaService
+                        .AddCommentToProductAsync(model);
                 else
-                    result = await _mediaService.AddReplyToProductComment(model);
+                    result = await _mediaService
+                        .AddReplyToProductCommentAsync(model);
 
                 product.Comments =
                     product.Comments
@@ -166,7 +170,7 @@ namespace Aroma_Shop.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddNewsletter(string customerEmail)
+        public async Task<IActionResult> AddNewsletter(string customerEmail)
         {
             if (ModelState.IsValid)
             {
@@ -180,15 +184,15 @@ namespace Aroma_Shop.Mvc.Controllers
                     return Content("MoreThan256Character");
 
                 var isEmailExistInNewslettersCustomers =
-                    _mediaService
-                        .IsEmailExistInNewslettersCustomers(customerEmail);
+                    await _mediaService
+                        .IsEmailExistInNewslettersCustomersAsync(customerEmail);
 
                 if (isEmailExistInNewslettersCustomers)
                     return Content("CustomerEmailExist");
 
                 var result =
-                    _mediaService
-                        .AddNewsletter(customerEmail);
+                    await _mediaService
+                        .AddNewsletterAsync(customerEmail);
 
                 if (result)
                     return Content("Successful");

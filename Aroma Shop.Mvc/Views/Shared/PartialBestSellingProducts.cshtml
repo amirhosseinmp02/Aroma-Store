@@ -4,13 +4,15 @@
 @model IEnumerable<Aroma_Shop.Domain.Models.ProductModels.Product>
 
 @inject IAccountService AccountService
-@inject IProductService ProductService
 
 @{
     var products =
         Model
             .OrderByDescending(p => p.ProductSalesCount)
             .Take(12);
+
+    var isUserSignIn =
+        AccountService.IsUserSignedIn();
 }
 
 <section class="section-margin calc-60px">
@@ -46,9 +48,9 @@
                             {
                                 <li><a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.ProductId"><i class="bi bi-bag"></i></a></li>
                             }
-                            @if (AccountService.IsUserSignedIn())
+                            @if (isUserSignIn)
                             {
-                                if (!await ProductService.IsProductInLoggedUserFavoriteProducts(product.ProductId))
+                                if (!await AccountService.IsProductInLoggedUserFavoriteProductsAsync(product.ProductId))
                                 {
                                     <li><a asp-controller="Product" asp-action="AddProductToUserFavoriteProducts" asp-route-favoriteProductId="@product.ProductId"><i class="ti-heart"></i></a></li>
                                 }

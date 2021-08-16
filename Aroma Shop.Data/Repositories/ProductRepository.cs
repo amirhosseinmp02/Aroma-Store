@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
@@ -19,33 +20,50 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context = context;
         }
-        public IEnumerable<Product> GetProducts()
+
+        public async Task<IEnumerable<Product>> GetProductsAsync()
         {
-            var products = _context.Products
+            var products = 
+                await _context
+                .Products
                 .Include(p => p.Categories)
                 .Include(p => p.Images)
                 .Include(p => p.ProductVariations)
-                .AsSplitQuery();
+                .AsSplitQuery()
+                .ToListAsync();
 
             return products;
         }
-        public IEnumerable<Product> GetAvailableProducts()
+        public async Task<IEnumerable<Product>> GetAvailableProductsAsync()
         {
             var availableProducts =
-                _context.Products
-                .Where(p => p.IsSimpleProduct ?
+                await _context
+                    .Products
+                    .Where(p => p.IsSimpleProduct ?
                     p.ProductQuantityInStock > 0 :
                     p.ProductVariations.Any(p => p.ProductVariationQuantityInStock > 0))
-                .Include(p => p.Categories)
-                .Include(p => p.Images)
-                .Include(p => p.ProductVariations)
-                .AsSplitQuery();
+                    .Include(p => p.Categories)
+                    .Include(p => p.Images)
+                    .Include(p => p.ProductVariations)
+                    .AsSplitQuery()
+                    .ToListAsync();
 
             return availableProducts;
         }
-        public Product GetProduct(int productId)
+        public async Task<Product> GetProductAsync(int productId)
         {
-            var product = _context.Products
+            var product =
+                await _context
+                    .Products
+                    .FindAsync(productId);
+
+            return product;
+        }
+        public async Task<Product> GetProductWithDetailsAsync(int productId)
+        {
+            var product = 
+                await _context
+                .Products
                 .Include(p => p.Categories)
                 .Include(p => p.Informations)
                 .Include(p => p.Images)
@@ -55,132 +73,158 @@ namespace Aroma_Shop.Data.Repositories
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.Replies)
                 .ThenInclude(p => p.User)
-                .SingleOrDefault(p => p.ProductId == productId);
+                .SingleOrDefaultAsync(p => p.ProductId == productId);
 
             return product;
         }
-        public int GetProductsCount()
+        public async Task<int> GetProductsCountAsync()
         {
             var productsCount =
-                _context
+                await _context
                     .Products
-                    .Count();
+                    .CountAsync();
 
             return productsCount;
         }
-        public IEnumerable<Category> GetCategories()
+        public async Task<bool> IsProductExist(int productId)
+        {
+            var isProductExist = 
+                await _context
+                .Products
+                .AnyAsync(p => p.ProductId == productId);
+
+            return isProductExist;
+        }
+        public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             var categories =
-                _context.Categories
+                await _context
+                .Categories
                 .Include(p => p.ParentCategory)
                 .Include(p => p.Products)
                 .AsSplitQuery()
-                .ToList();
+                .ToListAsync();
 
             return categories;
         }
-        public Category GetCategory(int categoryId)
+        public async Task<Category> GetCategoryAsync(int categoryId)
         {
-            var category = _context.Categories
+            var category = 
+                await _context
+                .Categories
                 .Include(p => p.ParentCategory)
-                .SingleOrDefault(p => p.CategoryId == categoryId);
+                .SingleOrDefaultAsync(p => p.CategoryId == categoryId);
 
             return category;
         }
-        public void AddProduct(Product product)
+        public async Task AddProductAsync(Product product)
         {
-            _context.Add(product);
+            await _context
+                .AddAsync(product);
         }
-        public void AddProductInformation(ProductInformation productInformation)
+        public async Task AddProductInformationAsync(ProductInformation productInformation)
         {
-            _context.Add(productInformation);
+            await _context
+                .AddAsync(productInformation);
         }
         public void DeleteProductInformation(ProductInformation productInformation)
         {
-            _context.Remove(productInformation);
+            _context
+                .Remove(productInformation);
         }
         public void UpdateProduct(Product product)
         {
-            _context.Update(product);
+            _context
+                .Update(product);
         }
         public void DeleteProduct(Product product)
         {
-            _context.Remove(product);
+            _context
+                .Remove(product);
         }
-        public void AddProductVariation(ProductVariation productVariation)
+        public async Task AddProductVariationAsync(ProductVariation productVariation)
         {
-            _context.Add(productVariation);
+            await _context
+                .AddAsync(productVariation);
         }
         public void UpdateProductVariation(ProductVariation productVariation)
         {
-            _context.Update(productVariation);
+            _context
+                .Update(productVariation);
         }
         public void DeleteProductVariation(ProductVariation productVariation)
         {
-            _context.ProductVariations.Remove(productVariation);
+            _context
+                .Remove(productVariation);
         }
-        public void AddCategory(Category category)
+        public async Task AddCategoryAsync(Category category)
         {
-            _context.Add(category);
+            await _context
+                .AddAsync(category);
         }
         public void UpdateCategory(Category category)
         {
-            _context.Update(category);
+            _context
+                .Update(category);
         }
         public void DeleteCategory(Category category)
         {
-            _context.Remove(category);
+            _context
+                .Remove(category);
         }
-        public void DeleteCategoryById(int categoryId)
+        public async void DeleteCategoryById(int categoryId)
         {
             var category =
-                GetCategory(categoryId);
+                await GetCategoryAsync(categoryId);
 
-            _context.Remove(category);
+            _context
+                .Remove(category);
         }
 
         //Start Order Section 
 
-        public IEnumerable<Order> GetOrders()
+        public async Task<IEnumerable<Order>> GetOrdersAsync()
         {
             var orders =
-                _context
+                await _context
                     .Orders
                     .Include(p => p.OrdersDetails)
                     .Include(p => p.InvoicesDetails)
                     .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
-                    .ThenInclude(p => p.UserDetails);
+                    .ThenInclude(p => p.UserDetails)
+                    .ToListAsync();
 
             return orders;
         }
-        public IEnumerable<Order> GetUserOrders(string userId)
+        public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userId)
         {
             var orders =
-                _context
+                await _context
                     .Orders
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
                     .Where(p => p.OwnerUser.Id == userId)
                     .Include(p => p.OrdersDetails)
                     .Include(p => p.Discounts)
-                    .Include(p => p.InvoicesDetails);
+                    .Include(p => p.InvoicesDetails)
+                    .ToListAsync();
 
             return orders;
         }
-        public Order GetOrder(int orderId)
+        public async Task<Order> GetOrderAsync(int orderId)
         {
             var order =
-                _context
+                await _context
                     .Orders
-                    .Find(orderId);
+                    .FindAsync(orderId);
 
             return order;
         }
-        public Order GetOrderWithDetails(int orderId)
+        public async Task<Order> GetOrderWithDetailsAsync(int orderId)
         {
             var order =
-                _context
+                await _context
                     .Orders
                     .Include(p => p.InvoicesDetails)
                     .Include(p => p.Discounts)
@@ -190,14 +234,14 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.Product)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
-                    .SingleOrDefault(p => p.OrderId == orderId);
+                    .SingleOrDefaultAsync(p => p.OrderId == orderId);
 
             return order;
         }
-        public Order GetUserOpenOrder(string userId)
+        public async Task<Order> GetUserOpenOrderAsync(string userId)
         {
             var order =
-                _context
+                await _context
                     .Orders
                     .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
@@ -207,14 +251,14 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.Images)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
-                    .SingleOrDefault(p => p.OwnerUser.Id == userId && !p.IsOrderCompleted);
+                    .SingleOrDefaultAsync(p => p.OwnerUser.Id == userId && !p.IsOrderCompleted);
 
             return order;
         }
-        public Order GetUserOrder(string userId, int orderId)
+        public async Task<Order> GetUserOrderAsync(string userId, int orderId)
         {
             var order =
-                _context
+                await _context
                     .Orders
                     .Include(p => p.Discounts)
                     .Include(p => p.InvoicesDetails)
@@ -224,14 +268,14 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.Product)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
-                    .SingleOrDefault(p => p.OrderId == orderId && p.OwnerUser.Id == userId);
+                    .SingleOrDefaultAsync(p => p.OrderId == orderId && p.OwnerUser.Id == userId);
 
             return order;
         }
-        public Order GetUserOrderByEmail(string userEmail, int orderId)
+        public async Task<Order> GetUserOrderByEmailAsync(string userEmail, int orderId)
         {
             var userOrder =
-                _context
+                await _context
                     .Orders
                     .Include(p => p.InvoicesDetails)
                     .Include(p => p.Discounts)
@@ -241,40 +285,41 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.Product)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
-                    .SingleOrDefault(p => p.OrderId == orderId);
+                    .SingleOrDefaultAsync(p => p.OrderId == orderId);
 
             return userOrder;
         }
-        public int GetCompletedOrdersCount()
+        public async Task<int> GetCompletedOrdersCountAsync()
         {
             var completedOrdersCount =
-                _context
+                await _context
                     .Orders
-                    .Count(p => p.IsOrderCompleted);
+                    .CountAsync(p => p.IsOrderCompleted);
 
             return completedOrdersCount;
         }
-        public int GetUnCompletedOrdersCount()
+        public async Task<int> GetUnCompletedOrdersCountAsync()
         {
             var unCompletedOrdersCount =
-                _context
+                await _context
                     .Orders
-                    .Count(p => !p.IsOrderCompleted);
+                    .CountAsync(p => !p.IsOrderCompleted);
 
             return unCompletedOrdersCount;
         }
-        public int GetUnSeenOrdersCount()
+        public async Task<int> GetUnSeenOrdersCountAsync()
         {
             var unSeenOrdersCount =
-                _context
+                await _context
                     .Orders
-                    .Count(p => !p.IsOrderSeen);
+                    .CountAsync(p => !p.IsOrderSeen);
 
             return unSeenOrdersCount;
         }
-        public void AddOrder(Order order)
+        public async Task AddOrderAsync(Order order)
         {
-            _context.Add(order);
+            await _context
+                .AddAsync(order);
         }
         public void UpdateOrder(Order order)
         {
@@ -285,96 +330,114 @@ namespace Aroma_Shop.Data.Repositories
             _context
                 .Remove(order);
         }
-        public IEnumerable<OrderDetails> GetUnFinishedOrdersDetails()
+        public async Task<IEnumerable<OrderDetails>> GetUnFinishedOrdersDetailsAsync()
         {
             var unFinishedOrdersDetails =
-                _context
+                await _context
                     .OrdersDetails
                     .Where(p => !p.Order.IsOrderCompleted)
                     .Include(p => p.Product)
-                    .Include(p => p.ProductVariation);
+                    .Include(p => p.ProductVariation)
+                    .ToListAsync();
 
             return unFinishedOrdersDetails;
         }
-        public IEnumerable<OrderDetails> GetOrdersDetailsByProductId(int productId)
+        public async Task<IEnumerable<OrderDetails>> GetOrdersDetailsByProductIdAsync(int productId)
         {
             var orderDetails =
-                _context
+                await _context
                     .OrdersDetails
                     .Where(p => p.Product.ProductId == productId)
                     .Include(p => p.Order)
-                    .Include(p => p.ProductVariation);
+                    .Include(p => p.ProductVariation)
+                    .ToListAsync();
 
             return orderDetails;
         }
-        public OrderDetails GetOrderDetails(int orderDetailsId)
+        public async Task<OrderDetails> GetOrderDetailsAsync(int orderDetailsId)
         {
             var orderDetails =
-                _context
+                await _context
                     .OrdersDetails
-                    .Find(orderDetailsId);
+                    .FindAsync(orderDetailsId);
 
             return orderDetails;
         }
-        public int GetUserOpenOrderDetailsCount(string userId)
+        public async Task<int> GetUserOpenOrderDetailsCountAsync(string userId)
         {
             var userOpenOrderDetailsCount =
-                _context
+                await _context
                     .OrdersDetails
-                    .Count(p => p.Order.OwnerUser.Id == userId && !p.Order.IsOrderCompleted);
+                    .CountAsync(p => p.Order.OwnerUser.Id == userId && !p.Order.IsOrderCompleted);
 
             return userOpenOrderDetailsCount;
         }
-        public void AddOrderDetails(OrderDetails orderDetails)
+        public async Task AddOrderDetailsAsync(OrderDetails orderDetails)
         {
-            _context.Add(orderDetails);
+            await _context
+                .AddAsync(orderDetails);
         }
         public void UpdateOrderDetails(OrderDetails orderDetails)
         {
-            _context.OrdersDetails.Update(orderDetails);
+            _context
+                .Update(orderDetails);
         }
         public void DeleteOrderDetails(OrderDetails orderDetails)
         {
-            _context.Remove(orderDetails);
-        }
-        public void AddInvoiceDetails(OrderInvoiceDetails invoiceDetails)
-        {
             _context
-                .Add(invoiceDetails);
+                .Remove(orderDetails);
         }
-        public IEnumerable<Discount> GetDiscounts()
+        public async Task AddInvoiceDetailsAsync(OrderInvoiceDetails invoiceDetails)
+        {
+            await _context
+                .AddAsync(invoiceDetails);
+        }
+        public async Task<IEnumerable<Discount>> GetDiscountsAsync()
         {
             var discounts =
-                _context.Discounts;
+                await _context
+                    .Discounts
+                    .ToListAsync();
 
             return discounts;
         }
-        public Discount GetDiscount(int discountId)
+        public async Task<Discount> GetDiscountAsync(int discountId)
         {
             var discount =
-                _context
+                await _context
                     .Discounts
                     .Include(p => p.Orders)
-                    .SingleOrDefault(p => p.DiscountId == discountId);
+                    .SingleOrDefaultAsync(p => p.DiscountId == discountId);
 
             return discount;
         }
-        public Discount GetDiscountByCode(string discountCode)
+        public async Task<Discount> GetDiscountByCodeAsync(string discountCode)
         {
             var discount =
-                _context
+                await _context
                     .Discounts
-                    .SingleOrDefault(p => p.DiscountCode == discountCode);
+                    .SingleOrDefaultAsync(p => p.DiscountCode == discountCode);
 
             return discount;
         }
-        public void AddDiscount(Discount discount)
+        public async Task<bool> IsDiscountCodeExistAsync(string discountCode)
         {
-            _context.Add(discount);
+            var isDiscountCodeExist =
+                await _context
+                    .Discounts
+                    .AnyAsync(p => p.DiscountCode == discountCode);
+
+            return isDiscountCodeExist;
+        }
+        public async Task AddDiscountAsync(Discount discount)
+        {
+            await _context
+                .AddAsync(discount);
         }
         public void UpdateDiscount(Discount discount)
         {
-            _context.Update(discount);
+            _context
+                .Update(discount);
         }
         public void DeleteDiscount(Discount discount)
         {
@@ -384,9 +447,10 @@ namespace Aroma_Shop.Data.Repositories
 
         //End Order Section
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context
+                .SaveChangesAsync();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.MediaModels;
@@ -18,38 +19,52 @@ namespace Aroma_Shop.Data.Repositories
             _context = context;
         }
 
-        public Comment GetComment(int commentId)
+        public async Task<Comment> GetCommentWithDetailsAsync(int commentId)
         {
             var comment =
-                _context.Comments
+                await _context
+                    .Comments
                     .Include(p => p.ParentComment)
                     .Include(p => p.User)
                     .Include(p => p.Product)
                     .Include(p => p.Replies)
                     .ThenInclude(p => p.User)
-                    .SingleOrDefault(p => p.CommentId == commentId);
+                    .SingleOrDefaultAsync(p => p.CommentId == commentId);
 
             return comment;
         }
-        public void UpdateComment(Comment comment)
+        public async Task<Comment> GetCommentAsync(int commentId)
+        {
+            var comment =
+                await _context
+                    .Comments
+                    .FindAsync(commentId);
+
+            return comment;
+        }
+        public void UpdateCommentAsync(Comment comment)
         {
             _context.Update(comment);
         }
-        public IEnumerable<Comment> GetComments()
+        public async Task<IEnumerable<Comment>> GetCommentsAsync()
         {
             var comments =
-                _context.Comments
+                await _context
+                    .Comments
                     .Include(p => p.Product)
                     .Include(p => p.User)
                     .Include(p => p.ParentComment)
-                    .ThenInclude(p => p.User);
+                    .ThenInclude(p => p.User)
+                    .ToListAsync();
 
             return comments;
         }
-        public int GetUnreadCommentsCount()
+        public async Task<int> GetUnreadCommentsCountAsync()
         {
             var unreadMessagesCount =
-                _context.Comments.Count(p => !p.IsRead);
+                await _context
+                    .Comments
+                    .CountAsync(p => !p.IsRead);
 
             return unreadMessagesCount;
         }
@@ -62,16 +77,17 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Remove(comment);
         }
-        public void DeleteCommentById(int commentId)
+        public async void DeleteCommentById(int commentId)
         {
             var comment =
-                GetComment(commentId);
+                await GetCommentAsync(commentId);
 
-            _context.Remove(comment);
+            DeleteComment(comment);
         }
-        public void AddMessage(Message message)
+        public async Task AddMessageAsync(Message message)
         {
-            _context.Add(message);
+            await _context
+                .AddAsync(message);
         }
         public void UpdateMessage(Message message)
         {
@@ -82,61 +98,67 @@ namespace Aroma_Shop.Data.Repositories
         {
             _context.Remove(message);
         }
-        public Message GetMessage(int messageId)
+        public async Task<Message> GetMessageAsync(int messageId)
         {
             var message =
-                _context.Messages
+                await _context
+                    .Messages
                     .Include(p => p.MessageReply)
-                    .SingleOrDefault(p => p.MessageId == messageId);
+                    .SingleOrDefaultAsync(p => p.MessageId == messageId);
 
             return message;
         }
-        public int GetMessagesCount()
+        public async Task<int> GetMessagesCountAsync()
         {
             var messagesCount =
-                _context
+                await _context
                     .Messages
-                    .Count();
+                    .CountAsync();
 
             return messagesCount;
         }
-        public IEnumerable<Message> GetMessages()
+        public async Task<IEnumerable<Message>> GetMessagesAsync()
         {
             var messages =
-                _context.Messages;
+                await _context
+                    .Messages
+                    .ToListAsync();
 
             return messages;
         }
-        public int GetUnreadMessagesCount()
+        public async Task<int> GetUnreadMessagesCountAsync()
         {
             var unreadMessagesCount =
-                _context.Messages.Count(p => !p.IsRead);
+                await _context
+                    .Messages
+                    .CountAsync(p => !p.IsRead);
 
             return unreadMessagesCount;
         }
-        public IEnumerable<Banner> GetBanners()
+        public async Task<IEnumerable<Banner>> GetBannersAsync()
         {
             var banners =
-                _context
+                await _context
                     .Banners
-                    .Include(p => p.BannerImage);
+                    .Include(p => p.BannerImage)
+                    .ToListAsync();
 
             return banners;
         }
-        public Banner GetBanner(int bannerId)
+        public async Task<Banner> GetBannerAsync(int bannerId)
         {
             var banner =
-                _context
+                await _context
                     .Banners
                     .Include(p => p.BannerImage)
-                    .SingleOrDefault(p => p.BannerId == bannerId);
+                    .SingleOrDefaultAsync(p => p.BannerId == bannerId);
 
             return banner;
         }
-        public void AddBanner(Banner banner)
+        public async Task AddBannerAsync(Banner banner)
         {
-            _context
-                .Add(banner);
+            await _context
+                .AddAsync(banner);
         }
         public void UpdateBanner(Banner banner)
         {
@@ -148,42 +170,44 @@ namespace Aroma_Shop.Data.Repositories
             _context
                 .Remove(banner);
         }
-        public IEnumerable<Newsletter> GetNewsletters()
+        public async Task<IEnumerable<Newsletter>> GetNewslettersAsync()
         {
             var newsletters =
-                _context
-                    .Newsletters;
+                await _context
+                    .Newsletters
+                    .ToListAsync();
 
             return newsletters;
         }
-        public bool IsEmailExistInNewslettersCustomers(string customerEmail)
+        public async Task<bool> IsEmailExistInNewslettersCustomersAsync(string customerEmail)
         {
             var isEmailExistInNewslettersCustomers =
-                _context
+                await _context
                     .Newsletters
-                    .Any(p => p.CustomerEmail == customerEmail);
+                    .AnyAsync(p => p.CustomerEmail == customerEmail);
 
             return isEmailExistInNewslettersCustomers;
         }
-        public void AddNewsletter(Newsletter newsletter)
+        public async Task AddNewsletterAsync(Newsletter newsletter)
         {
-            _context
-                .Add(newsletter);
+            await _context
+                .AddAsync(newsletter);
         }
-        public void DeleteNewsletterById(int newsletterId)
+        public async void DeleteNewsletterByIdAsync(int newsletterId)
         {
             var newsletter =
-                _context
+                await _context
                     .Newsletters
-                    .Find(newsletterId);
+                    .FindAsync(newsletterId);
 
             _context
                 .Remove(newsletter);
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context
+                .SaveChangesAsync();
         }
     }
 }

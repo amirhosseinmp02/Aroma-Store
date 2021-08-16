@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.ViewModels.Page;
 using Aroma_Shop.Domain.Interfaces;
@@ -19,64 +20,65 @@ namespace Aroma_Shop.Application.Services
             _pageRepository = pageRepository;
         }
 
-        public Page GetPage(int pageId)
+        public async Task<Page> GetPageAsync(int pageId)
         {
             var page =
-                _pageRepository.GetPage(pageId);
+                await _pageRepository
+                    .GetPageAsync(pageId);
 
             return page;
         }
-        public Page GetPageByPathAddress(string pagePathAddress)
+        public async Task<Page> GetPageByPathAddressAsync(string pagePathAddress)
         {
             var page =
-                GetPages()
-                    .SingleOrDefault(p => p.PagePathAddress == pagePathAddress);
+                await _pageRepository
+                    .GetPageByPathAddressAsync(pagePathAddress);
 
             return page;
         }
-        public IEnumerable<Page> GetPages()
+        public async Task<IEnumerable<Page>> GetPagesAsync()
         {
             var pages =
-                _pageRepository.GetPages();
+                await _pageRepository
+                    .GetPagesAsync();
 
             return pages;
         }
-        public JsonResult IsPagePathAddressExistForAddJsonResult(string pagePathAddress)
+        public async Task<JsonResult> IsPagePathAddressExistForAddJsonResultAsync(string pagePathAddress)
         {
             var isPagePathAddressExist =
-                GetPages()
-                    .Any(p => p.PagePathAddress == pagePathAddress);
+                await _pageRepository
+                    .IsPagePathAddressExist(pagePathAddress);
 
-            if (!isPagePathAddressExist)
-                return new JsonResult(true);
+            if (isPagePathAddressExist)
+                return new JsonResult("این آدرس صفحه در حال حاضر موجود است");
 
-            return new JsonResult("این آدرس صفحه در حال حاضر موجود است");
+            return new JsonResult(true);
         }
-        public JsonResult IsPagePathAddressExistForEditJsonResult(string newPagePathAddress, int pageId)
+        public async Task<JsonResult> IsPagePathAddressExistForEditJsonResultAsync(string newPagePathAddress, int pageId)
         {
             var currentPage =
-                GetPage(pageId);
+                await GetPageAsync(pageId);
 
             if (currentPage.PagePathAddress != newPagePathAddress)
             {
                 var isNewPagePathAddressExist =
-                    GetPages()
-                        .Any(p => p.PagePathAddress == newPagePathAddress);
+                    await _pageRepository
+                        .IsPagePathAddressExist(newPagePathAddress);
 
                 if (isNewPagePathAddressExist)
                     return new JsonResult("این آدرس صفحه در حال حاضر موجود است");
-
             }
 
             return new JsonResult(true);
         }
-        public PageCreateUpdateResult CreatePage(AddPageViewModel pageViewModel)
+        public async Task<PageCreateUpdateResult> CreatePageAsync(AddPageViewModel pageViewModel)
         {
             try
             {
                 var isPagePathAddressExist =
-                    GetPages()
-                        .Any(p => p.PagePathAddress == pageViewModel.PagePathAddress);
+                    await _pageRepository
+                        .IsPagePathAddressExist(pageViewModel.PagePathAddress);
 
                 if (isPagePathAddressExist)
                     return PageCreateUpdateResult.PathAddressExist;
@@ -88,9 +90,11 @@ namespace Aroma_Shop.Application.Services
                     PageDescription = pageViewModel.PageDescription
                 };
 
-                _pageRepository.CreatePage(page);
+                await _pageRepository
+                    .CreatePageAsync(page);
 
-                _pageRepository.Save();
+                await _pageRepository
+                    .SaveAsync();
 
                 return PageCreateUpdateResult.Successful;
             }
@@ -100,18 +104,18 @@ namespace Aroma_Shop.Application.Services
                 return PageCreateUpdateResult.Failed;
             }
         }
-        public PageCreateUpdateResult UpdatePage(EditPageViewModel pageViewModel)
+        public async Task<PageCreateUpdateResult> UpdatePageAsync(EditPageViewModel pageViewModel)
         {
             try
             {
                 var currentPage =
-                    GetPage(pageViewModel.PageId);
+                    await GetPageAsync(pageViewModel.PageId);
 
                 if (currentPage.PagePathAddress != pageViewModel.PagePathAddress)
                 {
                     var isNewPagePathAddressExist =
-                        GetPages()
-                            .Any(p => p.PagePathAddress == pageViewModel.PagePathAddress);
+                        await _pageRepository
+                            .IsPagePathAddressExist(pageViewModel.PagePathAddress);
 
                     if (isNewPagePathAddressExist)
                         return PageCreateUpdateResult.PathAddressExist;
@@ -121,9 +125,11 @@ namespace Aroma_Shop.Application.Services
                 currentPage.PagePathAddress = pageViewModel.PagePathAddress;
                 currentPage.PageDescription = pageViewModel.PageDescription;
 
-                _pageRepository.UpdatePage(currentPage);
+                _pageRepository
+                    .UpdatePage(currentPage);
 
-                _pageRepository.Save();
+                await _pageRepository
+                    .SaveAsync();
 
                 return PageCreateUpdateResult.Successful;
             }
@@ -133,18 +139,21 @@ namespace Aroma_Shop.Application.Services
                 return PageCreateUpdateResult.Failed;
             }
         }
-        public bool DeletePageById(int pageId)
+        public async Task<bool> DeletePageByIdAsync(int pageId)
         {
             try
             {
                 var page =
-                    GetPage(pageId);
+                    await GetPageAsync(pageId);
 
                 if (page == null)
                     return false;
 
-                _pageRepository.DeletePage(page);
-                _pageRepository.Save();
+                _pageRepository
+                    .DeletePage(page);
+
+                await _pageRepository
+                    .SaveAsync();
 
                 return true;
             }

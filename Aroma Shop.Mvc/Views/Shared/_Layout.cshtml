@@ -4,7 +4,8 @@
 @inject IProductService ProductService
 
 @{
-    var isUserSignedIn = AccountService.IsUserSignedIn();
+    var isUserSignedIn = 
+        AccountService.IsUserSignedIn();
 }
 
 <!DOCTYPE html>
@@ -21,6 +22,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/vendors/owl-carousel/owl.theme.default.min.css">
     <link rel="stylesheet" href="~/vendors/owl-carousel/owl.carousel.min.css">
+    <link href="~/vendors/linericon/style.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
     <link rel="stylesheet" href="~/css/style.css">
     <style>
     </style>
@@ -108,7 +111,7 @@
                         </div>
                         <ul class="nav-shop">
                             <li class="nav-item"><button class="openBtn"><i class="ti-search"></i></button></li>
-                            <li class="nav-item"><a asp-controller="Product" asp-action="ShoppingCart"><i class="ti-shopping-cart"></i><span class="nav-shop__circle">@(isUserSignedIn ? ProductService.GetLoggedUserOpenOrderDetailsCount() : 0)</span></a> </li>
+                            <li class="nav-item"><a asp-controller="Product" asp-action="ShoppingCart"><i class="ti-shopping-cart"></i><span class="nav-shop__circle">@(isUserSignedIn ? await ProductService.GetLoggedUserOpenOrderDetailsCountAsync() : 0)</span></a> </li>
                             @if (isUserSignedIn)
                             {
                                 <li class="nav-item"><a class="button button-header" asp-controller="Account" asp-action="ManageAccount">@User.Identity.Name</a></li>

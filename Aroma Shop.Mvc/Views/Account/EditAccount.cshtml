@@ -121,7 +121,7 @@
                 <div class="col-md-12 form-group">
                     @{
                         var isLoggedUserHasPassword =
-                            await AccountService.IsLoggedUserHasPassword();
+                            await AccountService.IsLoggedUserHasPasswordAsync();
                     }
                     @if (isLoggedUserHasPassword)
                     {

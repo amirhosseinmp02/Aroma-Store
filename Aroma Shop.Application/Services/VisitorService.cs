@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.VisitorModels;
@@ -16,29 +17,29 @@ namespace Aroma_Shop.Application.Services
             _visitorRepository = visitorRepository;
         }
 
-        public IEnumerable<Visitor> GetVisitors()
+        public async Task<IEnumerable<Visitor>> GetVisitorsAsync()
         {
             var visitors =
-                _visitorRepository
-                    .GetVisitors();
+                await _visitorRepository
+                    .GetVisitorsAsync();
 
             return visitors;
         }
-        public int GetNumberOfVisits()
+        public async Task<int> GetNumberOfVisitsAsync()
         {
             var numberOfVisits =
-                _visitorRepository
-                    .GetNumberOfVisits();
+                await _visitorRepository
+                    .GetNumberOfVisitsAsync();
 
             return numberOfVisits;
         }
-        public bool AddOrUpdateVisitor(string visitorIpAddress)
+        public async Task<bool> AddOrUpdateVisitorAsync(string visitorIpAddress)
         {
             try
             {
                 var visitor =
-                    _visitorRepository
-                        .GetVisitorByIpAddress(visitorIpAddress);
+                    await _visitorRepository
+                        .GetVisitorByIpAddressAsync(visitorIpAddress);
 
                 if (visitor != null)
                 {
@@ -59,12 +60,12 @@ namespace Aroma_Shop.Application.Services
                         LastVisitTime = DateTime.Now
                     };
 
-                    _visitorRepository
-                        .AddVisitor(visitor);
+                    await _visitorRepository
+                        .AddVisitorAsync(visitor);
                 }
 
-                _visitorRepository
-                    .Save();
+                await _visitorRepository
+                    .SaveAsync();
 
                 return true;
             }

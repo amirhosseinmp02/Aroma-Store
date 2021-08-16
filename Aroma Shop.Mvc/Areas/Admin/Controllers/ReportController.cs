@@ -24,23 +24,21 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowVisitors
 
         [HttpGet("/Admin/Visitors")]
-        public IActionResult Visitors(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Visitors(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Visitor> visitors;
+            var visitors =
+                await _visitorService
+                    .GetVisitorsAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
-                visitors =
-                    _visitorService
-                        .GetVisitors().Where(p =>
+                visitors = 
+                    visitors
+                        .Where(p =>
                             p.VisitorIpAddress.Contains(search));
 
                 ViewBag.search = search;
             }
-            else
-                visitors =
-                    _visitorService
-                        .GetVisitors();
 
             if (!visitors.Any())
             {

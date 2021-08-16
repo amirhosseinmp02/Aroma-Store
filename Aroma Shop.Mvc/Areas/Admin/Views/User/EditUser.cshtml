@@ -32,7 +32,7 @@
             <div class="form-group">
                 @{
                     var isUserHasPassword =
-                        await AccountService.IsUserHasPasswordById(Model.UserId);
+                        await AccountService.IsUserHasPasswordByIdAsync(Model.UserId);
                 }
                 @if (isUserHasPassword)
                 {

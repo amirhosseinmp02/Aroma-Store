@@ -12,57 +12,57 @@ namespace Aroma_Shop.Application.Interfaces
 {
     public interface IProductService
     {
-        IEnumerable<Product> GetProducts();
-        IEnumerable<Product> GetAvailableProducts();
-        Product GetProduct(int productId);
-        int GetProductsCount();
-        bool AddProduct(AddEditProductViewModel productViewModel);
-        bool UpdateProduct(AddEditProductViewModel productViewModel);
-        bool DeleteProduct(Product product);
-        bool DeleteProductById(int productId);
-        bool AddHitsToProduct(Product product);
-        IEnumerable<Category> GetCategories();
-        Category GetCategory(int categoryId);
-        bool AddCategory(AddEditCategoryViewModel categoryViewModel);
-        bool UpdateCategory(AddEditCategoryViewModel categoryViewModel);
-        bool DeleteCategoryById(int categoryId);
-        IEnumerable<CategoryTreeView> GetCategoriesTreeViews();       
-        IEnumerable<SelectListItem> GetCategoriesTreeViewForAdd();
-        IEnumerable<SelectListItem> GetCategoriesTreeViewForEdit(Category selfCategory);
-        Task<bool> IsProductInLoggedUserFavoriteProducts(int favoriteProductId);
-        Task<bool> AddProductByIdToLoggedUserFavoriteProducts(int favoriteProductId);
-        Task<bool> RemoveProductByIdFromLoggedUserFavoriteProducts(int favoriteProductId);
-        Task<IEnumerable<Product>> GetLoggedUserFavoriteProducts();
+        Task<IEnumerable<Product>> GetAvailableProductsAsync();
+        Task<IEnumerable<Product>> GetProductsAsync();
+        Task<Product> GetProductAsync(int productId);
+        Task<Product> GetProductWithDetailsAsync(int productId);
+        Task<int> GetProductsCountAsync();
+        Task<bool> AddProductAsync(AddEditProductViewModel productViewModel);
+        Task<bool> UpdateProductAsync(AddEditProductViewModel productViewModel);
+        Task<bool> DeleteProductAsync(Product product);
+        Task<bool> DeleteProductByIdAsync(int productId);
+        Task<bool> AddHitsToProductAsync(Product product);
+        Task<IEnumerable<Category>> GetCategoriesAsync();
+        Task<Category> GetCategoryAsync(int categoryId);
+        Task<bool> AddCategoryAsync(AddEditCategoryViewModel categoryViewModel);
+        Task<bool> UpdateCategoryAsync(AddEditCategoryViewModel categoryViewModel);
+        Task<bool> DeleteCategoryByIdAsync(int categoryId);
+        Task<IEnumerable<CategoryTreeView>> GetCategoriesTreeViewsAsync();       
+        Task<IEnumerable<SelectListItem>> GetCategoriesTreeViewForAddAsync();
+        Task<IEnumerable<SelectListItem>> GetCategoriesTreeViewForEditAsync(Category selfCategory);
+        Task<bool> AddProductByIdToLoggedUserFavoriteProductsAsync(int favoriteProductId);
+        Task<bool> RemoveProductByIdFromLoggedUserFavoriteProductsAsync(int favoriteProductId);
+        Task<IEnumerable<Product>> GetLoggedUserFavoriteProductsAsync();
 
         //Start Order Section
 
-        IEnumerable<Order> GetOrders();
-        IEnumerable<OrdersViewModel> GetOrdersListView();       
-        IEnumerable<OrdersViewModel> GetLoggedUserOrders();
-        OrderViewModel GetOrderForEdit(int orderId);
-        Order GetLoggedUserOpenOrder();
-        OrderViewModel OrderTrackingByUserEmail(string userEmail, int orderId);
-        OrderViewModel GetConfirmedOrderInvoice(Order confirmedOrder);
-        OrderViewModel GetLoggedUserOrderInvoice(int orderId);
-        int GetCompletedOrdersCount();
-        int GetUnCompletedOrdersCount();
-        int GetUnSeenOrdersCount();
-        bool UpdateOrder(Order order);
-        bool SetOrderAsSeen(Order order);
-        bool DeleteOrderById(int orderId);
-        int GetLoggedUserOpenOrderDetailsCount();
-        bool DeleteOrderDetailsById(int orderDetailsId);
-        Task<AddProductToCartResult> AddProductToCart(Product product, int requestedQuantity = 1, int productVariationId = -1);
-        bool UpdateCart(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities);
-        CartCheckOutViewModel GetLoggedUserCartCheckOut();
-        Task<string> PaymentProcess(CartCheckOutViewModel cartCheckOutViewModel);
-        Task<bool> OrderConfirmation(Order loggedUserOpenOrder);
-        Task<AddDiscountToCartResult> AddDiscountToCart(Order loggedUserOpenOrder, string discountCode);
-        IEnumerable<Discount> GetDiscounts();
-        Discount GetDiscount(int discountId);
-        bool MoveDiscountToTrash(int discountId);
-        AddUpdateDiscountResult AddDiscount(Discount discount);
-        AddUpdateDiscountResult UpdateDiscount(Discount discount);
+        Task<IEnumerable<Order>> GetOrdersAsync();
+        Task<IEnumerable<OrdersViewModel>> GetOrdersListViewAsync();       
+        Task<IEnumerable<OrdersViewModel>> GetLoggedUserOrdersAsync();
+        Task<OrderViewModel> GetOrderForEditAsync(int orderId);
+        Task<Order> GetLoggedUserOpenOrderAsync();
+        Task<OrderViewModel> OrderTrackingByUserEmailAsync(string userEmail, int orderId);
+        OrderViewModel GetConfirmedOrderInvoiceAsync(Order confirmedOrder);
+        Task<OrderViewModel> GetLoggedUserOrderInvoiceAsync(int orderId);
+        Task<int> GetCompletedOrdersCountAsync();
+        Task<int> GetUnCompletedOrdersCountAsync();
+        Task<int> GetUnSeenOrdersCountAsync();
+        Task<bool> UpdateOrderAsync(Order order);
+        Task<bool> SetOrderAsSeenAsync(Order order);
+        Task<bool> DeleteOrderByIdAsync(int orderId);
+        Task<int> GetLoggedUserOpenOrderDetailsCountAsync();
+        Task<bool> DeleteOrderDetailsByIdAsync(int orderDetailsId);
+        Task<AddProductToCartResult> AddProductToCartAsync(Product product, int requestedQuantity = 1, int productVariationId = -1);
+        Task<bool> UpdateCartAsync(Order loggedUserOpenOrder, IEnumerable<int> orderDetailsQuantities);
+        Task<CartCheckOutViewModel> GetLoggedUserCartCheckOutAsync();
+        Task<string> PaymentProcessAsync(CartCheckOutViewModel cartCheckOutViewModel);
+        Task<bool> OrderConfirmationAsync(Order loggedUserOpenOrder);
+        Task<AddDiscountToCartResult> AddDiscountToCartAsync(Order loggedUserOpenOrder, string discountCode);
+        Task<IEnumerable<Discount>> GetDiscountsAsync();
+        Task<Discount> GetDiscountAsync(int discountId);
+        Task<bool> MoveDiscountToTrashAsync(int discountId);
+        Task<AddUpdateDiscountResult> AddDiscountAsync(Discount discount);
+        Task<AddUpdateDiscountResult> UpdateDiscountAsync(Discount discount);
 
         //End Order Section
     }

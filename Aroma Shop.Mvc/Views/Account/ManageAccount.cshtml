@@ -36,7 +36,7 @@
         <div class="col-lg-9 col-md-8 col-sm-11">
             @{
                 var loggedUser =
-                    await AccountService.GetLoggedUser();
+                    await AccountService.GetLoggedUserAsync();
 
                 var loggedUserName =
                     loggedUser.UserName;

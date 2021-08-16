@@ -26,22 +26,22 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region ShowPages
 
         [HttpGet("/Admin/Pages")]
-        public IActionResult Index(int pageNumber = 1, string search = null)
+        public async Task<IActionResult> Index(int pageNumber = 1, string search = null)
         {
-            IEnumerable<Page> pages;
+            var pages =
+                await _pageService
+                    .GetPagesAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
                 pages =
-                    _pageService.GetPages().Where(p =>
+                    pages
+                        .Where(p =>
                         p.PageTitle.Contains(search) ||
                         p.PagePathAddress.Contains(search));
 
                 ViewBag.search = search;
             }
-            else
-                pages =
-                    _pageService.GetPages();
 
             if (!pages.Any())
             {
@@ -80,12 +80,13 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Pages/AddPage")]
         [ValidateAntiForgeryToken]
-        public IActionResult CreatePage(AddPageViewModel model)
+        public async Task<IActionResult> CreatePage(AddPageViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    _pageService.CreatePage(model);
+                    await _pageService
+                        .CreatePageAsync(model);
 
                 if (result == PageCreateUpdateResult.Successful)
                 {
@@ -111,10 +112,11 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region EditPage
 
         [HttpGet("/Admin/Pages/EditPage")]
-        public IActionResult EditPage(int pageId)
+        public async Task<IActionResult> EditPage(int pageId)
         {
             var page =
-                _pageService.GetPage(pageId);
+                await _pageService
+                    .GetPageAsync(pageId);
 
             if (page == null)
                 return NotFound();
@@ -134,7 +136,7 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost("/Admin/Pages/EditPage")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPage(EditPageViewModel model)
+        public async Task<IActionResult> EditPage(EditPageViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -142,7 +144,8 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
                     Convert.ToInt32(TempData["pageId"]);
 
                 var result =
-                    _pageService.UpdatePage(model);
+                    await _pageService
+                        .UpdatePageAsync(model);
 
                 if (result == PageCreateUpdateResult.Successful)
                     return RedirectToAction("Index");
@@ -164,10 +167,10 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
         #region DeletePage
 
         [HttpGet("Admin/Pages/DeletePage")]
-        public IActionResult DeletePage(int pageId)
+        public async Task<IActionResult> DeletePage(int pageId)
         {
             var result =
-                _pageService.DeletePageById(pageId);
+                await _pageService.DeletePageByIdAsync(pageId);
 
             if (result)
                 return RedirectToAction("Index");
@@ -181,20 +184,20 @@ namespace Aroma_Shop.Mvc.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult IsPagePathAddressExistForAdd(string pagePathAddress)
+        public async Task<IActionResult> IsPagePathAddressExistForAdd(string pagePathAddress)
         {
             var isPagePathAddressExist =
-                _pageService.IsPagePathAddressExistForAddJsonResult(pagePathAddress);
+                await _pageService.IsPagePathAddressExistForAddJsonResultAsync(pagePathAddress);
 
             return isPagePathAddressExist;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult IsPagePathAddressExistForEdit(string pagePathAddress, int pageId)
+        public async Task<IActionResult> IsPagePathAddressExistForEdit(string pagePathAddress, int pageId)
         {
             var isPagePathAddressExist =
-                _pageService.IsPagePathAddressExistForEditJsonResult(pagePathAddress, pageId);
+                await _pageService.IsPagePathAddressExistForEditJsonResultAsync(pagePathAddress, pageId);
 
             return isPagePathAddressExist;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Aroma_Shop.Data.Context;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
@@ -16,24 +17,28 @@ namespace Aroma_Shop.Data.Repositories
             _context = context;
         }
 
-        public Image GetImage(int imageId)
+        public async Task<Image> GetImageAsync(int imageId)
         {
             var image =
-                _context.Images.Find(imageId);
+                await _context
+                    .Images
+                    .FindAsync(imageId);
 
             return image;
         }
-        public void AddImage(Image image)
+        public async Task AddImageAsync(Image image)
         {
-            _context.Add(image);
+            await _context
+                .AddAsync(image);
         }
-        public void DeleteImage(Image image)
+        public void DeleteImageAsync(Image image)
         {
             _context.Remove(image);
         }
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context
+                .SaveChangesAsync();
         }
     }
 }
