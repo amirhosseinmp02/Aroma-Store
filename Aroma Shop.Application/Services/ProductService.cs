@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels.IdPayModels;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Domain.Interfaces;
 using Aroma_Shop.Domain.Models.FileModels;
@@ -15,7 +18,8 @@ using Aroma_Shop.Domain.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
-using ZarinpalSandbox;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Aroma_Shop.Application.Services
 {
@@ -27,8 +31,10 @@ namespace Aroma_Shop.Application.Services
         private readonly IAccountService _accountService;
         private readonly LinkGenerator _linkGenerator;
         private readonly IHttpContextAccessor _accessor;
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService, IAccountService accountService, LinkGenerator linkGenerator, IHttpContextAccessor accessor)
+        public ProductService(IProductRepository productRepository, IFileService fileService, IMediaService mediaService, IAccountService accountService, LinkGenerator linkGenerator, IHttpContextAccessor accessor, IConfiguration configuration)
         {
             _productRepository = productRepository;
             _fileService = fileService;
@@ -36,6 +42,8 @@ namespace Aroma_Shop.Application.Services
             _accountService = accountService;
             _linkGenerator = linkGenerator;
             _accessor = accessor;
+            _configuration = configuration;
+            _httpClient = new HttpClient();
         }
         public async Task<IEnumerable<Product>> GetAvailableProductsAsync()
         {
@@ -129,7 +137,9 @@ namespace Aroma_Shop.Application.Services
 
                     if (!result)
                     {
-                        DeleteProductAsync(product);
+                        await 
+                            DeleteProductAsync(product);
+
                         return false;
                     }
                 }
@@ -759,7 +769,7 @@ namespace Aroma_Shop.Application.Services
 
             var paymentMethod =
                 order.IsOrderCompleted ?
-                    "زرین پال" :
+                    "آیدی پی" :
                     "-";
 
             var orderViewModel = new OrderViewModel()
@@ -875,7 +885,7 @@ namespace Aroma_Shop.Application.Services
 
             var paymentMethod =
                 userOrder.IsOrderCompleted ?
-                    "زرین پال" :
+                    "آیدی پی" :
                     "-";
 
             var orderViewModel = new OrderViewModel()
@@ -968,7 +978,7 @@ namespace Aroma_Shop.Application.Services
 
             var paymentMethod =
                 confirmedOrder.IsOrderCompleted ?
-                    "زرین پال" :
+                    "آیدی پی" :
                     "-";
 
             int totalOrderPrice;
@@ -1024,7 +1034,7 @@ namespace Aroma_Shop.Application.Services
 
             var paymentMethod =
                 userOrder.IsOrderCompleted ?
-                    "زرین پال" :
+                    "آیدی پی" :
                     "-";
 
             var orderViewModel = new OrderViewModel()
@@ -1539,20 +1549,43 @@ namespace Aroma_Shop.Application.Services
                     loggedUserOpenOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
                     loggedUserOpenOrder.Discounts.Sum(p => p.DiscountPrice);
 
-                var payment = 
-                    new Payment(totalOrderPrice);
-
                 var callBackUrl =
                     _linkGenerator
                         .GetUriByAction(_accessor.HttpContext
                             , "OrderConfirmation",
                             "Product");
 
-                var result =
-                    await payment.PaymentRequest("پرداخت صورتحساب", callBackUrl);
-
-                if (result.Status == 100 || totalOrderPrice <= 0)
+                var idPayRequestModel = new IdPayRequestModel()
                 {
+                    order_id = loggedUserOpenOrder.OrderId,
+                    amount = totalOrderPrice,
+                    callback = callBackUrl
+                };
+
+                var jsonIdPayRequestModel =
+                    JsonConvert
+                    .SerializeObject(idPayRequestModel);
+
+                var idPayRequestModelStringContent =
+                    new StringContent(jsonIdPayRequestModel, Encoding.UTF8, "application/json");
+
+                idPayRequestModelStringContent
+                    .Headers.Add("X-API-KEY", _configuration["IdPayInformation:ApiKey"]);
+
+                idPayRequestModelStringContent
+                    .Headers.Add("X-SANDBOX", _configuration["IdPayInformation:IsTest"].ToString()=="True"?"1":"0");
+
+                var postIdPayResult =
+                    await _httpClient
+                    .PostAsync("https://api.idpay.ir/v1.1/payment", idPayRequestModelStringContent);
+
+                if (postIdPayResult.StatusCode.ToString() == "Created" || totalOrderPrice <= 0)
+                {
+                    var postIdPayResultContent =
+                        postIdPayResult
+                        .Content
+                        .ReadAsStringAsync();
+
                     loggedUserOpenOrder
                             .OwnerUser
                             .UserDetails
@@ -1615,9 +1648,13 @@ namespace Aroma_Shop.Application.Services
                     await _productRepository
                         .SaveAsync();
 
+                    var responseIdPayModel =
+                        JsonConvert
+                        .DeserializeObject<IdPayResponseModel>(await postIdPayResultContent);
+
                     var redirectUrl =
                         totalOrderPrice > 0 ?
-                    $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}" :
+                    responseIdPayModel.link :
                     callBackUrl;
 
                     return redirectUrl;
@@ -1639,22 +1676,42 @@ namespace Aroma_Shop.Application.Services
                     loggedUserOpenOrder.OrdersDetails.Sum(p => p.OrderDetailsTotalPrice) -
                     loggedUserOpenOrder.Discounts.Sum(p => p.DiscountPrice);
 
-                if (_accessor.HttpContext.Request.Query["Status"] != "" &&
-                    _accessor.HttpContext.Request.Query["Status"].ToString().ToLower() == "ok" &&
-                    _accessor.HttpContext.Request.Query["Authority"] != "")
+                var idPayUniqueKey =
+                    _accessor
+                    .HttpContext
+                    .Request
+                    .Query["id"]
+                    .ToString();
+
+                if (_accessor.HttpContext.Request.Query["status"] != "" &&
+                    _accessor.HttpContext.Request.Query["status"].ToString() == "10" &&
+                    _accessor.HttpContext.Request.Query["track_id"] != "" &&
+                    _accessor.HttpContext.Request.Query["order_id"].ToString() == loggedUserOpenOrder.OrderId.ToString())
                 {
-                    string authority =
-                        _accessor
-                            .HttpContext
-                            .Request
-                            .Query["Authority"].ToString();
+                    var idPayConfirmationModel = new IdPayConfirmationModel()
+                    {
+                        id = idPayUniqueKey,
+                        order_id = loggedUserOpenOrder.OrderId.ToString()
+                    };
 
-                    var payment = new Payment(totalOrderPrice);
+                    var jsonIdPayConfirmationModel =
+                        JsonConvert
+                        .SerializeObject(idPayConfirmationModel);
 
-                    var result =
-                        await payment.Verification(authority);
+                    var idPayConfirmationModelStringContent =
+                        new StringContent(jsonIdPayConfirmationModel, Encoding.UTF8, "application/json");
+                    
+                    idPayConfirmationModelStringContent
+                        .Headers.Add("X-API-KEY", _configuration["IdPayInformation:ApiKey"]);
 
-                    if (result.Status == 100)
+                    idPayConfirmationModelStringContent
+                        .Headers.Add("X-SANDBOX", Convert.ToInt32(_configuration["IdPayInformation:IsTest"]).ToString());
+
+                    var postIdPayConfirmationResult =
+                        await _httpClient
+                        .PostAsync("https://api.idpay.ir/v1.1/payment/verify", idPayConfirmationModelStringContent);
+
+                    if (postIdPayConfirmationResult.StatusCode.ToString() == "OK")
                     {
                         loggedUserOpenOrder
                                 .OrderPaymentTime =

@@ -626,7 +626,8 @@ namespace Aroma_Shop.Application.Services
                     await _userManager
                         .DeleteAsync(requestedUser);
 
-                _userRepository.SaveAsync();
+                await _userRepository
+                    .SaveAsync();
 
                 return result.Succeeded;
             }

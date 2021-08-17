@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Aroma_Shop.Data.Repositories
 
         public async Task<IEnumerable<Product>> GetProductsAsync()
         {
-            var products = 
+            var products =
                 await _context
                 .Products
                 .Include(p => p.Categories)
@@ -61,19 +62,34 @@ namespace Aroma_Shop.Data.Repositories
         }
         public async Task<Product> GetProductWithDetailsAsync(int productId)
         {
-            var product = 
-                await _context
-                .Products
-                .Include(p => p.Categories)
-                .Include(p => p.Informations)
-                .Include(p => p.Images)
-                .Include(p => p.ProductVariations)
+            var product =
+                await _context.Products
                 .Include(p => p.Comments)
-                .ThenInclude(p => p.User)
-                .Include(p => p.Comments)
-                .ThenInclude(p => p.Replies)
                 .ThenInclude(p => p.User)
                 .SingleOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product != null)
+            {
+                await _context
+                    .Entry(product)
+                    .Collection(p => p.Categories)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(product)
+                    .Collection(p => p.Informations)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(product)
+                    .Collection(p => p.Images)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(product)
+                    .Collection(p => p.ProductVariations)
+                    .LoadAsync();
+            }
 
             return product;
         }
@@ -88,7 +104,7 @@ namespace Aroma_Shop.Data.Repositories
         }
         public async Task<bool> IsProductExist(int productId)
         {
-            var isProductExist = 
+            var isProductExist =
                 await _context
                 .Products
                 .AnyAsync(p => p.ProductId == productId);
@@ -109,7 +125,7 @@ namespace Aroma_Shop.Data.Repositories
         }
         public async Task<Category> GetCategoryAsync(int categoryId)
         {
-            var category = 
+            var category =
                 await _context
                 .Categories
                 .Include(p => p.ParentCategory)
@@ -226,15 +242,34 @@ namespace Aroma_Shop.Data.Repositories
             var order =
                 await _context
                     .Orders
-                    .Include(p => p.InvoicesDetails)
-                    .Include(p => p.Discounts)
-                    .Include(p => p.OwnerUser)
-                    .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.Product)
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
                     .SingleOrDefaultAsync(p => p.OrderId == orderId);
+
+            if (order != null)
+            {
+                await _context
+                    .Entry(order)
+                    .Collection(p => p.InvoicesDetails)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(order)
+                    .Collection(p => p.Discounts)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(order)
+                    .Reference(p => p.OwnerUser)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(order.OwnerUser)
+                    .Reference(p => p.UserDetails)
+                    .LoadAsync();
+            }
 
             return order;
         }
@@ -243,7 +278,6 @@ namespace Aroma_Shop.Data.Repositories
             var order =
                 await _context
                     .Orders
-                    .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
@@ -253,6 +287,14 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.ProductVariation)
                     .SingleOrDefaultAsync(p => p.OwnerUser.Id == userId && !p.IsOrderCompleted);
 
+            if (order != null)
+            {
+                await _context
+                    .Entry(order)
+                    .Collection(p => p.Discounts)
+                    .LoadAsync();
+            }
+
             return order;
         }
         public async Task<Order> GetUserOrderAsync(string userId, int orderId)
@@ -260,8 +302,6 @@ namespace Aroma_Shop.Data.Repositories
             var order =
                 await _context
                     .Orders
-                    .Include(p => p.Discounts)
-                    .Include(p => p.InvoicesDetails)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
@@ -270,6 +310,19 @@ namespace Aroma_Shop.Data.Repositories
                     .ThenInclude(p => p.ProductVariation)
                     .SingleOrDefaultAsync(p => p.OrderId == orderId && p.OwnerUser.Id == userId);
 
+            if (order != null)
+            {
+                await _context
+                    .Entry(order)
+                    .Collection(p => p.InvoicesDetails)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(order)
+                    .Collection(p => p.Discounts)
+                    .LoadAsync();
+            }
+
             return order;
         }
         public async Task<Order> GetUserOrderByEmailAsync(string userEmail, int orderId)
@@ -277,8 +330,6 @@ namespace Aroma_Shop.Data.Repositories
             var userOrder =
                 await _context
                     .Orders
-                    .Include(p => p.InvoicesDetails)
-                    .Include(p => p.Discounts)
                     .Include(p => p.OwnerUser)
                     .ThenInclude(p => p.UserDetails)
                     .Include(p => p.OrdersDetails)
@@ -286,6 +337,19 @@ namespace Aroma_Shop.Data.Repositories
                     .Include(p => p.OrdersDetails)
                     .ThenInclude(p => p.ProductVariation)
                     .SingleOrDefaultAsync(p => p.OrderId == orderId);
+
+            if (userOrder != null)
+            {
+                await _context
+                    .Entry(userOrder)
+                    .Collection(p => p.InvoicesDetails)
+                    .LoadAsync();
+
+                await _context
+                    .Entry(userOrder)
+                    .Collection(p => p.Discounts)
+                    .LoadAsync();
+            }
 
             return userOrder;
         }
