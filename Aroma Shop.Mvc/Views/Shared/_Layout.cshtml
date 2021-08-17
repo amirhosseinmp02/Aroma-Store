@@ -4,7 +4,7 @@
 @inject IProductService ProductService
 
 @{
-    var isUserSignedIn = 
+    var isUserSignedIn =
         AccountService.IsUserSignedIn();
 }
 
@@ -25,8 +25,6 @@
     <link href="~/vendors/linericon/style.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
     <link rel="stylesheet" href="~/css/style.css">
-    <style>
-    </style>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="rtl">
@@ -230,7 +228,6 @@
     <script src="~/vendors/jquery/jquery-3.2.1.min.js"></script>
     <script src="~/vendors/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="~/vendors/owl-carousel/owl.carousel.min.js"></script>
-    <script src="~/vendors/skrollr.min.js"></script>
     <script src="~/vendors/mail-script.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/js/site.js"></script>

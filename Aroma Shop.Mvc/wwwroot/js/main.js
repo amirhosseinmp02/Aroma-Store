@@ -1,11 +1,6 @@
 $(function () {
     "use strict";
 
-    //------- Parallax -------//
-    skrollr.init({
-        forceHeight: false
-    });
-
     //------- hero carousel -------//
     $(".hero-carousel").owlCarousel({
         rtl: true,

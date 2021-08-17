@@ -1424,7 +1424,8 @@ a {
 
 @media (min-width: 992px) {
     .blog-banner h1 {
-        font-size: 36px
+        font-size: 32px;
+        line-height: 3rem;
     }
 }
 
@@ -5306,4 +5307,10 @@ span.reset_variations:hover {
 
 .page_content {
     overflow: auto;
+}
+
+@media (max-width: 767px) {
+    .button-disabled {
+        padding: 8px 25px !important;
+    }
 }
