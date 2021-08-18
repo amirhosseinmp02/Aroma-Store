@@ -116,12 +116,12 @@
                 <div class="col-xl-9 col-lg-8 col-md-7">
                     <!-- Start Filter Bar -->
                     <div class="filter-bar d-flex flex-wrap align-items-center">
-                        <div class="mr-auto mt-3 mb-2">
+                        <div class="mr-auto mt-3 mb-2 sort-product-section">
                             <select class="form-control" asp-items="Model.SortList" asp-for="SortBy">
                             </select>
                         </div>
-                        <div>
-                            <div class="input-group filter-bar-search">
+                        <div class="filter-bar-search-section">
+                            <div class="input-group filter-bar-search w-100">
                                 <input type="text" placeholder="جستجو..." class="pl-2" name="Search" value="@ViewData["search"]">
                                 <div class="input-group-append">
                                     <button type="submit"><i class="ti-search"></i></button>
@@ -267,8 +267,8 @@
                     <!-- End Best Seller -->
                 </div>
             </div>
-            <input id="minimum-price" type="hidden" name="minimumPrice" value="@ViewData["minimumPrice"]"/>
-            <input id="maximum-price" type="hidden" name="maximumPrice"  value="@ViewData["maximumPrice"]"/>
+            <input id="minimum-price" type="hidden" name="minimumPrice" value="@ViewData["minimumPrice"]" />
+            <input id="maximum-price" type="hidden" name="maximumPrice" value="@ViewData["maximumPrice"]" />
             <input id="page-number-input" type="hidden" name="pageNumber" />
         </form>
     </div>
@@ -279,6 +279,7 @@
 {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js" integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
 

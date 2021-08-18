@@ -5314,3 +5314,40 @@ span.reset_variations:hover {
         padding: 8px 25px !important;
     }
 }
+
+@media (max-width: 992px) {
+    .product-image-detail {
+        margin: auto;
+        max-height: 520px;
+        max-width: 520px;
+    }
+}
+
+@media (max-width: 520px) {
+    .product-image-detail {
+        max-height: 350px;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 545px) {
+    .sort-product-section {
+        width: 100%;
+    }
+
+    .filter-bar-search-section {
+        width: 100%;
+    }
+
+    .filter-bar-search input {
+        width: 92%;
+    }
+
+    .filter-bar-search div {
+        width: 8%;
+    }
+}
+
+.offer__content a {
+    width: 175px;
+}
