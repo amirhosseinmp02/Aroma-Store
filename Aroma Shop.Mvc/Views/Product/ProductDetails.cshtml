@@ -21,7 +21,7 @@
             <div class="text-center">
                 <h1>@Model.Product.ProductName</h1>
                 <nav aria-label="breadcrumb d-flex flex-wrap flex-column flex-sm-row" class="banner-breadcrumb">
-                    <ol class="breadcrumb">
+                    <ol class="breadcrumb d-flex flex-wrap flex-column flex-sm-row">
                         <li class="breadcrumb-item"><a class="text-dark" asp-controller="Home" asp-action="Index">خانه</a></li>
                         <li class="breadcrumb-item"><a class="text-dark" asp-controller="Product" asp-action="Index">محصولات</a></li>
                         <li class="breadcrumb-item active" aria-current="page">@Model.Product.ProductName</li>
@@ -228,7 +228,7 @@
                                                 .ElementAtOrDefault(i).Split(",");
                                         <div class="row">
                                             <label class="control-label pt-2 col-2">@Model.Product.ProductAttributesNames.ElementAtOrDefault(i)</label>
-                                            <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes">
+                                            <select class="form-control col-lg-10 col-md-9 col-sm-8 product-attributes mx-2 mx-sm-0">
                                                 <option>لطفا انتخاب کنید</option>
                                                 @foreach (var attributeValue in attributeValues)
                                                 {
@@ -507,6 +507,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script src="https://www.google.com/recaptcha/api.js?hl=fa" async defer></script>
+    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
 
     <script>
 
@@ -708,7 +709,4 @@
         });
 
     </script>
-
-    <script src="~/vendors/ckeditor5/build/ckeditor.js"></script>
-
 }

@@ -1,4 +1,4 @@
-@import url('../Fonts/Samim.css');
+@import url('https://v1.fontapi.ir/css/Samim');
 
 body {
     font-family: 'Samim', sans-serif;
@@ -5350,4 +5350,15 @@ span.reset_variations:hover {
 
 .offer__content a {
     width: 175px;
+}
+
+@media (max-width: 382px) {
+    #btn-addtocart {
+        margin-top: 1.5rem;
+    }
+
+    .product_count .reduced {
+        bottom: unset;
+        top: 24px;
+    }
 }
