@@ -7,6 +7,7 @@ using Aroma_Shop.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Utilites;
+using Aroma_Shop.Application.ViewModels;
 using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Application.ViewModels.User;
@@ -249,7 +250,7 @@ namespace Aroma_Shop.Application.Services
                 return false;
             }
         }
-        public async Task<bool> LoginWithPasswordAsync(LoginViewModel loginViewModel)
+        public async Task<LoginWithPasswordResult> LoginWithPasswordAsync(LoginViewModel loginViewModel)
         {
             try
             {
@@ -258,7 +259,10 @@ namespace Aroma_Shop.Application.Services
                         .FindByEmailAsync(loginViewModel.Email);
 
                 if (user == null)
-                    return false;
+                    return LoginWithPasswordResult.Failed;
+
+                if (!user.EmailConfirmed)
+                    return LoginWithPasswordResult.EmailNotConfirmed;
 
                 var result =
                     await _signInManager
@@ -266,12 +270,15 @@ namespace Aroma_Shop.Application.Services
                     (user.UserName, loginViewModel.Password
                         , loginViewModel.RememberMe, false);
 
-                return result.Succeeded;
+                if (!result.Succeeded)
+                    return LoginWithPasswordResult.Failed;
+
+                return LoginWithPasswordResult.Successful;
             }
             catch (Exception error)
             {
                 Console.WriteLine(error.Message);
-                return false;
+                return LoginWithPasswordResult.Failed;
             }
         }
         public async Task<bool> LogOutUserAsync()

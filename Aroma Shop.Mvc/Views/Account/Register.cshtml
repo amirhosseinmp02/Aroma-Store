@@ -39,6 +39,10 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <button type="submit" class="button button-register w-100">ثبت نام</button>
+                            @if (ViewData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success mt-3" role="alert">@ViewData["SuccessMessage"]</div>
+                            }
                             <div class="alert alert-danger text-left mt-3" role="alert" asp-validation-summary="All"></div>
                         </div>
                     </form>

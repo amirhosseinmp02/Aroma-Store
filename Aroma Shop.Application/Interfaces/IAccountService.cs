@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Aroma_Shop.Application.ViewModels;
 using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Application.ViewModels.Product;
 using Aroma_Shop.Application.ViewModels.User;
@@ -27,7 +28,7 @@ namespace Aroma_Shop.Application.Interfaces
         ChallengeResult ConfigureExternalLogins(string provider, string controllerName, string actionName,
             string returnUrl);
         Task<bool> ConfigureExternalLoginsCallBacksGetUriByActionAsync(string remoteError = null);
-        Task<bool> LoginWithPasswordAsync(LoginViewModel loginViewModel); 
+        Task<LoginWithPasswordResult> LoginWithPasswordAsync(LoginViewModel loginViewModel); 
         Task<bool> LogOutUserAsync();
         Task<bool> SendRestPasswordLinkAsync(string userEmail, string returnController, string returnAction);
         Task<bool> RestPasswordAsync(string userEmail, string token, string newPassword);

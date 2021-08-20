@@ -29,7 +29,7 @@ namespace Aroma_Shop.Application.Services
                 client.Credentials = credentials;
                 client.Host = _configuration["EmailSettings:Host"];
                 client.Port = Convert.ToInt32(_configuration["EmailSettings:Port"]);
-                client.EnableSsl = true;
+                client.EnableSsl = _configuration["EmailSettings:EnableSsl"].ToString() == "True";
 
                 using var emailMessage = new MailMessage()
                 {

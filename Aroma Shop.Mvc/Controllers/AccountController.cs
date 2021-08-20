@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Aroma_Shop.Application.Interfaces;
+using Aroma_Shop.Application.ViewModels;
 using Aroma_Shop.Application.ViewModels.Account;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Microsoft.AspNetCore.Authorization;
@@ -54,7 +55,9 @@ namespace Aroma_Shop.Mvc.Controllers
                         await _accountService
                             .SendEmailConfirmationAsync(user, "Account", "EmailConfirmation");
 
-                    return RedirectToAction("Index", "Home");
+                    ViewData["SuccessMessage"] = "ثبت نام با موفقیت انجام شد ، لطفا ایمیل خود را بررسی بفرمایید";
+
+                    return View();
                 }
 
                 foreach (var item in result.Errors)
@@ -99,20 +102,23 @@ namespace Aroma_Shop.Mvc.Controllers
                     await _accountService
                         .LoginWithPasswordAsync(model);
 
-                if (result)
+                if (result == LoginWithPasswordResult.Successful)
                 {
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
 
                     return RedirectToAction("Index", "Home");
                 }
+
+                ModelState.AddModelError("",
+                    result == LoginWithPasswordResult.EmailNotConfirmed
+                        ? "برای ورود به حساب ، باید ایمیل خود را تایید کنید"
+                        : "نام کاربری یا رمز عبور اشتباه است.");
             }
             model.ReturnUrl = returnUrl;
 
             model.ExternalsLogins =
                 (await _accountService.GetExternalAuthenticationsAsync()).ToList();
-
-            ModelState.AddModelError("", "نام کاربری یا رمز عبور اشتباه است.");
 
             return View(model);
         }
