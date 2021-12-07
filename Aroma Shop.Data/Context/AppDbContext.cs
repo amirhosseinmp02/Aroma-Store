@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Aroma_Shop.Domain.Models;
+using Aroma_Shop.Domain.Models.BlogModels;
 using Aroma_Shop.Domain.Models.CustomIdentityModels;
 using Aroma_Shop.Domain.Models.FileModels;
 using Aroma_Shop.Domain.Models.MediaModels;
@@ -41,6 +42,9 @@ namespace Aroma_Shop.Data.Context
         public DbSet<OrderDetails> OrdersDetails { get; set; }
         public DbSet<OrderInvoiceDetails> OrdersInvoicesDetails { get; set; }          
         public DbSet<Discount> Discounts { get; set; }
+
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogCategory> BlogsCategories { get; set; }    
 
         public DbSet<Visitor> Visitors { get; set; }    
 

@@ -1786,7 +1786,7 @@ a {
             color: #222;
             font-size: 16px;
             font-weight: 600;
-            padding-left: 15px;
+            padding-right: 15px;
             line-height: 20px;
             vertical-align: middle
         }
@@ -1880,16 +1880,16 @@ a {
 
     .blog_right_sidebar .search_widget .input-group .btn-default {
         position: absolute;
-        right: 20px;
+        left: 20px;
         background: transparent;
         border: 0px;
         box-shadow: none;
         font-size: 14px;
         color: #fff;
         padding: 0px;
-        top: 50%;
+        top: 57%;
         transform: translateY(-50%);
-        z-index: 1
+        z-index: 1;
     }
 
     .blog_right_sidebar .author_widget {
@@ -1919,7 +1919,7 @@ a {
             }
 
                 .blog_right_sidebar .author_widget .social_icon a + a {
-                    margin-left: 20px
+                    margin-right: 20px
                 }
 
                 .blog_right_sidebar .author_widget .social_icon a:hover {
@@ -1929,7 +1929,7 @@ a {
     .blog_right_sidebar .popular_post_widget .post_item .media-body {
         justify-content: center;
         align-self: center;
-        padding-left: 20px
+        padding-right: 20px
     }
 
         .blog_right_sidebar .popular_post_widget .post_item .media-body h3 {
@@ -1991,7 +1991,7 @@ a {
         }
 
         .blog_right_sidebar .newsletter_widget .input-group-prepend {
-            margin-right: -1px
+            margin-left: -1px
         }
 
         .blog_right_sidebar .newsletter_widget .input-group-text {
@@ -2000,9 +2000,9 @@ a {
             vertical-align: top;
             font-size: 12px;
             line-height: 36px;
-            padding: 0px 0px 0px 15px;
+            padding: 0px 15px 0px 5px;
             border: 1px solid #eeeeee;
-            border-right: 0px
+            border-left: 0px;
         }
 
             .blog_right_sidebar .newsletter_widget .input-group-text i {
@@ -2014,8 +2014,9 @@ a {
             line-height: 24px;
             color: #cccccc;
             border: 1px solid #eeeeee;
-            border-left: 0px;
-            border-radius: 0px
+            border-right: 0px;
+            border-radius: 0px;
+            height: 100%;
         }
 
             .blog_right_sidebar .newsletter_widget .form-control.placeholder {

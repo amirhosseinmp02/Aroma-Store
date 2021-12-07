@@ -30,6 +30,9 @@ namespace Aroma_Shop.Ioc
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IBlogService, BlogService>();
+
             services.AddScoped<IAccountService, AccountService>();
             services.AddHttpContextAccessor();
 
