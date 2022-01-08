@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+#ASP.NET Core Web Application
+Aroma Shop.Mvc/appsettings.json
